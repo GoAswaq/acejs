@@ -1,0 +1,126 @@
+/*ATTENTION!!! This file was created on 04-10-2019 when original css theme file was replace with these variables. Base css is base-stone.css. A copy of original file is white-stone-copy.css*/
+
+/* *** GENERAL STYLES *** */
+:root {
+    --primarycolor:140,23,59; /*darkred color*/
+
+    --general-color-alpha0:0,0,0,0;
+    --general-color-alpha01:0,0,0,0.1;
+    --general-color-alpha026:0,0,0,0.26;
+    --general-color-alpha04:0,0,0,0.4;
+    --general-color-alpha07:0,0,0,0.7;
+    --general-color-alpha016:255,47,0,0.16;
+    --general-color-alpha06:0,0,0,0.6;
+    --general-color-alpha05:0,0,0,0.5;
+    --general-color-alpha08:0,0,0,0.8;
+    --general-color-alpha02:0,0,0,0.2;
+    --general-color-alpha01:0,0,0,0.1;
+    --general-color-alpha072:0,0,0,0.72;
+    --general-color-alpha087:0,0,0,0.87;
+    --general-color-alpha005:0,0,0,0.05;
+    --general-color-alpha002:0,0,0,0.02;
+    --general-color-alpha003:0,0,0,0.03;
+    --general-color-alpha006:0,0,0,0.06;
+    --general-color-alpha011:0,0,0,0.11;
+    --general-color-alpha012:0,0,0,0.12;
+    --general-color-alpha016:0,0,0,0.16;
+    --general-color-alpha015:0,0,0,0.15;
+
+    --medium-color-alpha01:170,170,170,0.1;
+    --medium-color-alpha012:0,4,15,0.12;
+    --gray-light-alpha039:255,240,244,0.39;
+    --gray-light-alpha059:255,240,244,0.59;
+
+    --used-color--alpha015:70,195,255,0.15;
+    --used-color--alpha021:70,195,255,0.21;
+    --used-color--alpha088:77,122,159,0.88;
+    --used-color--alpha01:70,195,255,0.1;
+
+    --tone-color-alpha09:250,250,250,0.9;
+    --tone-color-alpha075:255,255,255,0.75;
+    --tone-color-alpha08:255,255,255,0.8;
+    --tone-color-alpha08255:240,244,0.59;
+    --tone-color-alpha09:255, 255, 255, 0.9;
+
+    --green-color-alpha014:83,202,159,0.14;
+
+    --separate-color-1:70,195,255;
+    --base-color:#ffffff;
+    --sistem-color-1:243,245,248;
+    --black:#000000;
+    --black-2:#0a0a0a;
+    --black-3:#0d0d0d;
+
+    --separate-color-2:#d46363;
+    --separate-color-3:#fdd248;
+    --substitut-color-1:#ebebeb;
+    --substitut-color-2:#424242;
+    --substitut-color-3:#686868;
+    --substitut-color-4:#888888;
+    --substitut-color-5:#8a8a8a;
+    --substitut-color-6:#EF3831;
+    --done-color-1:#41d195;
+    --done-color-2:#46C392;
+    --done-color-3:#88D2A2;
+    --green-light-6:#d4dae0;
+    --separate-color-4:#46C392;
+    --sistem-color-2:#f2f4f6;
+    --sistem-color-3:#e6e6e6;
+    --sistem-color-4:#ececec;
+    --sistem-color-5:#DADADA;
+    --sistem-color-6:#DBDBDB;
+    --sistem-color-7:#f4f4f4;
+    --sistem-color-8:#e9e8e7;
+    --sistem-color-9:#f2f2f2;
+    --sistem-color-10:#F3F5F8;
+    --sistem-color-11:#f6f6f6;
+    --sistem-color-12:#f0f0f0;
+    --sistem-color-13:#f1f6fb;
+    --sistem-color-14:#f7f7f7;
+    --separate-color-5:#ffa8a8;
+    --separate-color-6:#FF7C7C;
+    --separate-color-7:#E67171;
+    --separate-color-8:#8b012b;
+    --separate-color-9:#FD4;
+    --separate-color-10:#F62;
+    --semnal-color-1:#35A2fe;
+    --semnal-color-2:#5989b1;
+    --semnal-color-3:#F96060;
+    --semnal-color-4:#ff5454;
+    --semnal-color-5:#08a09f;
+
+
+    --redbrown:123,43,68; /*other kind of dark red color*/
+    --redlight:179,67,101; /*redlight color*/
+    --redlightpale:233,30,99; /*redlight pale color*/
+    --redpale:255,107,107; /*redlight pale color*/
+    --pinkfade:224,116,116; /*other kind of pink color*/
+    --pink:233,30,99; /*some kind of pink color*/
+    --pinklight:255,51,85; /*some kind of pink color*/
+
+    --ok-button-1:75,181,143; /*light green color*/
+    --greenlightpale:174,222,130; /*light pale green color*/
+    --greenlightpale-alpha01:174,222,130,0.1; /*light pale green color*/
+    --green:136,218,61; /* green color*/
+
+    --violetlight:208,130,255; /*light violet color*/
+
+    --blue:0,159,255; /* blue color*/
+    --bluelight:70,195,255; /*blue light color*/
+    --bluelight-alpha01:70,195,255,0.1; /*blue light color*/
+    --bluepale:43,137,197; /* blue pale color*/
+    --blueverylight:227,246,255; /* blue very light color*/
+    --bluedarkpale:77,122,159; /*blue light color*/
+
+    --orangelight:255,240,197; /*light orange color*/
+    --orrangelightpale:255,197,92; /*light pale orange color*/
+    --orange:255,131,0; /*orange color*/
+    --orrangepale:222,138,51; /*light pale orange color*/
+
+    --greylight:180,179,179; /*grey light color*/
+    --greylightpale:191,191,191; /*grey light pale color*/
+    --grey:102,102,102; /*grey color*/
+    --greydark:53,53,53; /*dark grey color*/
+    --turqoiselight:61,216,186; /*turqoise light color*/
+}
+

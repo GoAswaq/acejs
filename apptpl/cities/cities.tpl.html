@@ -1,0 +1,77 @@
+<!-- BEGIN inline -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa fa-angle-right"></i><span id="cities-title-bar-container"><l>Cities</l></span></h2>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="cities-add-button"
+		type="button"
+		value="add"
+		action="addNewCities"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="cities-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshCities"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+</div>
+<div class="ace-info-side ace-col-12">
+	<div 
+		id="cities-inline-grid" 
+		class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+	 >
+	<columns>
+	
+	<record>
+		<field name="title"><l>Country_ID</l></field>
+		<field name="fieldname">_country_id</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Parinte_city_ID</l></field>
+		<field name="fieldname">_city_id_parent</field>
+	</record>
+
+	<record>
+		<field name="title"><l>City_phone_prefix</l></field>
+		<field name="fieldname">_city_phone_prefix</field>
+	</record>
+
+	<record>
+		<field name="title"><l>STG_city</l></field>
+		<field name="fieldname">_city_left</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>DRP_city</l></field>
+		<field name="fieldname">_city_right</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Map_coordinates</l></field>
+		<field name="fieldname">_city_image_map_coordinates</field>
+	</record>
+
+	<record>
+		<field name="title"><l>City_image</l></field>
+		<field name="fieldname">_city_image_over</field>
+	</record>
+
+	</columns>
+	</div>
+</div>
+<script>
+function cities_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/cities/js/cities.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END inline -->

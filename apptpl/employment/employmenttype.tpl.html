@@ -1,0 +1,107 @@
+<!-- BEGIN grid -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa "></i><span id="employmenttype-title-bar-container"><l>Employment_Type</l></span></h2>
+ 	<div class="ace-buttons-groups ace-right-float" id="employmenttype-edit-buttons-grp">
+ 	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmenttype-add-button"
+		type="button"
+		value="add"
+		action="addNewEmploymentType"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmenttype-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshEmploymentType"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmenttype-cancel-button"
+		type="button"
+		value="cancel"
+		action="cancelEmploymentType"
+		iconcls="fa-ban"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmenttype-save-button"
+		type="button"
+		value="save"
+		action="saveEmploymentType"
+		iconcls="fa-save"
+		textbellowicon="false"
+	></div>
+	</div><!-- end employmenttype-edit-buttons-grp -->
+</div> <!-- end ace-title-bar -->
+<div class="ace-info-side ace-col-12">
+	<div 
+		id="employmenttype-grid" 
+		class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+	 >
+	<columns>
+	
+	<record>
+		<field name="title"><l>Name</l></field>
+		<field name="fieldname">_et_name</field>
+		<field name="aditionalclasses">ace-col-1</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Active</l></field>
+		<field name="fieldname">_et_active</field>
+		<field name="atype">checkbox</field>
+		<field name="renderer">rendererCheckbox</field>
+		<field name="align">center</field>
+		<field name="aditionalclasses">ace-col-1</field>
+	</record>
+
+	</columns>
+	</div>
+	<div id="employmenttype-ed-frm-renderer" class="ace-independent-form"></div>
+</div>
+
+<div id="employmenttype-ed-frm-tpl" class="ace-hide ace-template-container">
+	<div class="ace-scrollview">
+		<h2 class="employmenttype-grid-edit-ft"><l>Employment_Type</l></h2>
+		
+<div class="ace-auto-gen ace-col-12 _t_label  "
+	type="hidden"
+	fieldname="_employment_type_id"
+	label="Employment_type_ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-col-12 _t_label  "
+	type="text"
+	fieldname="_et_name"
+	label="Name"
+	validation="minlength=1;maxlength=30;"
+>
+</div>
+
+<div class="ace-auto-gen ace-col-12 _t_label  "
+	type="checkbox"
+	fieldname="_et_active"
+	label="Active"
+>
+</div>
+
+	</div>
+</div>
+
+<script>
+function employmenttype_tpl_loaded(target){
+	$('body').append($('#employmenttype-ed-frm-tpl').detach());
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/base/tpl/employment/js/employmenttype.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END grid -->

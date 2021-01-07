@@ -1,0 +1,56 @@
+<!-- BEGIN inline -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa fa-angle-right"></i><span id="appsettings-title-bar-container"><l>App_Settings</l></span></h2>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="appsettings-add-button"
+		type="button"
+		value="add"
+		action="addNewAppSettings"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="appsettings-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshAppSettings"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+</div>
+<div class="ace-info-side ace-col-12">
+	<div 
+		id="appsettings-inline-grid" 
+		class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+	 >
+	<columns>
+	
+	<record>
+		<field name="title"><l>App_settings_type</l></field>
+		<field name="fieldname">_app_settings_type</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>App_settings_name</l></field>
+		<field name="fieldname">_app_settings_name</field>
+	</record>
+
+	<record>
+		<field name="title"><l>App_settings_value</l></field>
+		<field name="fieldname">_app_settings_value</field>
+	</record>
+
+	</columns>
+	</div>
+</div>
+<script>
+function appsettings_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/appsettings/js/appsettings.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END inline -->

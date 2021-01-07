@@ -1,0 +1,207 @@
+<!-- BEGIN grid -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa fa-angle-right"></i><span id="countries-title-bar-container"><l>Countries</l></span></h2>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="countries-add-button"
+		type="button"
+		value="add"
+		action="addNewCountries"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="countries-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshCountries"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="countries-cancel-button"
+		type="button"
+		value="cancel"
+		action="cancelCountries"
+		iconcls="fa-ban"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="countries-save-button"
+		type="button"
+		value="save"
+		action="saveCountries"
+		iconcls="fa-save"
+		textbellowicon="false"
+	></div>
+</div>
+
+<div class="ace-info-side ace-col-12">
+<div 
+	id="countries-grid" 
+	class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+ >
+<columns>
+
+	<record>
+		<field name="title"><l>Currency_ID</l></field>
+		<field name="fieldname">_country_currency_id</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Phone_prefix</l></field>
+		<field name="fieldname">_country_phone_prefix</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Phone_digits_no</l></field>
+		<field name="fieldname">_country_phone_digits</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Phone_mobile_digits</l></field>
+		<field name="fieldname">_country_mobile_digits</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Mobile_prefix</l></field>
+		<field name="fieldname">_country_mobile_prefix_digits</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_image_map_coordinates</l></field>
+		<field name="fieldname">_country_image_map_coordinates</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_image_over</l></field>
+		<field name="fieldname">_country_image_over</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_cities_image</l></field>
+		<field name="fieldname">_country_cities_image</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_flag_picture</l></field>
+		<field name="fieldname">_country_flag_picture</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_ISO_Code</l></field>
+		<field name="fieldname">_country_iso_code</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Country_ISO_Name</l></field>
+		<field name="fieldname">_country_iso_name</field>
+	</record>
+
+</columns>
+</div>
+<div id="countries-ed-frm-renderer" class="ace-independent-form"></div>
+</div>
+
+<div id="countries-ed-frm-tpl" class="ace-hide">
+<div class="ace-scrollview">
+	<h2 class="countries-grid-edit-ft"><l>Countries</l></h2>
+	
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_id"
+	label="ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_currency_id"
+	label="Currency_ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_phone_prefix"
+	label="Phone_prefix"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_phone_digits"
+	label="Phone_digits_no"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_mobile_digits"
+	label="Phone_mobile_digits"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_mobile_prefix_digits"
+	label="Mobile_prefix"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="textarea"
+	fieldname="_country_image_map_coordinates"
+	label="Country_image_map_coordinates"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_image_over"
+	label="Country_image_over"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_cities_image"
+	label="Country_cities_image"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_flag_picture"
+	label="Country_flag_picture"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_iso_code"
+	label="Country_ISO_Code"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_country_iso_name"
+	label="Country_ISO_Name"
+>
+</div>
+
+</div>
+</div>
+
+<script>
+function countries_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/countries/js/countries.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END grid -->

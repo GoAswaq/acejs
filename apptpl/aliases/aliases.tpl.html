@@ -1,0 +1,210 @@
+<!-- BEGIN quickaccessmodule -->{TPL_display_anyway}
+ 	  <div class="ace-title-bar">
+			<div 
+				class="ace-auto-gen _t_valuex ace-right-float"
+				id="aliases-add-button"
+				type="button"
+				value="add"
+				action="addNewAliases"
+				iconcls="fa-plus"
+				textbellowicon="false"
+			></div>
+			<div 
+				class="ace-auto-gen _t_valuex ace-right-float"
+				id="aliases-refresh-button"
+				type="button"
+				value="rfs"
+				action="refreshAliases"
+				iconcls="fa-sync"
+				textbellowicon="false"
+			></div>
+			<div 
+				class="ace-auto-gen _t_valuex ace-right-float"
+				id="aliases-cancel-button"
+				type="button"
+				value="cancel"
+				action="cancelAliases"
+				iconcls="fa-ban"
+				textbellowicon="false"
+			></div>
+			<div 
+				class="ace-auto-gen _t_valuex ace-right-float"
+				id="aliases-save-button"
+				type="button"
+				value="save"
+				action="saveAliases"
+				iconcls="fa-save"
+				textbellowicon="false"
+			></div>
+		</div>
+		
+		<div 
+			id="aliases-grid" 
+			class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+		 >
+		<columns>
+		
+	<record>
+		<field name="title"><l>Is_it_active</l></field>
+		<field name="fieldname">_a_state</field>
+		<field name="atype">combobox</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>login</l></field>
+		<field name="fieldname">_a_login</field>
+	</record>
+
+	<record>
+		<field name="title"><l>password</l></field>
+		<field name="fieldname">_a_password</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Master_user_ID</l></field>
+		<field name="fieldname">_a_master_user_id</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Type</l></field>
+		<field name="fieldname">_a_type</field>
+		<field name="atype">combobox</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Created_on</l></field>
+		<field name="fieldname">_a_creation_date</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Rights_mask</l></field>
+		<field name="fieldname">_a_rights</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Number_of_entries_commissioned_for</l></field>
+		<field name="fieldname">_a_reserved_entries_count</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Remaining_entries_to_entere</l></field>
+		<field name="fieldname">_a_remaining_entries_count</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Was_it_created_automaticall</l></field>
+		<field name="fieldname">_a_automatic</field>
+		<field name="atype">combobox</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Number_of_created_drafts</l></field>
+		<field name="fieldname">_a_stat_draft_created</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Number_of_activated_drafts</l></field>
+		<field name="fieldname">_a_stat_draft_activated</field>
+		<field name="align">right</field>
+	</record>
+
+		</columns>
+		</div>
+		<div id="aliases-grid-no-data" class="ace-hide">
+               <h2 class="ace-center ace-large-padding-top">Ooops!</h2>
+               <div class="ace-center ace-big-padding-top">
+                   <!-- 
+                   <img height="150px" src="/poslayout/css/images/ic_nothing.png" />
+                    -->
+               </div>
+               <p class="ace-center ace-medium-padding-top"><l>norecfnd</l></p>
+        </div>
+        
+        <div id="aliases-ed-frm-renderer" class="ace-height-minus-60 ace-margin-top-60 ace-independent-form"></div>
+ 
+		<div id="aliases-ed-frm-tpl" class="ace-hide">
+		<div class="ace-scrollview">
+			<h2 class="aliases-qcm-edit-ft"><l>Aliases</l></h2>
+			
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_alias_id"
+	label="Alias_ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="combobox"
+	fieldname="_a_state"
+	label="Is_it_active"
+	valuename="id",
+	displayname="name",
+>
+<store>
+    <record>
+        <field name="name">NO_</field>
+        <field name="id">0</field>
+    </record>
+    <record>
+        <field name="name">YES_</field>
+        <field name="id">1</field>
+    </record>
+</store>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_a_login"
+	label="login"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_a_password"
+	label="password"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="combobox"
+	fieldname="_a_type"
+	label="Type"
+	valuename="id",
+	displayname="name",
+>
+<store>
+    <record>
+        <field name="name">Admin_</field>
+        <field name="id">0</field>
+    </record>
+    <record>
+        <field name="name">Normal_</field>
+        <field name="id">1</field>
+    </record>
+    <record>
+        <field name="name">Shop_manager_</field>
+        <field name="id">2</field>
+    </record>
+</store>
+</div>
+
+		</div>
+		</div>
+
+<script>
+function aliases_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/aliases/js/aliases.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END quickaccessmodule -->

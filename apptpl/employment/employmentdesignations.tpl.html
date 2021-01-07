@@ -1,0 +1,333 @@
+<!-- BEGIN grid -->{TPL_display_anyway}
+<div class="ace-transparent-title-bar ace-independent-style">
+	<h2><i class="fa "></i><span id="employmentdesignations-title-bar-container"><l>Employment_Designations</l></span></h2>
+ 	<div class="ace-buttons-groups ace-right-float" id="employmentdesignations-edit-buttons-grp">
+ 	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmentdesignations-add-button"
+		type="button"
+		value="add"
+		action="addNewEmploymentDesignations"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmentdesignations-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshEmploymentDesignations"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmentdesignations-cancel-button"
+		type="button"
+		value="cancel"
+		action="cancelEmploymentDesignations"
+		iconcls="fa-ban"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="employmentdesignations-save-button"
+		type="button"
+		value="save"
+		action="saveEmploymentDesignations"
+		iconcls="fa-save"
+		textbellowicon="false"
+	></div>
+	<div
+		class="ace-auto-gen _t_valuex ace-right-float ace-soft-close"
+		id="employmentdesignations-back-button"
+		type="button"
+		value="back"
+		iconcls="far fa-angle-left"
+		textbellowicon="false"
+	></div>
+	</div><!-- end employmentdesignations-edit-buttons-grp -->
+</div> <!-- end ace-title-bar -->
+<div class="ace-info-side ace-col-12">
+	<div 
+		id="employmentdesignations-grid" 
+		class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+	 >
+	<columns>
+	
+	<record>
+		<field name="title"><l>Designation_name</l></field>
+		<field name="fieldname">_ed_name</field>
+		<field name="aditionalclasses">ace-col-8</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Employee_no_prefix</l></field>
+		<field name="fieldname">_ed_employee_no_prefix</field>
+		<field name="aditionalclasses">ace-col-2</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Active</l></field>
+		<field name="fieldname">_ed_active</field>
+		<field name="atype">checkbox</field>
+		<field name="renderer">rendererCheckbox</field>
+		<field name="align">center</field>
+		<field name="aditionalclasses">ace-col-2</field>
+	</record>
+
+	</columns>
+	</div>
+	<div id="employmentdesignations-ed-frm-renderer" class="ace-independent-form"></div>
+</div>
+
+<div id="employmentdesignations-ed-frm-tpl" class="ace-hide ace-template-container">
+<div class="ace-scrollview">
+	
+<div class="ace-auto-gen"
+	type="hidden"
+	fieldname="_employment_designation_id"
+	label="Employee_designation_ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-col-8 _t_label ace-big-padding-top "
+	type="text"
+	fieldname="_ed_name"
+	label="Designation_name"
+	validation="minlength=1;maxlength=30;"
+>
+</div>
+
+<div class="ace-auto-gen ace-col-2 _t_label ace-big-padding-top "
+	type="text"
+	fieldname="_ed_employee_no_prefix"
+	label="Employee_no_prefix"
+	validation="minlength=1;maxlength=2;"
+>
+</div>
+
+<div class="ace-auto-gen ace-col-2 _t_label  "
+	type="checkbox"
+	fieldname="_ed_active"
+	label="Active"
+>
+</div>
+
+<!-- begin rights-templates -->
+<div id="rightstemplates-ed-frm-renderer" class="ace-independent-form"></div>
+
+
+
+<div class="ace-transparent-title-bar ace-independent-style" id="employeedesignations-title-bar">
+	<h2><i class="fa fa-user-md"></i><span id="employeedesignations-title-bar-container"><l>Rights_Templates</l></span></h2>
+ 	<div class="ace-buttons-groups ace-right-float forced-visible" id="employeedesignations-edit-buttons-grp">
+ 		<div
+			class="ace-auto-gen _t_valuex ace-right-float"
+			style="position:relative"
+			id="rightstemplates-refresh-button"
+			type="button"
+			value="Refresh"
+			action="refreshRightsTemplates"
+			iconcls="fa-sync"
+			textbellowicon="false"
+		></div>
+		
+		<div
+			class="ace-auto-gen _t_valuex ace-right-float"
+			style="position:relative"
+			id="rightstemplates-clear-rights-button"
+			type="button"
+			value="Clear"
+			action="edClearRightsTemplates"
+			iconcls="fa-eraser"
+			textbellowicon="false"
+		></div>
+	</div>
+</div>
+	<div
+			id="rightstemplates-grid"
+			class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-grid-hide-toolbar  ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+		 >
+		<columns>
+			<record>
+				<field name="title"><l>Module</l></field>
+				<field name="fieldname">_name</field>
+				<field name="aditionalclasses">ace-thin-col-4</field>
+				<field name="renderer">renderRightName</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_add_own_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_add_network_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_add_grant_needed_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_add_grant_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_edit_own_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_edit_network_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_edit_grant_needed_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_edit_grant_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_del_own_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_del_network_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_del_grant_needed_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_del_grant_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_search_view_own_right</field>
+				<field name="groupheader"><l>Search/View/Use</l></field>
+				<field name="aditionalclasses">ace-thin-col-2</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_search_view_network_right</field>
+				<field name="groupheader"><l>Search/View/Use</l></field>
+				<field name="aditionalclasses">ace-thin-col-2</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+		</columns>
+	</div>
+	<div class="ace-col-12">
+	<b>Legend:</b><br>
+	<ul>
+		<li>Own - Can do the action on his records (clients, contracts, etc.)
+		<li>Sons - Can do the action on his sons records (eg. edit the customers of my team)</li>
+		<li>GN - Grant Needed - In order to finalize the action he needs a permission from someone that has the right to give it to him</li>
+		<li>GP - Grant Permission - Grant someone the permission to finalize a grant needed (GN) action</li>
+	</ul>
+	</div>
+<!-- end rights-templates -->
+</div>
+
+<script>
+function employmentdesignations_tpl_loaded(target){
+	$('body').append($('#employmentdesignations-ed-frm-tpl').detach());
+	$.aceOverWatch.template.loadScripts("{shared_path}/js_csslibs/thinkITJQplugins/ace/apptpl/employment/js/employmentdesignations.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END grid -->

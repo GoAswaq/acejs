@@ -1,0 +1,523 @@
+* {
+	font-family:"Lato", FontAwesome,"Font Awesome 5 Pro";
+}
+
+.ace-ta-center{
+	text-align:center !important;
+}
+
+.ace-clear{
+	clear: both;
+}
+
+html[dir="ltr"] .ace-ta-lft{
+	text-align:left !important;
+}
+html[dir="rtl"] .ace-ta-lft{
+	text-align:right !important;
+}
+
+html[dir="ltr"] .ace-ta-rght{
+	text-align:right !important;
+}
+html[dir="rtl"] .ace-ta-rght{
+	text-align:left !important;
+}
+
+.ace-hide{
+	display:none;	
+}
+
+/****************************************
+* field related data
+*****************************************/
+.ace-field-container{
+	
+}
+
+.ace-efld{
+	
+}
+
+.ace-display-field{
+	
+}
+
+.ace-text-field{
+	
+}
+
+.ace-combo-field{
+	
+}
+
+.ace-button-field{
+	
+}
+
+.ace-datepicker-field{
+	
+}
+
+.ace-autocomplete-field{
+	
+}
+
+/********* BEGIN ********************* checkbox ************************************/
+.ace-checkbox-field input[type="checkbox"]{
+	display:none !important;
+}		
+
+.ace-checkbox-field input[type="checkbox"]+ span:before{
+	display:inline-block;
+	vertical-align:middle;
+	cursor:pointer;
+	border-radius: 50%;
+	color: #BFBFBF;
+	font-size: 22px;
+	text-align: center;
+	content: "\f055";
+	font-family:FontAwesome,"Font Awesome 5 Pro";
+}
+
+html[dir="ltr"] .ace-checkbox-field input[type="checkbox"]+ span:before{
+	margin: -5px 9px 0 0;	
+}
+
+html[dir="rtl"] .ace-checkbox-field input[type="checkbox"]+ span:before{
+	margin: 0 9px -5px 0;	
+}
+		
+.ace-checkbox-field input[type="checkbox"]:checked + span:before{
+	content: "\f058";
+	color: #27C3BB;
+	font-family:FontAwesome,"Font Awesome 5 Pro";
+}
+
+.ace-checkbox-field input[type="checkbox"]:checked + span{
+	background-color: rgba(39, 195, 187,0.2);
+}
+
+.ace-checkbox-field input[type="checkbox"]+ span{
+	display: inline-block;
+	height: 20px;
+	border-radius: 10px;
+	color: rgba(0,0,0,0.87);
+	transition: ease-in-out .01s;
+	cursor: pointer;
+}
+html[dir="ltr"] .ace-checkbox-field input[type="checkbox"]+ span{
+	padding-right: 15px;	
+}
+html[dir="rtl"] .ace-checkbox-field input[type="checkbox"]+ span{
+	padding-left: 15px;	
+}
+/********* END ********************* checkbox ************************************/
+
+
+/********* BEGIN ********************* radiogroup ************************************/
+.ace-radio-field input[type="radio"] {
+	display:none !important;
+}		
+
+.ace-radio-field input[type="radio"] + span:before{
+	display:inline-block;
+	vertical-align:middle;
+	cursor:pointer;
+	border-radius: 50%;
+	color: #BFBFBF;
+	font-size: 22px;
+	text-align: center;
+	content: "\f10c";
+}
+html[dir="ltr"] .ace-radio-field input[type="radio"] + span:before{
+	margin: -5px 9px 0 0;	
+}
+html[dir="rtl"] .ace-radio-field input[type="radio"] + span:before{
+	margin: 0 9px -5px 0;	
+}
+		
+.ace-radio-field input[type="radio"]:checked + span:before{
+	content: "\f192";
+	color: #27C3BB;
+}
+
+.ace-radio-field input[type="radio"] + span{
+	display: inline-block;
+	height: 20px;
+	border-radius: 10px;
+	color: rgba(0,0,0,0.87);
+	transition: ease-in-out .01s;
+	cursor: pointer;
+}
+html[dir="ltr"] .ace-radio-field input[type="radio"] + span{
+	padding-right: 15px;	
+}
+html[dir="rtl"] .ace-radio-field input[type="radio"] + span{
+	padding-left: 15px;	
+}
+
+/********* END ********************* radiogroup ************************************/
+
+
+/********* BEGIN ********************* switch ************************************/
+.ace-switch-field input[type="checkbox"] {
+	display: none;
+}
+.ace-switch-field span.ace-label{
+	margin: 5px 5px 0 0;
+	float: left;
+}
+.ace-switch-field input[type="checkbox"] + span {
+	height: 21px;
+	padding: 5px;
+	width: 45px;
+	border:  1px solid rgba(0,0,0,0.1);
+	position: relative;
+	background: #F3F3F3;
+	display: inline-block;
+	content: '';
+	cursor: pointer;
+	border-radius: 16px;
+	transition: ease-in-out .1s;
+	margin:0 !important;
+}
+
+.ace-switch-field input[type="checkbox"] + span:before{
+	display:inline-block;
+	vertical-align:middle;
+	transition: ease-in-out .1s;
+	top: -1px;
+	/* margin: -3px 0; */
+	/* background: #E8E8E8; */
+	cursor:pointer;
+	border-radius: 50%;
+	color: #FFFFFF;
+	font-size: 26px;
+	text-align: center;
+	content: "\f111";
+	position: absolute;
+	text-shadow: 0px 1px 2px rgba(0,0,0,0.26);
+}
+.ace-switch-field input[type="checkbox"]:checked + span:before{
+	margin-left: 25px;
+}
+.ace-switch-field input[type="checkbox"]:checked + span{
+	background: #36C7BF;
+}
+/********* END ********************* switch ************************************/
+
+
+/********* BEGIN ********************* grid ************************************/
+
+.ace-grid-cell{
+	padding: 10px;
+	margin:1px 1px 1px 1px;
+	background-color:lightgrey;
+}
+html[dir="ltr"] .ace-grid-cell{
+	float:left;
+}
+html[dir="rtl"] .ace-grid-cell{
+	float:right;
+}
+
+.ace-grid-cell-selected{/*if a cell is selected, this class is added to the cell*/
+	background-color:blue;
+	color:yellow;
+}
+
+.ace-grid-cell-dirty{
+	border:solid 1px red !important;
+}
+
+.ace-grid{
+	clear: both;
+}
+
+.ace-grid-raw{
+	clear: both;
+}
+
+.ace-grid-header{
+	clear: both;
+}
+
+.ace-grid-header .ace-grid-cell{
+	font-weight: bold;
+}
+
+.ace-grid-footer{
+	clear: both;
+}
+
+.ace-grid-pagination{
+	
+}
+.ace-grid-action-button{
+		
+}
+html[dir="ltr"] .ace-grid-action-button{
+	float:left;
+}
+html[dir="rtl"] .ace-grid-action-button{
+	float:right;
+}
+
+html[dir="ltr"] .ace-grid-pagination div{
+	float:left;
+}
+html[dir="rtl"] .ace-grid-pagination div{
+	float:right;
+}
+html[dir="ltr"] .ace-grid-pagination button{
+	float:left;
+}
+html[dir="rtl"] .ace-grid-pagination button{
+	float:right;
+}
+
+.ace-grid-body{
+	clear: both;
+}
+
+.ace-grid-row{
+	
+}
+
+.ace-grid-top-toolbar{
+	
+}
+
+.ace-grid-inline-ctrls{
+	display:none;
+	position:absolute;
+}
+html[dir="ltr"] .ace-grid-inline-ctrls > button {
+	float:left;	
+}
+html[dir="rtl"] .ace-grid-inline-ctrls > button {
+	float:right;	
+}
+
+.ace-grid-inline-row{
+	border:solid 1px blue !important;	
+}
+
+.ace-grid-auto-complete{
+	position:absolute;
+	z-index:200;
+}
+
+/*****************************************
+* End Ace Grid Related CSS classes
+*****************************************/
+
+/*****************************************
+* Begin Ace Form Related CSS classes
+*****************************************/
+
+.ace-form-popup{
+	display:none;
+}
+
+.ace-form-show{
+	display:block !important;
+}
+
+.ace-form-inner{
+	display:block !important;
+}
+
+.ace-form-footer{
+	
+}
+
+/*****************************************
+* End Ace Form Related CSS classes
+*****************************************/
+
+/********* BEGIN ********************* MASK & PROMPT CSS ************************************/
+.ace-mask-el{
+	width:100%;
+	opacity: 1;
+	pointer-events: auto;
+	position: fixed;
+	font-family: Arial,Helvetica,sans-serif;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	background: none repeat scroll 0% 0% rgba(0, 0, 0, 0.8);
+	z-index: 99999;
+}
+
+.ace-mask-el > div {
+		width: 400px;
+		position: relative;
+		margin-left: auto;
+    	margin-right: auto;
+    	margin-top: 17%;
+    	margin-bottom: auto;
+		padding: 5px 20px 13px 20px;
+		border-radius: 10px;
+		background: #fff;
+		font-size:15px;
+}
+
+.ace-prompt-el{
+	
+}
+.ace-mask-el.ace-prompt-el{
+	background: none repeat scroll 0% 0% rgba(200, 200, 200, 0.3);
+}
+
+.ace-prompt-el > div {
+	height:auto;
+	display:table;
+}
+
+.ace-prompt-el > div > input {
+	width:100%;
+	margin-bottom:12px;
+}
+
+html[dir="ltr"] .ace-prompt-el > div > button {
+	float:right;
+}
+html[dir="rtl"] .ace-prompt-el > div > button {
+	float:left;
+}
+
+@media (max-width: 480px) {
+	.ace-mask-el > div {
+		width: 90%;
+	}
+}
+
+/*this is used to makse a specific element*/
+.ace-mask-div{
+	position: absolute;
+    /*width:100%;
+    height:100%;
+    left:0;
+    top:0;*/
+    zIndex:1000000;
+	background-color:#EEE;
+	opacity: 0.85;
+    /*background: "url(/img/loading.gif) no-repeat 50% 50%"*/
+}
+/********** END ********************* MASK & PROMPT CSS ************************************/
+
+/********* BEGIN ********************* ERROR ************************************/
+ .ace-error{
+	border:solid 1px red !important;
+ } 
+ .ace-error-req{	/*a softare color, as an attention the field is required*/
+ 	border:solid 1px orange !important;
+ }
+.ace-error-msg{ 
+	display:none;
+	color:red;
+ }
+ html[dir="ltr"] .ace-error-msg{
+	float:right; 	 
+ }
+ html[dir="rtl"] .ace-error-msg{
+	float:left; 	 
+ }
+ .ace-error-msg:before{
+	content:'\f071';
+ }
+ .ace-error .ace-error-msg{
+ 	display:block;
+ }
+ /********* END ********************* ERROR ************************************/
+
+ /********* BEGIN ********************* TOAST ************************************/
+ .ace-toast {
+   	padding: 15px 15px 25px 15px;
+    width: 25%;
+    position: fixed;
+    top:0;
+    left: 0;
+    right: 0;
+    margin:0 auto;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.26);
+    opacity:0.85;
+    transition: ease .2s;
+}
+
+.ace-toast-icon{
+   /* width: 7%; */
+    /* float:left; */
+    text-align:center;
+    /* height:100%; */
+    position: relative;
+}
+
+.ace-toast-hide{
+	transition: ease-in-out .2s;
+	-webkit-transform: translate3d(0,0,0);
+	opacity:0;
+	height: 0px !important;
+	width: 0px !important;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	padding: 0 !important;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+.ace-toast-icon span{
+    font-size:26px;
+    color:#ffffff;
+    float: left;
+    width:35px;
+    height:35px;
+    padding: 5px;
+    border-radius: 50%;
+    font-family: FontAwesome,"Font Awesome 5 Pro";
+}
+
+.ace-toast-text{
+	transition:none;
+}
+
+.ace-toast-text p{
+	transition:none;
+    float: right;
+    width: 90%;
+}
+
+.ace-toast-error {
+    border: 1px solid #E07474;
+    background-color: #ffeeee
+}
+
+.ace-toast-error .ace-toast-icon span {
+    background: #E07474;
+}
+
+.ace-toast-warning {
+    border: 1px solid #FFC800;
+    background-color: #FFF3C6;
+}
+
+.ace-toast-warning .ace-toast-icon span {
+    background: #FFC800;
+}
+
+.ace-toast-success {
+    border: 1px solid #27C3BB;
+    background-color: #CBECEB;
+}
+
+.ace-toast-success .ace-toast-icon span {
+    background: #27C3BB;
+}
+/********* END ********************* TOAST ************************************/

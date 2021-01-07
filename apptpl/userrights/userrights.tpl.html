@@ -1,0 +1,248 @@
+<!-- BEGIN quickaccessdirecteditmodule -->
+<div class="ace-transparent-title-bar ace-independent-style" id="userrights-title-bar">
+    <h2><i class="far fa-traffic-light-go"></i><span id="userrights-title-bar-container"><l>Current_applicants</l></span></h2>
+    <div class="ace-buttons-groups ace-right-float forced-visible" id="userrights-edit-buttons-grp">
+		<div
+			class="ace-auto-gen _t_valuex ace-right-float ace-grid-controls"
+			id="userrights-refresh-button"
+			type="button"
+			value="rfs_userrights"
+			action="refreshUserRights"
+			iconcls="fad fa-sync"
+			textbellowicon="false"
+		></div>
+		<div
+			class="ace-auto-gen _t_valuex ace-right-float"
+			style="position:relative"
+			id="userrights-clear-rights-button"
+			type="button"
+			value="Clear"
+			action="clearUserRights"
+			iconcls="fad fa-eraser"
+			textbellowicon="false"
+		></div>
+		<div
+			class="ace-auto-gen _t_valuex ace-right-float"
+			style="position:relative"
+			id="rightstemplates-clear-rights-button"
+			type="button"
+			value="applydefrghttpl"
+			action="applyDefaultRightsTemplate"
+			iconcls="fad fa-history"
+			textbellowicon="false"
+		></div>
+		<div class="ace-auto-gen _t_valuex ace-right-float ace-soft-close ace-grid-controls"
+			type="button"
+			value="back"
+			action="backFromUserRights"
+			iconcls="fad fa-angle-left"
+			textbellowicon="false"
+		></div>
+
+
+
+		<div
+				class="ace-auto-gen _t_valuex ace-right-float ace-soft-close"
+				type="button"
+				value="back"
+				action="showEmployeeEditMenu"
+				iconcls="x fad fa-angle-left"
+				textbellowicon="false"
+		></div>
+
+	</div>
+</div>
+<div class="ace-col-12">
+	<div
+			id="userrights-grid"
+			class="ace-no-text-wrap ace-height-minus-120 ace-grid-hide-toolbar  ace-thin-col-24 ace-full-width ace-field-container ace-label-align-top"
+		 >
+		<columns>
+			<record>
+				<field name="title"><l>Module</l></field>
+				<field name="fieldname">_name</field>
+				<field name="aditionalclasses">ace-thin-col-4</field>
+				<field name="renderer">renderRightName</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_add_own_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_add_network_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_add_grant_needed_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_add_grant_right</field>
+				<field name="groupheader"><l>Add</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_edit_own_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_edit_network_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_edit_grant_needed_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_edit_grant_right</field>
+				<field name="groupheader"><l>Edit</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_del_own_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_del_network_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GN</l></field>
+				<field name="fieldname">_del_grant_needed_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			<record>
+				<field name="title"><l>GP</l></field>
+				<field name="fieldname">_del_grant_right</field>
+				<field name="groupheader"><l>Delete</l></field>
+				<field name="aditionalclasses">ace-thin-col-1</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+
+			
+			<record>
+				<field name="title"><l>Own</l></field>
+				<field name="fieldname">_search_view_own_right</field>
+				<field name="groupheader"><l>Search/View/Use</l></field>
+				<field name="aditionalclasses">ace-thin-col-2</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+			<record>
+				<field name="title"><l>Subs</l></field>
+				<field name="fieldname">_search_view_network_right</field>
+				<field name="groupheader"><l>Search/View/Use</l></field>
+				<field name="aditionalclasses">ace-thin-col-2</field>
+				<field name="iconcls">fa-check-square-o</field>
+				<field name="align">center</field>
+				<field name="renderer">rightCheckRenderer</field>
+				<field name="oncolumntitleclick">headerRightClicked</field>
+			</record>
+		</columns>
+	</div>
+	<b>Legend:</b><br>
+	<ul>
+		<li>Own - Can do the action on his records (clients, contracts, etc.)
+		<li>Subs - Can do the action on his subs's records  (eg. edit the customers of owns team)</li>
+		<li>GN - Grant Needed - In order to finalize the action he needs a permission from someone that has the right to give it to him</li>
+		<li>GP - Grant Permission - Grant someone the permission to finalize a grant needed (GN) action</li>
+	</ul>
+</div>
+<div id="userrights-grid-no-data" class="ace-hide">
+	<h2 class="ace-center ace-large-padding-top">Ooops!</h2>
+	<div class="ace-center ace-big-padding-top">
+	 	<!-- 
+	    <img height="150px" src="/poslayout/css/images/ic_nothing.png" />
+	    -->
+	</div>
+	<p class="ace-center ace-medium-padding-top"><l>norecfnd</l></p>
+</div>
+<div id="userrights-ed-frm-tpl" class="ace-hide ace-full-height ace-template-container"></div>
+<script>
+function userrights_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("{shared_path}/js_csslibs/thinkITJQplugins/ace/apptpl/userrights/js/userrights.js", function(){
+        $('#ace-content').append($('[tag="userrightstag"]').detach().addClass('ace-hide'));
+
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END quickaccessdirecteditmodule -->

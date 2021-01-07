@@ -1,0 +1,157 @@
+<!-- BEGIN quickaccessdirecteditmodule -->
+<div id="users-educational-data" class="ace-partial-form">
+ 	<div class="ace-buttons-groups ace-right-float ace-hide" id="useraddresses-edit-buttons-grp">
+			<div
+				class="ace-auto-gen _t_valuex ace-right-float ace-grid-controls"
+				type="button"
+				value="Add"
+				action="addNewUserAddresses"
+				iconcls="fa-plus"
+				textbellowicon="false"
+			></div>
+			<div
+				class="ace-auto-gen _t_valuex ace-right-float ace-grid-controls"
+				type="button"
+				value="Refresh"
+				action="refreshUserAddresses"
+				iconcls="fa-sync"
+				textbellowicon="false"
+			></div>
+			<div
+				class="ace-auto-gen _t_valuex ace-right-float ace-form-controls"
+				type="button"
+				value="Cancel"
+				action="cancelUserAddresses"
+				iconcls="fa-ban"
+				textbellowicon="false"
+			></div>
+			<div
+				class="ace-auto-gen _t_valuex ace-right-float ace-form-controls"
+				type="button"
+				value="save_useraddresses"
+				action="saveUserAddresses"
+				iconcls="fa-save"
+				textbellowicon="false"
+			></div>
+			<div
+					class="ace-auto-gen _t_valuex ace-right-float ace-soft-close"
+					type="button"
+					value="back"
+					action="showEmployeeEditMenu"
+					iconcls="fa-angle-left"
+					textbellowicon="false"
+			></div>
+		</div>
+	<div id="useraddresses-ed-frm-renderer" class="ace-independent-form"></div>
+	<div id="useraddresses-grid"
+		class="ace-no-text-wrap ace-height-minus-60 ace-grid-hide-toolbar ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+		 >
+		<columns>
+			<record>
+				<field name="title"><l>Adresa</l></field>
+				<field name="fieldname">_ua_address</field>
+				<field name="aditionalclasses">ace-col-6</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Tara</l></field>
+				<field name="fieldname">_country_name</field>
+				<field name="aditionalclasses">ace-col-2</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Oras</l></field>
+				<field name="fieldname">_city_name</field>
+				<field name="aditionalclasses">ace-col-2</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Judet</l></field>
+				<field name="fieldname">_ua_county</field>
+				<field name="aditionalclasses">ace-col-1</field>
+			</record>
+
+			<record>
+				<field name="title"><l>Cod postal</l></field>
+				<field name="fieldname">_ua_postal_code</field>
+				<field name="aditionalclasses">ace-col-1</field>
+			</record>
+
+		</columns>
+	</div>
+</div>
+ 	
+ 	<div id="useraddresses-grid-no-data" class="ace-hide ace-template-container">
+		<h2 class="ace-center ace-large-padding-top">Ooops!</h2>
+		<div class="ace-center ace-big-padding-top">
+			<!-- 
+		    <img height="150px" src="/pos/layout/css/images/ic_nothing.png" />
+		     -->
+		</div>
+		<p class="ace-center ace-medium-padding-top"><l>norecfnd</l></p>
+	</div>
+	<div id="useraddresses-ed-frm-tpl" class="ace-hide ace-full-height ace-template-container">
+		<div class="ace-scrollview">
+            <div class="ace-col-12 ace-form-padding">
+
+			<div class="ace-auto-gen ace-col-12 _t_label  "
+				type="text"
+				fieldname="_ua_address"
+				label="Adresa"
+			>
+			</div>
+			
+			<div class="ace-auto-gen ace-col-12 _t_label  "
+				type="autocomplete"
+				fieldname="_ua_country_id"
+				label="Tara"
+				net="fid=50;remote=1;size=5;"
+				displayname="_country_name"
+				searchname="_country_name"
+				valuename="_country_id"
+				minlength=0
+			>
+			</div>
+			
+			<div class="ace-auto-gen ace-col-12 _t_label  "
+				type="autocomplete"
+				fieldname="_ua_city_id"
+				label="Oras"
+				net="fid=40;remote=1;size=5;"
+				displayname="_city_name"
+				searchname="_city_name"
+				valuename="_city_id"
+				minlength=0
+			>
+			</div>
+			
+			<div class="ace-auto-gen ace-col-12 _t_label  "
+				type="text"
+				fieldname="_ua_county"
+				label="Judet"
+			>
+			</div>
+			
+			
+			
+			<div class="ace-auto-gen ace-col-12 _t_label  "
+				type="text"
+				fieldname="_ua_postal_code"
+				label="Cod_postal"
+			>
+			</div>
+
+
+            </div>
+        </div>
+        </div>
+</div>
+<script>
+function employee_useraddresses_tpl_loaded(target){
+$('#employeemenu-title-bar').append($('#useraddresses-edit-buttons-grp').detach().addClass('ace-hide'));
+	$.aceOverWatch.template.loadScripts("{shared_path}/js_csslibs/thinkITJQplugins/ace/apptpl/users/js/useraddresses.js", function(){
+		initMotion(target);
+   	});
+}
+</script>
+<!-- END quickaccessdirecteditmodule -->

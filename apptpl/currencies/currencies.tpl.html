@@ -1,0 +1,74 @@
+<!-- BEGIN inline -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa fa-angle-right"></i><span id="currencies-title-bar-container"><l>Currencies</l></span></h2>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="currencies-add-button"
+		type="button"
+		value="add"
+		action="addNewCurrencies"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="currencies-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshCurrencies"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+</div>
+<div class="ace-info-side ace-col-12">
+	<div 
+		id="currencies-inline-grid" 
+		class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+	 >
+	<columns>
+	
+	<record>
+		<field name="title"><l>Is_default_currency</l></field>
+		<field name="fieldname">_default_currency</field>
+		<field name="atype">combobox</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Exchange_rate_to_default_currency</l></field>
+		<field name="fieldname">_usd_exchange_rate</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Number_of_decimals</l></field>
+		<field name="fieldname">_number_of_decimals</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>ISO_code</l></field>
+		<field name="fieldname">_currency_iso_code</field>
+	</record>
+
+	<record>
+		<field name="title"><l>ISO_name</l></field>
+		<field name="fieldname">_currency_iso_name</field>
+	</record>
+
+	<record>
+		<field name="title"><l>ISO_unit</l></field>
+		<field name="fieldname">_currency_iso_unit</field>
+	</record>
+
+	</columns>
+	</div>
+</div>
+<script>
+function currencies_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/currencies/js/currencies.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END inline -->

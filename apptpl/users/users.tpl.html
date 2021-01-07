@@ -1,0 +1,622 @@
+<!-- BEGIN quickaccessmodules -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2>
+		<i class="fa fa-cogs"></i><span id="users-title-bar-container"><l>Users</l></span>
+	</h2>
+		<div 
+			class="ace-auto-gen _t_valuex ace-right-float"
+			id="users-add-button"
+			type="button"
+			value="add"
+			action="addNewUsers"
+			iconcls="fa-plus"
+			textbellowicon="false"
+		></div>
+		<div 
+			class="ace-auto-gen _t_valuex ace-right-float"
+			id="users-refresh-button"
+			type="button"
+			value="rfs"
+			action="refreshUsers"
+			iconcls="fa-sync"
+			textbellowicon="false"
+		></div>
+		<div 
+			class="ace-auto-gen _t_valuex ace-right-float"
+			id="users-cancel-button"
+			type="button"
+			value="cancel"
+			action="cancelUsers"
+			iconcls="fa-ban"
+			textbellowicon="false"
+		></div>
+		<div 
+			class="ace-auto-gen _t_valuex ace-right-float"
+			id="users-save-button"
+			type="button"
+			value="save"
+			action="saveUsers"
+			iconcls="fa-save"
+			textbellowicon="false"
+		></div>
+	
+</div>
+<div class="ace-col-12 ace-full-height ace-flex">
+	<!-- begin users quick access grid region -->
+	<div class="ace-flex">
+    <div class="ace-quick-access-bar ace-entries-menu ace-advanced-panel ace-no-padding ace-show" id="users-grid-panel">
+		<a class="ace-advanced-panel-close"><i class="fa fa-angle-left"></i><l>Hide_Users</l></a>
+		<div class="ace-col-12 ace-flex ace-quick-access-flex-container ace-flex-align-strech ace-flex-column ace-no-padding-right">
+			<div class="ace-auto-gen" type="searchform" mid="1" grid="users-grid">
+				<advsearchfields>
+					<record>
+						<field name="placeholder"><l>First_name</l></field>
+						<field name="name">first_name</field>
+					</record>
+					<record>
+						<field name="placeholder"><l>Middle_name</l></field>
+						<field name="name">middle_name</field>
+					</record>
+					<record>
+						<field name="placeholder"><l>Last_name</l></field>
+						<field name="name">last_name</field>
+					</record>
+					<record>
+						<field name="placeholder"><l>login</l></field>
+						<field name="name">login</field>
+					</record>
+				</advsearchfields>
+				<orderbyfields>
+					<record>
+						<field name="label"><l>Last_name</l></field>
+						<field name="type">radio</field>
+						<field name="name">__sort</field>
+						<field name="fieldname">last_name</field>
+					</record>
+					<record>
+						<field name="label"><l>login</l><</field>
+						<field name="type">radio</field>
+						<field name="name">__sort</field>
+						<field name="fieldname">login</field>
+					</record>
+				</orderbyfields>
+			</div> 
+			<div id="users-grid" class="ace-no-row-selection ace-grid-disputes">
+				<store></store>
+			</div>
+		</div>
+	</div>
+	<!-- end users quick access grid region -->
+	<!-- begin users quick access edit form region -->
+	<div class="ace-quick-access-bar ace-submenu ace-no-padding ace-full-height">
+		<div class="ace-col-12 ace-form-padding">
+            <a class="ace-entries-menu-trigger"><i class="fa fa-users ace-left ace-medium-margin-right"></i><span>Users</span><i class="fa fa-angle-right ace-right"></i></a>
+            <div
+            	id="users-accordion"
+                class="ace-auto-gen"
+                type='accordion'
+                activetag='users-general-data'
+                handler='onUsersTypeSelection'
+            >
+                <store>
+                    <record>
+                        <field name="name" ><l>General_data</l></field>
+                        <field name="tag" >users-general-data</field>
+                    </record>
+                    <record>
+                        <field name="name" ><l>Account_info</l></field>
+                        <field name="tag" >users-account-data</field>
+                    </record>
+                    <record>
+                        <field name="name" ><l>Preferences</l></field>
+                        <field name="tag" >users-preferences-data</field>
+                    </record>
+                    <record>
+                        <field name="name" ><l>Employee_details</l></field>
+                        <field name="tag" >employee-general-data</field>
+                        <field name="children" type="array">
+						<array>
+							<record>
+								<field name="name" ><l>Contact_data</l></field>
+								<field name="tag" >employee-contact-data</field>
+							</record>
+							<record>
+								<field name="name" ><l>Licences</l></field>
+								<field name="tag" >employee-licences-data</field>
+							</record>
+							<record>
+								<field name="name" ><l>Contract,Formalities</l></field>
+								<field name="tag" >employee-ctr-data</field>
+							</record>
+							<record>
+								<field name="name" ><l>Courses</l></field>
+								<field name="tag" >employee-courses-data</field>
+							</record>
+							<record>
+								<field name="name" ><l>Documents/Scans</l></field>
+								<field name="tag" >employee-documents-data</field>
+							</record>
+							<record>
+								<field name="name" ><l>Shifts_schedule</l></field>
+								<field name="tag" >employee-shifts-data</field>
+							</record>
+						</array>
+					</field>
+                    </record>
+                    <record>
+                        <field name="name" ><l>Rights</l></field>
+                        <field name="tag" >users-rights-data</field>
+                    </record>
+                    
+                </store>
+
+            </div>
+		</div>
+	</div>
+    </div>
+	<!-- begin users quick access edit form region -->
+	<!-- begin users edit form region -->
+	<div class="ace-info-side" style="width:100%" id="users-ed-frm-renderer">
+	users editing
+	</div>
+	<!-- end users edit form region -->
+</div>
+<div id="users-grid-row-template" class="ace-hide">
+    <div class="ace-left ace-entry ace-small-margin-right ace-col-12 ace-grid-panel-row-tpl">
+        <!-- 
+        <img src="/pos/layout/imgs/profile.jpg" class="ace-left user-image" />
+         -->
+        <div class="ace-flex ace-flex-wrap-yes">
+        <div class="ace-auto-gen ace-left ace-flex-full-width "
+             type="display"
+             fieldname="_first_name"
+             >
+        </div>
+        <div class="ace-auto-gen ace-left ace-entry-subtitle"
+             type="display"
+             fieldname="_middle_name">
+        </div>
+        <div class="ace-auto-gen ace-left ace-entry-subtitle"
+             type="display"
+             fieldname="_last_name">
+        </div>
+        </div>
+        <i class="fa fa-many-arrows"></i>
+    </div>
+</div>
+<div id="users-ed-frm-tpl" class="ace-hide">
+<div class="ace-scrollview">
+	<!--  begin users-general-data -->
+	<div class="ace-col-12 ace-form-padding ace-partial-form ace-hide" id="users-general-data">
+	<h3>
+		<i class="fa fa-lock ace-medium-margin-right"></i>
+		<l>General_data</l>
+		<div class="ace-auto-gen _t_label " style="float:right;text-size:12px"
+				type="switch"
+				fieldname="_user_validated"
+				label="Validated"
+			>
+			</div>
+	</h3>
+	<div class="ace-col-12 ace-big-padding-top">
+		<div 
+			class="ace-auto-gen ace-col-2 ace-center ace-col-l-12 ace-col-m-12"
+			fieldname="_user_picture_path" 
+			type="uploadbutton"
+			atype="image"
+			destinationfield="_user_picture_upload"
+			rounded="true"
+			width="124px"
+			height="124px"
+			net="fid=110;remote=true"
+			maximagesize="100000"
+			uploadparameters="uploadonly=1;_user_picture="
+			deleteparameters="uploadonly=0;_user_picture='-'"
+			onuploadsuccessful="onProfileImageUploadSuccessfull">
+		</div>
+		
+		<div class="ace-col-10 ace-col-l-12 ace-col-m-12">
+			<div class="ace-auto-gen ace-small-padding-right ace-col-4 _t_placeholder ace-huge-text-150"
+				type="text"
+				fieldname="_first_name"
+				placeholder="First_name"
+				validation="allowempty=false;"
+			>
+			</div>
+			<div class="ace-auto-gen ace-small-padding-right ace-col-3 _t_placeholder  ace-huge-text-150"
+				type="text"
+				fieldname="_middle_name"
+				placeholder="Middle_name"
+				validation="allowempty=true;"
+			>
+			</div>
+			<div class="ace-auto-gen ace-col-5 _t_placeholder  ace-huge-text-150"
+				type="text"
+				fieldname="_last_name"
+				placeholder="Last_name"
+				validation="allowempty=false;"
+			>
+			</div>
+			<div class="ace-auto-gen ace-col-4 ace-small-padding-right _t_label "
+				type="combobox"
+				fieldname="_user_type"
+				label="User_type"
+				valuename="id",
+				displayname="name",
+			>
+			<store>
+			    <record>
+			        <field name="name"><l>Ultra_admin</l></field>
+			        <field name="id">-100</field>
+			    </record>
+			    <record>
+			        <field name="name"><l>Super_Admin</l></field>
+			        <field name="id">-1</field>
+			    </record>
+			    <record>
+			        <field name="name"><l>Admin</l></field>
+			        <field name="id">0</field>
+			    </record>
+			    <record>
+			        <field name="name"><l>Head_Nurse</l></field>
+			        <field name="id">100</field>
+			    </record>
+			     <record>
+			        <field name="name"><l>Nurse</l></field>
+			        <field name="id">200</field>
+			    </record>
+			     <record>
+			        <field name="name"><l>Human_resources</l></field>
+			        <field name="id">300</field>
+			    </record>
+			     <record>
+			        <field name="name"><l>Marketing</l></field>
+			        <field name="id">400</field>
+			    </record>
+			     <record>
+			        <field name="name"><l>Accountant</l></field>
+			        <field name="id">500</field>
+			    </record>
+			     <record>
+			        <field name="name"><l>No_right</l></field>
+			        <field name="id">600</field>
+			    </record>
+			</store>
+			</div>
+			<div class="ace-auto-gen ace-small-padding-right ace-col-4 _t_label "
+				type="datepicker" format="dd/mm/yy"  format="dd/mm/yy" 
+				fieldname="_user_birthdate"
+				label="Birthday"
+			>
+			</div>
+			<div class="ace-auto-gen ace-col-4 _t_label "
+				type="text"
+				fieldname="_user_gender"
+				label="Gender"
+			>
+			</div>			
+			<div class="ace-auto-gen ace-small-padding-right ace-col-3 _t_label "
+				type="text"
+				fieldname="_user_title"
+				label="Title"
+			>
+			</div>			
+			<div class="ace-auto-gen ace-small-padding-right ace-col-3 _t_label "
+				type="text"
+				fieldname="_user_function_name"
+				label="Function"
+			>
+			</div>			
+			<div class="ace-auto-gen ace-small-padding-right ace-col-3 _t_label "
+				type="text"
+				fieldname="_user_nationality_id"
+				label="Nationality_ID"
+			>
+			</div>			
+			<div class="ace-auto-gen ace-col-3 _t_label "
+				type="text"
+				fieldname="_user_connection_to_us_id"
+				label="Connection_ID"
+			>
+			</div>			
+			
+		</div>					
+	</div>
+	<div class="ace-col-6 ace-col-l-12 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Personal_contact_information</l>
+		</h3>
+        <div class="ace-col-12 ace-big-padding-top">
+            <div class="ace-auto-gen ace-col-12 _t_label "
+                type="text"
+                fieldname="_user_email"
+                label="Email"
+                validation="allowempty=false;"
+            >
+            </div>
+
+
+            <div class="ace-auto-gen ace-col-2 _t_label ace-small-padding-right"
+                type="text"
+                fieldname="_user_phone_country_prefix"
+                label="Prefix"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-2 _t_label ace-small-padding-right"
+                type="text"
+                fieldname="_user_phone_area_prefix"
+                label="Area"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-8 _t_label"
+                type="text"
+                fieldname="_user_phone_number"
+                label="Phone_number"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-4 _t_label ace-small-padding-right"
+                type="text"
+                fieldname="_user_mobile_country_prefix"
+                label="Prefix"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-8 _t_label "
+                type="text"
+                fieldname="_user_mobile_number"
+                label="Mobile_number"
+            >
+            </div>
+		</div>
+
+	</div>
+		
+	<div class="ace-col-6 ace-col-l-12 ace-col-m-12">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Address_information</l>
+		</h3>
+		<div class="ace-col-12 ace-big-padding-top">
+            <div class="ace-auto-gen ace-col-6 _t_label ace-small-padding-right"
+                type="text"
+                fieldname="_user_country_id"
+                label="Country_ID"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-6 _t_label "
+                type="text"
+                fieldname="_user_city_id"
+                label="Country_ID"
+            >
+            </div>
+
+            <div class="ace-auto-gen ace-col-12 _t_placeholder "
+                type="text"
+                fieldname="_user_cnp"
+                placeholder="National_ID"
+            >
+            </div>
+		</div>
+		
+						
+	</div>
+	</div>
+	<!--  end users-general-data -->
+	<!--  begin users-account-data -->
+	<div class="ace-col-12 ace-partial-form ace-hide ace-form-padding" id="users-account-data">
+        <div class="ace-col-3 ace-col-l-6 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Password_modification</l>
+		</h3>
+			
+		<div 
+			class="ace-auto-gen ace-col-12 ace-big-padding-top _t_label"
+			name="_login" 
+			label="loginName" 
+			labelalign="top">
+		</div>
+		
+		<div 
+			class="ace-auto-gen ace-col-12  _t_label"
+			name="oldPassword" 
+			label="currentPass" 
+			labelalign="top" 
+			type="password">
+		</div>
+		
+		<div 
+			class="ace-auto-gen ace-col-12  _t_label"
+			name="newPassword" 
+			label="newPass" 
+			labelalign="top"
+			type="password">
+		</div>
+			
+		<div 
+			class="ace-auto-gen ace-col-12  _t_label"
+			name="confirmPassword" 
+			label="confPass" 
+			labelalign="top"
+			type="password">
+		</div>
+		
+		<div 
+			class="ace-auto-gen ace-col-12 ace-medium-padding-top _t_valuex"
+			value="changePass" 
+			action="onChangePassword"
+			type="button">
+		</div>
+		</div>
+        <div class="ace-col-3 ace-col-l-6 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Security_information</l>
+		</h3>
+
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_security_question_id"
+			label="Security_question_id"
+		>
+		</div>
+		
+		<div class="ace-auto-gen ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_security_answer"
+			label="Security_question_answer"
+		>
+		</div>
+		</div>
+        <div class="ace-col-3 ace-col-l-6 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Email_phone_confirmations</l>
+		</h3>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="text"
+			fieldname="_email_confirmation_code"
+			label="Email_confirmation_code"
+		>
+		</div>
+		<div class="ace-auto-gen ace-col-12 _t_label "
+			type="text"
+			fieldname="_sms_confirmation_code"
+			label="SMS_confirmation_code"
+		>
+		</div>
+		</div>
+        <div class="ace-col-3 ace-col-l-6 ace-col-m-12">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Third_party_logins</l>
+		</h3>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="display"
+			value="For now this section is disabled"
+		></div>
+	   </div>
+	</div>
+	<!--  end users-account-data -->
+	<!--  begin users-preferences-data -->
+	<div class="ace-col-12 ace-partial-form  ace-hide ace-form-padding" id="users-preferences-data">
+        <div class="ace-col-4 ace-col-l-6 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Contact_preferences</l>
+		</h3>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_contact_perferences"
+			label="Contact_preferences_mask"
+		>
+		</div>
+		</div>
+        <div class="ace-col-4 ace-col-l-6 ace-col-m-12 ace-small-padding-right">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Regionals</l>
+		</h3>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_preferred_currency_id"
+			label="Preferred_currency_id"
+		>
+		</div>
+		<div class="ace-auto-gen ace-tiny-padding-top ace-col-12 _t_label "
+			type="combobox"
+			fieldname="_user_preferred_lang_id"
+			label="Preferred_language"
+			valuename="id"
+			displayname="name"
+		>
+		<store>
+		    <record>
+		        <field name="name">English_</field>
+		        <field name="id">0</field>
+		    </record>
+		    <record>
+		        <field name="name">Arabic_</field>
+		        <field name="id">1</field>
+		    </record>
+		</store>
+		</div>
+		</div>
+        <div class="ace-col-4 ace-col-l-6 ace-col-m-12">
+		<h3>
+			<i class="fa fa-lock ace-medium-margin-right"></i>
+			<l>Notifications</l>
+		</h3>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="checkbox"
+			fieldname="_notify_on_messages"
+			label="Will_notify_on_messages"
+			valuename="id",
+			displayname="name",
+		>
+		<store>
+		    <record>
+		        <field name="name">NO_</field>
+		        <field name="id">0</field>
+		    </record>
+		    <record>
+		        <field name="name">YES_</field>
+		        <field name="id">1</field>
+		    </record>
+		</store>
+		</div>
+		<div class="ace-auto-gen ace-big-padding-top ace-col-12 _t_label "
+			type="combobox"
+			fieldname="_notify_on_push_msg"
+			label="Will_notify_on_push_notifications"
+			valuename="id",
+			displayname="name",
+		>
+		<store>
+		    <record>
+		        <field name="name">NO_</field>
+		        <field name="id">0</field>
+		    </record>
+		    <record>
+		        <field name="name">YES_</field>
+		        <field name="id">1</field>
+		    </record>
+		</store>
+		</div>
+		<div class="ace-auto-gen ace-medium-padding-top ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_dashboard"
+			label="Dashboard_settings"
+		>
+		</div>
+		<div class="ace-auto-gen ace-col-12 _t_label "
+			type="text"
+			fieldname="_user_office_id"
+			label="Assigned_to_office_ID"
+		>
+		</div>
+		</div>
+	</div>
+	<!--  end users-preferences-data -->
+	
+</div>
+</div>
+
+
+<div class="ace-app-edit-windwow ace-hide ace-auto-loadtpl" tag="employeedetailsmenutag" url="tpl/base/employees" tpl="employeedetails.tpl" tplloadedcallback="employeedetails_tpl_loaded" tplloadedbeforecallback="translate"></div>
+
+
+<script>
+function users_tpl_loaded(target){
+	console.log('users loaded');
+	$.aceOverWatch.template.loadScripts("{shared_path}/js_csslibs/thinkITJQplugins/ace/apptpl/users/js/users.js", function(){
+		initMotion(target);
+   	});
+}
+</script>
+<!-- END quickaccessmodules -->

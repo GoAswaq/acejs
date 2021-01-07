@@ -1,0 +1,124 @@
+/* *** GENERAL STYLES *** */
+:root {
+    --primarycolor:140,23,59; /*darkred color*/
+
+    --main-color-alpha0:0,0,0,0; /*font text, b;lb*/
+    --main-color-alpha01:0,0,0,0.1;
+    --main-color-alpha026:0,0,0,0.26;
+    --main-color-alpha04:0,0,0,0.4;
+    --main-color-alpha07:0,0,0,0.7;
+    --main-color-alpha016:255,47,0,0.16;
+    --main-color-alpha06:0,0,0,0.6;
+    --main-color-alpha05:0,0,0,0.5;
+    --main-color-alpha08:0,0,0,0.8;
+    --main-color-alpha02:0,0,0,0.2;
+    --main-color-alpha01:0,0,0,0.1;
+    --main-color-alpha072:0,0,0,0.72;
+    --main-color-alpha087:0,0,0,0.87;
+    --main-color-alpha005:0,0,0,0.05;
+    --main-color-alpha002:0,0,0,0.02;
+    --main-color-alpha003:0,0,0,0.03;
+    --main-color-alpha006:0,0,0,0.06;
+    --main-color-alpha011:0,0,0,0.11;
+    --main-color-alpha012:0,0,0,0.12;
+    --main-color-alpha016:0,0,0,0.16;
+    --main-color-alpha015:0,0,0,0.15;
+
+    --secondary-color-alpha01:170,170,170,0.1;
+    --secondary-color-alpha012:0,4,15,0.12;
+    --used-color-alpha039:255,240,244,0.39;
+    --used-color-alpha059:255,240,244,0.59;
+
+    --variant-color-alpha015:70,195,255,0.15;
+    --variant-color-alpha021:70,195,255,0.21;
+    --variant-color-alpha088:77,122,159,0.88;
+    --variant-color-alpha01:70,195,255,0.1;
+
+    --based-color-alpha09:250,250,250,0.9;
+    --based-color-alpha075:255,255,255,0.75;
+    --based-color-alpha08:255,255,255,0.8;
+    --based-color-alpha08255:240,244,0.59;
+    --based-color-alpha09:255, 255, 255, 0.9;
+
+    --small-color-alpha014:83,202,159,0.14;
+
+    --variant-color-1:70,195,255;
+    --elementar-color-base:#ffffff;
+    --elementar-color-1:243,245,248;
+    --main-color-1:#000000;
+    --main-color-2:#0a0a0a;
+    --main-color-3:#0d0d0d;
+
+    --style-color-1:#d46363;
+    --style-color-2:#fdd248;
+    --secondary-color1:#ebebeb;
+    --secondary-color2:#424242;
+    --secondary-color3:#686868;
+    --secondary-color4:#888888;
+    --secondary-color7:#8a8a8a;
+    --spine-color-3:#EF3831;
+    --chroma-light-1:#41d195;
+    --chroma-light-2:#46C392;
+    --chroma-light-3:#88D2A2;
+    --chroma-light-6:#d4dae0;
+    --spine-color-2:#46C392;
+    --elementar-color-2:#f2f4f6;
+    --elementar-color-3:#e6e6e6;
+    --elementar-color-4:#ececec;
+    --elementar-color-5:#DADADA;
+    --elementar-color-6:#DBDBDB;
+    --elementar-color-7:#f4f4f4;
+    --elementar-color-8:#e9e8e7;
+    --elementar-color-9:#f2f2f2;
+    --elementar-color-10:#F3F5F8;
+    --elementar-color-11:#f6f6f6;
+    --elementar-color-12:#f0f0f0;
+    --elementar-color-13:#f1f6fb;
+    --elementar-color-14:#f7f7f7;
+    --selected-color-1:#ffa8a8;
+    --selected-color-2:#FF7C7C;
+    --selected-color-4:#E67171;
+    --spine-color-1:#8b012b;
+    --spine-color-7:#FD4;
+    --spine-color-8:#F62;
+    --change-color-4:#35A2fe;
+    --change-color-6:#5989b1;
+    --spine-color-5:#F96060;
+    --spine-color-1:#ff5454;
+    --small-color-3:#08a09f;
+
+
+    --redbrown:123,43,68; /*other kind of dark red color*/
+    --redlight:179,67,101; /*redlight color*/
+    --redlightpale:233,30,99; /*redlight pale color*/
+    --redpale:255,107,107; /*redlight pale color*/
+    --pinkfade:224,116,116; /*other kind of pink color*/
+    --pink:233,30,99; /*some kind of pink color*/
+    --pinklight:255,51,85; /*some kind of pink color*/
+
+    --greenlight:75,181,143; /*light green color*/
+    --greenlightpale:174,222,130; /*light pale green color*/
+    --greenlightpale-alpha01:174,222,130,0.1; /*light pale green color*/
+    --green:136,218,61; /* green color*/
+
+    --violetlight:208,130,255; /*light violet color*/
+
+    --blue:0,159,255; /* blue color*/
+    --bluelight:70,195,255; /*blue light color*/
+    --bluelight-alpha01:70,195,255,0.1; /*blue light color*/
+    --bluepale:43,137,197; /* blue pale color*/
+    --blueverylight:227,246,255; /* blue very light color*/
+    --bluedarkpale:77,122,159; /*blue light color*/
+
+    --orangelight:255,240,197; /*light orange color*/
+    --orrangelightpale:255,197,92; /*light pale orange color*/
+    --orange:255,131,0; /*orange color*/
+    --orrangepale:222,138,51; /*light pale orange color*/
+
+    --greylight:180,179,179; /*grey light color*/
+    --greylightpale:191,191,191; /*grey light pale color*/
+    --grey:102,102,102; /*grey color*/
+    --greydark:53,53,53; /*dark grey color*/
+    --turqoiselight:61,216,186; /*turqoise light color*/
+}
+

@@ -1,0 +1,179 @@
+<!-- BEGIN grid -->{TPL_display_anyway}
+<div class="ace-title-bar">
+	<h2><i class="fa fa-angle-right"></i><span id="usergroups-title-bar-container"><l>User_Groups</l></span></h2>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="usergroups-add-button"
+		type="button"
+		value="add"
+		action="addNewUserGroups"
+		iconcls="fa-plus"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="usergroups-refresh-button"
+		type="button"
+		value="rfs"
+		action="refreshUserGroups"
+		iconcls="fa-sync"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="usergroups-cancel-button"
+		type="button"
+		value="cancel"
+		action="cancelUserGroups"
+		iconcls="fa-ban"
+		textbellowicon="false"
+	></div>
+	<div 
+		class="ace-auto-gen _t_valuex ace-right-float"
+		id="usergroups-save-button"
+		type="button"
+		value="save"
+		action="saveUserGroups"
+		iconcls="fa-save"
+		textbellowicon="false"
+	></div>
+</div>
+
+<div class="ace-info-side ace-col-12">
+<div 
+	id="usergroups-grid" 
+	class="ace-no-text-wrap ace-height-minus-60 ace-full-height ace-col-12 ace-full-width ace-field-container ace-label-align-top"
+ >
+<columns>
+
+	<record>
+		<field name="title"><l>Parinte_user_group_ID</l></field>
+		<field name="fieldname">_user_group_id_parent</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Name</l></field>
+		<field name="fieldname">_user_group_name</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Code</l></field>
+		<field name="fieldname">_user_group_code</field>
+	</record>
+
+	<record>
+		<field name="title"><l>STG_user_group</l></field>
+		<field name="fieldname">_user_group_left</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>DRP_user_group</l></field>
+		<field name="fieldname">_user_group_right</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Default_group_on_register</l></field>
+		<field name="fieldname">_ugauc_default_on_register</field>
+		<field name="atype">checkbox</field>
+		<field name="renderer">rendererCheckbox</field>
+		<field name="align">center</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Ugauc_disabled</l></field>
+		<field name="fieldname">_ugauc_disabled</field>
+		<field name="align">right</field>
+	</record>
+
+	<record>
+		<field name="title"><l>Ugauc_allow_aliases</l></field>
+		<field name="fieldname">_ugauc_allow_aliases</field>
+		<field name="align">right</field>
+	</record>
+
+</columns>
+</div>
+<div id="usergroups-ed-frm-renderer" class="ace-independent-form"></div>
+</div>
+
+<div id="usergroups-ed-frm-tpl" class="ace-hide">
+<div class="ace-scrollview">
+	<h2 class="usergroups-grid-edit-ft"><l>User_Groups</l></h2>
+	
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_id"
+	label="ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_id_parent"
+	label="Parinte_user_group_ID"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_name"
+	label="Name"
+	validation="allowempty=false;"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_code"
+	label="Code"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_left"
+	label="STG_user_group"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_user_group_right"
+	label="DRP_user_group"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="checkbox"
+	fieldname="_ugauc_default_on_register"
+	label="Default_group_on_register"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_ugauc_disabled"
+	label="Ugauc_disabled"
+>
+</div>
+
+<div class="ace-auto-gen ace-small-padding ace-col-12 _t_label "
+	type="text"
+	fieldname="_ugauc_allow_aliases"
+	label="Ugauc_allow_aliases"
+>
+</div>
+
+</div>
+</div>
+
+<script>
+function usergroups_tpl_loaded(target){
+	$.aceOverWatch.template.loadScripts("/pos/layout/apps/ace/tpl/usergroups/js/usergroups.js", function(){
+   		initMotion(target);
+   	});
+}
+</script>
+<!-- END grid -->
