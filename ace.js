@@ -1,9 +1,7 @@
 /**
- * some details - test silviu
- * **
  * .ace is the plugin, the public interface
  * .aceOverWatch - is the object which contains all/most of the functionality
- ****/
+**/
 
 
 /**
