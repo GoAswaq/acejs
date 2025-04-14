@@ -1,0 +1,269 @@
+/*begin mobile tools*/
+@use '../variables/all' as *;
+.ace-full-screen-popup {
+  position: absolute;
+  left: $position-0;
+  right: $position-0;
+  top: $position-0;
+  z-index: 8;
+  background: $fullscreen-main-bg-color;
+  height: smartvh(100);
+}
+.ace-full-screen-popup .ace-soft-close { display: none; }
+.ace-full-screen-popup-close {
+  position: fixed;
+  bottom: $position-100;
+  background: $fullscreen-close-main-bg-color;
+  color: $fullscreen-close-main-color;
+  width: $meas-40;
+  height: $meas-40;
+  border-radius: $meas-full;
+  text-align: center;
+  cursor: pointer;
+  z-index: 9000;
+}
+@include positionLTR('.ace-full-screen-popup-close',right,$position-20);
+
+.ace-full-screen-popup-close i {
+  line-height: $meas-line-height-0d8 !important;
+  padding-top: $meas-8;
+}
+@include sidePaddingLTR('.ace-standard-form.ace-field-container',right,$meas-pad-0,false);
+@include sidePaddingLTR('.ace-standard-form.ace-field-container',left,$meas-pad-0,false);
+@include sidePaddingLTR('.ace-form-popup.ace-standard-form.ace-field-container',left,$meas-pad-0,false);
+@include sidePaddingLTR('.ace-presentation-main > .ace-standard-form.ace-field-container',left,$meas-pad-0,false);
+
+.ace-standard-form .ace-field-container input,
+.ace-standard-form .ace-field-container select{
+  border-radius: $ace-common-radius;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+
+.ace-standard-form > .ace-form-container {
+  max-height: calc(#{smartvh(100)} - #{$ace-composite-height-main-title-bar-and-normal-title-bar});
+  height: calc(#{smartvh(100)} - #{$ace-composite-height-main-title-bar-and-normal-title-bar});
+}
+.ace-standard-form > .ace-form-container > .ace-form-inner {
+  max-height: calc(#{smartvh(100)} - #{$ace-composite-height-main-title-bar-and-normal-title-bar});
+  height: calc(#{smartvh(100)} - #{$ace-composite-height-main-title-bar-and-normal-title-bar});
+  overflow-y: auto;
+}
+.ace-no-top-bar .ace-standard-form > .ace-form-container,
+.ace-full-screen-popup.ace-standard-form > .ace-form-container {
+  max-height: calc(#{smartvh(100)} - #{$ace-tittle-bar-height});
+  height: calc(#{smartvh(100)} - #{$ace-tittle-bar-height});
+  /*overflow-y: hidden;*//*SM-not sure*/
+}
+.ace-no-top-bar .ace-standard-form > .ace-form-container > .ace-form-inner,
+.ace-full-screen-popup.ace-standard-form > .ace-form-container > .ace-form-inner{
+  max-height: calc(#{smartvh(100)} - #{$ace-tittle-bar-height});
+  height: calc(#{smartvh(100)} - #{$ace-tittle-bar-height});
+  overflow-y: auto;
+}
+
+.ace-standard-form.ace-standard-form-no-external-title > .ace-form-container {
+  max-height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+  height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+  /*overflow-y: hidden;*//*SM-not sure*/
+}
+.ace-standard-form.ace-standard-form-no-external-title > .ace-form-container > .ace-form-inner {
+  max-height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+  height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+  overflow-y: auto;
+}
+.ace-no-top-bar .ace-standard-form.ace-standard-form-no-external-title > .ace-form-container,
+.ace-full-screen-popup.ace-standard-form.ace-standard-form-no-external-title > .ace-form-container{
+  max-height: smartvh(100);
+  height: smartvh(100);
+  /*overflow-y: hidden;*//*SM-not sure*/
+}
+.ace-no-top-bar .ace-standard-form.ace-standard-form-no-external-title > .ace-form-container > .ace-form-inner,
+.ace-full-screen-popup.ace-standard-form.ace-standard-form-no-external-title > .ace-form-container > .ace-form-inner{
+  max-height: smartvh(100);
+  height: smartvh(100);
+  overflow-y: auto;
+}
+
+.ace-standard-form.ace-standard-form-popup > .ace-form-container {
+  height: auto;
+}
+.ace-standard-form.ace-standard-form-popup > .ace-form-container > .ace-form-inner {
+  height: auto;
+}
+
+.ace-standard-form.ace-lateral-form > .ace-form-container > .ace-form-inner,
+.ace-standard-form.ace-independent-form > .ace-form-container > .ace-form-inner{
+  overflow-y: hidden;
+}
+
+.ace-standard-form.ace-independent-form.ace-lateral-form .ace-transparent-title-bar {
+  justify-content: normal;
+}
+
+.ace-standard-form-inside-with-footer,
+.ace-standard-form-inside-with-mobile-title-and-footer,
+.ace-standard-form-inside-with-mobile-title-and-footer-desktop-only{
+  height: calc(#{$meas-full} - #{$ace-footer-height});
+  padding-top: $ace-common-top-bottom-padding;
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-standard-form-inside-with-mobile-title-and-footer {
+    height: calc(#{$meas-full} - #{$ace-composite-height-normal-title-bar-and-footer});
+  }
+}
+
+.ace-standard-form-inside-with-title-and-footer,
+.ace-standard-form-inside-with-title-and-footer-desktop-only{
+  height: calc(#{$meas-full} - #{$ace-composite-height-normal-title-bar-and-footer});
+  padding-top: $ace-common-top-bottom-padding;
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-standard-form-inside-with-title-and-footer-desktop-only {
+    height: calc(#{$meas-full} - #{$ace-tittle-bar-height});
+  }
+}
+
+.ace-standard-form-footer,
+.ace-standard-form-footer-desktop-only {
+  position: absolute;
+  bottom: $meas-0;
+  height: $ace-footer-height;
+  display: flex;
+  justify-content: center;
+  width: $meas-full;
+  align-items: center;
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-standard-form-footer-desktop-only {
+    display: none;
+  }
+}
+
+.ace-standard-form-footer button {
+  font-size: $font-size-16;
+  font-weight: $font-weight-500;
+}
+
+.ace-standard-form .ace-standard-form-inside{
+  border-radius: $ace-common-radius;
+  background-color: $form-inside-highlight-color;
+  padding: $meas-pad-10;
+}
+html[dir="ltr"] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-standard-form .ace-standard-form-inside{
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+html[dir="rtl"] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-standard-form .ace-standard-form-inside{
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+.ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-standard-form .ace-transparent-title-bar{
+  border:none;
+}
+
+.ace-standard-form .ace-standard-form-inside div.ace-control-envelope{
+  padding: $ace-envelope-highlight-padding;
+  background-color: $ace-envelope-highlight-bg-color;
+  border-radius: $ace-common-radius;
+}
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope label {
+  color: $label-envelope-color;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select{
+  background-color: $ace-envelope-highlight-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$ace-envelop-highlight-border-color);
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope input,
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope select{
+    background-color: $ace-envelope-highlight-bg-color;
+  }
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope input:-webkit-autofill,
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope select:-webkit-autofill{
+    -webkit-box-shadow: 0 0 0 50px $ace-envelope-highlight-bg-color inset !important;
+  }
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within input,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within select,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover input,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover select{
+  background-color: $ace-envelope-highlight-focus-bg-color !important;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:hover,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:focus-within,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:focus,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:hover,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:focus-within,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:focus {
+  background-color: $ace-envelope-highlight-focus-bg-color !important;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within select:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px $ace-envelope-highlight-focus-bg-color inset !important;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px $ace-envelope-highlight-bg-color inset !important;
+}
+.ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope:focus-within label,
+.ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope:hover label {
+  background-color: $ace-envelope-highlight-focus-bg-color !important;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-efld:focus ~ label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-efld ~ label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-empty:focus ~ label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-autocomplete-details-field .ace-efld.ace-hide ~ .ace-label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-label-align-top .ace-file-upload .ace-label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-text-editor .ace-efld:focus ~ label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-text-editor .ace-efld ~ label,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input[placeholder] ~ label {
+  top: $ace-envelop-highlight-label-top-offset;
+  font-size: small;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-empty ~ label {
+  top: $ace-envelop-highlight-label-empty-offset;
+  font-size: $ace-standard-font-size;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope .ace-efld{
+  padding-left: $ace-envelop-highlight-efld-side-padding;
+  padding-right: $ace-envelop-highlight-efld-side-padding;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope.ace-autocomplete-field .ace-grid-auto-complete.ace-field-container {
+  top:  $ace-envelop-highlight-autocomple-grid-top !important;
+  border-bottom-left-radius: $ace-common-radius;
+  border-bottom-right-radius: $ace-common-radius;
+  box-shadow: none;
+}
+.ace-standard-form.ace-standard-form-popup .ace-standard-form-inside .ace-control-envelope.ace-autocomplete-field .ace-grid-auto-complete.ace-field-container {
+  top:  $ace-envelop-highlight-autocomple-popup-grid-top !important;
+}
+
+
+/*
+ * visible only in full screen
+ */
+.ace-mobile-title-bar,
+div.ace-mobile-title-bar {
+  display: none !important
+}
+.ace-full-screen-popup .ace-mobile-title-bar,
+.ace-full-screen-popup div.ace-mobile-title-bar{
+  display: block !important;
+}
+
+/*end mobile tools*/

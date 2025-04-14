@@ -1,0 +1,25 @@
+/* begin readonly */
+
+.ace-readonly * {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-radio-field {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-switch-field {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-checkbox-field {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-radio-field .ace-label {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-switch-field .ace-label {
+  pointer-events: none !important;
+}
+.ace-readonly .ace-checkbox-field .ace-label {
+  pointer-events: none !important;
+}
+
+/* end readonly */

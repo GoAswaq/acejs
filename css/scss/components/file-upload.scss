@@ -1,0 +1,188 @@
+/* begin file upload */
+@use '../variables/all' as *;
+
+.ace-file-upload input {
+  display: none;
+}
+
+.ace-file-upload {
+  height: $ace-standard-element-size;
+  font-size: $ace-tiny-title-size;
+}
+@include floatToLTR('.ace-file-upload',left);
+
+.ace-label-align-top .ace-file-upload {
+  padding-bottom: $ace-label-align-top-inner-bottom-padding;
+}
+.ace-grid-cell .ace-label-align-top .ace-file-upload {
+  padding-bottom: $meas-0; /*SM-not sure*/
+}
+.ace-file-upload .ace-file-upload {
+  padding-bottom: $meas-pad-0;
+}
+
+.ace-file-upload span {
+  transition: ease 0.2s;
+  color: $upload-main-color;
+  line-height: $meas-line-height-1d5;
+  padding: $meas-pad-6 $meas-pad-10;
+  min-width: $meas-150;
+  height: $ace-standard-element-size;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$upload-main-border-color);
+}
+[class*="ace-col-"] .ace-file-upload {
+  width: $meas-full;
+}
+[class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder {
+  width: $meas-full;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@include sidePaddingLTR('[class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder',right,$meas-pad-70);
+
+.ace-file-upload label {
+  transition: ease 0.2s;
+  cursor: pointer;
+  position: relative;
+  flex-direction: row;
+}
+@include floatToLTR('.ace-file-upload label',left);
+
+.ace-file-upload .ace-file-type-icon {
+  background: $upload-main-icon-bg-color;
+  color: $upload-main-contrast-color;
+  padding: $meas-pad-6 $meas-pad-13;
+  line-height: $meas-line-height-1d0;
+}
+.ace-label-align-top .ace-file-upload {
+  display: flex;
+  align-items: stretch;
+  height: auto;
+}
+.ace-label-align-left .ace-file-upload .ace-label {
+  margin-top: $meas-marg-8;
+  height: 0;
+}
+@include floatToLTR('.ace-label-align-left .ace-file-upload .ace-label',left);
+
+.ace-label-align-top .ace-file-upload .ace-label {
+  position: absolute;
+  top: $ace-label-top-offset;
+  width: $meas-full;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ace-file-upload-button,
+.ace-file-remove {
+  transform: scale(0);
+  transition: ease 0.2s;
+  transform-origin: right;
+  height: $meas-full;
+}
+.ace-file-upload-button a,
+.ace-file-remove a {
+  max-width: $meas-45;
+  padding: $meas-pad-10 !important;
+  margin: $meas-marg-0;
+}
+.ace-file-upload-button a:hover,
+.ace-file-remove a:hover {
+  max-width: 400px;
+}
+
+.ace-file-upload label:hover .ace-file-upload-button,
+.ace-file-upload label:hover .ace-file-remove {
+  transform: scale(1) !important;
+}
+.ace-file-upload-button a:before,
+.ace-file-remove a:before {
+  margin: $meas-marg-0 !important;
+  line-height: $meas-line-height-1d0 !important;
+}
+@include floatToLTR('.ace-file-upload-button a:before',right);
+@include floatToLTR('.ace-file-remove a:before',right);
+
+.ace-file-upload-button a {
+  background: $upload-button-bg-color;
+  color: $upload-button-color;
+  display: block;
+  height: $meas-full;
+  transition: all ease 0.2s;
+}
+.ace-file-upload-button a:hover {
+  background: $upload-button-bg-color-hover;
+  color: $upload-button-color-hover;
+  padding: $meas-pad-10;
+}
+.ace-file-upload-button a:hover span {
+  opacity: 1;
+  width: auto !important;
+  transform: scaleX(1);
+}
+html[dir="ltr"] .ace-file-upload-button a:hover span {
+  padding: $meas-pad-0 $meas-pad-10 $meas-pad-0 $meas-pad-0 !important;
+}
+html[dir="rtl"] .ace-file-upload-button a:hover span {
+  padding: $meas-pad-0 $meas-pad-0 $meas-pad-0 $meas-pad-10 !important;
+}
+
+.ace-file-remove a span,
+.ace-file-upload-button a span {
+  border: none;
+  color: $upload-button-color-hover;
+  transition: ease 0.2s, width 2s;
+  width: 0 !important;
+  display: block;
+  opacity: 0;
+  transform: scaleX(0);
+  min-width: 0 !important;
+  height: 0;
+  padding: $meas-pad-0 !important;
+  line-height: $meas-line-height-1d0;
+}
+@include floatToLTR('.ace-file-remove a span',left);
+@include floatToLTR('.ace-file-upload-button a span',left);
+html[dir="ltr"] .ace-file-remove a span,
+html[dir="ltr"] .ace-file-upload-button a span {
+  transform-origin: right;
+}
+html[dir="rtl"] .ace-file-remove a span,
+html[dir="rtl"] .ace-file-upload-button a span {
+  transform-origin: left;
+}
+
+.ace-file-remove a {
+  background: $remove-button-bg-color;
+  color: $remove-button-color;
+  padding: $meas-pad-10;
+  height: $meas-full;
+  transition: ease 0.2s;
+}
+.ace-file-remove a:hover {
+  background: $remove-button-bg-color-hover;
+  color: $remove-button-color-hover;
+  padding: $meas-pad-10;
+}
+
+.ace-file-remove a:hover span {
+  width: auto !important;
+  opacity: 1;
+  transform: scaleX(1);
+}
+html[dir="ltr"] .ace-file-remove a:hover span {
+  padding: $meas-pad-0 $meas-pad-10 $meas-pad-0 $meas-pad-0 !important;
+}
+html[dir="rtl"] .ace-file-remove a:hover span {
+  padding: $meas-pad-0 $meas-pad-0 $meas-pad-0 $meas-pad-10 !important;
+}
+
+.ace-upload-buttons-container {
+  position: absolute;
+  display: flex;
+  height: $meas-full;
+}
+@include positionLTR('.ace-upload-buttons-container',right,$position-0);
+
+/* end file upload */

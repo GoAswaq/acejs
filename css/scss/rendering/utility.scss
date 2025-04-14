@@ -1,0 +1,135 @@
+/* begin utility classes */
+@use '../variables/all' as *;
+@use "fonts" as *;
+
+.ace-no-after:after {
+  content: initial !important;
+}
+
+.ace-no-visibility {
+  visibility: hidden !important;
+}
+.ace-visibility {
+  visibility: visible !important;
+}
+
+.ace-hide {
+  display: none !important;
+}
+.ace-show {
+  max-height: $meas-2500;
+  opacity: 1;
+  visibility: visible;
+  transition: max-height 0.3s cubic-bezier(0.03, -0.01, 0.74, 0.16), height 0.6s,
+    opacity 0.3s;
+}
+
+.ace-clear {
+  clear: both;
+}
+
+.ace-scrollview {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  margin: $meas-marg-0;
+  overflow-x: hidden;
+  padding: $meas-pad-0;
+  transform: translateZ(0px);
+}
+.ace-no-scrolling {
+  overflow: hidden;
+}
+body.ace-no-scrolling {
+  position: relative;
+}
+
+.ace-no-overflow {
+  overflow: hidden;
+}
+.ace-visible-overflow {
+  overflow: visible !important;
+}
+
+.ace-no-radius {
+  border-radius: $meas-radius-0;
+}
+.ace-rounded {
+  border-radius: $meas-radius-50p;
+}
+.ace-no-border {
+  border: none !important;
+}
+
+.ace-force-z-index {
+  z-index: 16 !important;
+}
+.ace-full-width {
+  width: $meas-full !important;
+  position: relative;
+}
+.ace-width-minus-50 {
+  width: calc(#{$meas-full} - #{$meas-50});
+}
+
+.ace-no-shadow {
+  box-shadow: none !important;
+}
+
+.ace-no-break br {
+  display: none;
+}
+
+.ace-arrow-down {
+  width: 0;
+  height: 0;
+  position: absolute;
+  transform: rotate(-90deg);
+  top:  $position-23;
+  @include addBorder(left,$meas-bord-20);
+  @include addBorder(right,$meas-bord-20);
+  @include addBorder(top,$meas-bord-20,$ace-border-default-pattern,$primary-color);
+}
+@include positionLTR('.ace-arrow-down',right,-$position-30);
+
+.ace-hover:hover {
+  z-index: 999;
+}
+
+.ace-field-cell {
+  display: inline;
+}
+
+.ace-hidden-menu-screen {
+  transform: translateX(-$meas-90);
+  width: calc(#{$meas-full} + #{$meas-90}) !important;
+}
+
+.ace-active-border[active="1"] {
+  border-radius: $meas-10;
+  @include addBorder(all,$meas-bord-3,$ace-border-default-pattern,$primary-color);
+}
+.ace-primary-border {
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-color);
+}
+.ace-default-border {
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$ace-border-default-color);
+}
+
+.ace-highlight-shadow-form,
+.ace-highlight-shadow-form.ace-independent-form.ace-show {
+  border-radius: $meas-10;
+  box-shadow: inset $box-shad-null $box-shad-1 $box-shad-3 $form-highlight-shadow-color;
+}
+html[dir="ltr"] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-show {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+html[dir="rtl"] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-show {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.ace-hint {
+  display:none;
+}
+/* end utility classes */

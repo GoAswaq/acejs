@@ -1,0 +1,9 @@
+/* begin tags */
+@use '../variables/all' as *;
+
+.ace-tag-edit {
+  margin: $meas-marg-0 $meas-marg-3;
+  color: $tags-color !important;
+}
+
+/* end tags */

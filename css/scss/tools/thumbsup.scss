@@ -1,0 +1,14 @@
+/* begin thumbsup */
+@use '../variables/all' as *;
+
+.ace-thumbs-up:before {
+  color: $variant-check-color;
+  height: $meas-12;
+}
+@include floatToLTR('.ace-thumbs-up:before',left);
+@include sideMarginLTR('.ace-thumbs-up:before',right,$meas-marg-5);
+
+.ace-thumbs-up .ace-display-field {
+  width: auto !important;
+}
+/* end thumbsup */

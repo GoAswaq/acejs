@@ -1,0 +1,265 @@
+/* begin font related classes */
+@use '../variables/all' as *;
+
+.ace-standard-title-text,
+span.ace-standard-title-text,
+h1.ace-standard-title-text,
+h2.ace-standard-title-text,
+h3.ace-standard-title-text,
+h4.ace-standard-title-text,
+.ace-transparent-title-bar h2.ace-standard-title-text,
+.ace-form-inner h2.ace-standard-title-text{
+  font-size: $ace-huge-title-size;
+  font-weight: $font-weight-600;
+}
+
+
+.ace-standard-subtitle-text,
+span.ace-standard-subtitle-text,
+h1.ace-standard-subtitle-text {
+  font-size: $ace-large-title-size;
+  font-weight: $font-weight-600;
+}
+
+.ace-transparent-subtitle-bar h2.ace-standard-subtitle-text,
+.ace-form-inner h2.ace-standard-subtitle-text,
+h2.ace-standard-subtitle-text {
+  font-size: $ace-medium-title-size;
+  font-weight: $font-weight-500;
+}
+
+h3.ace-standard-subtitle-text {
+  font-size: $ace-small-title-size;
+  font-weight: $font-weight-400;
+}
+
+h4.ace-standard-subtitle-text {
+  font-size: $ace-tiny-title-size;
+  font-weight: $font-weight-400;
+}
+.ace-title {
+  margin-bottom: $meas-marg-15;
+  position: relative;
+  width: $lg;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+@include floatToLTR('.ace-title',left);
+
+.ace-title:after {
+  content: " ";
+  width: 45%;
+  height: $meas-2;
+  background: $primary-color;
+  bottom: - $position-1;
+  position: absolute;
+}
+@include positionLTR('.ace-title:after',left,$position-0);
+
+.ace-title h2,
+.ace-title h3 {
+  border: none;
+  margin: $meas-marg-0;
+}
+
+.ace-font-size-50p {
+  font-size: $xs;
+}
+.ace-font-size-75p {
+  font-size: $sm;
+}
+.ace-font-size-90p {
+  font-size: $md;
+}
+.ace-font-size-100p {
+  font-size: $lg;
+}
+.ace-font-size-110p {
+  font-size: $xl;
+}
+.ace-font-size-115p {
+  font-size: $xxl;
+}
+.ace-font-size-120p {
+  font-size: $x3l;
+}
+.ace-font-size-125p {
+  font-size: $x4l;
+}
+
+.ace-font-size-150p {
+  font-size: $x5l;
+}
+.ace-font-size-200p {
+  font-size: $x6l;
+}
+
+.ace-font-50 {
+  zoom: $xs;
+}
+.ace-font-75 {
+  zoom: $sm;
+}
+.ace-font-85 {
+  zoom: 85%;
+}
+
+[class*="ace-huge-text-"] {
+  line-height: $meas-line-height-null !important;
+}
+
+.ace-huge-text-110,
+.ace-huge-text-110 .ace-efld {
+  font-size: $xl !important;
+}
+.ace-huge-text-120,
+.ace-huge-text-120 .ace-efld {
+  font-size: $x3l !important;
+}
+.ace-huge-text-130,
+.ace-huge-text-130 .ace-efld {
+  font-size: $x4l_m !important;
+}
+.ace-huge-text-150,
+.ace-huge-text-150 .ace-efld,
+.ace-huge-text-150 i {
+  font-size: $x5l !important;
+}
+
+.ace-huge-text-200,
+.ace-huge-text-200 .ace-efld {
+  font-size: $x6l !important;
+}
+.ace-huge-text-250,
+.ace-huge-text-250 .ace-efld {
+  font-size: $x7l !important;
+}
+[class*="ace-huge-text-"] .ace-label {
+  height: auto !important;
+}
+[class*="ace-huge-text-"] .ace-empty:focus ~ .ace-label,
+[class*="ace-huge-text-"] .ace-efld ~ .ace-label {
+  top: - $position-30 !important;
+}
+[class*="ace-huge-text-"] .ace-empty ~ .ace-label {
+  top:  $position-8 !important;
+}
+
+.ace-small-text-90 .ace-efld {
+  font-size: $md !important;
+  line-height: $meas-line-height-null;
+}
+.ace-small-text-80 .ace-efld {
+  font-size: 80% !important;
+  line-height: $meas-line-height-null;
+}
+.ace-small-text-75 .ace-efld {
+  font-size: $sm !important;
+  line-height: $meas-line-height-null;
+}
+.ace-small-text-60 .ace-efld {
+  font-size: 60% !important;
+  line-height: $meas-line-height-null;
+}
+.ace-small-text-50 .ace-efld {
+  font-size: $xs !important;
+  line-height: $meas-line-height-null;
+}
+[class*="ace-small-text-"] select.ace-efld {
+  line-height: initial;
+}
+
+.ace-huge-text,
+.ace-huge-text .ace-efld {
+  font-size: $font-size-48 !important;
+}
+.ace-large-text,
+.ace-large-text .ace-efld {
+  font-size: $font-size-36;
+}
+.ace-big-text,
+.ace-big-text .ace-efld {
+  font-size: $font-size-26 !important;
+}
+.ace-bigger-text,
+.ace-bigger-text .ace-efld {
+  font-size: $font-size-18 !important;
+}
+
+.ace-ta-center {
+  text-align: center !important;
+}
+html[dir="ltr"] .ace-ta-lft {
+  text-align: left !important;
+}
+html[dir="rtl"] .ace-ta-lft {
+  text-align: right !important;
+}
+html[dir="ltr"] .ace-ta-rght {
+  text-align: right !important;
+}
+html[dir="rtl"] .ace-ta-rght {
+  text-align: left !important;
+}
+
+.ace-text-center {
+  text-align: center;
+}
+html[dir="ltr"] .ace-text-right {
+  text-align: right;
+}
+html[dir="rtl"] .ace-text-right {
+  text-align: left;
+}
+html[dir="ltr"] .ace-text-left {
+  text-align: left;
+}
+html[dir="rtl"] .ace-text-left {
+  text-align: right;
+}
+
+.ace-no-line-height {
+  line-height: $meas-line-height-null !important;
+}
+.ace-line-height-half {
+  line-height: $meas-line-height-0d5;
+}
+.ace-line-height-07 {
+  line-height: $meas-line-height-0d7;
+}
+.ace-line-height-1 {
+  line-height: $meas-line-height-1d0;
+}
+.ace-line-height-18 {
+  line-height: $meas-line-height-1d8;;
+}
+
+.ace-no-text-wrap,
+.ace-no-warp {
+  white-space: nowrap;
+}
+
+.ace-text-pre-wrap {
+  white-space: pre-wrap;
+}
+.ace-fld-pre-wrap .ace-efld {
+  white-space: pre-wrap;
+}
+
+.ace-text-cut-elipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace-white-space-normal {
+  white-space: normal !important;
+}
+.ace-word-break {
+  word-break: break-word;
+}
+
+.ace-bold {
+  font-weight: 600 !important;
+  color: $primary-font-color-highlight;
+  font-size: $ace-bigger-font-size;
+}
+/* end font related classes */

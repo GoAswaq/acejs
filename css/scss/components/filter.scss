@@ -1,0 +1,22 @@
+@use '../variables/all' as *;
+
+.ace-filter-container {
+  margin-top: $meas-marg-5;
+}
+// .ace-filter-container i {
+// }
+
+.ace-filter-container:hover .ace-filter-remove {
+  opacity: 1;
+  border-radius: $ace-common-radius;
+  padding: $meas-pad-6 $meas-pad-10;
+  top:  $position-10;
+}
+
+.ace-filter-remove {
+  opacity: 0;
+  border: none;
+  background: $error-color-v2;
+  color: $contrast-font-color;
+  top:  $position-15;
+}

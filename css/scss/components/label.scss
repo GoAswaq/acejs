@@ -1,0 +1,104 @@
+@use '../variables/all' as *;
+
+.ace-field-container .ace-label {
+  pointer-events: none;
+}
+
+.ace-label {
+  display: inline-block;
+  padding: $meas-pad-0 $ace-common-left-right-padding $ace-common-top-bottom-padding;
+  width: auto;
+  color: $label-color;
+  font-weight: 400;
+}
+
+.ace-label-wrap label {
+  white-space: normal;
+}
+
+.ace-label-align-top .ace-label {
+  padding-bottom: $meas-pad-0;
+  line-height: $meas-line-height-1d6 !important;
+}
+
+.ace-label-align-left .ace-label,
+.ace-label-align-left .ace-empty ~ label,
+.ace-label-align-left .ace-efld ~ label,
+.ace-label-align-left .ace-error .ace-efld ~ label,
+.ace-label-align-left .ace-error .ace-empty ~ label,
+.ace-label-align-left .ace-error-req .ace-efld ~ label,
+.ace-label-align-left .ace-error-req .ace-empty ~ label {
+  position: static;
+  display: table-cell;
+  width: auto;
+}
+
+@include floatToLTR('.ace-label-align-left .ace-label',left);
+@include floatToLTR('.ace-label-align-left .ace-empty ~ label',left);
+@include floatToLTR('.ace-label-align-left .ace-efld ~ label',left);
+@include floatToLTR('.ace-label-align-left .ace-error .ace-efld ~ label',left);
+@include floatToLTR('.ace-label-align-left .ace-error .ace-empty ~ label',left);
+@include floatToLTR('.ace-label-align-left .ace-error-req .ace-efld ~ label',left);
+@include floatToLTR('.ace-label-align-left .ace-error-req .ace-empty ~ label',left);
+
+@include addBorderLTR('ace-label-align-left .ace-label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-empty ~ label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-efld ~ label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-error .ace-efld ~ label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-error .ace-empty ~ label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-error-req .ace-efld ~ label',right,$meas-bord-5);
+@include addBorderLTR('.ace-label-align-left .ace-error-req .ace-empty ~ label',right,$meas-bord-5);
+
+.ace-label-align-left .ace-error-msg {
+  margin-top: $meas-marg-10 !important;
+}
+
+.ace-label-align-left .ace-text-field,
+.ace-label-align-left .ace-combo-field,
+.ace-label-align-left .ace-datepicker-field,
+.ace-label-align-left .ace-autocomplete-field,
+.ace-label-align-left .ace-text-editor {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.ace-label-align-left input,
+.ace-label-align-left select,
+.ace-label-align-left textarea {
+  width: $meas-full !important;
+  display: inline-block;
+  white-space: nowrap;
+}
+@include floatToLTR('.ace-label-align-left',right);
+
+/* end label related classes */
+
+/* begin label modifiers */
+
+.ace-no-label label {
+  display: none !important;
+}
+
+.ace-label-width-auto label {
+  width: auto !important;
+  min-width: 0 !important;
+}
+
+.ace-label-max label {
+  width: $meas-full !important;
+}
+
+html[dir="ltr"] .ace-label-text-right .ace-label {
+  text-align: right;
+}
+html[dir="rtl"] .ace-label-text-right .ace-label {
+  text-align: left;
+}
+
+html[dir="ltr"] .ace-label-text-left .ace-label {
+  text-align: left;
+}
+html[dir="rtl"] .ace-label-text-left .ace-label {
+  text-align: right;
+}
+/* end label modifiers */

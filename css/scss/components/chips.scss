@@ -1,0 +1,155 @@
+/* begin chips */
+/*
+
+ACE CODE simple chip with already loaded store:
+>>>>>>>>>>>>>>>>
+<div
+  class="ace-auto-gen ace-col-8 ks-target"
+  type="chips"
+  placeholder="type something here and press enter"
+
+  allowduplicates="true"
+  maxchipcount="5"
+  customallowadd="allowChipTextToBeAdded"
+  onadd="onChipAdded"
+  onremove="onChipRemoved"
+>
+  <store>
+    <record>
+      <field name="name">C1</field>
+      <field name="value">1</field>
+    </record>
+    <record>
+      <field name="name">C2</field>
+      <field name="value">2</field>
+    </record>
+    <record>
+      <field name="name">C3</field>
+      <field name="value">3</field>
+    </record>
+  </store>
+</div>
+<<<<<<<<<<<<<<<<
+
+RESULT:
+>>>>>>>>>>>>>>>>
+<div class="ace-auto-gen ace-col-8 ks-target ace-field-container" type="chips" placeholder="type something here and press enter" allowduplicates="true" maxchipcount="5" customallowadd="allowChipTextToBeAdded" onadd="onChipAdded" onremove="onChipRemoved">
+  <div class="ace-chips-field">
+    <span class="ace-chip" idx="0">C1
+      <a href="#" class="ace-chip-remove">X</a>
+    </span>
+    <span class="ace-chip" idx="1">C2
+      <a href="#" class="ace-chip-remove">X</a>
+    </span>
+    <span class="ace-chip" idx="2">C3
+      <a href="#" class="ace-chip-remove">X</a>
+    </span>
+    <input type="text" class="ace-efld" aceid="ace-26" placeholder="type something here and press enter">
+  </div>
+</div>
+<<<<<<<<<<<<<<<<
+
+
+ACE-CODE - chips with combobox selector:
+>>>>>>>>>>>>>>>>
+<div
+  class="ace-auto-gen ace-col-8 ks-target"
+  type="chips"
+  placeholder="type something here and press enter"
+
+  maxchipcount="5"
+
+  onadd="onChipAdded"
+  onremove="onChipRemoved"
+
+  inputtype="combobox"
+>
+  <storecombo>
+    <record>
+        <field name="name">Option 1</field>
+        <field name="id">1</field>
+    </record>
+    <record>
+        <field name="name">Option 2</field>
+        <field name="id">2</field>
+    </record>
+    <record>
+        <field name="name">Option 3</field>
+        <field name="id">3</field>
+    </record>
+    <record>
+        <field name="name">Option 4</field>
+        <field name="id">4</field>
+    </record>
+    <record>
+        <field name="name">Option 5</field>
+        <field name="id">5</field>
+    </record>
+  </storecombo>
+</div>
+
+<<<<<<<<<<<<<<<<
+
+RESULT:
+>>>>>>>>>>>>>>>>
+<div class="ace-auto-gen ace-col-8 ks-target ace-field-container" type="chips" placeholder="type something here and press enter" maxchipcount="5" onadd="onChipAdded" onremove="onChipRemoved" inputtype="combobox">
+  <div class="ace-chips-field">
+    <span class="ace-chip" idx="0">Option 1
+      <a href="#" class="ace-chip-remove">X</a>
+    </span>
+    <span class="ace-chip" idx="1">Option 3
+      <a href="#" class="ace-chip-remove">X</a>
+    </span>
+    <select placeholder="" class="ace-efld" aceid="ace-30">
+      <option value=""></option>
+      <option value="2">Option 2</option>
+      <option value="4">Option 4</option>
+      <option value="5">Option 5</option>
+    </select>
+  </div>
+</div>
+<<<<<<<<<<<<<<<<
+
+ */
+
+@use '../variables/all' as *;
+
+.ace-error .ace-chips-field {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$error-color-text);
+}
+.ace-hide-errors .ace-chips-field {
+  border-bottom: initial !important;
+}
+
+.ace-chips-field {
+  display: flex;
+  flex-wrap: wrap;
+  padding: $meas-pad-4 $meas-pad-5 $meas-pad-2 $meas-pad-5;
+  cursor: text;
+  font-size: $ace-tiny-title-size;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+.ace-chips-field input {
+  width: auto !important;
+  border: none;
+  padding: $meas-pad-0 !important;
+}
+
+.ace-chip {
+  padding: $meas-pad-2 $meas-pad-5;
+  color: $chips-text-color;
+  margin-bottom: $meas-marg-2;
+  background: $chips-background-color;
+}
+@include sideMarginLTR('.ace-chip',right,$meas-marg-3);
+a.ace-chip-remove {
+  margin: $meas-marg-0 $meas-marg-3;
+  color: $chips-text-color !important;
+  font-weight: bolder;
+}
+a.ace-chip-clear {
+  margin: $meas-marg-0 $meas-marg-3;
+  color: $chips-clear-color !important;
+  background-color: $chips-clear-bg-color !important;
+}
+/* end chips */

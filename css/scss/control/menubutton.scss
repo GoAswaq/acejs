@@ -1,0 +1,232 @@
+/* begin menubutton field */
+@use '../variables/all' as *;
+
+.ace-dropdown-list {
+  min-width: 182px;
+  display: none;
+  list-style: none;
+  position: absolute;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  top:  $position-35;
+  background-color: $menubutton-main-bg-color;
+  box-shadow: $box-shad-0 $box-shad-2 $box-shad-4 $menubutton-main-shadow-color;
+}
+@include positionLTR('.ace-dropdown-list',left,$position-0);
+
+.ace-dropdown-trigger:hover + .ace-dropdown-list,
+.ace-dropdown-list:hover {
+  height: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+.ace-dropdown:hover .ace-dropdown-trigger {
+  color: $menubutton-contrast-color;
+  background-color: $menubutton-contrast-bg-color;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $menubutton-main-shadow-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$menubutton-contrast-bg-color);
+}
+.ace-dropdown {
+  z-index: 2;
+  position: relative;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: ease-in-out 0.1s;
+  padding: $meas-pad-5 $meas-pad-0 !important;
+  font-size: $ace-tiny-title-size;
+}
+@include floatToLTR('.ace-dropdown',left);
+
+.ace-dropdown-list li {
+  width: $meas-full;
+  float: none;
+/*  min-height: $meas-10; */ /*SM-not sure*/
+}
+.ace-dropdown-list li a {
+  color: $menubutton-main-color;
+  padding: $ace-common-top-bottom-padding $ace-common-top-bottom-padding !important;
+  width: $meas-full;
+  display: block;
+  font-size: inherit !important;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+.ace-dropdown-list li a:hover {
+  color: $menubutton-highlight-color;
+}
+.ace-dropdown-list li a:active {
+  background-color: $menubutton-contrast-bg-color;
+  color: $menubutton-contrast-color;
+}
+.ace-dropdown-inside {
+  position: absolute;
+  margin: -$meas-marg-24 $meas-marg-0 !important;
+  background-color: $secondary-bg-color;
+  cursor: pointer;
+}
+@include positionLTR('.ace-dropdown-inside',right,$position-0);
+
+.ace-dropdown-list a:hover {
+  color: $menubutton-highlight-color;
+}
+@include sideMarginLTR('.ace-dropdown-list a i',right,$meas-marg-5);
+
+.ace-main-nav .ace-dropdown-trigger-click {
+  height: $ace-main-title-bar-height;
+}
+@include floatToLTR('.ace-right .ace-dropdown-list ul li',left);
+
+.ace-right .ace-dropdown-list ul li ul li {
+  width: $meas-full;
+  margin-top: $meas-marg-0;
+  padding: $meas-pad-0;
+}
+
+.ace-dropdown-trigger {
+  padding: $meas-pad-10;
+  color: $menubutton-highlight-color;
+  background-color: $menubutton-secondary-bg-color;
+  cursor: pointer;
+  border: none;
+}
+a.ace-advanced-search-trigger img {
+  width: $meas-20;
+  height: $meas-20;
+  border-radius: $meas-radius-50p;
+  display: block;
+}
+@include floatToLTR('a.ace-advanced-search-trigger img',left);
+@include sideMarginLTR('a.ace-advanced-search-trigger img',right,$meas-marg-5);
+
+.ace-dropdown-trigger:hover {
+  color: $menubutton-contrast-color;
+  background-color: $menubutton-contrast-bg-color;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $menubutton-main-shadow-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$menubutton-contrast-bg-color);
+}
+
+.ace-dropdown-trigger-click {
+  padding: $meas-pad-5 $meas-pad-10 $meas-pad-5 !important;
+  color: $menubutton-main-color;
+  background-color: $menubutton-secondary-bg-color;
+  cursor: pointer;
+  display: block;
+  line-height: $meas-line-height-1d0 !important;
+}
+.ace-dropdown-trigger-click .ace-icon{
+  color: $menubutton-main-color;
+}
+
+.ace-button-active {
+  box-shadow: inset $box-shad-0 $box-shad-1 $box-shad-4 $menubutton-main-shadow-color;
+  color: $menubutton-contrast-color !important;
+  background-color: $menubutton-contrast-bg-color;
+}
+.ace-button-active.ace-dropdown-trigger-click .ace-icon {
+  color: $menubutton-contrast-color !important;
+}
+
+.ace-radio {
+  display: none !important;
+}
+
+.ace-radio + span:before {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: $meas-radius-50p;
+  color: $menubutton-disabled-color;
+  font-size: 2 + $ace-tiny-title-size;//just a bit bigger
+  text-align: center;
+  content: "\f10c";
+  font-family: $primary-font-family;
+}
+html[dir="ltr"] .ace-radio + span:before {
+  margin: -$meas-marg-5 $meas-marg-9 $meas-marg-0 $meas-marg-0;
+}
+html[dir="rtl"] .ace-radio + span:before {
+  margin: -$meas-marg-5 $meas-marg-0 $meas-marg-0 $meas-marg-9;
+}
+.ace-radio:checked + span:before {
+  content: "\f192";
+  font-family: $primary-font-family;
+  color: $primary-color;
+}
+
+.ace-radio + span {
+  display: inline-block;
+  height: $ace-small-element-size;
+  border-radius: $ace-common-radius;
+  color: $menubutton-main-color;
+  transition: ease-in-out 0.1s;
+  cursor: pointer;
+}
+@include sidePaddingLTR('.ace-radio + span',right,$meas-pad-15);
+
+.ace-input {
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.ace-input + label span:before {
+  font-family: $primary-font-family;
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+.ace-input + label {
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  cursor: pointer;
+  border-radius: $meas-radius-16;
+}
+html[dir="ltr"] .ace-input + label {
+  padding: $meas-pad-1 $meas-pad-15 $meas-pad-0 $meas-pad-3;
+}
+html[dir="rtl"] .ace-input + label {
+  padding: $meas-pad-1 $meas-pad-0 $meas-pad-3 $meas-pad-15;
+}
+
+.ace-radio:checked + label span:before {
+  content: "\f192";
+  font-family: $primary-font-family;
+  color: $menubutton-checked-color;
+}
+
+.ace-separator {
+  width: $meas-full;
+  display: block;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$menubutton-separator-color);
+}
+@include floatToLTR('.ace-separator',left);
+
+/* begin modifiers*/
+.ace-dropdown-no-border .ace-dropdown .ace-dropdown-list li a {
+  @include addBorder(bottom,$meas-0);
+}
+
+/* end menubutton field */

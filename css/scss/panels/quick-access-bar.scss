@@ -1,0 +1,81 @@
+/* begin quick access bar */
+@use '../variables/all' as *;
+
+.ace-quick-access-bar {
+  height: $meas-full;
+  width: $meas-250;
+  overflow: visible;
+  padding: $meas-pad-15;
+  z-index: 6;
+  opacity: 0.99;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+@include floatToLTR('.ace-quick-access-bar',left);
+@include positionLTR('.ace-quick-access-bar .ace-dropdown-list',left,initial);
+@include positionLTR('.ace-quick-access-bar .ace-dropdown-list',right,$position-0);
+
+.ace-advanced-panel.ace-quick-access-bar {
+  width: $meas-0;
+  display: block;
+  position: relative;
+}
+@include positionLTR('.ace-advanced-panel.ace-quick-access-bar',left,-$position-300);
+
+.ace-advanced-panel.ace-not-default.ace-quick-access-bar {
+  position: absolute;
+}
+
+.ace-advanced-panel.ace-quick-access-bar.ace-show {
+  width: $meas-300;
+  max-width: $meas-300;
+  min-width: $meas-300;
+}
+@include positionLTR('.ace-advanced-panel.ace-quick-access-bar.ace-show',left,$position-0);
+
+.ace-quick-access-bar.ace-entries-menu {
+  height: $meas-full;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.ace-quick-access-bar .ace-text-field {
+  padding-bottom: $meas-pad-0;
+}
+.ace-quick-access-bar .ace-search-panel {
+  margin-bottom: $meas-marg-0 !important;
+  width: $meas-full;
+}
+
+.ace-quick-access-bar .ace-title-bar {
+  overflow: visible;
+}
+@include sidePaddingLTR('.ace-quick-access-bar .ace-field-container',right,$meas-pad-0);
+
+.ace-quick-access-bar .ace-grid {
+  width: $meas-full;
+  max-height: $meas-full;
+}
+
+.ace-quick-access-bar .ace-grid .ace-grid-body {
+  max-height: $meas-full;
+  height: auto;
+}
+.ace-quick-access-bar .ace-grid .ace-grid-footer {
+  width: $meas-full !important;
+}
+
+.ace-quick-access-bar .ace-grid .ace-grid-footer .ace-grid-pagination {
+  width: $meas-full !important;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-quick-access-bar .ace-search-panel {
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+/* end quick access bar */

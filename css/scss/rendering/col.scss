@@ -1,0 +1,80 @@
+/* begin col */
+@use '../variables/all' as *;
+
+@include floatToLTR('[class*="ace-col-"]',left);
+@include floatToLTR('[class*="ace-thin-col-"]',left);
+@include floatToLTR('[class*="ace-extra-thin-col-"]',left);
+
+@for $i from 1 to 13 {
+  $per : floor(percentage( (100/12)*$i/100) * 100) / 100;
+  .ace-col-#{$i} {
+    width: $per;
+    flex-basis: $per;
+    max-width: $per;
+  }
+}
+@for $i from 1 to 25 {
+  $per : floor(percentage( (100/24)*$i/100) * 100) / 100;
+  .ace-thin-col-#{$i} {
+    width: $per;
+    flex-basis: $per;
+    max-width: $per;
+  }
+}
+@for $i from 1 to 49 {
+  $per : floor(percentage( (100/48)*$i/100) * 100) / 100;
+  .ace-extra-thin-col-#{$i} {
+    width: $per;
+    flex-basis: $per;
+    max-width: $per;
+  }
+}
+@media screen and (min-width: $screen-large) and (max-width: $screen-1366) {
+  @for $i from 1 to 13 {
+    $per : floor(percentage( (100/12)*$i/100) * 100) / 100;
+    .ace-col-l-#{$i} {
+      width: $per;
+      flex-basis: $per;
+      max-width: $per;
+    }
+  }
+}
+@media screen and (min-width: $screen-681) and (max-width: $screen-large) {
+  @for $i from 1 to 13 {
+    $per : floor(percentage( (100/12)*$i/100) * 100) / 100;
+    .ace-col-m-#{$i} {
+      width: $per;
+      flex-basis: $per;
+      max-width: $per;
+    }
+  }
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  [class*="ace-col-"],
+  [class*="ace-thin-col-"],
+  [class*="ace-extra-thin-col-"] {
+    width: $meas-full;
+    max-width: $meas-full;
+    flex-basis: $meas-full;
+  }
+
+  @for $i from 1 to 13 {
+    $per : floor(percentage( (100/12)*$i/100) * 100) / 100;
+    .ace-col-fm-#{$i} {
+      width: $per;
+      flex-basis: $per;
+      max-width: $per;
+    }
+  }
+}
+.ace-a4-size {
+  width: 21cm;
+  height: 29.7cm;
+}
+.ace-a4-width {
+  width: 21cm;
+}
+.ace-a4-height {
+  height: 29.7cm;
+}
+/* end col */

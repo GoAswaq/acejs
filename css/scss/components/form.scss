@@ -1,0 +1,145 @@
+/* begin form */
+@use '../variables/all' as *;
+
+.ace-form-show {
+  display: block !important;
+  position: fixed;
+  height: $meas-full;
+  width: $meas-full;
+  background: $form-popup-mask-color;
+  top:  $position-0;
+  z-index: 16;
+  transition: ease 0.1s;
+}
+@include positionLTR('.ace-form-show',left,$position-0);
+
+.ace-form-inner {
+  display: block !important;
+  width: $meas-full;
+  /*left:  $position-0;
+  right:  $position-0;
+  top:  $position-30p;*//*SM-not sure*/
+}
+.ace-form-inner h2 {
+  font-size: $font-size-26;
+  width: $meas-full;
+  margin-bottom: $meas-marg-25;
+  font-weight: 400;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+.ace-form-inner p {
+  margin: $meas-marg-0 auto;
+}
+
+@include floatToLTR('.ace-form-footer',right);
+
+.ace-form-popup {
+  display: none;
+}
+
+.ace-form-popup > .ace-form-container {
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  width: 80%;
+
+  margin-top: $meas-marg-75;
+  margin-left: auto;
+  margin-right: auto;
+  top:  $position-0;
+
+  position: relative;
+  background: $form-bg-color;
+  box-shadow: $box-shad-0 $box-shad-6 $box-shad-16 $form-popup-shadow-color;
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-form-popup > .ace-form-container {
+    width: 90%;
+  }
+}
+
+.ace-form-popup.ace-form-popup-small > .ace-form-container {
+  max-width: $screen-480;
+}
+
+.ace-form-popup > .ace-form-container > .ace-form-footer > button[action="cancel"] {
+  position: absolute;
+  top: - $position-39;
+  margin: $meas-marg-0;
+  color: $contrast-font-color;
+  background: $primary-color !important;
+  padding: $meas-pad-7 $meas-pad-12;
+}
+@include positionLTR('button[action="cancel"]',right,$position-0);
+@include positionLTR('.ace-soft-close button[action="cancel"]',right,initial);
+
+.ace-form-popup > .ace-form-container > .ace-form-footer > button[action="cancel"]:before {
+  content: "X";
+  margin: $meas-marg-0 $meas-marg-5;
+}
+
+.ace-form-popup .ace-field-container {
+  white-space: normal !important;
+}
+@include floatToLTR('.ace-form-popup .ace-field-container',left);
+
+.ace-form-container h3 {
+  width: calc(#{$meas-full} - 15px);
+}
+.ace-form-container:hover input[type="text"],
+.ace-form-container:hover input[type="number"],
+.ace-form-container:hover input[type="password"],
+.ace-form-container:hover input[type="email"],
+.ace-form-container:hover select,
+.ace-form-container:hover .hasDatepicker,
+.ace-form-container:hover textarea,
+.ace-highlight-area:hover textarea,
+.ace-highlight-area:hover input,
+.ace-highlight-area:hover input[type="text"],
+.ace-highlight-area:hover .hasDatepicker,
+.ace-highlight-area:hover select {
+  background-color: $form-focus-bg-color;
+}
+
+.ace-form-container:hover .ace-image-upload {
+  background-color: $secondary-bg-color;
+  transition: ease-in-out 0.2s;
+  @include addBorder(all,$meas-bord-1,$ace-border-default-pattern,$primary-color);
+}
+.ace-form-container:hover .ace-image-upload:before {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+.ace-form-container:hover .ace-image-upload:after {
+  background: $primary-color;
+  transform: scale(1);
+}
+
+/* end form */
+
+/* begin search form */
+.ace-adv-search-panel {
+  height: $meas-250;
+  position: relative;
+  padding: $meas-pad-15 $meas-pad-0;
+  margin-bottom: $meas-marg-15;
+  width: $meas-full;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,#dadada);
+}
+@include floatToLTR('.ace-adv-search-panel',left);
+
+.ace-adv-search-panel .ace-advanced-expand {
+  color: $contrast-font-color !important;
+  font-size: $ace-medium-title-size;
+  position: absolute;
+  z-index: 114;
+  top:  $position-0;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  background: $error-color-v2 !important;
+}
+@include positionLTR('.ace-adv-search-panel .ace-advanced-expand',right,-$position-30);
+
+orderbyfields,
+advsearchfields {
+  display: none;
+}
+
+/* end search form */

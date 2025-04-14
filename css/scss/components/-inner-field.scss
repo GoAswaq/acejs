@@ -1,0 +1,73 @@
+/* begin value inner field */
+@use '../variables/all' as *;
+
+.ace-efld {
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  transition: ease-in-out 0.1s;
+
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+}
+.ace-efld:focus ~ label {
+  display: inline-block;
+  top: $ace-label-top-offset;
+  position: absolute;
+  color: $primary-color;
+}
+.ace-label-align-left .ace-efld:focus ~ label {
+  top: initial;
+  position: initial;
+}
+
+.ace-efld ~ label {
+  display: inline-block;
+  top: $ace-label-top-offset;
+  position: absolute;
+  transition: all ease-in-out 0.1s;
+  width: $meas-full;
+  white-space: nowrap;
+  overflow: hidden;
+  height: $meas-20 !important;
+  text-overflow: ellipsis;
+  font-size: $ace-standard-font-size;
+}
+.ace-label-align-left .ace-efld ~ label {
+  height: auto !important;
+  padding-top: $meas-pad-0;
+  align-items: center;
+  align-content: center;
+  line-height: $meas-line-height-1d8;
+}
+@include positionLTR('.ace-efld ~ label',left,$position-0);
+
+.ace-empty ~ label {
+  display: inline-block;
+  top:  $ace-label-empty-offset;
+  position: absolute;
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  font-size: $ace-standard-font-size;
+}
+@include positionLTR('.ace-empty ~ label',left,$position-0);
+
+.ace-empty:focus ~ label {
+  display: inline-block;
+  top: $ace-label-top-offset;
+  position: absolute;
+  transition: 0.1s ease all;
+  -moz-transition: 0.1s ease all;
+  -webkit-transition: 0.1s ease all;
+}
+
+/* end value inner field */

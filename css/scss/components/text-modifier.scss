@@ -1,0 +1,52 @@
+/* begin text modifiers */
+@use '../variables/all' as *;
+
+[class^="ace-state-badge-"] .ace-text-field {
+  display: flex !important;
+  margin-bottom: $meas-marg-5;
+  flex-direction: row;
+  padding: $meas-pad-5 $meas-pad-10;
+}
+@include sideMarginLTR('[class^="ace-state-badge-"] .ace-text-field',left,-$meas-marg-15);
+
+[class^="ace-state-badge-"] .ace-text-field input {
+  color: $contrast-font-color;
+  padding: $meas-pad-10 $meas-pad-5 $meas-pad-5 $meas-pad-5 !important;
+  width: auto !important;
+  display: block;
+  position: relative;
+  top: - $position-3;
+  order: 1;
+}
+@include floatToLTR('[class^="ace-state-badge-"] [class^="ace-state-badge-"] .ace-text-field input',right,true);
+@include positionLTR('[class^="ace-state-badge-"] [class^="ace-state-badge-"] .ace-text-field input',left,$position-0);
+
+[class^="ace-state-badge-"] .ace-text-field .ace-label {
+  position: relative;
+  min-width: $meas-50 !important;
+  width: auto !important;
+  max-width: initial !important;
+  order: 0;
+  top: - $position-2;
+  padding: $meas-pad-0;
+  z-index: 6;
+  color: $contrast-font-color !important;
+}
+@include floatToLTR('[class^="ace-state-badge-"] .ace-text-field .ace-label',left);
+
+.ace-state-badge-green .ace-text-field {
+  background: $variant-check-color !important;
+  color: $contrast-font-color;
+}
+.ace-state-badge-red .ace-text-field {
+  background: $variant-uncheck-color !important;
+  color: $contrast-font-color;
+}
+.ace-state-badge-gray .ace-text-field {
+  background: $gray;
+  color: $primary-font-color-highlight !important;
+}
+.ace-state-badge-gray .ace-text-field.ace-label {
+  color: $primary-font-color-highlight !important;
+}
+/* end text modifiers */

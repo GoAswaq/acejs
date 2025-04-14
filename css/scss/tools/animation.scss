@@ -1,0 +1,50 @@
+@use '../variables/all' as *;
+
+@keyframes fullscreen {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes close {
+  0% {
+    width: $meas-1500;
+    height: $meas-800;
+    transform: translateX(-70%) translateY(-50%);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes check {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(2.2);
+    margin-top: -$meas-marg-5;
+    text-shadow: 0px 2px 4px $primary-shadow-color;
+  }
+}
+@keyframes radio {
+  from {
+    transform: scale(0.1);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+@keyframes checkbox {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,281 @@
+/* begin height classes */
+@use "../variables/all" as *;
+
+.ace-full-height {
+  height: $meas-full;
+}
+.ace-height-minus-50 {
+  height: calc(#{$meas-full} - #{$meas-50});
+}
+.ace-height-minus-60 {
+  height: calc(#{$meas-full} - #{$meas-60});
+}
+.ace-height-minus-80 {
+  height: calc(#{$meas-full} - #{$meas-80});
+}
+.ace-height-minus-100 {
+  height: calc(#{$meas-full} - #{$meas-100});
+}
+.ace-height-minus-120 {
+  height: calc(#{$meas-full} - #{$meas-120});
+}
+.ace-height-minus-130 {
+  height: calc(#{$meas-full} - #{$meas-130});
+}
+.ace-height-minus-140 {
+  height: calc(#{$meas-full} - #{$meas-140});
+}
+.ace-height-minus-150 {
+  height: calc(#{$meas-full} - #{$meas-150});
+}
+.ace-height-minus-200 {
+  height: calc(#{$meas-full} - #{$meas-200});
+}
+.ace-height-minus-230 {
+  height: calc(#{$meas-full} - #{$meas-230});
+}
+.ace-height-minus-250 {
+  height: calc(#{$meas-full} - #{$meas-250});
+}
+.ace-height-minus-290 {
+  height: calc(#{$meas-full} - #{$meas-290});
+}
+.ace-height-minus-300 {
+  height: calc(#{$meas-full} - #{$meas-300});
+}
+.ace-height-minus-350 {
+  height: calc(#{$meas-full} - #{$meas-350});
+}
+.ace-height-minus-400 {
+  height: calc(#{$meas-full} - #{$meas-400});
+}
+.ace-height-minus-450 {
+  height: calc(#{$meas-full} - #{$meas-450});
+}
+
+.ace-i-full-height {
+  height: $meas-full !important;
+}
+.ace-i-height-minus-50 {
+  height: calc(#{$meas-full} - #{$meas-50}) !important;
+}
+.ace-i-height-minus-60 {
+  height: calc(#{$meas-full} - #{$meas-60}) !important;
+}
+.ace-i-height-minus-80 {
+  height: calc(#{$meas-full} - #{$meas-80}) !important;
+}
+.ace-i-height-minus-100 {
+  height: calc(#{$meas-full} - #{$meas-100}) !important;
+}
+.ace-i-height-minus-120 {
+  height: calc(#{$meas-full} - #{$meas-120}) !important;
+}
+.ace-i-height-minus-150 {
+  height: calc(#{$meas-full} - #{$meas-150}) !important;
+}
+.ace-i-height-minus-200 {
+  height: calc(#{$meas-full} - #{$meas-200}) !important;
+}
+.ace-i-height-minus-230 {
+  height: calc(#{$meas-full} - #{$meas-230}) !important;
+}
+.ace-i-height-minus-250 {
+  height: calc(#{$meas-full} - #{$meas-250}) !important;
+}
+.ace-i-height-minus-290 {
+  height: calc(#{$meas-full} - #{$meas-290}) !important;
+}
+.ace-i-height-minus-300 {
+  height: calc(#{$meas-full} - #{$meas-300}) !important;
+}
+.ace-i-height-minus-350 {
+  height: calc(#{$meas-full} - #{$meas-350}) !important;
+}
+.ace-i-height-minus-400 {
+  height: calc(#{$meas-full} - #{$meas-400}) !important;
+}
+.ace-i-height-minus-450 {
+  height: calc(#{$meas-full} - #{$meas-450}) !important;
+}
+
+.ace-full-height-vh {
+  height: smartvh(100);
+}
+.ace-height-minus-50-vh {
+  height: calc(#{smartvh(100)} - #{$meas-50});
+}
+.ace-height-minus-60-vh {
+  height: calc(#{smartvh(100)} - #{$meas-60});
+}
+.ace-height-minus-80-vh {
+  height: calc(#{smartvh(100)} - #{$meas-80});
+}
+.ace-height-minus-100-vh {
+  height: calc(#{smartvh(100)} - #{$meas-100});
+}
+.ace-height-minus-120-vh {
+  height: calc(#{smartvh(100)} - #{$meas-120});
+}
+.ace-height-minus-130-vh {
+  height: calc(#{smartvh(100)} - #{$meas-130});
+}
+.ace-height-minus-150-vh {
+  height: calc(#{smartvh(100)} - #{$meas-150});
+}
+.ace-height-minus-200-vh {
+  height: calc(#{smartvh(100)} - #{$meas-200});
+}
+.ace-height-minus-230-vh {
+  height: calc(#{smartvh(100)} - #{$meas-230});
+}
+.ace-height-minus-250-vh {
+  height: calc(#{smartvh(100)} - #{$meas-250});
+}
+.ace-height-minus-290-vh {
+  height: calc(#{smartvh(100)} - #{$meas-290});
+}
+.ace-height-minus-300-vh {
+  height: calc(#{smartvh(100)} - #{$meas-300});
+}
+.ace-height-minus-350-vh {
+  height: calc(#{smartvh(100)} - #{$meas-350});
+}
+.ace-height-minus-400-vh {
+  height: calc(#{smartvh(100)} - #{$meas-400});
+}
+.ace-height-minus-450-vh {
+  height: calc(#{smartvh(100)} - #{$meas-450});
+}
+
+.ace-i-full-height-vh {
+  height: smartvh(100) !important;
+}
+.ace-i-height-minus-50-vh {
+  height: calc(#{smartvh(100)} - #{$meas-50}) !important;
+}
+.ace-i-height-minus-60-vh {
+  height: calc(#{smartvh(100)} - #{$meas-60}) !important;
+}
+.ace-i-height-minus-80-vh {
+  height: calc(#{smartvh(100)} - #{$meas-80}) !important;
+}
+.ace-i-height-minus-100-vh {
+  height: calc(#{smartvh(100)} - #{$meas-100}) !important;
+}
+.ace-i-height-minus-120-vh {
+  height: calc(#{smartvh(100)} - #{$meas-120}) !important;
+}
+.ace-i-height-minus-150-vh {
+  height: calc(#{smartvh(100)} - #{$meas-150}) !important;
+}
+.ace-i-height-minus-200-vh {
+  height: calc(#{smartvh(100)} - #{$meas-200}) !important;
+}
+.ace-i-height-minus-230-vh {
+  height: calc(#{smartvh(100)} - #{$meas-230}) !important;
+}
+.ace-i-height-minus-250-vh {
+  height: calc(#{smartvh(100)} - #{$meas-250}) !important;
+}
+.ace-i-height-minus-290-vh {
+  height: calc(#{smartvh(100)} - #{$meas-290}) !important;
+}
+.ace-i-height-minus-300-vh {
+  height: calc(#{smartvh(100)} - #{$meas-300}) !important;
+}
+.ace-i-height-minus-350-vh {
+  height: calc(#{smartvh(100)} - #{$meas-350}) !important;
+}
+.ace-i-height-minus-400-vh {
+  height: calc(#{smartvh(100)} - #{$meas-400}) !important;
+}
+.ace-i-height-minus-450-vh {
+  height: calc(#{smartvh(100)} - #{$meas-450}) !important;
+}
+
+.ace-vcol-1 {
+  height: 8.33%;
+}
+.ace-vcol-2 {
+  height: 16.66%;
+}
+.ace-vcol-3 {
+  height: 25%;
+}
+.ace-vcol-4 {
+  height: 33.33%;
+}
+.ace-vcol-5 {
+  height: 41.66%;
+}
+.ace-vcol-6 {
+  height: 50%;
+}
+.ace-vcol-7 {
+  height: 58.33%;
+}
+.ace-vcol-8 {
+  height: 66.66%;
+}
+.ace-vcol-9 {
+  height: 75%;
+}
+.ace-vcol-10 {
+  height: 83.33%;
+}
+.ace-vcol-11 {
+  height: 91.66%;
+}
+.ace-vcol-12 {
+  height: $meas-full;
+}
+
+.ace-vcol-1 select {
+  height: 8.33%;
+}
+.ace-vcol-2 select {
+  height: 16.66%;
+}
+.ace-vcol-3 select {
+  height: 25%;
+}
+.ace-vcol-4 select {
+  height: 33.33%;
+}
+.ace-vcol-5 select {
+  height: 41.66%;
+}
+.ace-vcol-6 select {
+  height: 50%;
+}
+.ace-vcol-7 select {
+  height: 58.33%;
+}
+.ace-vcol-8 select {
+  height: 66.66%;
+}
+.ace-vcol-9 select {
+  height: 75%;
+}
+.ace-vcol-10 select {
+  height: 83.33%;
+}
+.ace-vcol-11 select {
+  height: 91.66%;
+}
+.ace-vcol-12 select {
+  height: $meas-full;
+}
+[class*="ace-vcol-"] select {
+  height: $meas-full;
+}
+
+.ace-height-minus-titlebar-and-tabs {
+  height: calc(#{$meas-full} - #{$ace-composite-height-normal-title-bar-and-horizontal-tabs});
+}
+.ace-height-minus-normal-titlebar {
+  height: calc(#{$meas-full} - #{$ace-tittle-bar-height});
+}
+
+/* end height classes */

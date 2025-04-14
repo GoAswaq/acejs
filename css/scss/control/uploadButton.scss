@@ -1,0 +1,149 @@
+/* begin upload buttons */
+
+@use '../variables/all' as *;
+
+.ace-image-upload {
+  overflow: hidden;
+  padding: $meas-pad-0;
+  cursor: pointer;
+  position: relative;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$upload-main-highlight-color);
+}
+@include floatToLTR('.ace-image-upload',left);
+
+.ace-image-upload:after {
+  content: "\f030";
+  font-family: $primary-font-family;
+  display: inline-block;
+  width: $meas-48;
+  height: $meas-48;
+  z-index: 1;
+  top:  $position-2p;
+  border-radius: $meas-radius-50p;
+  text-align: center;
+  font-size: $ace-large-title-size;
+  line-height: $meas-line-height-2d2;
+  transform: scale(0);
+  position: absolute;
+  cursor: pointer;
+  color: $upload-main-contrast-color;
+  margin: auto;
+  transition: ease-in-out 0.2s;
+  pointer-events: none;
+  left:  $position-0;
+  top:  $position-0;
+  right:  $position-0;
+  bottom:  $position-0;
+}
+@keyframes image-icon-change {
+  0% {
+    transform: scale(1);
+    content: "\f030";
+  }
+  60% {
+    transform: scale(0);
+    content: "\f040";
+  }
+  100% {
+    transform: scale(1);
+    content: "\f040";
+  }
+}
+.ace-image-upload:not(.ace-readonly):hover:after {
+  background: $upload-main-highlight-color;
+  transform: scale(1);
+  content: "\f040";
+  font-family: $primary-font-family;
+  animation: image-icon-change ease 0.3s;
+}
+.ace-image-upload:before {
+  content: " ";
+  position: absolute;
+  width: $meas-full;
+  height: $meas-full;
+  z-index: 1;
+  background: transparent;
+  transition: ease 0.1s;
+  transform: scale(0.5) translateY(-50%);
+  opacity: 0;
+}
+.ace-image-upload.ace-rounded:before {
+  border-radius: $meas-radius-50p;
+}
+.ace-image-upload:not(.ace-readonly):hover:before {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+.ace-image-upload img {
+  height: $meas-full;
+}
+.ace-image-upload:hover {
+  background-color: $secondary-bg-color;
+  @include addBorder(all,$meas-bord-2,$ace-border-default-pattern,$upload-main-border-color);
+}
+
+.ace-photo-remove {
+  position: static !important;
+}
+button.ace-photo-remove,
+.ace-photo-remove a,
+.ace-photo-remove button {
+  color: $upload-main-contrast-color !important;
+  background: $error-color-v2 !important;
+  border-radius: $meas-radius-50p;
+  position: absolute !important;
+  line-height: $meas-line-height-3d8 !important;
+  transform: scale(0);
+  width: $ace-standard-element-size !important;
+  height: $ace-standard-element-size;
+  text-align: center;
+  margin: auto !important;
+  left:  $position-0;
+  right:  $position-0;
+  bottom:  $position-10p;
+  z-index: 2;
+}
+a.ace-photo-remove:hover,
+a.ace-photo-remove:hover,
+.ace-photo-remove a:hover,
+.ace-photo-remove buttom:hover {
+  background: $error-color-v3;
+}
+.ace-image-upload:hover a.ace-photo-remove,
+.ace-image-upload:hover button.ace-photo-remove,
+.ace-image-upload:hover .ace-photo-remove a,
+.ace-image-upload:hover .ace-photo-remove button {
+  transform: scale(1);
+}
+.ace-photo-remove a:before {
+  margin: $meas-marg-0 !important;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-file-upload-button a:hover,
+  .ace-file-remove a:hover {
+    max-width: 400px;
+  }
+  .ace-file-upload label .ace-file-upload-button,
+  .ace-file-upload label .ace-file-remove {
+    transform: scale(1) !important;
+  }
+  .ace-image-upload a.ace-photo-remove,
+  .ace-image-upload button.ace-photo-remove,
+  .ace-image-upload .ace-photo-remove a,
+  .ace-image-upload .ace-photo-remove button {
+    transform: scale(1);
+  }
+  .ace-image-upload:after {
+    transform: scale(1);
+  }
+  .ace-image-upload:before {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* end upload buttons */

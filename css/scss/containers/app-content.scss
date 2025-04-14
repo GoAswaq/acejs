@@ -1,0 +1,111 @@
+/* begin app content */
+@use '../variables/all' as *;
+
+.ace-content {
+  clear: both;
+  bottom:  $position-0;
+
+  width: $meas-full;
+  -webkit-transition: padding ease 0.18s;
+  -moz-transition: padding ease 0.18s;
+  -o-transition: padding ease 0.18s;
+  -ms-transition: padding ease 0.18s;
+  transition: padding ease 0.18s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+  margin: $meas-marg-50 $meas-marg-0 $meas-marg-0 $meas-marg-0;
+  overflow: visible;
+}
+.ace-no-top-bar .ace-content {
+  margin: $meas-marg-0 $meas-marg-0 $meas-marg-0 $meas-marg-0;
+  height: smartvh(100);
+}
+.ace-no-top-bar #ace-top-bar{
+  display: none !important;
+}
+
+.ace-content-no-top-bar {
+  margin: $meas-marg-0;
+}
+
+.ace-window {
+  height: $meas-full;
+  width: $meas-full;
+  clear: both;
+  overflow-y: hidden;
+  position: relative;
+  display: none;
+}
+@include floatToLTR('.ace-window',left);
+
+.ace-info-side {
+  overflow: hidden;
+  height: $meas-full;
+  width: calc(#{$meas-full} - #{$meas-250});
+  position: relative;
+  background-color: $primary-bg-color;
+}
+
+@include floatToLTR('.ace-info-side',left);
+
+.ace-info-side-details {
+  width: $meas-full;
+  max-height: 0;
+  opacity: 0;
+  height: $meas-full;
+  overflow: hidden;
+  transition: ease 0.2s;
+}
+@include floatToLTR('.ace-info-side-details',left);
+
+.ace-info-side-details ul {
+  clear: both;
+  height: auto;
+  display: inline-block;
+}
+
+.ace-footer {
+  background: $primary-bg-color;
+  height: $ace-footer-height;
+  width: $meas-full;
+  padding: $ace-footer-padding;
+  position: fixed;
+  z-index: 5;
+  bottom:  $position-0;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-content {
+    clear: none !important;
+    top:  $position-0;
+    z-index: 3;
+  }
+
+  .ace-footer {
+    display: none;
+  }
+
+}
+
+.ace-app-edit-windwow{
+  height: $meas-full;
+  width: $meas-full;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  /*.ace-info-side {
+    height: calc(#{smartvh(100)} - #{$meas-50});
+  }*//*SM-not sure*/
+  .ace-info-side.ace-info-side-mobile-scroll {
+    overflow-y: auto;
+  }
+  /*.ace-no-top-bar .ace-info-side {
+    height: smartvh(100);
+  }*//*SM-not sure*/
+}
+
+/* end app content */

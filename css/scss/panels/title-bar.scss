@@ -1,0 +1,84 @@
+/* begin title bar */
+@use '../variables/all' as *;
+
+.ace-title-bar {
+  width: $meas-full;
+  height: $ace-tittle-bar-height;
+  padding: $ace-tittle-bar-padding;
+  background: $primary-bg-color;
+  position: relative;
+  display: flex;
+  z-index: 5;
+  justify-content: space-between;
+  @include addBorder(bottom,$meas-bord-1,$ace-border-default-pattern,$titlebar-border-color);
+}
+html[dir="ltr"] .ace-title-bar {
+  box-shadow: -$box-shad-2 $box-shad-2 $box-shad-5 $titlebar-shadow-color;
+}
+html[dir="rtl"] .ace-title-bar {
+  box-shadow: $box-shad-2 $box-shad-1 $box-shad-2 $titlebar-shadow-color;
+}
+
+.ace-title-bar h2 {
+  display: inline-block;
+  border: none;
+  line-height: $meas-line-height-2d3;
+  margin: $meas-marg-0;
+  white-space: nowrap;
+  padding: $meas-pad-0;
+  color: $primary-font-color-highlight;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace-title-bar h2 > i {
+  margin: $meas-marg-0 $meas-marg-15;
+}
+
+/* end title bar */
+
+/* begin transparent title bar */
+
+.ace-transparent-title-bar {
+  background: $primary-bg-color;
+  height: $ace-tittle-bar-height;
+  box-shadow: $box-shad-0 $box-shad-0 $titlebar-shadow-color;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  position: relative;
+  width: $meas-full;
+  z-index: 7;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+@include floatToLTR('.ace-transparent-title-ba',left);
+
+.ace-transparent-title-bar h2 {
+  color: $primary-font-color-highlight;
+  width: auto;
+  border: none;
+  font-size: $ace-medium-title-size;
+}
+
+.ace-transparent-title-bar .ace-auto-gen.ace-h2 .ace-display-field {
+  width: $meas-full;
+}
+.ace-transparent-title-bar .ace-auto-gen.ace-h2 .ace-display-field span {
+  color: $primary-font-color-highlight;
+  border: none !important;
+  width: $meas-full;
+  font-size: $ace-medium-title-size;
+}
+
+.ace-independent-form .ace-transparent-title-bar,
+.ace-independent-style.ace-transparent-title-bar {
+  display: flex;
+  width: $meas-full;
+  justify-content: space-between;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-transparent-title-bar .ace-col-11 {
+    width: 91.66%;
+  }
+}
+
+/* end transparent title bar */

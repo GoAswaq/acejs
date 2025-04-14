@@ -1,0 +1,104 @@
+/* begin prompt */
+@use '../variables/all' as *;
+
+.ace-prompt-el {
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+.ace-prompt-el div button {
+  margin: $meas-marg-3;
+  min-height: $ace-standard-element-size;
+  max-height: $ace-standard-element-size;
+  padding: $meas-pad-5 $meas-pad-10;
+  line-height: $meas-line-height-1d0 !important;
+}
+.ace-prompt-el div button#mask_el_prompt_cancel,
+.ace-prompt-el div button#mask_el_prompt_ok {
+  height: $ace-standard-element-size;
+  display: block;
+  text-align: center;
+  padding-top: $ace-common-top-bottom-padding;
+  cursor: pointer;
+  border-radius: $ace-prompt-buttons-radius;
+}
+
+.ace-prompt-el div button#mask_el_prompt_ok {
+  background: $prompt-button-ok-bg-color;
+  color: $prompt-button-ok-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$prompt-button-ok-border-color);
+}
+.ace-prompt-el div button#mask_el_prompt_ok:hover {
+  background: $prompt-button-ok-bg-hover-color;
+  box-shadow: $box-shad-0 $box-shad-2 $box-shad-4 $primary-shadow-color;
+}
+.ace-prompt-el div button#mask_el_prompt_cancel {
+  background: $prompt-button-cancel-bg-color;
+  color: $prompt-button-cancel-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$prompt-button-cancel-border-color);
+}
+.ace-prompt-el div button#mask_el_prompt_cancel:hover {
+  background: $prompt-button-cancel-bg-hover-color;
+  box-shadow: $box-shad-0 $box-shad-2 $box-shad-4 $primary-shadow-color;
+}
+
+.ace-prompt-el > .ace-prompt-inner-el {
+  height: auto;
+  display: table;
+  position: relative;
+  background: $primary-bg-color;
+  margin: initial;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  width: 80%;
+  max-width: $screen-480;
+  border-radius: $ace-prompt-radius;
+  font-size: $ace-tiny-title-size;
+  font-weight: $font-weight-500;
+}
+
+.ace-prompt-el > .ace-prompt-inner-el > input {
+  width: $meas-full;
+  margin-bottom: $meas-marg-12;
+  color: $primary-font-color;
+}
+@include floatToLTR('.ace-prompt-el > div > button',right);
+
+.ace-prompt-el .ace-button-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.ace-prompt-el .ace-button-bar > button {
+  flex-basis: 35%;
+}
+
+.ace-prompt-inner-el p {
+  color: $primary-font-color;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-prompt-el > .ace-prompt-inner-el {
+    width: $meas-full;
+    height: auto;
+    top: initial;
+    bottom:  $position-0;
+    position:absolute;
+    max-width: $meas-full;
+
+    -webkit-transform: translateY(100%) translate3d(0px, 0px, 0px);
+    transform: translateY(100%) translate3d(0px, 0px, 0px);
+
+    border-bottom-left-radius:$meas-radius-0;
+    border-bottom-right-radius:$meas-radius-0;
+  }
+
+  .ace-prompt-el > .ace-prompt-inner-el.ace-show {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+    transition: ease 0.3s;
+  }
+}
+/* end prompt */

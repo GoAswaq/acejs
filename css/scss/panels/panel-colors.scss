@@ -1,0 +1,86 @@
+/* begin panel colors */
+@use "../variables/all" as *;
+
+div.ace-panel-white {
+  padding: $meas-pad-0 $meas-pad-15;
+  background-color: $primary-bg-color;
+}
+@include addBorderLTR('.ace-panel-white',left,$meas-bord-4,$ace-border-default-pattern,$white);
+
+.ace-panel-white
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $disabled-color !important;
+}
+
+div.ace-panel-blue {
+  padding: $meas-pad-0 $meas-pad-15;
+  background-color: $select-soft-bg-color;
+}
+@include addBorderLTR('.ace-panel-blue',left,$meas-bord-4,$ace-border-default-pattern,$primary-color);
+
+.ace-panel-blue
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $primary-color !important;
+}
+
+div.ace-panel-yellow {
+  padding: $meas-pad-0 $meas-pad-15;
+  background-color: $yellow-secondary;
+}
+@include addBorderLTR('.ace-panel-yellow',left,$meas-bord-4,$ace-border-default-pattern,$yellow);
+
+.ace-panel-yellow
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $yellow !important;
+}
+
+div.ace-panel-orange {
+  background-color: $orange;
+  padding: $meas-pad-0 $meas-pad-15;
+}
+@include addBorderLTR('.ace-panel-orange',left,$meas-bord-4,$ace-border-default-pattern,$orange-secondary);
+
+.ace-panel-orange
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $orange-secondary !important;
+}
+
+div.ace-panel-red {
+  background-color: $red-soft;
+  padding: $meas-pad-0 $meas-pad-15;
+}
+@include addBorderLTR('.ace-panel-red',left,$meas-bord-4,$ace-border-default-pattern,$red);
+
+.ace-panel-red
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $red !important;
+}
+
+div.ace-panel-green {
+  background-color: $green;
+  padding: $meas-pad-0 $meas-pad-15;
+}
+@include addBorderLTR('.ace-panel-green',left,$meas-bord-4,$ace-border-default-pattern,$green-secondary);
+
+.ace-panel-green
+  .ace-checkbox-field
+  input[type="checkbox"]:checked
+  + span:before {
+  color: $green-secondary !important;
+}
+
+[class*="ace-panel-"] .ace-checkbox-field span {
+  background-color: $secondary-bg-color !important;
+}
+
+/* end panel colors */

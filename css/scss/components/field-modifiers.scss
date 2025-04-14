@@ -1,0 +1,228 @@
+/* begin global ace fields modifiers */
+@use "../variables/all" as *;
+
+.ace-field-container,
+.ace-field-container div {
+  background-color: $secondary-bg-color;
+}
+
+.ace-field-container {
+  padding: $meas-pad-0;
+  width: auto;
+  position: relative;
+}
+@include sidePaddingLTR('[type="button"].ace-field-container',right,$meas-pad-0);
+@include sidePaddingLTR('[type="iconbutton"]',right,$meas-pad-0);
+
+.ace-field-container {
+  white-space: nowrap;
+}
+.ace-field-container p {
+  white-space: normal;
+}
+.ace-field-container.ace-field-show-all-content {
+  white-space: initial !important;
+}
+
+@include sidePaddingLTR('.ace-field-container',right,$ace-container-default-side-padding);
+
+.ace-field-container .ace-field-container {
+  padding-right: $meas-pad-0;
+  padding-left: $meas-pad-0;
+}
+
+[class*="ace-"] > .fa,
+[class*="ace-"] > .far,
+[class*="ace-"] > .fal {
+  line-height: $meas-line-height-1d8;
+}
+
+[class*="ace-"] > * {
+  font-family: $text-font-family;
+  -webkit-font-smoothing: antialiased;
+}
+
+[class*="ace-"] input,
+[class*="ace-"] textarea,
+[class*="ace-"] keygen,
+[class*="ace-"] select,
+[class*="ace-"] button {
+  font-family: $controls-font-family;
+  font-size: $ace-standard-font-size;
+}
+
+[class*="ace-"] > input,
+[class*="ace-"] > textarea,
+[class*="ace-"] > keygen,
+[class*="ace-"] > select,
+[class*="ace-"] > button {
+  font-family: $controls-font-family;
+  font-size: $ace-standard-font-size;
+  width: $meas-full;
+  white-space: nowrap;
+}
+
+[class*="ace-"] hr {
+  width: $meas-full;
+  background: $hr-bg-color;
+  height: $meas-1;
+}
+
+[class*="ace-"] a,
+.ace-cursor-pointer {
+  cursor: pointer;
+  transition: ease-out 0.2s;
+}
+
+[class*="ace-"] > input[type="text"],
+[class*="ace-"] > input[type="password"],
+[class*="ace-"] > input[type="number"],
+[class*="ace-"] > input[type="email"],
+[class*="ace-"] > .ace-grid-search,
+[class*="ace-"] > textarea {
+  background: initial;
+  transition: ease-in-out 0.1s;
+  width: $meas-full;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  @include addBorder();
+}
+
+[class*="ace-"] > input:read-only[type="text"],
+[class*="ace-"] > input:read-only[type="password"],
+[class*="ace-"] > input:read-only[type="number"],
+[class*="ace-"] > input:read-only[type="email"],
+[class*="ace-"] > textarea:read-only {
+  background: $secondary-bg-color !important;
+  @include addBorder();
+}
+
+[class*="ace-"] > input[type="text"]:hover,
+[class*="ace-"] input[type="number"]:hover,
+[class*="ace-"] input[type="email"]:hover,
+[class*="ace-"] input[type="password"]:hover,
+[class*="ace-"] textarea:hover,
+[class*="ace-"] .hasDatepicker:hover,
+[class*="ace-"] .ace-grid-search:hover {
+  background-color: $focus-bg-color;
+}
+[class*="ace-"] > input[type="text"]:focus,
+[class*="ace-"] input[type="number"]:focus,
+[class*="ace-"] input[type="email"]:focus,
+[class*="ace-"] input[type="password"]:focus,
+[class*="ace-"] textarea:focus,
+[class*="ace-"] .hasDatepicker:focus,
+[class*="ace-"] .ace-grid-search:focus {
+  background-color: $focus-bg-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$focus-border-color);
+}
+
+[class*="ace-"] input[disabled] {
+  background: $primary-bg-color !important;
+  color: $disabled-color !important;
+  box-shadow: none !important;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$disabled-bg-color);
+}
+
+[class*="ace-"] button:disabled {
+  background-color: $button-disabled-bg-color !important;
+  color: $button-disabled-color !important;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$button-disabled-color);
+}
+[class*="ace-"] button:disabled:hover {
+  box-shadow: none !important;
+  cursor: default;
+}
+
+[class*="ace-"] > button {
+  width: auto;
+  transition: all ease 0.1s;
+  text-align: center;
+  background-color: $button-main-bg-color;
+  cursor: pointer;
+  color: $button-main-color;
+  position: relative;
+  font-family: $controls-font-family;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  min-height: $ace-standard-element-size;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+
+[class*="ace-"] > button:hover {
+  background: $button-highlight-color;
+  color: $button-contrast-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$button-highlight-color);
+}
+
+[class*="ace-"] > button .ace-icon {
+  color: $button-main-color;
+  background: $button-highlight-bg-color;
+}
+
+[class*="ace-"] > button:hover .ace-icon {
+  color: $button-contrast-color;
+  background: $button-highlight-color;
+}
+@include sideMarginLTR('[class*="ace-"] button i',right,$meas-marg-5);
+@include sideMarginLTR('[class*="ace-"] a:before',right,$meas-marg-5);
+
+[class*="ace-"] > button i,
+[class*="ace-"] > button:before,
+[class*="ace-"] > a:before,
+[class*="ace-"] > button i:before,
+[class*="ace-"] > a i:before {
+  line-height: $meas-line-height-1d8;
+}
+
+[class*="ace-"] input[type="submit"] {
+  background: $highlight-bg-color;
+  opacity: 0.7;
+  transition: all ease-in-out 0.1s;
+}
+[class*="ace-"] > input:hover[type="submit"] {
+  background: $highlight-bg-color;
+  opacity: 1;
+}
+
+[class*="ace-"] > button[type="submit"] {
+  background: $highlight-bg-color;
+  color: $contrast-font-color;
+  opacity: 0.7;
+  margin-top: $meas-marg-5;
+  padding: $meas-pad-12 $meas-pad-25 $meas-pad-12 $meas-pad-25;
+  transition: all ease-in-out 0.1s;
+}
+[class*="ace-"] > button[type="submit"]:hover {
+  background: $highlight-bg-color;
+  opacity: 1;
+}
+
+.ace-button-inverse button {
+  color: $button-contrast-color;
+  background-color: transparent;
+  @include addBorder(all,$meas-bord-1,$ace-border-default-pattern,$button-contrast-color);
+}
+.ace-button-inverse button:hover {
+  color: $button-contrast-color;
+  background-color: transparent;
+  @include addBorder(all,$meas-bord-1,$ace-border-default-pattern,$button-contrast-color);
+}
+.ace-button-smaller button {
+  padding: ($ace-common-top-bottom-padding / 2) ($ace-common-left-right-padding / 2);
+}
+
+
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  [class*="ace-"] > input[type="text"],
+  [class*="ace-"] input[type="number"],
+  [class*="ace-"] input[type="email"],
+  [class*="ace-"] input[type="password"],
+  [class*="ace-"] textarea,
+  [class*="ace-"] .hasDatepicker,
+  [class*="ace-"] .ace-grid-search,
+  [class*="ace-"] select {
+    background-color: $focus-bg-color;
+  }
+}
+
+/* end global ace fields modifiers */

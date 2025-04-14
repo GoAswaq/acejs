@@ -1,0 +1,59 @@
+/* begin text field */
+@use '../variables/all' as *;
+
+/* begin text field */
+.ace-text-field {
+  position: relative;
+  padding: $meas-pad-0;
+  width: $meas-full;
+  box-sizing: border-box;
+  line-height: $meas-line-height-null;
+  display:flex;
+  align-items: start;
+}
+@include floatToLTR('.ace-text-field',left);
+
+.ace-text-field input {
+  color: $input-color;
+}
+.ace-text-field input[readonly="readonly"] {
+  color: $disabled-color;
+}
+
+.ace-label-align-top .ace-text-field {
+  padding-bottom: $ace-label-align-top-inner-bottom-padding;
+}
+.ace-grid-cell .ace-label-align-top .ace-text-field {
+  padding-bottom: $meas-0; /*SM-not sure*/
+}
+.ace-label-align-left .ace-text-field .ace-label {
+  /*padding-top: $ace-label-align-left-inner-top-padding;*/
+  padding-top: $ace-common-top-bottom-padding;
+}
+.ace-text-field:after {
+  display: block;
+  width: 0;
+  position: absolute;
+  bottom:  $position-20;
+  height: $meas-1;
+  background: $highlight-bg-color;
+  margin-top: $meas-marg-0;
+  transition: width ease-in-out 0.1s;
+}
+@include positionLTR('.ace-text-field:after',right,$position-10);
+
+.ace-error .ace-text-field:after {
+  width: $meas-full;
+  background-color: $error-color-text;
+  height: $meas-1;
+  margin-top: -$meas-marg-1;
+}
+.ace-error .ace-text-field .ace-label {
+  color: $error-color-text !important;
+}
+
+.ace-text-field .ace-efld:focus ~ label {
+  color: $label-envelope-highlight-color !important;
+}
+
+/* end textfield field */

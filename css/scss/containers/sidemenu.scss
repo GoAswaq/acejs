@@ -1,0 +1,251 @@
+/* begin app side menu */
+@use '../variables/all' as *;
+
+.ace-side-container {
+  position: fixed;
+  height: $meas-full;
+  z-index: 3;
+  top:  $position-50;
+}
+.ace-no-top-bar .ace-side-container {
+  top:  $position-0;
+}
+
+.ace-side-container .ace-expand {
+  width: $meas-90 !important;
+}
+
+.ace-menu-trigger {
+  cursor: pointer;
+  text-align: center;
+  padding: $meas-pad-13 $meas-pad-20 $meas-pad-13;
+  height: $ace-main-title-bar-height;
+  width: $ace-main-title-bar-height;/*yes, same as height by default */
+  font-size: 14pt !important;
+  color: $side-menu-trigger-color;
+  background-color: $side-menu-trigger-bg-color;
+  position: relative;
+  z-index: 1000;
+}
+
+.ace-side-menu {
+  background-color: $side-menu-bg-color;
+  width: $meas-90;
+  height: $meas-full;
+  position: relative;
+  border-top: none;
+  top:  $position-0;
+  -webkit-transition: all ease 0.18s;
+  -moz-transition: all ease-in-out 0.18s;
+  -o-transition: all ease-in-out 0.18s;
+  -ms-transition: all ease-in-out 0.18s;
+  transition: all ease 0.18s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+@include floatToLTR('.ace-side-menu',left);
+
+.ace-side-menu ul li {
+  list-style: none;
+  line-height: $meas-line-height-1d2;;
+  width: $meas-full;
+}
+@include floatToLTR('.ace-side-menu ul li',left);
+
+.ace-side-menu.ace-expand ul li a p,
+.ace-side-menu.ace-expand ul li a p {
+  opacity: 1;
+  padding: $meas-pad-0;
+  width: $meas-120;
+}
+@include floatToLTR('.ace-side-menu.ace-expand ul li a p',left);
+
+.ace-side-menu a {
+  color: $side-menu-a-color;
+  width: $meas-full;
+  padding: $side-menu-a-pad;
+  height: auto;
+  cursor: pointer;
+  clear: both;
+}
+.ace-side-menu .ace-accordion-list li a {
+  color: $side-menu-a-color;
+}
+
+.ace-side-menu ul li a {
+  height: auto;
+}
+@include floatToLTR('.ace-side-menu ul li a',left);
+
+.ace-side-menu a:hover {
+  color: $side-menu-a-hover-color !important;
+}
+
+.ace-side-menu ul li a p {
+  padding: $meas-pad-0;
+}
+
+.ace-side-menu ul li a i {
+  font-size: 16pt;
+  line-height: $meas-line-height-1d8 !important; /* Fix for cases we use icons from different fonts */
+}
+@include floatToLTR('.ace-side-menu ul li a i',left);
+
+.ace-side-menu a i:before {
+  line-height: $meas-line-height-1d0 !important;
+}
+
+.ace-side-menu a p {
+  width: $meas-full;
+  text-align: center;
+  white-space: normal;
+  line-height: $meas-line-height-1d0;
+}
+@include sidePaddingLTR('.ace-side-menu a p',left,$side-menu-p-left-pad);
+@include sidePaddingLTR('.ace-side-menu a p',top,$side-menu-p-top-pad);
+
+.ace-side-menu i.ace-accordion-icon {
+  font-size: $font-size-34;
+  clear: both;
+  display: block;
+  width: $meas-full;
+  text-align: center;
+  line-height: $meas-line-height-1d0 !important;
+}
+
+.ace-expand {
+  width: $meas-220 !important;
+}
+
+.ace-side-menu ul li a i:before {
+  line-height: $meas-line-height-1d0 !important;
+}
+
+.ace-side-menu-dropdown-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: ease 0.2s;
+}
+@include floatToLTR('.ace-side-menu-dropdown-list',left);
+
+ul.ace-side-menu-dropdown-list li a {
+  display: block;
+  color: $side-menu-a-color;
+}
+html[dir="ltr"] ul.ace-side-menu-dropdown-list li a {
+  padding: $meas-pad-10 $meas-pad-0 $meas-pad-10 $meas-pad-45;
+}
+html[dir="rtl"] ul.ace-side-menu-dropdown-list li a {
+  padding: $meas-pad-10 $meas-pad-45 $meas-pad-10 $meas-pad-0;
+}
+
+.ace-side-menu .ace-arrow-icon {
+  display: none;
+}
+
+.ace-side-menu .ace-add-icon,
+.ace-side-menu .ace-edit-icon,
+.ace-side-menu .ace-refresh-icon {
+  display: none;
+  background-color: $side-menu-standard-icon-bg-color;
+  padding: $meas-pad-0 $meas-pad-10 $meas-pad-0 $meas-pad-10;
+  line-height: $meas-line-height-null;
+}
+
+.ace-side-menu .ace-add-icon:before {
+  line-height: $meas-line-height-1d8 !important;
+}
+
+@include sideMarginLTR('.ace-side-menu .ace-add-icon',right,$meas-marg-10);
+@include sideMarginLTR('.ace-side-menu .ace-edit-icon',right,$meas-marg-10);
+
+.ace-side-menu.ace-expand .ace-arrow-icon {
+  display: block;
+  padding: $meas-pad-0 $meas-pad-10 $meas-pad-0 $meas-pad-10;
+  font-size: $ace-small-title-size;
+  line-height: $meas-line-height-null;
+}
+
+.ace-side-menu.ace-field-container {
+  padding-right: $meas-pad-0 !important;
+  padding-left: $meas-pad-0 !important;
+}
+
+.ace-side-menu .ace-scrollview .ace-accordion.ace-active, .ace-side-menu .ace-scrollview .ace-accordion.ace-active:hover {
+  color: $side-menu-active-color !important;
+  background-color: $accordion-active-bg-color;
+  border-radius: $active-border-radius;
+  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
+}
+@include addBorderLTR('.ace-side-menu .ace-scrollview .ace-accordion.ace-active ',left,$ace-border-default-size,$ace-border-default-pattern,$accordion-active-border);
+@include addBorderLTR('.ace-side-menu .ace-scrollview .ace-accordion.ace-active:hover ',left,$ace-border-default-size,$ace-border-default-pattern,$accordion-active-border);
+
+.ace-side-menu .ace-scrollview .ace-accordion:hover {
+  background-color: $accordion-hover-bg-color;
+  border-radius: $active-border-radius;
+  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-side-menu .ace-scrollview {
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden !important;
+    overflow-x: auto;
+    justify-content: center;
+  }
+
+  .ace-side-menu .ace-scrollview .ace-accordion {
+    clear: none;
+    width: auto;
+    padding: $meas-pad-4 $ace-common-left-right-padding;
+    flex: none;
+  }
+  .ace-side-menu .ace-scrollview .ace-accordion i {
+    font-size: $ace-large-title-size !important;
+  }
+  .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
+    box-shadow: none;
+  }
+
+  .ace-side-container {
+    position: fixed;
+    height: $meas-pad-44;
+    z-index: 5;
+    top: initial;
+    bottom:  $position-0;
+    width: $meas-full;
+  }
+  .ace-no-top-bar .ace-side-container {
+    top: initial;
+  }
+
+  .ace-side-menu {
+    visibility: hidden;
+    height: 0;
+    width: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: width ease 0.16s;
+  }
+
+  .ace-side-menu.ace-expand {
+    visibility: visible;
+    height: $meas-full;
+    width: $meas-full !important;
+    overflow: hidden;
+    opacity: 1;
+    transition: width ease 0.16s;
+  }
+}
+
+@media (max-width: $screen-large) {
+  .ace-side-menu {
+    width: $meas-56;
+  }
+}
+
+/* end app side menu */

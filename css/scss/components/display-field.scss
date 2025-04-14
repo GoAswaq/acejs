@@ -1,0 +1,120 @@
+/* begin display field */
+@use '../variables/all' as *;
+
+@include floatToLTR('.ace-display-field',left);
+
+.ace-display-field span{
+  color: $primary-font-color,
+}
+.ace-display-field label {
+  padding: $meas-pad-0;
+}
+[class*="col-"] .ace-display-field {
+  width: $meas-full;
+}
+
+.ace-display-field .ace-efld {
+  padding: $meas-pad-0 !important;
+  display: inline-block;
+  line-height: $meas-line-height-1d8 !important;
+  word-break: break-word;
+}
+.ace-display-field-wrap .ace-efld {
+  white-space: normal;
+}
+
+.ace-auto-gen.ace-h2 .ace-display-field {
+  width: $meas-full;
+}
+.ace-auto-gen.ace-h2 .ace-display-field span.ace-efld {
+  display: block;
+  width: $meas-full;
+  white-space: nowrap;
+  margin-bottom: $meas-marg-15;
+  font-size: $font-size-26;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+
+.ace-auto-gen.ace-h3 .ace-display-field {
+  width: $meas-full;
+}
+.ace-auto-gen.ace-h3 .ace-display-field span.ace-efld {
+  width: $meas-full;
+  font-weight: bold;
+  font-size: $ace-small-title-size;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+@include floatToLTR('.ace-auto-gen.ace-h3 .ace-display-field span.ace-efld',left);
+
+.ace-auto-gen.ace-h4 .ace-display-field {
+  width: $meas-full;
+}
+.ace-auto-gen.ace-h4 .ace-display-field span.ace-efld {
+  width: $meas-full;
+  font-weight: bold;
+  font-size: $ace-bigger-font-size;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+@include floatToLTR('.ace-auto-gen.ace-h4 .ace-display-field span.ace-efld',left);
+
+.ace-auto-gen.ace-bold .ace-display-field span {
+  font-weight: 600;
+}
+
+.ace-fld-no-padding .ace-display-field {
+  padding: $meas-pad-0 !important;
+}
+.ace-fld-no-padding-top .ace-display-field {
+  padding-top: $meas-pad-0 !important;
+}
+.ace-fld-no-padding-bottom .ace-display-field {
+  padding-bottom: $meas-pad-0 !important;
+}
+
+.ace-state-checked .ace-display-field .ace-label,
+.ace-state-checked .ace-display-field .ace-label span,
+.ace-state-unchecked .ace-display-field .ace-label,
+.ace-state-unchecked .ace-display-field .ace-label span {
+  cursor: default !important;
+}
+.ace-state-checked .ace-display-field span.ace-efld,
+.ace-state-unchecked .ace-display-field span.ace-efld {
+  background: $secondary-bg-color;
+  display: flex;
+}
+.ace-state-checked .ace-display-field span.ace-efld:before,
+.ace-state-unchecked .ace-display-field span.ace-efld:before {
+  width: $meas-18;
+}
+.ace-state-checked .ace-display-field span.ace-efld:before {
+  content: "\f00c";
+  font-family: $primary-font-family;
+  display: inline;
+  color: $display-state-checked-color;
+  cursor: default;
+  vertical-align: sub;
+}
+.ace-state-unchecked .ace-display-field span.ace-efld:before {
+  content: "\f00d";
+  font-family: $primary-font-family;
+  display: inline;
+  color: $display-state-unchecked-color;
+  cursor: default;
+  vertical-align: sub;
+}
+
+h3 .ace-display-field {
+  height: 0;
+}
+
+.ace-label-align-top .ace-display-field .ace-label {
+  top: - $position-15;
+  min-width: $meas-150;
+}
+.ace-label-align-top.ace-label-no-min-width .ace-display-field .ace-label {
+  top: - $position-15;
+  min-width: auto !important;
+  line-height: $meas-line-height-1d8;;
+}

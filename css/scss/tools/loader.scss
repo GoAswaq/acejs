@@ -1,0 +1,83 @@
+/* begin loader */
+@use '../variables/all' as *;
+
+@keyframes ace-aswaq-loader {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes ace-aswaq-loader {
+  from {
+    -webkit-transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+.ace-loader {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+.ace-loader-spinner {
+  width: $meas-45;
+  flex-basis: $meas-45;
+  z-index: 3;
+  box-sizing: content-box;
+  border-radius: $meas-radius-50p;
+  height: $meas-45;
+  -webkit-animation: ace-aswaq-loader cubic-bezier(0, 1.28, 0.76, -0.23) 0.8s
+    infinite;
+  animation: ace-aswaq-loader cubic-bezier(0, 1.28, 0.76, 0.77) 0.8s infinite;
+  @include addBorder(all,$meas-bord-4,$ace-border-default-pattern,$loader-secondary);
+  @include addBorder(top,$meas-bord-4,$ace-border-default-pattern,$loader-primary);
+}
+@include floatToLTR('.ace-loader-spinner',left);
+
+.ace-loader-text {
+  z-index: 1;
+}
+.ace-loader-spinner.ace-middle {
+  left:  $position-0;
+  right:  $position-0;
+  top:  $position-0;
+  bottom:  $position-0;
+  margin: auto;
+  position: absolute;
+}
+.ace-loader-text:before {
+  content: attr(data-loadtext);
+}
+.ace-loader.ace-loader-overlay {
+  position: absolute;
+  top:  $position-0;
+  left:  $position-0;
+  right:  $position-0;
+  bottom:  $position-0;
+  margin: auto;
+}
+.ace-loader.ace-middle {
+  position: absolute;
+  top:  $position-0;
+  left:  $position-0;
+  right:  $position-0;
+  bottom:  $position-0;
+  margin: auto;
+}
+@include floatToLTR('.ace-loader.ace-middle',left);
+
+.ace-loader.ace-loader-overlay:after {
+  content: " ";
+  top:  $position-0;
+  width: $meas-full;
+  height: $meas-full;
+  z-index: 0;
+  position: absolute;
+}
+@include positionLTR('.ace-loader.ace-loader-overlay:after',left,$position-0);
+/* end loader */

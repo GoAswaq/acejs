@@ -1,0 +1,60 @@
+/* begin simple card */
+@use '../variables/all' as *;
+
+.ace-simple-card {
+  border: $meas-bord-1 solid;
+  background: $primary-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-font-color);
+}
+@include floatToLTR('.ace-simple-card',left);
+
+.ace-simple-card .ace-label {
+  max-width: $meas-full;
+  min-width: auto !important;
+  color: $primary-font-color-highlight;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@include sideMarginLTR('ace-simple-card',right,$meas-marg-5);
+
+.ace-simple-card-footer {
+  padding-top: $meas-pad-15 !important;
+}
+@include floatToLTR('.ace-simple-card-footer',left);
+
+.ace-simple-card-fixed-image {
+  height: 105px;
+  width: $meas-full;
+}
+@include floatToLTR('.ace-simple-card-fixed-image',left);
+@include sidePaddingLTR('.ace-simple-card-fixed-image',right,$meas-pad-15);
+
+.ace-simple-card-fixed-image img {
+  max-height: $meas-full;
+  max-width: $meas-full;
+  height: auto !important;
+  width: auto !important;
+  display: block;
+  margin: auto;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+}
+
+a.ace-simple-card {
+  color: $primary-font-color-highlight;
+  opacity: 0.7;
+  overflow: hidden;
+  border-radius: $ace-common-radius;
+}
+
+a.ace-simple-card:hover,
+[class*="ace-"] a.ace-simple-card:hover,
+a.ace-simple-card-hover,
+[class*="ace-"] a.ace-simple-card-hover {
+  color: $primary-font-color-highlight;
+  opacity: 1;
+}
+a.ace-simple-card h3 {
+  border: none;
+}
+/* end simple card */

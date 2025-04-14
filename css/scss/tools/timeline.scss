@@ -1,0 +1,292 @@
+/* begin timeline */
+@use '../variables/all' as *;
+
+.ace-timeline .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-220});
+}
+.ace-timeline .ace-grid-body:before {
+  content: " ";
+  width: $meas-4;
+  height: $meas-full;
+  position: absolute;
+  background: $disabled-bg-color;
+}
+.ace-timeline-block {
+  width: $meas-full;
+  position: relative;
+}
+@include floatToLTR('.ace-timeline-block',left);
+
+.ace-timeline-content {
+  border-radius: $ace-common-radius;
+  position: relative;
+  background: $primary-bg-color;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+}
+@include sidePaddingLTR('.ace-timeline-content .ace-field-container',right,$meas-pad-0,true);
+
+.ace-timeline-content-subtitle {
+  width: $meas-full;
+  clear: both;
+  opacity: 0.5;
+  font-size: $ace-standard-font-size;
+}
+
+.ace-timeline-content-title {
+  font-size: $ace-small-title-size;
+}
+
+.ace-timeline-content-state {
+  opacity: 0.7;
+}
+
+.ace-timeline-content-timestamp {
+  font-size: $ace-bigger-font-size;
+  color: $select-soft-bg-color;
+}
+
+.ace-timeline-icon i:before {
+  line-height: $meas-line-height-2d0;
+  font-size: $ace-large-title-size;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon {
+  color: $contrast-font-color;
+}
+
+.ace-timeline-icon[cpat="1"] {
+  background: $yellow;
+}
+.ace-timeline-icon[cpat="2"] {
+  background: $primary-color;
+}
+.ace-timeline-icon[cpat="3"] {
+  background: $yellow;
+}
+.ace-timeline-icon[cpat="5"] {
+  background: $primary-color;
+}
+
+.ace-timeline-icon[cpat="4BP"],
+.ace-timeline-icon[cpat="4PR/HR"],
+.ace-timeline-icon[cpat="4RR"],
+.ace-timeline-icon[cpat="4TEMP"],
+.ace-timeline-icon[cpat="4O2Sat"],
+.ace-timeline-icon[cpat="4F/RBS"] {
+  background: $green-secondary;
+}
+
+.ace-timeline-icon[cpat="1"] i:before {
+  content: "\ed0b" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="2"] i:before {
+  content: "\f0f5" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="3"] i:before {
+  content: "\ed02" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4BP"] i:before {
+  content: "\ecef" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4PR/HR"] i:before {
+  content: "\f21e" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4RR"] i:before {
+  content: "\ecef" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4TEMP"] i:before {
+  content: "\ed16" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4O2sar"] i:before {
+  content: "\ee84" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="4F/RBS"] i:before {
+  content: "\ed15" !important;
+  font-family: $primary-font-family;
+}
+.ace-timeline-icon[cpat="5"] i:before {
+  content: "\ee84" !important;
+  font-family: $primary-font-family;
+}
+
+@media screen and (min-width: $screen-1181) {
+  .ace-timeline {
+    max-width: 1$meas-270;
+    margin: $meas-marg-0 auto !important;
+    display: block;
+    float: none !important;
+  }
+  .ace-timeline-content {
+    border-radius: $ace-common-radius;
+    width: 45%;
+    position: relative;
+    background: $primary-bg-color;
+    box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+  }
+  .ace-timeline .ace-grid-body:before {
+    content: " ";
+    position: absolute;
+    left:  $position-0;
+    right:  $position-0;
+    margin: auto;
+  }
+
+  @include floatToLTR('.ace-timeline-content',left);
+  @include floatToLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content',right);
+
+  .ace-timeline-block .ace-timeline-content:before {
+    content: " ";
+    position: absolute;
+    top:  $position-16;
+    width: 0;
+    height: 0;
+    z-index: 1;
+    @include addBorder(top,$meas-bord-12);
+    @include addBorder(bottom,$meas-bord-12);
+  }
+  @include addBorderLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before',left,$meas-bord-10,$ace-border-default-pattern,$white);
+  @include positionLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before',right,-$position-8);
+
+  .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
+    content: " ";
+    position: absolute;
+    top:  $position-18;
+    z-index: -1;
+    filter: blur(2px);
+    width: 0;
+    height: 0;
+    @include addBorder(top,$meas-bord-10);
+    @include addBorder(bottom,$meas-bord-10);
+  }
+  @include addBorderLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after',left,$meas-bord-8,$ace-border-default-pattern,$primary-shadow-color);
+  @include positionLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after',right,-$position-8);
+
+  .ace-timeline-content-timestamp {
+    position: absolute;
+    top:  $position-16;
+    white-space: nowrap;
+  }
+  @include positionLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp',left,$position-122p);
+  @include positionLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp',right,$position-122p);
+  @include floatToLTR('.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp div',left);
+  @include floatToLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp div',right);
+
+  .ace-grid-row:nth-child(even)
+    .ace-timeline-block
+    .ace-timeline-content:before {
+    content: " ";
+    position: absolute;
+    top:  $position-16;
+    width: 0;
+    height: 0;
+    z-index: 1;
+    @include addBorder(top,$meas-bord-12);
+    @include addBorder(bottom,$meas-bord-12);
+  }
+  @include addBorderLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before',right,$meas-bord-10,$ace-border-default-pattern,$white);
+  @include positionLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before',left,-$position-8);
+
+  .ace-grid-row:nth-child(even)
+    .ace-timeline-block
+    .ace-timeline-content:after {
+    content: " ";
+    position: absolute;
+    top:  $position-18;
+    z-index: -1;
+    filter: blur(2px);
+    width: 0;
+    height: 0;
+    @include addBorder(top,$meas-bord-10);
+    @include addBorder(bottom,$meas-bord-10);
+  }
+  @include addBorderLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after',right,$meas-bord-8,$ace-border-default-pattern,$primary-shadow-color);
+  @include positionLTR('.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after',left,-$position-8);
+
+  .ace-timeline-icon {
+    position: absolute;
+    left:  $position-0;
+    right:  $position-0;
+    margin: auto;
+    width: $meas-52;
+    height: $meas-52;
+    border-radius: $meas-radius-50p;
+    text-align: center;
+    font-size: $font-size-28;
+    background: $disabled-bg-color;
+    box-shadow: $box-shad-0 $box-shad-1 $box-shad-2  $primary-shadow-color,
+      inset $box-shad-0 $box-shad-1 $box-shad-2  $primary-shadow-color;
+    @include addBorder(all,$meas-bord-6,$ace-border-default-pattern,$white);
+  }
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-1180) {
+
+  @include sidePaddingLTR('.ace-timeline-block',left,$meas-pad-83);
+
+  .ace-timeline .ace-grid-body:before {
+    content: " ";
+  }
+  @include positionLTR('.ace-timeline .ace-grid-body:before',left,$position-40);
+
+  .ace-timeline-content-timestamp {
+    position: static;
+    padding-top: $meas-pad-15;
+  }
+  .ace-timeline-content:before {
+    content: " ";
+    position: absolute;
+    top:  $position-16;
+    width: 0;
+    height: 0;
+    z-index: 1;
+    @include addBorder(top,$meas-bord-12);
+    @include addBorder(bottom,$meas-bord-12);
+  }
+  @include addBorderLTR('.ace-timeline-content:before',right,$meas-bord-10,$ace-border-default-pattern,$white);
+  @include positionLTR('.ace-timeline-content:before',left,-$position-8);
+
+  .ace-timeline-icon {
+    position: absolute;
+    margin: $meas-marg-0;
+    width: $meas-52;
+    height: $meas-52;
+    border-radius: $meas-radius-50p;
+    text-align: center;
+    background: $disabled-bg-color;
+    box-shadow: $box-shad-0 $box-shad-1 $box-shad-2  $primary-shadow-color,
+      inset $box-shad-0 $box-shad-1 $box-shad-2  $primary-shadow-color;
+    @include addBorder(all,$meas-bord-6,$ace-border-default-pattern,$white);
+  }
+  @include positionLTR('.ace-timeline-icon',left,$position-15);
+
+  .ace-timeline-content:after {
+    content: " ";
+    position: absolute;
+    top:  $position-18;
+    z-index: -1;
+    filter: blur(2px);
+    width: 0;
+    height: 0;
+    @include addBorder(top,$meas-bord-10);
+    @include addBorder(bottom,$meas-bord-10);
+  }
+  @include addBorderLTR('.ace-timeline-content:after',right,$meas-bord-8,$ace-border-default-pattern,$primary-shadow-color);
+  @include positionLTR('.ace-timeline-content:after',left,-$position-8);
+  .ace-timeline-content {
+    border-radius: $ace-common-radius;
+    width: $meas-full;
+    position: relative;
+    background: $secondary-bg-color;
+    box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+  }
+  @include floatToLTR('.ace-timeline-content',left);
+}
+/* end timeline */

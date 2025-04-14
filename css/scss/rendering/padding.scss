@@ -1,0 +1,303 @@
+/* begin padding controll classes */
+@use "../variables/all" as *;
+
+.ace-form-padding {
+  padding-top: $meas-pad-15;
+  padding-bottom: $meas-pad-15;
+}
+html[dir="ltr"] .ace-form-padding {
+  padding-right: $meas-pad-0;
+  padding-left: $meas-pad-15;
+}
+html[dir="rtl"] .ace-form-padding {
+  padding-right: $meas-pad-15;
+  padding-left: $meas-pad-0;
+}
+
+.ace-extra-small-padding-top {
+  padding-top: $meas-pad-5;
+}
+html[dir="ltr"] .ace-extra-small-padding-left {
+  padding-left: $meas-pad-5;
+}
+html[dir="rtl"] .ace-extra-small-padding-left {
+  padding-right: $meas-pad-5;
+}
+html[dir="ltr"] .ace-extra-small-padding-right {
+  padding-right: $meas-pad-5;
+}
+html[dir="rtl"] .ace-extra-small-padding-right {
+  padding-left: $meas-pad-5;
+}
+.ace-extra-small-padding-bottom {
+  padding-bottom: $meas-pad-5;
+}
+.ace-extra-small-padding {
+  padding: $meas-pad-5;
+}
+
+.ace-tiny-padding-top {
+  padding-top: $meas-pad-5;
+}
+html[dir="ltr"] .ace-tiny-padding-left {
+  padding-left: $meas-pad-5;
+}
+html[dir="rtl"] .ace-tiny-padding-left {
+  padding-right: $meas-pad-5;
+}
+html[dir="ltr"] .ace-tiny-padding-right {
+  padding-right: $meas-pad-5;
+}
+html[dir="rtl"] .ace-tiny-padding-right {
+  padding-left: $meas-pad-5;
+}
+.ace-tiny-padding-bottom {
+  padding-bottom: $meas-pad-5;
+}
+.ace-tiny-padding {
+  padding: $meas-pad-5;
+}
+
+.ace-small-padding-top {
+  padding-top: $meas-pad-10;
+}
+html[dir="ltr"] .ace-small-padding-left {
+  padding-left: $meas-pad-10;
+}
+html[dir="rtl"] .ace-small-padding-left {
+  padding-right: $meas-pad-10;
+}
+html[dir="ltr"] .ace-small-padding-right {
+  padding-right: $meas-pad-10;
+}
+html[dir="rtl"] .ace-small-padding-right {
+  padding-left: $meas-pad-10;
+}
+.ace-small-padding-bottom {
+  padding-bottom: $meas-pad-10;
+}
+.ace-small-padding {
+  padding: $meas-pad-10;
+}
+
+.ace-medium-padding-top {
+  padding-top: $meas-pad-15;
+}
+html[dir="ltr"] .ace-medium-padding-left {
+  padding-left: $meas-pad-15;
+}
+html[dir="rtl"] .ace-medium-padding-left {
+  padding-right: $meas-pad-15;
+}
+html[dir="ltr"] .ace-medium-padding-right {
+  padding-right: $meas-pad-15;
+}
+html[dir="rtl"] .ace-medium-padding-right {
+  padding-left: $meas-pad-15;
+}
+.ace-medium-padding-bottom {
+  padding-bottom: $meas-pad-15;
+}
+.ace-medium-padding {
+  padding: $meas-pad-15;
+}
+
+.ace-medium-plus-padding-top {
+  padding-top: $meas-pad-20;
+}
+html[dir="ltr"] .ace-medium-plus-padding-left {
+  padding-left: $meas-pad-20;
+}
+html[dir="rtl"] .ace-medium-plus-padding-left {
+  padding-right: $meas-pad-20;
+}
+html[dir="ltr"] .ace-medium-plus-padding-right {
+  padding-right: $meas-pad-20;
+}
+html[dir="rtl"] .ace-medium-plus-padding-right {
+  padding-left: $meas-pad-20;
+}
+.ace-medium-plus-padding-bottom {
+  padding-bottom: $meas-pad-20;
+}
+.ace-medium-plus-padding {
+  padding: $meas-pad-20;
+}
+
+.ace-big-padding-top {
+  padding-top: $meas-pad-25;
+}
+html[dir="ltr"] .ace-big-padding-left {
+  padding-left: $meas-pad-25;
+}
+html[dir="rtl"] .ace-big-padding-left {
+  padding-right: $meas-pad-25;
+}
+html[dir="ltr"] .ace-big-padding-right {
+  padding-right: $meas-pad-25;
+}
+html[dir="rtl"] .ace-big-padding-right {
+  padding-left: $meas-pad-25;
+}
+.ace-big-padding-bottom {
+  padding-bottom: $meas-pad-25;
+}
+.ace-big-padding {
+  padding: $meas-pad-25;
+}
+
+.ace-large-padding-top {
+  padding-top: $meas-pad-35;
+}
+html[dir="ltr"] .ace-large-padding-left {
+  padding-left: $meas-pad-35;
+}
+html[dir="rtl"] .ace-large-padding-left {
+  padding-right: $meas-pad-35;
+}
+html[dir="ltr"] .ace-large-padding-right {
+  padding-right: $meas-pad-35;
+}
+html[dir="rtl"] .ace-large-padding-right {
+  padding-left: $meas-pad-35;
+}
+.ace-large-padding-bottom {
+  padding-bottom: $meas-pad-35;
+}
+.ace-large-padding {
+  padding: $meas-pad-35;
+}
+
+.ace-i-tiny-padding-top {
+  padding-top: $meas-pad-5 !important;
+}
+html[dir="ltr"] .ace-i-tiny-padding-left {
+  padding-left: $meas-pad-5 !important;
+}
+html[dir="rtl"] .ace-i-tiny-padding-left {
+  padding-right: $meas-pad-5 !important;
+}
+html[dir="ltr"] .ace-i-tiny-padding-right {
+  padding-right: $meas-pad-5 !important;
+}
+html[dir="rtl"] .ace-i-tiny-padding-right {
+  padding-left: $meas-pad-5 !important;
+}
+.ace-i-tiny-padding-bottom {
+  padding-bottom: $meas-pad-5 !important;
+}
+.ace-i-tiny-padding {
+  padding: $meas-pad-5 !important;
+}
+
+.ace-i-small-padding-top {
+  padding-top: $meas-pad-10 !important;
+}
+html[dir="ltr"] .ace-i-small-padding-left {
+  padding-left: $meas-pad-10 !important;
+}
+html[dir="rtl"] .ace-i-small-padding-left {
+  padding-right: $meas-pad-10 !important;
+}
+html[dir="ltr"] .ace-i-small-padding-right {
+  padding-right: $meas-pad-10 !important;
+}
+html[dir="rtl"] .ace-i-small-padding-right {
+  padding-left: $meas-pad-10 !important;
+}
+.ace-i-small-padding-bottom {
+  padding-bottom: $meas-pad-10 !important;
+}
+.ace-i-small-padding {
+  padding: $meas-pad-10 !important;
+}
+
+.ace-i-medium-padding-top {
+  padding-top: $meas-pad-15 !important;
+}
+html[dir="ltr"] .ace-i-medium-padding-left {
+  padding-left: $meas-pad-15 !important;
+}
+html[dir="rtl"] .ace-i-medium-padding-left {
+  padding-right: $meas-pad-15 !important;
+}
+html[dir="ltr"] .ace-i-medium-padding-right {
+  padding-right: $meas-pad-15 !important;
+}
+html[dir="rtl"] .ace-i-medium-padding-right {
+  padding-left: $meas-pad-15 !important;
+}
+.ace-i-medium-padding-bottom {
+  padding-bottom: $meas-pad-15 !important;
+}
+.ace-i-medium-padding {
+  padding: $meas-pad-15 !important;
+}
+
+.ace-i-big-padding-top {
+  padding-top: $meas-pad-25 !important;
+}
+html[dir="ltr"] .ace-i-big-padding-left {
+  padding-left: $meas-pad-25 !important;
+}
+html[dir="rtl"] .ace-i-big-padding-left {
+  padding-right: $meas-pad-25 !important;
+}
+html[dir="ltr"] .ace-i-big-padding-right {
+  padding-right: $meas-pad-25 !important;
+}
+html[dir="rtl"] .ace-i-big-padding-right {
+  padding-left: $meas-pad-25 !important;
+}
+.ace-i-big-padding-bottom {
+  padding-bottom: $meas-pad-25 !important;
+}
+.ace-i-big-padding {
+  padding: $meas-pad-25 !important;
+}
+
+.ace-i-large-padding-top {
+  padding-top: $meas-pad-35 !important;
+}
+html[dir="ltr"] .ace-i-large-padding-left {
+  padding-left: $meas-pad-35 !important;
+}
+html[dir="rtl"] .ace-i-large-padding-left {
+  padding-right: $meas-pad-35 !important;
+}
+html[dir="ltr"] .ace-i-large-padding-right {
+  padding-right: $meas-pad-35 !important;
+}
+html[dir="rtl"] .ace-i-large-padding-right {
+  padding-left: $meas-pad-35 !important;
+}
+.ace-i-large-padding-bottom {
+  padding-bottom: $meas-pad-35 !important;
+}
+.ace-i-large-padding {
+  padding: $meas-pad-35 !important;
+}
+
+.ace-no-padding {
+  padding: $meas-pad-0 !important;
+}
+.ace-no-padding-top {
+  padding-top: $meas-pad-0 !important;
+}
+html[dir="ltr"] .ace-no-padding-left {
+  padding-left: $meas-pad-0 !important;
+}
+html[dir="rtl"] .ace-no-padding-left {
+  padding-right: $meas-pad-0 !important;
+}
+html[dir="ltr"] .ace-no-padding-right {
+  padding-right: $meas-pad-0 !important;
+}
+html[dir="rtl"] .ace-no-padding-right {
+  padding-left: $meas-pad-0 !important;
+}
+.ace-no-padding-bottom {
+  padding-bottom: $meas-pad-0 !important;
+}
+
+/* end padding controll classes */

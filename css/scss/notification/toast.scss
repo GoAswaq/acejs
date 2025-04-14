@@ -1,0 +1,121 @@
+/* begin toast */
+@use '../variables/all' as *;
+
+.ace-toast {
+  padding: $meas-pad-15 $ace-common-left-right-padding $meas-pad-25 $ace-common-left-right-padding;
+  width: 25%;
+  position: fixed;
+  top:  $position-0;
+  left:  $position-0;
+  right:  $position-0;
+  margin: $meas-marg-0 auto;
+  border-bottom-left-radius: $meas-radius-16;
+  border-bottom-right-radius: $meas-radius-16;
+  box-shadow: $box-shad-0 $box-shad-3 $box-shad-6 $primary-shadow-color;
+  opacity: 1;
+  transition: ease 0.1s;
+  z-index: 10000;
+}
+
+.ace-toast-icon {
+  width: 10%;
+  text-align: center;
+  position: relative;
+}
+@include floatToLTR('.ace-toast-icon',left);
+
+.ace-toast-hide {
+  transition: ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  opacity: 0;
+  height: 0px !important;
+  width: 0px !important;
+  top:  $position-0;
+  left:  $position-0;
+  right:  $position-0;
+  margin: $meas-marg-0 auto;
+  z-index: 9;
+  padding: $meas-pad-0 !important;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.ace-toast-icon span {
+  font-size: $font-size-26;
+  color: $toast-icon-color;
+  width: $ace-standard-element-size;
+  line-height: $meas-line-height-1d0 !important;
+  height: $ace-standard-element-size;
+  padding: $meas-pad-5;
+  border-radius: $meas-radius-50p;
+  font-family: $primary-font-family;
+}
+@include floatToLTR('.ace-toast-icon span',left);
+
+.ace-toast-text {
+  transition: none;
+  width: 90%;
+}
+@include floatToLTR('.ace-toast-text',left);
+
+.ace-dialog-action-border {
+  display: block;
+  width: 30%;
+  height: $meas-2;
+  background: $highlight-bg-color;
+  margin-top: $meas-marg-10;
+  transition: width ease-in-out 0.1s;
+  z-index: 1;
+  position: absolute;
+}
+
+.ace-toast-text p {
+  transition: none;
+  width: 90%;
+  color: $toast-color;
+}
+@include floatToLTR('.ace-toast-text p',right);
+
+.ace-toast-error {
+  background-color: $toast-error-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$toast-error-border-color);
+}
+
+.ace-toast-error .ace-toast-icon span {
+  background: $toast-error-bg-icon-color;
+}
+
+.ace-toast-warning {
+  background-color: $toast-warning-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$toast-warning-border-color);
+}
+
+.ace-toast-warning .ace-toast-icon span {
+  background: $toast-warning-bg-icon-color;
+}
+
+.ace-toast-success {
+  background-color: $toast-success-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$toast-success-border-color);
+}
+
+.ace-toast-success .ace-toast-icon span {
+  background: $toast-success-bg-icon-color;
+}
+
+.ace-toast-help {
+  background-color: $toast-help-bg-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$toast-help-border-color);
+}
+
+.ace-toast-help .ace-toast-icon span {
+  background: $toast-help-bg-icon-color;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-toast {
+    width: 80%;
+  }
+}
+
+/* end toast */

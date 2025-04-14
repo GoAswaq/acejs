@@ -1,0 +1,15 @@
+{
+  "name": "css",
+  "version": "1.0.0",
+  "description": "this package is used to compile scss to css ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "node-sass --watch scss/ace.scss -o css/ace.css"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-sass": "^5.0.0"
+  }
+}

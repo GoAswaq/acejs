@@ -1,0 +1,900 @@
+/* BEGIN HARDCODED COLORS - DO NOT MODIFY - they should NOT be overwritten by themes*/
+/* END DO NOT MODIFY */
+/*
+ * begin specific TOAST colors
+ */
+/*
+ * begin specific PROMPT colors
+ */
+/*
+ * begin common controls
+ */
+/*
+ * begin loader & masks &checks
+ */
+/*
+ * begin select
+ */
+/*
+ * begin specific BUTTON colors
+ */
+/*
+ * begin UPLOAD BUTTON colors
+ */
+/*
+ * begin CHECKBOX coloring
+ */
+/*
+ * begin radiogroup
+ */
+/*
+ * begin chips
+ */
+/*
+ * begins tags
+ */
+/*
+ * begin breadcrumbs
+ */
+/*
+ * begin specific GRID colors
+ */
+/*
+ * begin form specific color
+ */
+/*
+ * begin autocomplete
+ */
+/*
+ * begin accordion
+ */
+/*
+ * begin datepicker
+ */
+/*
+ * begin menubutton
+ */
+/*
+ * begin side menu
+ */
+/*
+ * presentation panel
+ */
+/*
+ * mobile elements
+ */
+/*
+ * shadows
+ */
+/* Used for:
+TOP: .ace-filter-container:hover .ace-filter-remove,.ace-deblur-zone > div > .ace-autocomplete-field > .ace-empty ~ .ace-label, .ace-deblur-zone > div > .ace-autocomplete-field > button,
+		.ace-popover:before,
+WIDTH: .ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-efld,
+HEIGHT: .ace-dropdown-list li, .ace-thin-progress-bar .ace-progress-bar, .ace-thin-progress-bar .ace-progress-inner-bar,
+LEFT/RIGHT: .ace-combo-field:after , .ace-radio-field .ace-error-msg, .ace-lateral-form .ace-soft-close,
+ */
+/* Used for:
+TOP: .ace-efld ~ label, .ace-efld:focus ~ label, .ace-empty:focus ~ label, .ace-autocomplete-details-field .ace-efld.ace-hide ~ .ace-label, .ace-label-align-top .ace-file-upload .ace-label,
+		.ace-radio-field .ace-error-msg, .ace-text-editor .ace-efld:focus ~ label, .ace-text-editor .ace-efld ~ label ,
+BOTTOM: .ace-text-field:after
+WIDTH: .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, span.ace-card-highlight:after,
+HEIGHT: .ace-efld ~ label,  .ace-thin-row, .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, .ace-radio + span, span.ace-card-highlight:after,
+PADDING: .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field, .ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"],
+		.ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger, .ace-accordion-list,  a.ace-breadcrumbs-link, .ace-mask-el > div,
+LINE-HEIGHT: span.ace-selectoption,
+BORDER: .ace-breadcrumbs-separator:after, .ace-arrow-down,
+ */
+/* Used for:
+TOP: [class*="ace-huge-text-"] .ace-empty:focus ~ .ace-label, [class*="ace-huge-text-"] .ace-efld ~ .ace-label,
+HEIGHT: .ace-nested-grid-header .ace-grid-groupped-header-col, .ui-datepicker td span, .ui-datepicker td a, .ace-accordion, .ace-deblur-zone i,
+LINE-HEIGHT: div.ace-selectbox, .ui-datepicker td span, .ui-datepicker td a,
+WIDTH: .ui-datepicker td span, .ui-datepicker td a
+LEFT/RIGHT: .ace-adv-search-panel .ace-advanced-expand, .ace-floating-button, .ace-arrow-down,
+ */
+/* Used for:
+TOP: .ace-text-center .ace-deblur-zone.ace-show .ace-autocomplete-field .ace-grid-auto-complete,
+MARIGIN: .ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before
+HEIGHT: .ace-flex-grid .ace-grid-footer, .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+WIDTH: .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+LEFT/RIGHT: .ace-timeline .ace-grid-body:before
+ */
+/* Used for:
+HEIGHT: .ace-main-nav, .ace-main-nav .ace-logo, .ace-grid-height-minus-50 .ace-grid, .recaptcha_div table td img, [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-menu-trigger, .ace-main-nav .ace-dropdown-trigger-click,
+		.ace-height-minus-50, .ace-i-height-minus-50, .ace-height-minus-50-vh, .ace-i-height-minus-50-vh ,
+WIDTH: .ace-autocomplete-field .ace-grid-pagination input,
+TOP: .ace-main-nav .ace-dropdown-list, .ace-side-container,
+MARGIN: .ace-content, .ace-margin-top-50
+ */
+/* Used for:
+HEIGHT: .ace-grid-height-minus-60 .ace-grid, ace-height-minus-60, ace-i-height-minus-60, .ace-height-minus-60-vh, .ace-i-height-minus-60-vh
+PADDING LEFT/RIGHT: .ace-search-bar input
+MARGIN: .ace-margin-top-60,
+ */
+/* Used for:
+WIDTH: .ace-main-nav .ace-logo
+HEIGHT: .ace-nested-grid-header > .ace-grid-cell, .ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after
+PADDING LEFT/RIGHT: [class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder
+ */
+/* Used for:
+WIDTH: .ace-icon-card i.icofont
+HEIGHT: .ace-icon-card i.icofont, .ace-height-minus-80, .ace-i-height-minus-80, .ace-height-minus-80-vh, .ace-i-height-minus-80-vh , .ace-grid-body, .ace-grid-height-minus-80 .ace-grid,
+BOX-SHADDOW: .ace-advanced-panel.from-top.ace-show,
+MARGIN: .ace-margin-top-80
+ */
+/* Used for:
+WIDTH: .ace-side-container .ace-expand, .ace-side-menu, .ace-hidden-menu-screen
+TRANSFORM: .ace-hidden-menu-screen,
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-140, .recaptcha_div td.recaptcha_image_cell
+ */
+/* Used for:
+LEFT/RIGHT: .ace-main-nav .ace-right ul li .ace-dropdown-list
+MARIGN: .ace-margin-top-150
+HEIGHT: .ace-grid-height-minus-150 .ace-grid, .ace-i-height-minus-150-vh, .ace-height-minus-150-vh, .ace-i-height-minus-150, .ace-height-minus-150
+WIDTH: .ace-file-upload span, .ace-label-align-top .ace-display-field .ace-label
+ */
+/* Used for:
+WIDTH: .ace-advanced-panel
+*/
+/* Used for:
+HEIGHT: .ace-blur-zone .ace-scrollview
+ */
+/* Used for:
+HEIGHT: .ace-grid-height-minus-200 .ace-grid, .ace-height-minus-200, .ace-i-height-minus-200, .ace-height-minus-200-vh, .ace-i-height-minus-200-vh, .ace-height-minus-200
+ */
+/* Used for:
+.ace-timeline .ace-grid-body, .recaptcha_div span#recaptcha_privacy
+ */
+/* Used for:
+ace-adv-search-panel, ace-grid-height-minus-250, ace-info-side, ace-quick-access-bar, ace-height-minus-250, ace-margin-top-250
+ */
+/*
+Used for timeline
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-300, .ace-i-height-minus-300, .ace-height-minus-300-vh, .ace-i-height-minus-300-vh, .ace-height-minus-300
+LEFT/RIGHT: .ace-advanced-panel.ace-quick-access-bar
+WIDTH:.ace-advanced-panel.ace-quick-access-bar.ace-show
+HEIGHT: .ace-flex-grid-height-300 .ace-grid-auto-complete, .ace-flex-grid-height-300 .ace-grid
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-350, .ace-i-height-minus-350, .ace-height-minus-350-vh, .ace-i-height-minus-350-vh, .ace-height-minus-350
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-400, .ace-i-height-minus-400, .ace-height-minus-400-vh, .ace-i-height-minus-400-vh, .ace-height-minus-400
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-450, .ace-i-height-minus-450, .ace-height-minus-450-vh, .ace-i-height-minus-450-vh, .ace-height-minus-450
+ */
+/* Used for:
+.ace-entry-card
+ */
+/* Used for:
+.span.ace-selection
+ */
+/* Used for
+  .ace-panel-white, .ace-panel-blue, .ace-panel-yellow, .ace-panel-orange, .ace-panel-red, .ace-panel-green,
+ .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-template.ace-field-container, .ace-autocomplete-field .ace-grid-auto-complete,
+ .ace-chips-field input, .ace-datepicker-field, .ace-no-bottom-padding .ace-datepicker-field, .ace-fld-no-padding .ace-display-field, .ace-fld-no-padding-top .ace-display-field, .ace-fld-no-padding-bottom .ace-display-field,
+ [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-accordion-checkbox, .ace-horizontal-menu .ace-side-menu,
+ .ace-no-border-button button, button.ace-no-border-button, a.ace-no-border-button, .ace-dropdown, .ace-input + label,
+ .ace-efld.ace-progress-bar,
+ .ace-form-padding, .ace-no-padding, .ace-no-padding-top, .ace-no-padding-left, .ace-no-padding-right, .ace-no-padding-bottom
+ .ace-text-field, .ace-entry-card .ace-field-container, .ace-entry-card-title, .ace-entry-card-title h2,
+.ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span.efld, .ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span
+
+*/
+/* Used for
+ .ace-thin-rows-grid, .ace-input + label
+*/
+/* Used for
+ .ace-grid-cell button, .ace-compact-grid .ace-grid-row .ace-grid-cell, .ace-chips-field, .ace-chip, .ui-datepicker th, .ace-advanced-panel-trigger.active-filters .ace-numbered-badge,
+ .ace-entry-card.ace-no-shadow button,
+*/
+/* Used for
+ .ace-grid-cell button, .ace-accordion, .ace-input + label
+*/
+/* Used for
+ .ace-grid-pagination button, .ace-nested-grid-header .ace-grid-groupped-header-col, .ace-chips-field, .ui-datepicker-trigger,
+ a.ace-tiny-button, button.ace-tiny-button, .ace-tiny-button a, .ace-tiny-button button, span.ace-card-highlight:after,
+*/
+/* Used for
+ .ace-grid-cell button, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-pagination, .ace-grid-action-cell button, .ace-grid-action-button:before,
+ .ace-grid-inline-ctrls, .ace-chips-field, .ace-chip, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker th, .ui-datepicker-title,
+ .ace-radio-field,
+ [class^="ace-state-badge-"] .ace-text-field, [class^="ace-state-badge-"] .ace-text-field input, .ace-accordion-checkbox,
+ .ace-deblur-zone i, a.ace-breadcrumbs-link, .ace-inside, .ace-dropdown, .ace-dropdown-trigger-click, .ace-prompt-el div button,
+ .ace-toast-icon span, .ace-advanced-panel-trigger.active-filters .ace-numbered-badge, .ace-entry-card.ace-no-shadow button,
+ .ace-icon-card i.fa, .ace-icon-card i.far, .ace-icon-card i.fad, .ace-icon-card i.fal, .ace-icon-card i.icofont,
+ .ace-panel-white, .ace-error .ace-error-msg, .ace-mask-el > div,
+.ace-tiny-padding-top, .ace-tiny-padding-left, ace-tiny-padding-right, ace-tiny-padding-bottom, ace-tiny-padding,
+.ace-i-tiny-padding-top, .ace-i-tiny-padding-left, .ace-i-tiny-padding-right, .ace-i-tiny-padding-bottom, .ace-i-tiny-padding
+*/
+/* Used for
+ .ace-file-upload span, .ace-file-type-icon, .ace-grid-row .ace-flat-button button,
+ .ace-prompt-el div button#mask_el_prompt_cancel, .ace-prompt-el div button#mask_el_prompt_ok
+*/
+/* Used for
+ .ace-iconbutton a
+*/
+/* Used for
+ .ace-inside, .ace-inside button
+*/
+/* Used for
+.ace-file-upload span, .ace-file-upload-button a, .ace-file-remove a, .ace-file-upload-button a:hover, .ace-file-upload-button a:hover span, .ace-file-remove a, .ace-file-remove a:hover, .ace-file-remove a:hover span,
+.ace-grid-cell, .ace-grid-pagination, .ace-grid-header .ace-grid-action-cell, .ace-grid-footer-totals .ace-grid-action-cell
+.ace-autocomplete-details-inner-field, .ace-checkbox-field .ace-label,
+.ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-trigger,
+[class*="ace-"] > input[type="text"], [class*="ace-"] > input[type="password"], [class*="ace-"] > input[type="number"], [class*="ace-"] > input[type="email"], [class*="ace-"] > .ace-grid-search, [class*="ace-"] > textarea, [class*="ace-"] select,
+.ace-filter-container:hover .ace-filter-remove,
+.ace-efld, .ace-label, .ace-footer, .ace-main-nav, .ace-accordion, .ace-horizontal-menu .ace-accordion,
+[class^="ace-state-badge-"] .ace-text-field, [class^="ace-state-badge-"] .ace-text-field input,
+.ace-side-menu a, .ace-side-menu ul li a i, ul.ace-side-menu-dropdown-list li a,
+a.ace-normal-button, button.ace-normal-button, .ace-normal-button a, .ace-normal-button button, .ace-button,
+.ace-dropdown-list li a, .ace-dropdown-trigger, .ace-dropdown-trigger-click,
+.ace-prompt-el div button,
+.ace-chat-buble, .ace-mask-el div p,
+.ace-small-padding-top, .ace-small-padding-left, ace-small-padding-right, .ace-small-padding-bottom, .ace-small-padding
+.ace-i-small-padding-top, .ace-i-small-padding-left, .ace-i-small-padding-right, .ace-i-small-padding-bottom, .ace-i-small-padding,
+.ace-entry-card .ace-field-container.ace-small-padding-right
+ */
+/* Used for
+.ace-grid-cell .ace-checkbox-field
+ */
+/* Used for
+  .ace-grid-cell, .ace-grid-cell input, .ace-nested-grid-header > .ace-grid-cell, a.ace-tiny-button, button.ace-tiny-button, .ace-tiny-button a, .ace-tiny-button button,
+  .ace-checkable-card, ,
+ */
+/* Used for
+  .ace-file-type-icon, .ace-mask-el > div
+ */
+/* Used for
+  .ace-grid-header .ace-grid-cell, .ace-grid-footer-totals .ace-grid-cell, .ace-timeline-content-timestamp
+ */
+/* Used for
+  .ace-grid-cell input, .ace-grid-header .ace-grid-action-cell, .ace-grid-footer-totals .ace-grid-action-cell, .ace-nested-grid-header .ace-grid-cell-header, .ace-nested-grid-header .ace-grid-cell-header,
+  .ui-datepicker, .ace-radio-field input[type="radio"] + span, a.ace-breadcrumbs-link, .ace-iconbutton a,
+  a.ace-normal-button, button.ace-normal-button, .ace-normal-button a, .ace-normal-button button, .ace-button, .ace-dropdown-list, .ace-radio + span, .ace-input + label,
+  .ace-toast, .ace-panel-blue, .ace-panel-yellow, .ace-panel-orange, .ace-panel-red, .ace-panel-green, .ace-popover, .ace-quick-access-bar, .ace-simple-card-footer,
+.ace-form-padding, .ace-medium-padding-top, ace-medium-padding-left, ace-medium-padding-right, ace-medium-padding-bottom, .ace-medium-padding
+.ace-i-medium-padding-top, .ace-i-medium-padding-left, .ace-i-medium-padding-right, .ace-i-medium-padding-bottom, .ace-i-medium-padding,
+.ace-entry-card-title
+*/
+/* Used for
+  .ace-grid-cell input
+*/
+/* Used for
+  .ace-checkable-card
+*/
+/* Used for
+.ace-accordion-list, .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field,
+.ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"], .ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger,
+a.ace-breadcrumbs-link, .ace-mask-el > div
+
+*/
+/* Used for
+  .ui-datepicker-calendar, .ace-radio-field input[type="radio"] + span, .ace-toast, .ace-mask-el div p,
+.ace-big-padding-top, .ace-big-padding-left, .ace-big-padding-right, .ace-big-padding-bottom, .ace-big-padding,
+.ace-i-big-padding-top, .ace-i-big-padding-left, .ace-i-big-padding-right, .ace-i-big-padding-bottom, .ace-i-big-padding
+*/
+/* Used for
+.ace-large-padding-top, ace-large-padding-left, ace-large-padding-right, ace-large-padding, .ace-large-padding-bottom
+.ace-i-large-padding-top, .ace-i-large-padding-left, .ace-i-large-padding-right, .ace-i-large-padding-bottom, .ace-i-large-padding
+*/
+/* Used for
+  .ace-content,
+*/
+/* Used for
+  ul.ace-side-menu-dropdown-list li a
+*/
+/* Used for
+.ace-form-popup > .ace-form-container
+*/
+/* Used for
+  .ace-search-bar input
+*/
+/* Used for
+[class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder,
+*/
+/* Used for
+  .ace-timeline-block
+*/
+/* Used for:
+.ace-mask-el > div
+ */
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+.ace-tiny-margin, .ace-i-tiny-margin
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for:
+MARGIN: .ace-grid-cell button, .ace-grid-cell input, .ace-autocomplete-field .ace-autocomplete-extra-link, .ace-entry img, .ace-label-align-left .ace-error-msg,
+		.ace-search-bar, .ace-dialog-action-border,
+		html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fa,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.far,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fad,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fal,html[dir="rtl"] .ace-icon-card.ace-icon-card-small i.icofont,
+		.ace-independent-form .ace-grid .ace-entry-card,
+		.ace-separator, .ace-error-msg
+ */
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+.ace-medium-margin, .ace-i-medium-margin
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+.ace-big-margin, .ace-i-big-margin
+*/
+/* Used for
+*/
+/* Used for
+.ace-large-margin, .ace-i-large-margin
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+.ace-content,
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/**
+Used for positioning an element: left, right, top, bottom
+ */
+/**
+Used borders: top,left,bottom,right
+ */
+/* Used for
+BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
+			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
+			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
+			.ace-timeline-content:before, .ace-timeline-content:after,
+ */
+/* Used for
+BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
+			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
+			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
+			.ace-timeline-content:before, .ace-timeline-content:after,
+ */
+/* Used for
+box-shaddow
+ */
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/* Used for
+*/
+/*
+ * the composite values MUST NOT be overwritten by themes!
+ */
+/* begin font related classes */
+.ace-standard-title-text,
+span.ace-standard-title-text,
+h1.ace-standard-title-text,
+h2.ace-standard-title-text,
+h3.ace-standard-title-text,
+h4.ace-standard-title-text,
+.ace-transparent-title-bar h2.ace-standard-title-text,
+.ace-form-inner h2.ace-standard-title-text {
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.ace-title {
+  margin-bottom: 15px;
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+html[dir=ltr] .ace-title {
+  float: left;
+}
+
+html[dir=rtl] .ace-title {
+  float: right;
+}
+
+.ace-title:after {
+  content: " ";
+  width: 45%;
+  height: 2px;
+  background: #46c3ff;
+  bottom: -1px;
+  position: absolute;
+}
+
+html[dir=ltr] .ace-title:after {
+  left: 0px;
+}
+
+html[dir=rtl] .ace-title:after {
+  right: 0px;
+}
+
+.ace-title h2,
+.ace-title h3 {
+  border: none;
+  margin: 0px;
+}
+
+.ace-font-size-50p {
+  font-size: 50%;
+}
+
+.ace-font-size-75p {
+  font-size: 75%;
+}
+
+.ace-font-size-90p {
+  font-size: 90%;
+}
+
+.ace-font-size-100p {
+  font-size: 100%;
+}
+
+.ace-font-size-110p {
+  font-size: 110%;
+}
+
+.ace-font-size-115p {
+  font-size: 115%;
+}
+
+.ace-font-size-120p {
+  font-size: 120%;
+}
+
+.ace-font-size-125p {
+  font-size: 125%;
+}
+
+.ace-font-size-150p {
+  font-size: 150%;
+}
+
+.ace-font-size-200p {
+  font-size: 200%;
+}
+
+.ace-font-50 {
+  zoom: 50%;
+}
+
+.ace-font-75 {
+  zoom: 75%;
+}
+
+.ace-font-85 {
+  zoom: 85%;
+}
+
+[class*=ace-huge-text-] {
+  line-height: 0 !important;
+}
+
+.ace-huge-text-110,
+.ace-huge-text-110 .ace-efld {
+  font-size: 110% !important;
+}
+
+.ace-huge-text-120,
+.ace-huge-text-120 .ace-efld {
+  font-size: 120% !important;
+}
+
+.ace-huge-text-130,
+.ace-huge-text-130 .ace-efld {
+  font-size: 130% !important;
+}
+
+.ace-huge-text-150,
+.ace-huge-text-150 .ace-efld,
+.ace-huge-text-150 i {
+  font-size: 150% !important;
+}
+
+.ace-huge-text-200,
+.ace-huge-text-200 .ace-efld {
+  font-size: 200% !important;
+}
+
+.ace-huge-text-250,
+.ace-huge-text-250 .ace-efld {
+  font-size: 250% !important;
+}
+
+[class*=ace-huge-text-] .ace-label {
+  height: auto !important;
+}
+
+[class*=ace-huge-text-] .ace-empty:focus ~ .ace-label,
+[class*=ace-huge-text-] .ace-efld ~ .ace-label {
+  top: -30px !important;
+}
+
+[class*=ace-huge-text-] .ace-empty ~ .ace-label {
+  top: 8px !important;
+}
+
+.ace-small-text-90 .ace-efld {
+  font-size: 90% !important;
+  line-height: 0;
+}
+
+.ace-small-text-80 .ace-efld {
+  font-size: 80% !important;
+  line-height: 0;
+}
+
+.ace-small-text-75 .ace-efld {
+  font-size: 75% !important;
+  line-height: 0;
+}
+
+.ace-small-text-60 .ace-efld {
+  font-size: 60% !important;
+  line-height: 0;
+}
+
+.ace-small-text-50 .ace-efld {
+  font-size: 50% !important;
+  line-height: 0;
+}
+
+[class*=ace-small-text-] select.ace-efld {
+  line-height: initial;
+}
+
+.ace-huge-text,
+.ace-huge-text .ace-efld {
+  font-size: 48px !important;
+}
+
+.ace-large-text,
+.ace-large-text .ace-efld {
+  font-size: 36px;
+}
+
+.ace-big-text,
+.ace-big-text .ace-efld {
+  font-size: 26px !important;
+}
+
+.ace-bigger-text,
+.ace-bigger-text .ace-efld {
+  font-size: 18px !important;
+}
+
+.ace-ta-center {
+  text-align: center !important;
+}
+
+html[dir=ltr] .ace-ta-lft {
+  text-align: left !important;
+}
+
+html[dir=rtl] .ace-ta-lft {
+  text-align: right !important;
+}
+
+html[dir=ltr] .ace-ta-rght {
+  text-align: right !important;
+}
+
+html[dir=rtl] .ace-ta-rght {
+  text-align: left !important;
+}
+
+.ace-text-center {
+  text-align: center;
+}
+
+html[dir=ltr] .ace-text-right {
+  text-align: right;
+}
+
+html[dir=rtl] .ace-text-right {
+  text-align: left;
+}
+
+html[dir=ltr] .ace-text-left {
+  text-align: left;
+}
+
+html[dir=rtl] .ace-text-left {
+  text-align: right;
+}
+
+.ace-no-line-height {
+  line-height: 0 !important;
+}
+
+.ace-line-height-half {
+  line-height: 0.5;
+}
+
+.ace-line-height-07 {
+  line-height: 0.7;
+}
+
+.ace-line-height-1 {
+  line-height: 1;
+}
+
+.ace-line-height-18 {
+  line-height: 1.8;
+}
+
+.ace-no-text-wrap,
+.ace-no-warp {
+  white-space: nowrap;
+}
+
+.ace-text-pre-wrap {
+  white-space: pre-wrap;
+}
+
+.ace-fld-pre-wrap .ace-efld {
+  white-space: pre-wrap;
+}
+
+.ace-text-cut-elipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace-white-space-normal {
+  white-space: normal !important;
+}
+
+.ace-word-break {
+  word-break: break-word;
+}
+
+.ace-bold {
+  font-weight: 600 !important;
+  color: rgba(0, 0, 0, 0.9);
+  font-size: 14px;
+}
+
+/* end font related classes */
+/* begin utility classes */
+.ace-no-after:after {
+  content: initial !important;
+}
+
+.ace-no-visibility {
+  visibility: hidden !important;
+}
+
+.ace-visibility {
+  visibility: visible !important;
+}
+
+.ace-hide {
+  display: none !important;
+}
+
+.ace-show {
+  max-height: 2500px;
+  opacity: 1;
+  visibility: visible;
+  transition: max-height 0.3s cubic-bezier(0.03, -0.01, 0.74, 0.16), height 0.6s, opacity 0.3s;
+}
+
+.ace-clear {
+  clear: both;
+}
+
+.ace-scrollview {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  margin: 0px;
+  overflow-x: hidden;
+  padding: 0px;
+  transform: translateZ(0px);
+}
+
+.ace-no-scrolling {
+  overflow: hidden;
+}
+
+body.ace-no-scrolling {
+  position: relative;
+}
+
+.ace-no-overflow {
+  overflow: hidden;
+}
+
+.ace-visible-overflow {
+  overflow: visible !important;
+}
+
+.ace-no-radius {
+  border-radius: 0px;
+}
+
+.ace-rounded {
+  border-radius: 50%;
+}
+
+.ace-no-border {
+  border: none !important;
+}
+
+.ace-force-z-index {
+  z-index: 16 !important;
+}
+
+.ace-full-width {
+  width: 100% !important;
+  position: relative;
+}
+
+.ace-width-minus-50 {
+  width: calc(100% - 50px);
+}
+
+.ace-no-shadow {
+  box-shadow: none !important;
+}
+
+.ace-no-break br {
+  display: none;
+}
+
+.ace-arrow-down {
+  width: 0;
+  height: 0;
+  position: absolute;
+  transform: rotate(-90deg);
+  top: 23px;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 20px solid #46c3ff;
+}
+
+html[dir=ltr] .ace-arrow-down {
+  right: -30px;
+}
+
+html[dir=rtl] .ace-arrow-down {
+  left: -30px;
+}
+
+.ace-hover:hover {
+  z-index: 999;
+}
+
+.ace-field-cell {
+  display: inline;
+}
+
+.ace-hidden-menu-screen {
+  transform: translateX(-90px);
+  width: calc(100% + 90px) !important;
+}
+
+.ace-active-border[active="1"] {
+  border-radius: 10px;
+  border: 3px solid #46c3ff;
+}
+
+.ace-primary-border {
+  border: 1px solid #46c3ff;
+}
+
+.ace-default-border {
+  border: 1px solid transparent;
+}
+
+.ace-highlight-shadow-form,
+.ace-highlight-shadow-form.ace-independent-form.ace-show {
+  border-radius: 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.26);
+}
+
+html[dir=ltr] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-show {
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+html[dir=rtl] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.ace-show {
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.ace-hint {
+  display: none;
+}
+
+/* end utility classes */
+
+/*# sourceMappingURL=utility.css.map */

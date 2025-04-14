@@ -1,0 +1,70 @@
+/* begin chat bubbles */
+@use '../variables/all' as *;
+
+.ace-chat-buble {
+  padding: $meas-pad-10 !important;
+  position: relative;
+  border-radius: $ace-common-radius;
+}
+@include sidePaddingLTR('ace-chat-buble',right,$meas-pad-10,true);
+
+.ace-chat-from:before {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  font-size: $font-size-20;
+  color: $primary-color;
+  top:  $position-0;
+  @include addBorder(top,$meas-bord-25,$ace-border-default-pattern,$disabled-bg-color);
+  @include addBorder(right,$meas-bord-25);
+}
+@include positionLTR('.ace-chat-from:before',left,-$position-15);
+html[dir="ltr"] .ace-chat-from:before {
+  transform: rotateY(180deg);
+}
+
+.ace-chat-from:after {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  font-size: $font-size-20;
+  background: $primary-bg-color;
+  top:  $position-0;
+  width: $ace-standard-element-size;
+  height: $ace-standard-element-size;
+  border-radius: $meas-radius-50p;
+}
+@include positionLTR('.ace-chat-from:after',left,-$position-35);
+
+.ace-chat-for:before {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  font-size: $font-size-20;
+  color: $contrast-font-color;
+  top:  $position-0;
+
+  @include addBorder(bottom,$meas-bord-5);
+  @include addBorder(top,$meas-bord-35,$ace-border-default-pattern,$disabled-bg-color);
+  @include addBorder(right,$meas-bord-25);
+}
+@include positionLTR('.ace-chat-for:before',right,-$position-15);
+
+.ace-chat-for:after {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  font-size: $font-size-20;
+  height: $ace-standard-element-size;
+  z-index: 0;
+  border-radius: $meas-radius-50p;
+  background: $primary-bg-color;
+  top:  $position-0;
+  width: $ace-standard-element-size;
+  @include addBorder(bottom,$meas-bord-5);
+}
+@include positionLTR('.ace-chat-for:after',left,-$position-35);
+@include sideMarginLTR('.ace-chat-for',left,$meas-marg-48);
+@include sideMarginLTR('.ace-chat-from',left,$meas-marg-48);
+
+/* end chat bubbles */

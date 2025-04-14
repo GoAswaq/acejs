@@ -1,0 +1,106 @@
+/* begin breadcrumbs */
+@use '../variables/all' as *;
+
+a.ace-breadcrumbs-link {
+  background: $breadcrumb-enabled-element-bg-color;
+  color: $breadcrumb-enabled-element-text-color;
+  display: block;
+  position: relative;
+  padding: $meas-pad-5 $meas-pad-15;
+}
+html[dir="ltr"] a.ace-breadcrumbs-link {
+  border-top-right-radius: $ace-common-radius;
+  border-bottom-right-radius: $ace-common-radius;
+}
+html[dir="rtl"] a.ace-breadcrumbs-link {
+  border-top-left-radius: $ace-common-radius;
+  border-bottom-left-radius: $ace-common-radius;
+}
+@include floatToLTR('a.ace-breadcrumbs-link',left);
+@include sideMarginLTR('a.ace-breadcrumbs-link',right,-$meas-marg-5);
+@include sidePaddingLTR('a.ace-breadcrumbs-link',left,$meas-pad-20);
+
+.ace-breadcrumbs-separator:after {
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  z-index: 2;
+  top: - $position-4;
+
+  @include addBorder(top,$meas-bord-17);
+  @include addBorder(bottom,$meas-bord-17);
+}
+@include addBorderLTR('.ace-breadcrumbs-separator:after',left,$meas-bord-12,$ace-border-default-pattern,$breadcrumb-enabled-element-bg-color);
+@include positionLTR('.ace-breadcrumbs-separator:after',right,-$position-7);
+
+span.ace-breadcrumbs-separator {
+  position: relative;
+  z-index: 3;
+  display: block;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  width: 5px;
+}
+@include floatToLTR('span.ace-breadcrumbs-separator',left);
+
+.ace-breadcrumbs-field {
+  border-radius: $ace-common-radius;
+  height: $ace-small-element-size;
+  white-space: normal;
+  overflow: hidden;
+  width: $meas-full;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+}
+@include floatToLTR('.ace-breadcrumbs-field',left);
+
+.ace-breadcrumbs-field span,
+.ace-breadcrumbs-field a {
+  font-size: $ace-tiny-title-size;
+}
+
+html[dir="ltr"] .ace-breadcrumbs-field .ace-breadcrumbs-link:last-child {
+  border-top-right-radius: $ace-common-radius;
+  border-bottom-right-radius: $ace-common-radius;
+}
+html[dir="rtl"] .ace-breadcrumbs-field .ace-breadcrumbs-link:last-child {
+  border-top-left-radius: $ace-common-radius;
+  border-bottom-left-radius: $ace-common-radius;
+}
+@include sideMarginLTR('a.ace-breadcrumbs-link:not(:first-child)',left,-$meas-marg-3);
+
+html[dir="ltr"] a.ace-breadcrumbs-link:first-child {
+  border-top-left-radius: $ace-common-radius;
+  border-bottom-left-radius: $ace-common-radius;
+}
+html[dir="rtl"] a.ace-breadcrumbs-link:first-child {
+  border-top-right-radius: $ace-common-radius;
+  border-bottom-right-radius: $ace-common-radius;
+}
+a.ace-breadcrumbs-link.ace-breadcrumbs-active {
+  background: $breadcrumb-active-element-bg-color;
+  color: $breadcrumb-active-element-text-color !important;
+  border-radius: $meas-radius-0;
+}
+@include addBorderLTR('a.ace-breadcrumbs-link.ace-breadcrumbs-active + :after',left,$meas-bord-12,$ace-border-default-pattern,$breadcrumb-active-element-bg-color);
+
+a.ace-breadcrumbs-link[disabled] {
+  color: $breadcrumb-disabled-element-text-color;
+  background: $breadcrumb-disabled-element-bg-color;
+  border-radius: $meas-radius-0;
+}
+@include addBorderLTR('a.ace-breadcrumbs-link[disabled] + :after',left,$meas-bord-12,$ace-border-default-pattern,$breadcrumb-disabled-element-bg-color,true);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-breadcrumbs-field {
+    display: flex;
+    overflow-x: auto !important;
+    max-width: $meas-full;
+  }
+
+  .ace-breadcrumbs-field .ace-breadcrumbs-link {
+    flex: none;
+  }
+}
+
+/* end breadcrumbs */

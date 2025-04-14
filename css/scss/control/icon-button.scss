@@ -1,0 +1,318 @@
+@use '../variables/all' as *;
+
+/* begin buttons field */
+.ace-button-field button .ace-icon,
+.ace-button-field button span{
+  line-height: $meas-line-height-1d0;
+}
+
+.ace-button-field button[disabled],
+.ace-button-field button[disabled] .ace-icon{
+  color: $button-disabled-color;
+  background: $button-disabled-bg-color !important;
+}
+@include sidePaddingLTR('.ace-button-field .ace-icon',right,$meas-pad-5);
+@include sidePaddingLTR('.ace-button-field .ace-icon.ace-icon-after',left,$meas-pad-5);
+/* end buttons field */
+
+/* begin button modifiers */
+
+.ace-button-full-width button {
+  width: $meas-full;
+}
+
+.ace-flat-button {
+  text-align: center;
+}
+.ace-flat-button button {
+  margin: $meas-marg-0;
+  color: $button-highlight-color;
+  background-color: $button-highlight-bg-color;
+  border-color: $button-highlight-color;
+  border-radius: $ace-common-radius;
+}
+.ace-flat-button button .ace-icon{
+  color: $button-highlight-color;
+  background-color: $button-highlight-bg-color;
+}
+.ace-flat-button button:hover,
+.ace-flat-button button:hover .ace-icon{
+  opacity: 0.6;
+  background-color: $button-highlight-bg-color;
+  color: $button-highlight-color;
+}
+.ace-grid-row .ace-flat-button button {
+  padding: $meas-pad-6 !important;
+  margin: $meas-marg-0 $meas-marg-8;
+  text-align: center;
+}
+.ace-flat-button .fa,
+.ace-flat-button .far {
+  display: flex;
+  justify-content: center;
+  margin: $meas-marg-0;
+  margin-left: $meas-marg-0 !important;
+  margin-right: $meas-marg-0 !important;
+  line-height: $meas-line-height-1d0;
+}
+
+.ace-no-border-button button,
+button.ace-no-border-button,
+a.ace-no-border-button {
+  border: none !important;
+  padding: $meas-pad-0 !important;
+  background-color: $button-highlight-bg-color !important;
+}
+.ace-no-border-button button .ace-icon,
+button.ace-no-border-button .ace-icon,
+a.ace-no-border-button .ace-icon{
+  background-color: $button-highlight-bg-color !important;
+  color: $button-highlight-color !important;
+}
+
+.ace-no-border-button button:hover,
+button.ace-no-border-button:hover,
+a.ace-no-border-button:hover {
+  color: $button-highlight-color !important;
+  background-color: $button-highlight-bg-color !important;
+}
+
+.ace-no-border-button button:disabled,
+button:disabled.ace-no-border-button,
+a:disabled.ace-no-border-button {
+  border: none !important;
+}
+
+.ace-no-border-button button:disabled .ace-icon,
+button.ace-no-border-button:disabled .ace-icon,
+a.ace-no-border-button:disabled .ace-icon{
+  color: $button-disabled-color !important;
+}
+
+a.ace-normal-button,
+button.ace-normal-button,
+.ace-normal-button a,
+.ace-normal-button button {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: all ease-in-out 0.1s;
+  text-align: center;
+  background-color: $button-highlight-bg-color;
+  padding: $meas-pad-10 $meas-pad-15 $meas-pad-10 $meas-pad-15;
+  margin: $meas-marg-0 $meas-marg-5;
+  cursor: pointer;
+  color: $button-highlight-color;
+  position: relative;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$button-highlight-color);
+}
+.ace-normal-button button .ace-icon {
+  color: $button-highlight-color;
+  background-color: $button-highlight-bg-color;
+}
+a.ace-normal-button[disabled],
+button.ace-normal-button[disabled],
+.ace-normal-button a[disabled],
+.ace-normal-button button[disabled] {
+  border-color: $primary-shadow-color;
+  color: $button-disabled-color;
+  background-color: $button-disabled-bg-color !important;
+}
+.ace-normal-button button[disabled] .ace-icon {
+  color: $button-disabled-color;
+  background-color: $button-disabled-bg-color !important;
+}
+
+a.ace-normal-button:hover,
+button.ace-normal-button:hover,
+.ace-normal-button a:hover,
+.ace-normal-button button:hover {
+  background-color: $button-highlight-color;
+  color: $contrast-font-color;
+}
+.ace-normal-button:before {
+  display: inline-block;
+}
+@include sideMarginLTR('.ace-normal-button i',right,$meas-marg-5);
+@include floatToLTR('.ace-normal-button:before',left);
+@include sideMarginLTR('.ace-normal-button:before',right,$meas-marg-5);
+
+.ace-normal-button a,
+.ace-normal-button button {
+  width: $meas-full;
+}
+
+a.ace-tiny-button,
+button.ace-tiny-button,
+.ace-tiny-button a,
+.ace-tiny-button button {
+  height: $ace-small-element-size;
+  padding: $meas-pad-4 $meas-pad-12;
+}
+
+.ace-button {
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  transition: all ease-out 0.2s;
+  text-align: center;
+  padding: $meas-pad-10 $meas-pad-16 $meas-pad-10 $meas-pad-15;
+  background: $button-highlight-bg-color;
+  cursor: pointer;
+  color: $button-highlight-color;
+  height: $ace-standard-element-size;
+  margin: $meas-marg-5 $meas-marg-0;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+.ace-button:not([disabled]):hover {
+  background-color: $button-highlight-color;
+  color: $contrast-font-color;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$button-highlight-bg-color);
+}
+
+.ace-floating-button {
+  position: fixed;
+  cursor: pointer;
+  bottom:  $position-25;
+  z-index: 1;
+  box-shadow: $box-shad-0 $box-shad-3 $box-shad-6 $primary-shadow-color;
+  border-radius: $meas-radius-50p;
+  height: $meas-56 !important;
+  width: $meas-56;
+  font-size: $ace-large-title-size;
+  text-align: center;
+  line-height: $meas-line-height-2d0;
+  background-color: $primary-bg-color;
+  color: $contrast-font-color;
+}
+@include positionLTR('.ace-floating-button',right,$position-30);
+.ace-floating-button:not([disabled]):hover {
+  box-shadow: $box-shad-0 $box-shad-6 $box-shad-12 $primary-shadow-color;
+  color: $contrast-font-color;
+}
+.ace-floating-button i {
+  line-height: $meas-line-height-2d3 !important;
+}
+
+a.ace-cancel-button,
+.ace-cancel-button a,
+.ace-cancel-button button {
+  border-color: $error-color-v2;
+  color: $error-color-v2;
+}
+
+a.ace-cancel-button .ace-icon,
+.ace-cancel-button a .ace-icon,
+.ace-cancel-button button .ace-icon {
+  color: $error-color-v2;
+}
+
+a.ace-cancel-button:hover,
+.ace-cancel-button:hover a,
+.ace-cancel-button:hover button {
+  background-color: $error-color-v2;
+  border-color: $error-color-v2;
+  color: $button-contrast-color;
+}
+a.ace-cancel-button:hover .ace-icon,
+.ace-cancel-button:hover a .ace-icon,
+.ace-cancel-button:hover button .ace-icon{
+  background-color: $error-color-v2;
+  color: $button-contrast-color;
+}
+
+button.ace-filled-button,
+.ace-filled-button button {
+  background-color: $button-highlight-color;
+  color: $button-contrast-color;
+  border-radius: $ace-common-radius;
+  text-align: center;
+  position: relative;
+  margin: $meas-marg-3 $meas-marg-0;
+}
+.ace-auto-gen.ace-filled-button {
+  background: $button-highlight-bg-color;
+}
+button.ace-filled-button .ace-icon,
+.ace-filled-button button .ace-icon {
+  background: $button-highlight-color;
+  color: $button-contrast-color;
+}
+
+button[disabled].ace-filled-button .ace-icon,
+.ace-filled-button button[disabled] .ace-icon {
+  background-color: $button-disabled-bg-color !important;
+  color: $button-disabled-color !important;
+}
+
+.ace-inside {
+  top: $position-0;
+  margin: $meas-marg-0;
+  border: none;
+  padding: $meas-pad-5 $meas-pad-8;
+  height: $ace-standard-element-size;
+  padding: $meas-pad-0 !important;
+}
+@include floatToLTR('.ace-inside',right);
+
+.ace-inside button {
+  position: absolute;
+  top:  $position-0;
+  padding: $meas-pad-5 $meas-pad-8;
+  height: $ace-standard-element-size;
+  margin: $meas-marg-0;
+}
+@include positionLTR('.ace-inside button',right,$position-0);
+@include positionLTR('.ace-inside.ace-inside-double button',right,$position-36d5);
+
+.ace-buttons-groups {
+  position: static;
+}
+@include positionLTR('.ace-buttons-groups',right,$position-15);
+
+.ace-attention .ace-button-field button,
+.ace-attention .ace-button-field button .ace-icon {
+  color: $attention-color;
+}
+
+.ace-attention .ace-button-field button[disabled],
+.ace-attention .ace-button-field button[disabled] .ace-icon {
+  background-color: $button-disabled-bg-color !important;
+  color: $button-disabled-color !important;
+}
+
+.ace-big-button .ace-button-field button,
+button.ace-big-button{
+  font-size: $ace-medium-title-size;
+}
+
+/* end button modifiers */
+
+
+
+/* begin icon button - obsolete, kept for backwards compatibility*/
+  .ace-iconbutton a {
+    width: auto;
+    transition: all ease 0.1s;
+    text-align: center;
+    background: $primary-bg-color;
+    padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+    cursor: pointer;
+    color: $primary-font-color;
+    position: relative;
+    margin: $meas-marg-3;
+    font-family: $controls-font-family;
+    font-size: $ace-standard-font-size;
+    @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+  }
+
+  .ace-iconbutton a:hover {
+    background: $button-highlight-color;
+    color: $contrast-font-color;
+  }
+/* end icon button modifiers */
+

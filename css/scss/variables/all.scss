@@ -1,0 +1,204 @@
+@forward 'colors';
+@forward 'measures';
+@forward 'paddings';
+@forward 'margins';
+@forward 'positions';
+@forward 'borders';
+@forward 'shaddows';
+@forward 'radius';
+@forward 'line-height';
+@forward 'screen-breakpoints';
+@forward 'fonts';
+
+@use 'colors' as *;
+@use 'measures' as *;
+@use 'paddings' as *;
+@use 'margins' as *;
+@use 'positions' as *;
+@use 'borders' as *;
+@use 'shaddows' as *;
+@use 'radius' as *;
+@use 'line-height' as *;
+@use 'screen-breakpoints' as *;
+@use 'fonts' as *;
+
+//$ace-container-default-side-padding : $adsfsfsdf;
+
+//defining SMART VH
+@function smartvh($quantity) {
+  @return calc(var(--vh, 1vh) * #{$quantity});
+}
+
+//GENERAL PADDING SETTINGS AFFECTING MANY ELEMENTS
+        //the default right / left padding of all ace fields
+        $ace-container-default-side-padding: $meas-pad-10 !default;
+
+        //many ace fields have an internal field which holds / displays the actual value of the field
+        //the padding of this inner element is given by these values
+        //also, these values are used more commonly throughout the app, to specify various alignament paddings
+        $ace-common-top-bottom-padding: $meas-pad-8 !default;
+        $ace-common-left-right-padding: $ace-container-default-side-padding !default;
+
+        //ace fields with label align TOP will have an additional padding added to their inner element
+        $ace-label-align-top-inner-bottom-padding: $meas-pad-20 !default;
+
+        //ace label align LEFT will have an additional padding added at the top, to align them with the main input element
+        $ace-label-align-left-inner-top-padding: 2 * $ace-common-top-bottom-padding !default;
+
+        $ace-main-title-bar-padding: unset !default;
+        $ace-tittle-bar-padding: $ace-main-title-bar-padding !default;
+        //all footer elements will have this size
+        $ace-footer-padding: $meas-pad-0 $meas-pad-10 !default;
+//GENERAL BORDER SETTINGS
+
+        //many elements have a type of border
+        //these are the values of the most common border types
+        $ace-border-default-position: all !default;//all around: top, right, bottom and left
+        $ace-border-default-size: $meas-bord-1 !default;
+        $ace-border-default-pattern: solid !default;
+        $ace-border-default-color: transparent !default;
+        $active-border-radius: 0px !default;//some elements, when they get activated, will get a rounded border
+        $hover-border-radius: 0px !default;//some elements, when they get hovered, will get a rounded border
+
+//Other Measurements
+
+        //most common elements should be of this height, or width
+        $ace-standard-element-size: $meas-34 !default;
+        //some elements and sub-elements will have this height or width
+        $ace-small-element-size: $meas-25 !default;
+
+//height measurement
+        //title bars, some footbars and other elements are by default of this standard height
+        $ace-standard-bar-height: $meas-50 !default;
+
+        //this is the height of the main APP title-bar: the one that appears on top, all the time:
+        $ace-main-title-bar-height: $ace-standard-bar-height !default;
+        //all title bars, except the main app will have this size:
+        $ace-tittle-bar-height: $ace-standard-bar-height !default;
+        //all footer elements will have this size
+        $ace-footer-height: $ace-standard-bar-height !default;
+        //horizontal tabs height
+        $ace-horizontal-tabs-height: $ace-standard-bar-height !default;
+        //recaptcha size
+        $ace-recaptcha-height: $ace-standard-bar-height !default;
+
+        /*
+         * the composite values MUST NOT be overwritten by themes!
+         */
+        $ace-composite-height-main-title-bar-and-normal-title-bar: $ace-main-title-bar-height + $ace-tittle-bar-height;
+        $ace-composite-height-normal-title-bar-and-footer: $ace-tittle-bar-height + $ace-footer-height;
+        $ace-composite-height-normal-title-bar-and-horizontal-tabs: $ace-tittle-bar-height + $ace-horizontal-tabs-height;
+
+//FONT Measurements
+      //Attention: the size of the bellow defined value must in ascending order, if you want to keep a normal-ish aspect of the page
+      $ace-smaller-font-size: $font-size-12 !default;
+      $ace-standard-font-size: $font-size-13 !default;
+      $ace-bigger-font-size: $font-size-14 !default;
+      $ace-tiny-title-size: $font-size-16 !default;
+      $ace-small-title-size: $font-size-18 !default;
+      $ace-medium-title-size: $font-size-20 !default;
+      $ace-large-title-size: $font-size-22 !default;
+      $ace-huge-title-size: $font-size-34 !default;
+
+//
+      $ace-label-top-offset: - $position-20 !default;
+      $ace-label-empty-offset: $position-7 !default;
+
+      $ace-envelope-highlight-padding: $meas-pad-0 $meas-pad-0 $ace-label-align-top-inner-bottom-padding $meas-pad-0 !default;
+      $ace-envelope-highlight-bg-color: $secondary-bg-color !default;
+      $ace-envelope-highlight-focus-bg-color: $secondary-bg-color !default;
+      $ace-envelop-highlight-label-top-offset: $ace-label-top-offset !default;
+      $ace-envelop-highlight-label-empty-offset: $ace-label-empty-offset !default;
+      $ace-envelop-highlight-border-color: $primary-border-color !default;
+      $ace-envelop-highlight-efld-side-padding: $ace-common-left-right-padding !default;
+      $ace-envelop-highlight-autocomple-grid-top: $position-32 !default;
+      $ace-envelop-highlight-autocomple-popup-grid-top: $position-42 !default;
+
+//    radius
+      $ace-common-radius: $meas-radius-10 !default;
+      $ace-prompt-radius: $ace-common-radius !default;
+      $ace-prompt-buttons-radius: $ace-common-radius !default;
+
+
+//    components
+      $autocomplete-clear-button-display: inline-block !default;
+
+//if side == left, it will return right, and if not, it will return left
+@function invertSide($side){
+  @if $side == 'left' {
+    @return right;
+  }
+  @return left;
+}
+//if state == true, it will return !important, otherwise it will return an empty field
+@function parseImportant($state){
+  @if $state == true {
+    @return !important;
+  }
+  @return null;
+}
+
+//position can be either left or right
+@mixin positionLTR($selector,$position,$value,$important:false){
+  html[dir="ltr"] #{$selector} {
+    #{$position}: $value parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    #{invertSide($position)}: $value parseImportant($important);
+  }
+}
+
+//direction can be either left or right
+@mixin floatToLTR($selector,$direction,$important:false){
+  html[dir="ltr"] #{$selector} {
+    float: $direction parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    float: invertSide($direction) parseImportant($important);
+  }
+}
+
+//position can be either left or right
+@mixin sidePaddingLTR($selector,$position,$value,$important:false){
+  html[dir="ltr"] #{$selector} {
+    padding-#{$position}: $value parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    padding-#{invertSide($position)}: $value parseImportant($important);
+  }
+}
+//position can be either left or right
+@mixin sideMarginLTR($selector,$position,$value,$important:false){
+  html[dir="ltr"] #{$selector} {
+    margin-#{$position}: $value parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    margin-#{invertSide($position)}: $value parseImportant($important);
+  }
+}
+
+//position should be all, top, right, bottom or left; size can be none as well
+@mixin addBorder($position:all,$size:$ace-border-default-size,$pattern:$ace-border-default-pattern,$color:$ace-border-default-color,$important:false){
+    @if $position == all {
+      @if( $size == none ){
+        border: none parseImportant($important);
+      }@else {
+        border: $size $pattern $color parseImportant($important);
+      }
+    } @else {
+      @if( $size == none ) {
+        border-#{$position}: none parseImportant($important);
+      } @else {
+        border-#{$position}: $size $pattern $color parseImportant($important);
+      }
+    }
+}
+//add border-left  or -right for ltr and rtl
+@mixin addBorderLTR($selector,$direction,$size:$ace-border-default-size,$pattern:$ace-border-default-pattern,$color:$ace-border-default-color,$important:false){
+  html[dir="ltr"] #{$selector} {
+    @include addBorder($direction,$size,$pattern,$color,$important);
+  }
+  html[dir="rtl"] #{$selector} {
+    @include addBorder(invertSide($direction),$size,$pattern,$color,$important);
+  }
+}

@@ -1,0 +1,25 @@
+/* begin scrolling */
+.ace-horizontal-scrolling {
+  display: flex;
+  overflow-x: auto !important;
+}
+
+.ace-horizontal-scrolling .ace-grid {
+  display: flex !important;
+  flex-wrap: wrap;
+  flex: none;
+  width: auto !important;
+}
+
+.ace-horizontal-scrolling .ace-grid .ace-grid-header,
+.ace-horizontal-scrolling .ace-grid .ace-grid-footer-totals {
+  display: flex;
+}
+
+.ace-horizontal-scrolling .ace-grid .ace-grid-row {
+  display: flex;
+}
+
+/* end scrolling */
+
+/*# sourceMappingURL=scrolling.css.map */

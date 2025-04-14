@@ -1,0 +1,217 @@
+//@use '../variables/all';
+@use './base' with (
+
+    //$primary-color: #46c3ff,
+    $primary-color: red,
+
+    //$ace-container-default-side-padding: 0px,
+    //$ace-common-top-bottom-padding: 2px,
+    //$ace-common-left-right-padding: 2px,
+    ////$ace-label-align-top-inner-bottom-padding: $meas-pad-20 !default;
+    //$ace-label-align-left-inner-top-padding: 4px,
+
+//GENERAL BORDER SETTINGS
+
+//many elements have a type of border
+//these are the values of the most common border types
+//    $ace-border-default-size: 2px,
+//    $ace-border-default-pattern: dotted,
+//    $ace-border-default-color: blue,
+//    $ace-standard-element-size: 20px,
+//    $ace-small-element-size: 15px,
+
+//FONT Measurements
+      //Attention: the size of the bellow defined value must in ascending order, if you want to keep a normal-ish aspect of the page
+      //$ace-standard-font-size: 7px,
+      //$ace-bigger-font-size: 8px,
+      //$ace-tiny-title-size: 9px,
+      //$ace-small-title-size: 10px,
+      //$ace-medium-title-size: 11px,
+
+
+    //$primary-bg-color: gray,
+    //$secondary-bg-color: black,
+    //$background-bg-color: black,
+    //$highlight-bg-color: lightgreen, // this color is used to highlight the background of several items
+    //$highlight-bg-subtle-color: orange, // used to differentiate. ex: on hover cases
+    //
+    //$primary-shadow-color: blue, //shadow color
+    //
+    //$primary-border-color : navy, //main border color
+    //$highlight-border-color : yellow, //border color for highlighting elements
+    //
+    //$primary-font-color: darkgreen, // this color is used in the field modifiers , forms , buttons
+    //$primary-font-color-highlight: pink, // the color is used for accordion nodes, and grid footer cells, and other things which might need a bit of emphasis
+    //$contrast-font-color: indigo,
+    //
+    //$disabled-color: yellow,
+    //$disabled-bg-color: blue,
+    //$highlight-disabled-background: red,
+    //$select-soft-bg-color: black,
+
+  /*
+   * custom grid
+   */
+  //$grid-main-text-color: purple,
+  //$grid-main-bg-color: cyan,
+  //$grid-secondary-bg-color: brown,
+  //$grid-main-shadow-color: brown,
+  //$grid-main-error-color: lightgreen,
+  //$grid-action-button-color: white,
+  //$grid-action-button-bg-color: darkred,
+  //$grid-action-button-disabled-color: white,
+  //$grid-action-button-disabled-bg-color: black,
+  //$grid-column-lines-color: red,
+  //$grid-row-lines-color: rosa,
+  //$grid-cell-bg-color: #8888ff,
+  //$grid-cell-selected-bg-color: green,
+  //$grid-cell-selected-color: brown,
+  //$grid-cell-input-bg-color: black,
+  //$grid-inline-ctrls-color: yellow,
+  //$grid-inline-ctrls-focus-border-color: orange,
+  //$grid-pagination-color: yellow,
+  //$grid-pagination-focus-color: black,
+  //$grid-pagination-bg-color: blue,
+  //$grid-header-cell-bg-color: gray,
+  //$grid-header-cell-color: darkgreen,
+  //$grid-header-border-color: #Fa487F,
+  //$grid-footer-totals-cell-bg-color: pink,
+  //$grid-footer-totals-cell-color: white,
+  //$grid-footer-totals-cell-border-color: orange,
+  //$grid-footer-border-color: #Fa487F,
+  //$grid-footer-bg-color: lightgray,
+  //$grid-body-bg-color: darkblue,
+  //$grid-checkbox-checked-color: red,
+
+  /*
+   * custom buttons
+   */
+   //$button-main-color: darkorange,
+   //$button-main-bg-color: blue,
+   //$button-highlight-color: green,
+   ///*$button-highlight-bg-color: black, //-for most cases, it should probably not be overwritten, and left with the original value: transparent */
+   //$button-contrast-color: white,
+   //$button-disabled-color: darkgray,
+   //$button-disabled-bg-color: purple,
+
+   /*
+    * begin upload button
+    */
+   //$upload-main-color: #5111F9,
+   //$upload-main-highlight-color: purple,
+   //$upload-main-border-color: violet,
+   //$upload-main-contrast-color: yellow,
+   //$upload-main-icon-bg-color: blue,
+   //$upload-main-disabled-bg-color: brown,
+   //$upload-button-bg-color: black,
+   //$upload-button-color: green,
+   //$upload-button-bg-color-hover: white,
+   //$upload-button-color-hover: black,
+   //$remove-button-bg-color: blue,
+   //$remove-button-color: orange,
+   //$remove-button-bg-color-hover: pink,
+   //$remove-button-color-hover: magenta,
+
+   /*
+    * custom checkboxes
+    */
+    //$checkbox-label-color: green,
+    //$checkbox-checked-color: red,
+    //$checkbox-unchecked-color: darkgreen,
+    //$checkbox-background-color: blue,
+    //$checkbox-state-icon-unchecked-color: yellow,
+    //$checkbox-state-icon-checked-color: orange,
+
+    /*
+     * custom accordion
+     */
+    /*$accordion-bg-color: gray, //-for most cases, it should probably not be overwritten, and left with the original value: transparent */
+    //$accordion-primary-node-color: red,
+    //$accordion-leaf-color: pink,
+    //$accordion-checkbox-checked-color: red,
+    //$accordion-checkbox-unchecked-color: gray,
+    //$accordion-active: purple,
+
+    /*
+     * begin datepicker
+     */
+     //$datepicker-primary-color: green,
+     //$datepicker-background: black,
+     //$datepicker-highlight-color: white,
+     //$datepicker-contrast-color: pink,
+     //$datepicker-disabled-color: purple,
+     //$datepicker-disabled-bg-color: blue,
+
+     /*
+      * begin breadcrumbs
+      */
+      //$breadcrumb-active-element-text-color: green,
+      //$breadcrumb-active-element-bg-color: black,
+      //$breadcrumb-disabled-element-text-color: white,
+      //$breadcrumb-disabled-element-bg-color: gray,
+      //$breadcrumb-enabled-element-text-color: yellow,
+      //$breadcrumb-enabled-element-bg-color: blue,
+
+      /*
+       * begin chips
+       */
+      //$chips-background-color: black,
+      //$chips-text-color: green,
+      //$chips-clear-color: yellow,
+      //$chips-clear-bg-color: blue,
+
+      /*
+       * begin combobox
+       */
+       //$combo-main-color: green,
+       //$combo-highlight-color: yellow,
+       //$combo-main-bg-color: black,
+       //$combo-option-bg-color: blue,
+       //$combo-main-border-color: red,
+       //$combo-disabled-bg-color: magenta,
+       //$combo-disabled-border-color: orange,
+       //$combo-focus-bg-color: purple,
+       //$combo-focus-border-color: lightblue,
+
+       /*
+        * begin autocomplete
+        */
+        //$autocomplete-main-color: yellow,
+        //$autocomplete-main-bg-color: blue,
+        //$autocomplete-main-shadow-color: red,
+        //$autocomplete-contrast-color:white,
+        //$autocomplete-highlight-bg-color: black,
+
+       /*
+        * begin radiogroup
+        */
+        //$radiogroup-label-color: magenta,
+        //$radiogroup-checked-color: red,
+        //$radiogroup-error-color: blue,
+        //$radiogroup-disabled-color: purple,
+
+        /*
+         * begin menubutton
+         */
+        //$menubutton-main-color: green,
+        //$menubutton-main-bg-color: black,
+        //$menubutton-main-shadow-color: green,
+        //$menubutton-secondary-bg-color: blue,
+        //$menubutton-contrast-color: red,
+        //$menubutton-contrast-bg-color: white,
+        //$menubutton-highlight-color: yellow,
+        //$menubutton-disabled-color: purple,
+        //$menubutton-checked-color: pink,
+        //$menubutton-separator-color: white,
+
+      /*
+       * begin side menu
+       */
+        //$side-menu-trigger-bg-color: blue,
+        //$side-menu-trigger-color: yellow,
+        //$side-menu-bg-color: black,
+        //$side-menu-a-color: white,
+        //$side-menu-a-hover-color: purple,
+        //$side-menu-standard-icon-bg-color: yellow,
+        //$side-menu-active-color: lightgreen,
+);

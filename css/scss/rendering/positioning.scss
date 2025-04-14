@@ -1,0 +1,29 @@
+/* begin positioning related classes */
+@use '../variables/all' as *;
+@use "fonts" as *;
+
+@include floatToLTR('.ace-left',left,true);
+@include floatToLTR('.ace-right',right,true);
+
+@include floatToLTR('.ace-left-float',left);
+@include floatToLTR('.ace-right-float',right);
+
+.ace-to-bottom {
+  position: absolute;
+  bottom:  $position-15;
+}
+
+.ace-static-position {
+  position: static !important;
+}
+.ace-relative-position {
+  position: relative !important;
+}
+.ace-fixed-position {
+  position: fixed !important;
+}
+.ace-absolute-position {
+  position: absolute !important;
+}
+
+/* end positioning related classes */

@@ -1,0 +1,977 @@
+/* begin grid */
+@use '../variables/all' as *;
+
+.ace-no-row-selection .ace-grid-cell,
+.ace-no-row-selection .ace-grid-row {
+  background: $grid-secondary-bg-color !important;
+}
+.ace-no-row-selection .ace-grid-cell:hover,
+.ace-no-row-selection .ace-grid-row:hover {
+  background: $grid-secondary-bg-color !important;
+}
+.ace-no-row-selection .ace-grid-cell {
+  padding: $meas-pad-0;
+}
+.ace-grid-scrollview {
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  transform: translateZ(0px);
+}
+
+.ace-grid .ace-grid-cell {
+  background-color: $grid-cell-bg-color;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  vertical-align: middle;
+  position: relative;
+  min-height: $ace-standard-element-size;
+  justify-content: space-around;
+  font-size: $ace-standard-font-size;
+}
+
+.ace-grid .ace-grid-row-lines .ace-grid-cell {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$grid-column-lines-color);
+}
+@include addBorderLTR('.ace-grid .ace-grid-column-lines .ace-grid-cell',right,$ace-border-default-size,$ace-border-default-pattern,$grid-column-lines-color);
+
+.ace-grid .ace-grid-cell.ace-grid-cell-selected {
+  background-color: $grid-cell-selected-bg-color;
+}
+.ace-grid .ace-grid-cell.ace-grid-cell-selected .ace-grid-panel-row-tpl {
+  color: $grid-cell-selected-bg-color !important;
+}
+
+.ace-grid-cell-dirty {
+  transition: all ease-in-out 0.1s;
+}
+
+.ace-grid-header .ace-grid-cell,
+.ace-grid-footer-totals .ace-grid-cell {
+  color: $grid-header-cell-color;
+  font-size: $ace-tiny-title-size;
+  padding-top: $meas-pad-14;
+  font-weight: 200;
+  background: $grid-header-cell-bg-color !important;
+}
+.ace-grid-footer-totals .ace-grid-cell {
+  font-size: $ace-bigger-font-size;
+}
+.ace-grid-footer-totals-not-bold .ace-grid-footer-totals .ace-grid-cell {
+  font-weight: normal;
+}
+@include addBorderLTR('.ace-grid-footer-totals > .ace-grid-cell',right,$ace-border-default-size,$ace-border-default-pattern,$grid-footer-totals-cell-border-color);
+
+.ace-grid-action-cell button {
+  overflow: hidden;
+  margin: (-$meas-marg-2) $meas-marg-10 $meas-marg-0 $meas-marg-10;
+  padding: $meas-pad-5;
+}
+@include sideMarginLTR('.ace-grid-action-cell button',left,-$meas-marg-5);
+
+
+.ace-grid-cell .ace-checkbox-field {
+  padding-top: $meas-pad-11 !important;
+}
+.ace-grid-cell .ace-datepicker-field {
+  position: static !important;
+}
+/*.ace-grid-cell .ace-grid-cell-template .ace-datepicker-field input {
+  position: absolute;
+  margin: inherit;
+}*//*SM-removed*/
+
+/*
+.ace-grid-cell .ace-field-container .ace-autocomplete-field:not(.ace-ignore-cell) {
+  height: $meas-full;
+  width: $meas-full;
+  position: absolute;
+  top:  $position-1;
+}*
+@include positionLTR('.ace-grid-cell .ace-field-container .ace-autocomplete-field:not(.ace-ignore-cell)',left,$position-0);
+
+.ace-grid-cell .ace-grid-cell .ace-field-container .ace-autocomplete-field:not(.ace-ignore-cell) input {
+  height: $meas-full;
+  width: $meas-full;
+}
+*//*SM-removed*/
+.ace-grid-cell-no-padding .ace-grid-cell {
+  padding-top: $meas-pad-0 !important;
+  padding-bottom: $meas-pad-5;
+}
+
+/*
+.ace-grid-cell input {
+  background: $grid-secondary-bg-color;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  transition: ease-in-out 0.1s;
+  overflow: hidden;
+  box-sizing: border-box;
+  margin: (-$meas-marg-13) (-$meas-marg-10);
+  position: absolute;
+  width: auto;
+  top:  $position-29p;
+  width: $meas-full;
+}
+@include positionLTR('.ace-grid-cell input',left,$position-5);
+*//*SM-not sure*/
+
+.ace-grid-cell .ace-label-align-left input {
+  position: initial;
+}
+
+/*
+.ace-grid-cell .ui-datepicker-trigger {
+  display: none;
+  position: absolute;
+  top:  $position-6;
+}
+@include positionLTR('.ace-grid-cell .ui-datepicker-trigger',left,$position-0);
+ *//*SM-remove*/
+
+.ace-grid-cell input:focus {
+  background: $grid-cell-input-bg-color;
+  box-sizing: border-box;
+}
+.ace-grid-cell .ace-checkbox-field input[type="checkbox"] + span {
+  width: 0;
+  background: $grid-secondary-bg-color;
+}
+@include sideMarginLTR('.ace-grid-cell .ace-checkbox-field input[type="checkbox"] + span',left,$meas-marg-5);
+
+.ace-grid-cell .ace-switch-field {
+  margin: (-$meas-marg-18) (-$meas-marg-9);
+}
+.ace-grid-cell .ace-entry-card .ace-switch-field {
+  margin: $meas-marg-0;
+}
+
+/*
+.ace-grid-cell select {
+  width: $meas-full;
+  position: absolute;
+  top: -$position-7;
+}
+@include positionLTR('.ace-grid-cell select',left,$position-0);
+*//*SM-removed -> causes alignament trouble in grid panels*/
+
+.ace-grid-cell-normal-position .ace-grid-cell select {
+  position: initial !important;
+}
+.ace-grid-row:hover {
+  filter: brightness(100%) grayscale(0%);
+}
+@include floatToLTR('.ace-grid-cell',left);
+
+.ace-grid {
+  clear: both;
+  display: inline-block;
+}
+.ace-grid div {
+  color: $grid-main-text-color;
+}
+
+.ace-grid-raw {
+  clear: both;
+}
+
+.ace-grid .ace-grid-header {
+  clear: both;
+  width: $meas-full;
+  display: flex;
+  background-color: $grid-header-cell-bg-color;
+  @include addBorder(bottom,$meas-bord-2,$ace-border-default-pattern,$grid-header-border-color);
+}
+
+.ace-grid-footer-totals {
+  clear: both;
+  width: $meas-full;
+  display: flex;
+  @include addBorder(top,$meas-bord-2,$ace-border-default-pattern,$grid-footer-border-color);
+  @include addBorder(bottom,$meas-bord-2,$ace-border-default-pattern,$grid-footer-border-color);
+}
+
+@include floatToLTR('.ace-grid-header',left);
+@include floatToLTR('.ace-grid-footer-totals',left);
+
+.ace-grid-header .ace-grid-cell,
+.ace-grid-footer-totals .ace-grid-cell {
+  font-weight: bold;
+  white-space: initial;
+}
+
+.ace-grid .ace-grid-footer {
+  clear: both;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  background-color: $grid-footer-bg-color;
+}
+
+.ace-grid-footer-with-totals {
+  flex-direction: column;
+  align-items: center;
+  align-content: stretch;
+}
+
+.ace-grid .ace-grid-pagination {
+  padding: $meas-pad-5 $meas-pad-10;
+  width: $meas-full;
+  display: flex;
+  align-items: center;
+  color: $grid-pagination-color;
+  background-color: $grid-pagination-bg-color;
+  align-content: flex-start;
+  justify-content: center;
+}
+
+.ace-grid .ace-grid-pagination input {
+  width: 2 * $ace-small-element-size;
+  height: $ace-small-element-size;
+  position: static;
+  color: $grid-pagination-color;
+}
+.ace-grid .ace-grid-pagination input:focus {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$grid-pagination-focus-color);
+}
+
+.ace-grid .ace-grid-pagination button {
+  padding: $meas-pad-4 $meas-pad-4 $meas-pad-4 $meas-pad-4;
+  width: $ace-small-element-size;
+  height: $ace-small-element-size;
+}
+
+.ace-grid-pagination div {
+  margin: $meas-marg-0 $meas-marg-5;
+  width: auto;
+  display: flex;
+  height: $ace-standard-element-size;
+  display: flex;
+  align-items: center;
+}
+
+.ace-grid-cell-dirty:before {
+  display: inline-block;
+  width: $meas-1;
+  content: " ";
+  position: absolute;
+  top:  $position-0;
+  @include addBorder(top,$meas-bord-8,$ace-border-default-pattern,$grid-main-error-color);
+}
+@include addBorderLTR('.ace-grid-cell-dirty:before',right,$meas-bord-8,$ace-border-default-pattern,$grid-secondary-bg-color);
+@include positionLTR('.ace-grid-cell-dirty:before',left,$position-0);
+
+.ace-grid .ace-grid-action-button,
+.ace-grid .ace-grid-top-toolbar button,
+.ace-grid .ace-grid-inline-ctrls button,
+.ace-grid .ace-grid-pagination  button,{
+  color: $grid-action-button-color;
+  background-color: $grid-action-button-bg-color;
+  min-height:auto;
+}
+
+.ace-grid .ace-grid-action-button:disabled,
+.ace-grid .ace-grid-top-toolbar button:disabled,
+.ace-grid .ace-grid-inline-ctrls button:disabled,
+.ace-grid .ace-grid-pagination  button:disabled,{
+  color: $grid-action-button-disabled-color !important;
+  background-color: $grid-action-button-disabled-bg-color !important;
+}
+
+.ace-grid-action-button:before {
+  font-family: $primary-font-family;
+}
+@include sidePaddingLTR('.ace-grid-action-button:before',right,$meas-pad-5);
+
+.ace-grid .ace-grid-pagination span {
+  margin: $meas-marg-0 $meas-marg-5;
+  font-size: $ace-tiny-title-size;
+}
+@include floatToLTR('.ace-grid-action-button',left);
+@include floatToLTR('.ace-grid-pagination div',left);
+@include floatToLTR('.ace-grid-pagination button',left);
+
+.ace-grid .ace-grid-body {
+  clear: both;
+  height: calc(#{$meas-full} - 131px);
+  flex-direction: column;
+  width: $meas-full;
+  background-color: $grid-body-bg-color,
+}
+@include floatToLTR('.ace-grid-body',left);
+
+.ace-grid .ace-presentation-container{
+  height: calc(#{$meas-full} - 131px);
+}
+.ace-grid .ace-presentation-container > .ace-grid-body {
+  height: $meas-full;
+}
+.ace-grid .ace-presentation-container > .ace-presentation-info .ace-form-inner {
+  height: calc(#{$meas-full} - 89px);
+  overflow-y:auto;
+}
+
+.ace-grid .ace-checkbox-field input[type=checkbox] + span,
+.ace-grid .ace-checkbox-field input[type=checkbox] + span:before {
+  color: $grid-main-text-color,
+}
+
+.ace-grid .ace-checkbox-field input[type=checkbox]:checked + span:before {
+ color: $grid-checkbox-checked-color,
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-grid-body {
+    height: calc(#{$meas-full} - #{$meas-80});
+    -webkit-overflow-scrolling: touch;
+  }
+  @include sidePaddingLTR('[agrid="true"].ace-field-container',right,$meas-pad-0);
+}
+
+.ace-grid-body .ace-grid-cell {
+  cursor: pointer;
+  display: table-header-group;
+}
+.ace-grid-body .ace-grid-cell.ace-center-columns,
+.ace-grid-body .ace-grid-cell.ace-center-right-columns {
+  display: flex;
+}
+
+.ace-no-text-wrap .ace-grid-body .ace-grid-cell {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+div.ace-grid-row {
+  width: $meas-full;
+  display: flex;
+}
+.ace-grid-top-toolbar {
+  margin: $meas-marg-15;
+  display: flex;
+}
+
+.ace-grid .ace-grid-inline-ctrls {
+  display: none;
+  position: absolute;
+  z-index: 3;
+  padding: $meas-pad-5;
+  background: $grid-inline-ctrls-color;
+  box-shadow: $box-shad-0 $box-shad-17 $box-shad-17 $grid-main-shadow-color;
+}
+@include floatToLTR('.ace-grid-inline-ctrls > button',left);
+
+.ace-grid-inline-row {
+  box-shadow: $box-shad-0 $box-shad-0 $box-shad-57 $grid-main-shadow-color;
+  -webkit-transition: all ease-in-out 0.1s;
+  -moz-transition: all ease-in-out 0.1s;
+  -o-transition: all ease-in-out 0.1s;
+  -ms-transition: all ease-in-out 0.1s;
+  transition: all ease-in-out 0.1s;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  background: $grid-main-bg-color !important;
+  z-index: 3;
+  position: relative;
+}
+
+.ace-grid .ace-grid-inline-row input:focus{
+  color: $grid-main-text-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$grid-inline-ctrls-focus-border-color);
+}
+
+html[dir="ltr"] .ace-grid-cell-template.ace-field-container,
+html[dir="rtl"] .ace-grid-cell-template.ace-field-container {
+  padding: $meas-pad-0;
+}
+
+/* end grid */
+/* begin nested grid header classes */
+.ace-nested-grid-header {
+  display: flex;
+  align-items: center;
+  width: $meas-full;
+  flex-wrap: wrap;
+  margin-top: $meas-marg-0;
+}
+.ace-nested-grid-header .ace-grid-body {
+  height: auto;
+}
+.ace-nested-grid-header > .ace-grid-cell {
+  display: flex;
+  flex-wrap: wrap;
+  padding: $meas-pad-0;
+  box-sizing: border-box;
+}
+
+.ace-nested-grid-header .ace-grid-body {
+  height: auto;
+}
+.ace-nested-grid-header > .ace-grid-cell {
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: $meas-pad-12 $meas-pad-0 $meas-pad-0 $meas-pad-0;
+  height: $meas-70;
+}
+@include addBorderLTR('.ace-nested-grid-header > .ace-grid-cell',right,$ace-border-default-size,$ace-border-default-pattern,$grid-column-lines-color);
+@include sideMarginLTR('.ace-nested-grid-header > .ace-grid-cell',left,$meas-marg-0);
+
+.ace-nested-grid-header ~ .ace-grid-body .ace-grid-row,
+.ace-nested-grid-header > .ace-grid-body .ace-grid-row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before {
+  content: attr(groupname);
+  margin-top: -$meas-marg-40;
+  position: absolute;
+  text-align: center;
+  width: $meas-full;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: $ace-tiny-title-size;
+  background-color: $grid-header-cell-bg-color;
+}
+@include positionLTR('.ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before',left,$position-50p);
+
+.ace-nested-grid-header .ace-grid-groupped-header-title[groupname]::before {
+  content: attr(groupname);
+  margin-top: -$meas-marg-25;
+  position: absolute;
+  text-align: center;
+  width: $meas-full;
+}
+@include positionLTR('.ace-nested-grid-header .ace-grid-groupped-header-title[groupname]::before',left,$position-50p);
+
+.ace-nested-grid-header .ace-grid-groupped-header-col {
+  padding-top: $meas-pad-4;
+  @include addBorder(top,$ace-border-default-size,$ace-border-default-pattern,$grid-row-lines-color);
+}
+.ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after {
+  content: "";
+  position: absolute;
+  width: $meas-1;
+  height: $meas-70;
+  top: - $position-71;
+  background: $grid-column-lines-color;
+}
+@include positionLTR('.ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after',right,-$position-1);
+
+.ace-nested-grid-header .ace-col-4 {
+  flex-basis: 33.33%;
+  max-width: 33.33%;
+}
+.ace-nested-grid-header .ace-col-5 {
+  flex-basis: 41.66%;
+  max-width: 41.66%;
+}
+.ace-nested-grid-header .ace-col-6 {
+  flex-basis: 50%;
+  max-width: 50%;
+}
+.ace-nested-grid-header .ace-col-7 {
+  flex-basis: 58.33%;
+  max-width: 58.33%;
+}
+.ace-nested-grid-header .ace-col-8 {
+  flex-basis: 66.66%;
+  max-width: 66.66%;
+}
+.ace-nested-grid-header .ace-col-9 {
+  flex-basis: 75%;
+  max-width: 75%;
+}
+.ace-nested-grid-header .ace-col-10 {
+  flex-basis: 83.33%;
+  max-width: 83.33%;
+}
+.ace-nested-grid-header .ace-col-11 {
+  flex-basis: 91.66%;
+  max-width: 91.66%;
+}
+.ace-nested-grid-header .ace-col-12 {
+  flex-basis: $meas-full;
+  max-width: $meas-full;
+}
+
+.ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before {
+  content: attr(groupname);
+  margin-top: -$meas-marg-34;
+  position: absolute;
+  text-align: center;
+  width: $meas-full;
+}
+@include positionLTR('.ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before',left,$position-50p);
+
+.ace-nested-grid-header .ace-grid-groupped-header-title[groupname]::before {
+  content: attr(groupname);
+  margin-top: -$meas-marg-25;
+  position: absolute;
+  text-align: center;
+  width: $meas-full;
+}
+@include positionLTR('.ace-nested-grid-header .ace-grid-groupped-header-title[groupname]::before',left,$position-50p);
+
+.ace-nested-grid-header .ace-grid-groupped-header-col {
+  align-self: flex-end;
+  height: $meas-30;
+  min-height: $meas-30;
+  @include addBorder(top,$ace-border-default-size,$ace-border-default-pattern,$grid-row-lines-color);
+}
+/* end nested grid header classes */
+
+/* begin grid modifiers */
+
+.ace-grid-hide-header .ace-grid-header,
+.ace-grid-hide-header .ace-grid-footer-totals {
+  display: none;
+}
+.ace-grid-hide-header .ace-grid .ace-grid-body {
+  height: calc(#{$meas-full} - 44px);
+}
+
+.ace-grid-hide-toolbar .ace-grid-top-toolbar {
+  display: none !important;
+}
+
+.ace-compact-grid .ace-grid-row .ace-grid-cell {
+  min-height: $ace-standard-element-size !important;
+  height: $ace-standard-element-size !important;
+  padding: $meas-pad-2 $meas-pad-0 $meas-pad-0 $meas-pad-2 !important;
+}
+
+.ace-grid-only-row .ace-grid-footer,
+.ace-grid-only-row .ace-grid-top-toolbar,
+.ace-grid-only-row br {
+  display: none;
+}
+.ace-minimal-grid .ace-clear,
+.ace-minimal-grid .ace-grid-top-toolbar,
+.ace-minimal-grid .ace-grid-header,
+.ace-minimal-grid .ace-grid-footer-totals {
+  display: none;
+}
+
+.ace-thin-rows-grid .ace-grid-header .ace-grid-cell {
+  font-size: $ace-bigger-font-size;
+}
+.ace-thin-rows-grid .ace-grid-body {
+  height: calc(#{$meas-full} - 25px);
+}
+.ace-thin-rows-grid.ace-thin-rows-grid-with-header .ace-grid-body {
+  height: calc(#{$meas-full} - 73px);
+}
+.ace-thin-rows-grid
+  .ace-nested-grid-header
+  .ace-grid-groupped-header-title-50[groupname]::before {
+  font-size: $ace-bigger-font-size;
+}
+@include sidePaddingLTR('.ace-thin-rows-grid',left,$meas-pad-1);
+
+.ace-thin-rows-grid .ace-grid-cell {
+  padding: $meas-pad-0 $meas-pad-5;
+  min-height: $ace-small-element-size;
+  justify-content: flex-start;
+  display: flex;
+  align-items: center;
+}
+html[dir="ltr"] .ace-thin-rows-grid .ace-grid-cell {
+  text-align: left;
+}
+html[dir="rtl"] .ace-thin-rows-grid .ace-grid-cell {
+  text-align: right;
+}
+.ace-thin-rows-grid .ace-autocomplete-field .ace-grid-cell {
+  padding-top: $meas-pad-0;
+}
+
+.ace-thin-rows-grid .ace-grid-cell.ace-grid-cell-justify-center {
+  justify-content: center;
+}
+
+.ace-thin-rows-grid .ace-grid-cell.ace-grid-cell-justify-end,
+.ace-thin-rows-grid .ace-grid-cell.ace-ta-rght {
+  justify-content: flex-end;
+}
+@include sidePaddingLTR('.ace-thin-rows-grid .ace-field-container',right,$meas-pad-0,true);
+
+.ace-thin-rows-grid:not(.ace-thin-rows-grid-with-header) .ace-grid-header,
+.ace-thin-rows-grid:not(.ace-thin-rows-grid-with-header) .ace-grid-footer-totals {
+  height: $meas-0;
+  overflow: hidden;
+}
+.ace-thin-rows-grid .ace-grid-row {
+  display: flex;
+}
+.ace-thin-rows-grid.ace-no-text-wrap .ace-grid-body .ace-grid-cell {
+  height: $ace-small-element-size;
+}
+
+.ace-thin-rows-grid .ace-grid-action-cell,
+.ace-thin-rows-grid .ace-grid-action-cell button {
+  padding: $meas-pad-0;
+}
+@include sidePaddingLTR('.ace-thin-rows-grid .ace-grid-action-cell',left,$meas-pad-5,true);
+@include sidePaddingLTR('.ace-thin-rows-grid .ace-grid-action-cell button',left,$meas-pad-5,true);
+
+.ace-thin-row {
+  height: $meas-20;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace-grid-height-minus-50 .ace-grid,
+.ace-grid-body-height-minus-50 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-50});
+}
+.ace-grid-height-minus-60 .ace-grid,
+.ace-grid-body-height-minus-60 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-60});
+}
+.ace-grid-height-minus-80 .ace-grid,
+.ace-grid-body-height-minus-80 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-80});
+}
+.ace-grid-height-minus-100 .ace-grid,
+.ace-grid-body-height-minus-100 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-100});
+}
+.ace-grid-height-minus-110 .ace-grid,
+.ace-grid-body-height-minus-110 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-110});
+}
+.ace-grid-height-minus-120 .ace-grid,
+.ace-grid-body-height-minus-120 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-120});
+}
+.ace-grid-height-minus-150 .ace-grid,
+.ace-grid-body-height-minus-150 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-150});
+}
+.ace-grid-height-minus-200 .ace-grid,
+.ace-grid-body-height-minus-200 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-200});
+}
+.ace-grid-height-minus-230 .ace-grid,
+.ace-grid-body-height-minus-230 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-230});
+}
+.ace-grid-height-minus-250 .ace-grid,
+.ace-grid-body-height-minus-250 .ace-grid-body {
+  height: calc(#{$meas-full} - #{$meas-250});
+}
+
+.ace-flex-grid .ace-grid-auto-complete {
+  display: flex;
+  flex-direction: column;
+}
+.ace-flex-grid .ace-grid,
+.ace-flex-grid.ace-grid {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+}
+.ace-flex-grid .ace-grid .ace-grid-body,
+.ace-flex-grid.ace-grid .ace-grid-body {
+  flex: 1;
+}
+.ace-flex-grid .ace-grid-footer {
+  min-height: $meas-40;
+}
+
+.ace-flex-grid-height-600 .ace-grid-auto-complete,
+.ace-flex-grid-height-600 .ace-grid {
+  max-height: 600px;
+}
+.ace-flex-grid-height-400 .ace-grid-auto-complete,
+.ace-flex-grid-height-400 .ace-grid {
+  max-height: 400px;
+}
+.ace-flex-grid-height-350 .ace-grid-auto-complete,
+.ace-flex-grid-height-350 .ace-grid {
+  max-height: $meas-350;
+}
+.ace-flex-grid-height-300 .ace-grid-auto-complete,
+.ace-flex-grid-height-300 .ace-grid {
+  max-height: $meas-300;
+}
+.ace-flex-grid-height-250 .ace-grid-auto-complete,
+.ace-flex-grid-height-250 .ace-grid {
+  max-height: $meas-250;
+}
+.ace-flex-grid-height-200 .ace-grid-auto-complete,
+.ace-flex-grid-height-200 .ace-grid {
+  max-height: $meas-200;
+}
+
+.ace-grid-absolute-footer .ace-grid-footer {
+  position: absolute;
+  left:  $position-0;
+  right:  $position-0;
+  bottom:  $position-0;
+}
+
+.ace-grid-cols-3 .ace-grid-row {
+  width: 33.33% !important;
+}
+.ace-grid-cols-2 .ace-grid-row {
+  width: 50% !important;
+}
+.ace-grid-cols-4 .ace-grid-row {
+  width: 25% !important;
+}
+.ace-grid-cols-6 .ace-grid-row {
+  width: 16.33% !important;
+}
+.ace-grid-cols-auto .ace-grid-row {
+  width: auto !important;
+}
+.ace-grid-cols-1 .ace-grid-row {
+  width: $meas-full !important;
+}
+[class*="ace-grid-cols-"] .ace-grid-cell {
+  padding: $meas-pad-0 !important;
+}
+[class*="ace-grid-cols-"] .ace-grid-row {
+  padding: $meas-pad-0 $meas-pad-0 $ace-common-top-bottom-padding $meas-pad-0;
+}
+@include floatToLTR('[class*="ace-grid-cols-"] .ace-grid-row',left,true);
+@include sidePaddingLTR('[class*="ace-grid-cols-"] .ace-grid-row',left,$ace-common-left-right-padding);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  [class*="ace-grid-cols-"] .ace-grid-row {
+    width: $meas-full !important;
+  }
+}
+
+@media screen and (min-width: $screen-medium) and (max-width: $screen-large) {
+  .ace-grid-cols-4 .ace-grid-row {
+    width: 33% !important;
+  }
+  .ace-grid-cols-6 .ace-grid-row {
+    width: 25% !important;
+  }
+}
+
+.ace-grid-cell-min-height-0 .ace-grid-cell {
+  min-height: 0 !important;
+}
+
+.ace-grid-cell-normal-position .ace-grid-cell {
+  padding: $meas-pad-0;
+}
+.ace-grid-cell-normal-position .ace-grid-cell input {
+  position: initial !important;
+}
+.ace-grid-cell-normal-position .ace-grid-cell span.ace-efld {
+  line-height: $meas-line-height-1d0 !important;
+}
+
+.ace-full-width .ace-grid {
+  width: $meas-full;
+}
+
+.ace-full-height .ace-grid {
+  height: $meas-full;
+}
+
+.ace-grid-body-fix .ace-grid-body {
+  height: $meas-full;
+}
+.ace-grid-body-height-auto .ace-grid-body {
+  height: auto !important;
+}
+.ace-grid-body-height-auto .ace-grid {
+  height: auto !important;
+}
+
+.ace-compact-row-panel .ace-grid-cell .ace-display-field {
+  margin-top: $meas-marg-0;
+  padding-bottom: $meas-pad-0;
+}
+.ace-compact-row-panel [class*="ace-"] > h4 {
+  line-height: inherit;
+  font-size: inherit;
+}
+
+.ace-compact-row-panel .ace-grid-cell {
+  padding-bottom: $meas-pad-0;
+}
+
+.ace-compact-row-panel [class*="ace-"] > input[type="text"],
+.ace-compact-row-panel [class*="ace-"] > input[type="password"],
+.ace-compact-row-panel [class*="ace-"] > input[type="number"],
+.ace-compact-row-panel [class*="ace-"] > .ace-grid-search,
+.ace-compact-row-panel [class*="ace-"] > textarea {
+  padding: $meas-pad-8 $meas-pad-0 $meas-pad-0 $meas-pad-0;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-responsive-grid .ace-grid-cell-dirty:before {
+    border-top: $meas-bord-0;
+    position: relative;
+    top: initial;
+  }
+  @include addBorderLTR('.ace-responsive-grid .ace-grid-cell-dirty:before',left,$meas-bord-3,$ace-border-default-pattern,$grid-main-error-color);
+
+  .ace-responsive-grid .ace-grid-header {
+    display: none;
+  }
+  .ace-responsive-grid .ace-grid-footer-totals {
+    display: none;
+  }
+  .ace-responsive-grid .ace-grid .ace-grid-row{
+    flex-wrap: wrap;
+  }
+  .ace-responsive-grid .ace-grid-cell {
+    display: flex;
+    padding: $meas-pad-6 $meas-pad-0;
+    justify-content:start;
+  }
+  .ace-responsive-grid .ace-grid-row-lines .ace-grid-cell {
+    border-bottom: unset;
+  }
+  .ace-responsive-grid .ace-grid-row-lines {
+    @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$grid-column-lines-color);
+  }
+  .ace-responsive-grid .ace-grid-cell:before {
+    content: attr(data-label);
+    min-width: fit-content;
+    display: inline-block;
+    font-weight: bold;
+  }
+  @include sidePaddingLTR('.ace-responsive-grid .ace-grid-cell:before',right,$meas-pad-8);
+  html[dir="ltr"] .ace-responsive-grid .ace-grid-cell:before {
+    text-align: right;
+  }
+  html[dir="rtl"] .ace-responsive-grid .ace-grid-cell:before {
+    text-align: left;
+  }
+  .ace-responsive-grid .ace-grid-cell.ace-grid-action-cell:before {
+    content:'';
+  }
+
+  .ace-responsive-grid .ace-grid .ace-grid-body {
+    height: calc(#{$meas-full} - 89px);
+  }
+
+  .ace-responsive-grid .ace-grid .ace-presentation-container{
+    height: calc(#{$meas-full} - 89px);
+  }
+  .ace-responsive-grid .ace-grid .ace-presentation-container .ace-grid-body {
+    height: $meas-full;
+  }
+}
+
+/* begin forced responsive */
+.ace-responsive-grid .ace-grid-cell-dirty:before {
+  border-top: $meas-bord-0;
+  position: relative;
+  top: initial;
+}
+@include addBorderLTR('.ace-responsive-grid .ace-grid-cell-dirty:before',left,$meas-bord-3,$ace-border-default-pattern,$grid-main-error-color);
+
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-header {
+  display: none;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-footer-totals {
+  display: none;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid .ace-grid-row{
+  flex-wrap: wrap;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell {
+  display: flex;
+  padding: $meas-pad-6 $meas-pad-0;
+  justify-content:start;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-row-lines .ace-grid-cell {
+  border-bottom: unset;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-row-lines {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$grid-column-lines-color);
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell:before {
+  content: attr(data-label);
+  min-width: fit-content;
+  display: inline-block;
+  font-weight: bold;
+}
+@include sidePaddingLTR('.ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell:before',right,$meas-pad-8);
+html[dir="ltr"] .ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell:before {
+  text-align: right;
+}
+html[dir="rtl"] .ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell:before {
+  text-align: left;
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid-cell.ace-grid-action-cell:before {
+  content:'';
+}
+
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid .ace-grid-body {
+  height: calc(#{$meas-full} - 89px);
+}
+
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid .ace-presentation-container{
+  height: calc(#{$meas-full} - 89px);
+}
+.ace-force-responsive-grids .ace-responsive-grid .ace-grid .ace-presentation-container .ace-grid-body {
+  height: $meas-full;
+}
+/* end forced responsive */
+
+
+.ace-grid-force-overflow-visible {
+  overflow: visible !important;
+}
+
+.ace-grid-cell-inline-table .ace-grid .ace-grid-cell {
+  display: inline-table;
+  white-space: nowrap;
+}
+
+/* ALL HEIGHT CLASSES UNTIL NOW ARE OBSOLETE
+   give the GRID the following class: ace-auto-height-grid
+*/
+.ace-auto-height-grid .ace-grid {
+  height: $meas-full;
+  display: flex;
+  flex-direction: column;
+}
+.ace-auto-height-grid .ace-grid > .ace-grid-top-toolbar,
+.ace-auto-height-grid .ace-grid > .ace-grid-header,
+.ace-auto-height-grid .ace-grid > .ace-grid-footer {
+  flex: none;
+  height:auto;
+}
+.ace-auto-height-grid .ace-grid > .ace-grid-body {
+  flex: 1;
+  height:auto;
+}
+
+.ace-auto-height-grid .ace-grid > .ace-presentation-container {
+  flex: 1;
+  overflow-y: hidden;
+}
+.ace-auto-height-grid .ace-grid > .ace-presentation-container > .ace-grid-body{
+  overflow: auto;
+}
+.ace-auto-height-grid .ace-grid > .ace-presentation-container > .ace-presentation-info{
+  overflow: auto;
+  align-self: self-start;
+}
+
+
+
+/* end grid modifiers */

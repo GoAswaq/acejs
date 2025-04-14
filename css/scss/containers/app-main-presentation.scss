@@ -1,0 +1,148 @@
+/* begin app presentation */
+@use '../variables/all' as *;
+
+.ace-presentation-container .ace-side-container {
+  position: initial;
+  height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+}
+.ace-no-top-bar .ace-presentation-container .ace-side-container {
+  height: $meas-full;
+}
+
+.ace-main-presentation {
+  margin: $ace-main-title-bar-height $meas-marg-0 $meas-marg-0 $meas-marg-0;
+  height: calc(#{smartvh(100)} - #{$ace-main-title-bar-height});
+}
+@include sidePaddingLTR('.ace-main-presentation',left,$meas-pad-0);
+
+.ace-main-presentation .ace-content {
+  margin-top: $meas-marg-0;
+}
+
+.ace-no-top-bar .ace-main-presentation {
+  margin-top: $meas-marg-0;
+  height: smartvh(100);
+}
+
+.ace-main-presentation .ace-side-menu {
+  width: $meas-full !important;
+}
+.ace-main-presentation .ace-side-menu .ace-accordion {
+  width: $meas-full !important;
+}
+
+.ace-main-presentation .ace-side-menu i.ace-accordion-icon {
+  width: initial;
+  min-width: $side-menu-icon-min-width;
+  max-width: $side-menu-icon-max-width;
+  min-height: $side-menu-icon-min-height;
+  font-size: $side-menu-icon-font-size;
+  font-weight: $side-menu-icon-font-weight;
+}
+.ace-main-presentation .ace-side-menu .ace-accordion p {
+  font-size: $ace-tiny-title-size;
+  font-weight: $font-weight-500;
+}
+
+.ace-main-presentation .ace-side-menu a p {
+  width: initial;
+}
+
+.ace-full-screen-popup.ace-main-presentation{
+  margin-top: $meas-marg-0;
+  height: smartvh(100);
+}
+
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-main-presentation .ace-side-menu .ace-scrollview {
+    overflow-y: auto !important;
+    overflow-x: initial;
+    justify-content: initial;
+    height: $meas-full;
+    //flex-direction: column;
+    //flex-wrap: nowrap;
+    display: block;
+  }
+  ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview {
+    display: block;
+  }
+
+  .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion {
+    clear: initial;
+    width: $meas-full;
+    flex: initial;
+    align-self: flex-start;
+  }
+
+  .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion i {
+    font-size: 300% !important;
+  }
+  .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion p {
+    display: none;
+  }
+  .ace-main-presentation .ace-side-menu .ace-accordion {
+    width: $meas-80 !important;
+  }
+  .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-accordion {
+    width: $meas-full !important;
+  }
+  .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion i,
+  .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion p {
+    font-size: $ace-large-title-size !important;
+    display: initial;
+    min-width: $meas-30;
+  }
+  .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
+    box-shadow: initial;
+  }
+
+  .ace-main-presentation .ace-side-container {
+    position: initial;
+    height: initial;
+    z-index: initial;
+    top: initial;
+    bottom:  initial;
+    width: initial;
+  }
+
+  .ace-main-presentation .ace-side-menu {
+    visibility: initial;
+    height: $meas-full;
+    width: initial;
+    overflow: initial;
+    opacity: initial;
+    transition: initial;
+  }
+
+  .ace-main-presentation .ace-side-menu.ace-expand {
+    visibility: initial;
+    height: $meas-full;
+    width: $meas-full !important;
+    overflow: initial;
+    opacity: initial;
+    transition: initial;
+  }
+}
+
+.ace-display-only-on-mobile {
+  display:none;
+}
+
+@include positionLTR('.ace-grid-operation-button ul',right,$position-0);
+@include positionLTR('.ace-grid-operation-button ul',left,initial,true);
+@include positionLTR('.ace-form-operation-button ul',right,$position-0);
+@include positionLTR('.ace-form-operation-button ul',left,initial,true);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+
+  .ace-hide-on-mobile {
+    display:none
+  }
+
+  .ace-display-only-on-mobile {
+    display:initial;
+  }
+}
+
+/* end app presentation */

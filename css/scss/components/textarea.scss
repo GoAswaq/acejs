@@ -1,0 +1,36 @@
+/* begin textarea field */
+@use '../variables/all' as *;
+
+.ace-text-editor {
+  padding-bottom: $meas-pad-20;
+  position: relative;
+}
+
+.ace-text-editor .ace-efld:focus ~ label {
+  display: inline-block;
+  top: $ace-label-top-offset;
+  position: absolute;
+  color: $primary-color !important;
+}
+.ace-text-editor .ace-efld ~ label {
+  display: inline-block;
+  top: $ace-label-top-offset;
+  white-space: nowrap;
+  position: absolute;
+  transition: all ease-in-out 0.1s;
+  text-overflow: ellipsis;
+}
+
+.ace-text-editor .ace-empty ~ label {
+  top:  $position-5;
+}
+
+.ace-text-editor .ace-error-msg {
+  top:  $position-0;
+  position: absolute !important;
+}
+@include positionLTR('.ace-text-editor .ace-error-msg',right,$position-0);
+
+.ace-error .ace-text-editor textarea {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$error-color-text);
+}

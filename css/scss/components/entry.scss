@@ -1,0 +1,86 @@
+/* begin entry */
+@use '../variables/all' as *;
+
+.ace-entry {
+  display: flex;
+}
+.ace-entry .ace-display-field {
+  padding-top: $meas-pad-0 !important;
+  padding-bottom: $meas-pad-0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ace-entry.ace-active {
+  border: none !important;
+}
+
+.ace-entry .ace-flex-wrap-yes {
+  width: 70%;
+}
+.ace-entry .ace-flex-wrap-yes .ace-auto-gen {
+  width: $meas-full;
+}
+.ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-efld {
+  width: $meas-full;
+  max-width: $meas-10 !important;
+}
+.ace-entry .ace-flex-wrap-yes .ace-display-field {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-basis: $meas-full;
+  width: $meas-full;
+  max-width: $meas-full !important;
+}
+.ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-display-field span.ace-efld {
+  width: $meas-full;
+  max-width: $meas-full !important;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ace-entry img {
+  width: $ace-standard-element-size;
+  height: $ace-standard-element-size;
+  border-radius: $meas-radius-50p;
+}
+@include sideMarginLTR('.ace-entry img',right,$meas-marg-10);
+
+.ace-entry.ace-active img,
+.ace-grid-cell-selected .ace-entry img {
+  @include addBorder(all,$meas-bord-2,$ace-border-default-pattern,$primary-color);
+}
+
+.ace-entry i.fa-many-arrows {
+  position: absolute;
+  top:  $position-0;
+}
+@include positionLTR('.ace-entry i.fa-many-arrows',right,$position-0);
+
+.ace-entry.ace-active i.fa-many-arrows:after,
+.ace-grid-cell-selected i.fa-many-arrows:after {
+  content: " ";
+  background: url("https://cdn.jsdelivr.net/gh/GoAswaq/acejs/css/images/manyarrows.png") 0;
+  width: 27px;
+  height: 18px;
+  display: block;
+}
+@include floatToLTR('.ace-entry.ace-active i.fa-many-arrows:after',right);
+@include floatToLTR('.ace-grid-cell-selected i.fa-many-arrows:after',right);
+
+html[dir="rtl"] .ace-entry.ace-active i.fa-many-arrows:after,
+html[dir="rtl"] .ace-grid-cell-selected i.fa-many-arrows:after {
+  transform: rotate(180deg);
+}
+
+.ace-entry.ace-active i.fa-many-arrows {
+  position: relative;
+}
+
+.ace-entry-subtitle {
+  font-size: $ace-smaller-font-size;
+  margin-top: -$meas-marg-5;
+}
+
+/* end entry */

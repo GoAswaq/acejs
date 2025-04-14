@@ -1,0 +1,179 @@
+/* begin accordion field */
+@use '../variables/all' as *;
+
+.ace-accordion {
+  width: $meas-full;
+  cursor: pointer;
+  line-height: $meas-line-height-1d8;;
+  height: $meas-30;
+  padding: $meas-pad-3 $ace-common-left-right-padding;
+  list-style: none;
+  color: $accordion-primary-node-color;
+  background-color: $accordion-bg-color;
+  font-size: $ace-bigger-font-size;
+  font-weight: $font-weight-500;
+}
+@include floatToLTR('.ace-accordion',left);
+
+.ace-accordion li {
+  list-style: none;
+  color: $accordion-primary-node-color;
+}
+.ace-accordion .ace-arrow-icon {
+  line-height: $meas-line-height-2d5;
+}
+.ace-accordion-hide-arrows .ace-accordion .ace-arrow-icon {
+  display:none;
+}
+.ace-accordion-list {
+  width: $meas-full;
+  max-height: 0px;
+  transition: max-height 0.3s cubic-bezier(0, 1.05, 0, 1), height 0.6s,
+    opacity 0.3s;
+  overflow: hidden;
+}
+@include floatToLTR('.ace-accordion-list',left);
+@include sidePaddingLTR('.ace-accordion-list',left,$meas-pad-20);
+
+.ace-accordion-list li {
+  list-style: none;
+  width: $meas-full;
+}
+.ace-accordion-list li a {
+  color: $accordion-leaf-color;
+  width: $meas-full;
+  line-height: $meas-line-height-2d2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ace-accordion-list li a i {
+  line-height: $meas-line-height-2d2 !important;
+}
+@include floatToLTR('.ace-accordion-list li a',left);
+@include floatToLTR('.ace-accordion p',left);
+
+.ace-accordion .ace-checked {
+  background: initial;
+}
+@include addBorderLTR('.ace-accordion .ace-checked',left,none);
+@include floatToLTR('.ace-accordion-icon',left);
+@include sideMarginLTR('.ace-accordion-icon',right,$meas-marg-2);
+
+.ace-accordion-checkbox {
+  color: $accordion-checkbox-unchecked-color;
+  padding: $meas-pad-0 $meas-pad-5;
+}
+
+.ace-active {
+  color: $accordion-active !important;
+}
+@include addBorderLTR('.ace-active',left,$meas-bord-4,$ace-border-default-pattern,$accordion-active);
+
+.ace-accordion-checkbox.ace-checked {
+  color: $accordion-checkbox-checked-color;
+}
+
+.ace-accordion-item-remote-load:hover .ace-add-icon,
+.ace-accordion-item-remote-load:hover .ace-edit-icon,
+.ace-accordion-item-remote-load:hover .ace-refresh-icon {
+  display: block;
+}
+
+.ace-accordion p {
+  white-space: nowrap;
+}
+
+/* end accordion field */
+/* begin accordion modifier */
+.ace-horizontal-menu {
+  height: auto;
+  width: $meas-full !important;
+  top:  $position-0;
+}
+.ace-horizontal-menu .ace-accordion.ace-active {
+  opacity: 1;
+  color: $accordion-active;
+  @include addBorder(bottom,$meas-bord-3,$ace-border-default-pattern,$accordion-active);
+}
+@include addBorderLTR('.ace-horizontal-menu .ace-accordion.ace-active',left,none);
+
+.ace-horizontal-menu ul {
+  width: auto;
+}
+@include floatToLTR('.ace-horizontal-menu ul',left,true);
+
+.ace-horizontal-menu .ace-side-menu .ace-scrollview {
+  height: auto !important;
+  width: $meas-full !important;
+}
+.ace-horizontal-menu .ace-side-menu {
+  height: auto;
+  padding-bottom: $meas-pad-0;
+  top:  $position-0;
+  border: none;
+  width: $meas-full !important;
+}
+.ace-horizontal-menu .ace-accordion {
+  opacity: 0.6;
+  padding-bottom: $meas-pad-10 !important;
+  width: auto;
+  clear: none;
+}
+@include floatToLTR('.ace-horizontal-menu .ace-accordion',left,true);
+
+.ace-submenu.ace-horizontal-tabs {
+  width: $meas-full;
+  padding-top: $meas-pad-0;
+  padding-bottom: $meas-pad-0;
+  height: $ace-horizontal-tabs-height;
+}
+@include floatToLTR('.ace-submenu.ace-horizontal-tabs',left);
+
+.ace-submenu.ace-horizontal-tabs .ace-scrollview {
+  height: auto;
+  display: flex;
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.ace-submenu.ace-horizontal-tabs .ace-scrollview .ace-accordion {
+  flex: none;
+  display: block;
+  width: auto;
+  height: auto;
+}
+@include floatToLTR('.ace-submenu.ace-horizontal-tabs .ace-scrollview .ace-accordion',left,true);
+
+.ace-submenu.ace-horizontal-tabs a.ace-accordion.ace-error {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$error-color-text);
+}
+.ace-submenu.ace-horizontal-tabs a.ace-accordion.ace-error:before {
+  content: "*";
+  color: $error-color-text;
+  margin-top: $meas-marg-3;
+  width: 0px;
+  line-height: $meas-line-height-0d8 !important;
+  text-align: center;
+}
+@include floatToLTR('.ace-submenu.ace-horizontal-tabs a.ace-accordion.ace-error:before',right);
+
+.ace-submenu.ace-horizontal-tabs a.ace-accordion.ace-error.ace-active {
+  border-color: $error-color-text !important;
+}
+
+.ace-submenu.ace-horizontal-tabs .ace-active {
+  background-color: $accordion-active-bg-color;
+  border-radius: $active-border-radius;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$accordion-active-border);
+}
+@include addBorderLTR('.ace-submenu.ace-horizontal-tabs .ace-active',left,none);
+
+.ace-standard-form .ace-standard-form-inside-with-footer .ace-submenu.ace-horizontal-tabs .ace-active,
+.ace-standard-form .ace-standard-form-inside-with-title-and-footer .ace-submenu.ace-horizontal-tabs .ace-active,
+.ace-standard-form .ace-standard-form-inside-with-title-and-footer-desktop-only .ace-submenu.ace-horizontal-tabs .ace-active,
+.ace-standard-form .ace-standard-form-inside-with-mobile-title-and-footer .ace-submenu.ace-horizontal-tabs .ace-active,
+.ace-standard-form .ace-standard-form-inside-with-mobile-title-and-footer-desktop-only .ace-submenu.ace-horizontal-tabs .ace-active{
+  background-color: $form-bg-color;
+}
+
+/* end accordion modifier */

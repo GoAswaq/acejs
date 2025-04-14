@@ -1,0 +1,150 @@
+/* begin entry card */
+@use '../variables/all' as *;
+
+.ace-entry-card {
+  transition: ease 0.2s;
+  background: $primary-bg-color;
+  border-radius: $ace-common-radius;
+  margin: $meas-marg-0 $meas-marg-0 $meas-marg-15 $meas-marg-0;
+  position: relative;
+  min-height: $meas-45;
+  max-height: $meas-750;
+  overflow: hidden;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+}
+@include floatToLTR('.ace-entry-card',left);
+
+.ace-entry-card.ace-auto-height {
+  max-height: initial !important;
+  margin-bottom: $meas-marg-25 !important;
+}
+@include sidePaddingLTR('.ace-entry-card .ace-field-container',right,$meas-pad-0,true);
+@include sidePaddingLTR('.ace-entry-card .ace-field-container.ace-small-padding-right',right,$meas-pad-10,true);
+
+.ace-entry-card.ace-colapsed {
+  max-height: $meas-45 !important;
+}
+.ace-closing-animation {
+  animation: close 0.4s;
+}
+.ace-entry-card.ace-full-screen {
+  position: absolute;
+  z-index: 3;
+  top:  $position-0;
+  height: $meas-full;
+  animation: fullscreen 0.2s;
+  width: $meas-full;
+  max-width: $meas-full;
+}
+@include positionLTR('.ace-entry-card.ace-full-screen',left,$position-0);
+
+.ace-independent-form .ace-entry-card {
+  margin: $meas-marg-0;
+}
+.ace-entry-card:hover .ace-entry-card-title {
+  border-color: $primary-color;
+}
+
+.ace-entry-card-title {
+  background: $primary-bg-color;
+  width: $meas-full;
+  color: $primary-font-color-highlight;
+  padding: $meas-pad-0 $meas-pad-15 ;
+  height: $meas-45;
+  transition: ease-out 0.2s;
+  overflow: hidden;
+}
+@include floatToLTR('.ace-entry-card-title',left);
+
+.ace-entry-card.ace-flex a:before {
+  line-height: $meas-line-height-1d8 !important;
+}
+
+.ace-entry-card-title h2 {
+  width: auto;
+  border: none;
+  font-size: $ace-medium-title-size;
+  padding: $meas-pad-4 $meas-pad-0 $meas-pad-0 $meas-pad-0;
+  white-space: nowrap;
+}
+.ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span.efld {
+  width: auto;
+  border: none;
+  font-size: $ace-medium-title-size;
+  padding: $meas-pad-4 $meas-pad-0 $meas-pad-0 $meas-pad-0;
+}
+.ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field {
+  width: $meas-full;
+}
+.ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span {
+  width: auto;
+  color: $primary-font-color-highlight;
+  width: $meas-full;
+  border: none !important;
+  font-size: $ace-medium-title-size !important;
+  padding: $meas-pad-4 $meas-pad-0 $meas-pad-0 $meas-pad-0 !important;
+}
+.ace-entry-card-title p {
+  line-height: $meas-line-height-3d5;
+}
+.ace-entry-card-title span {
+  line-height: $meas-line-height-3d5;
+}
+.ace-entry-card-title .ace-display-field span {
+  line-height: $meas-line-height-3d4;
+  color: $primary-font-color;
+}
+
+.ace-entry-card-title .ace-display-field .ace-label {
+  line-height: $meas-line-height-3d4;
+}
+.ace-entry-card-title .ace-display-field label {
+  line-height: $meas-line-height-1d4;;
+  min-width: 0 !important;
+}
+
+.ace-entry-card-image {
+  height: 125px;
+  overflow: hidden;
+}
+.ace-entry-card-image img {
+  height: $meas-full;
+}
+
+.ace-entry-card h5 {
+  float: none;
+  line-height: $meas-line-height-0d5;
+  font-weight: 200;
+  opacity: 0.7;
+  clear: both;
+}
+
+.ace-entry-card.ace-no-shadow button {
+  padding: $meas-pad-2 $meas-pad-5 !important;
+  margin: $meas-marg-0;
+  font-size: $ace-bigger-font-size;
+}
+.ace-entry-card .ace-title-bar {
+  margin-bottom: $meas-marg-9;
+  background: $primary-bg-color;
+  z-index: initial;
+}
+@include floatToLTR('.ace-entry-card .ace-title-bar',left);
+
+.ace-entry-card .ace-title-bar h2 {
+  color: $primary-font-color-highlight;
+}
+
+.ace-entry-card.ace-no-shadow h3 {
+  width: auto;
+}
+.ace-entry-card.ace-no-shadow .ace-auto-gen {
+  padding: $meas-pad-0;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-entry-card {
+    max-height: unset;
+  }
+}
+/* end entry card */

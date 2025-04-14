@@ -1,0 +1,39 @@
+/* begin progressbar */
+@use '../variables/all' as *;
+
+.ace-progress-bar {
+  background-color: $disabled-bg-color !important;
+  height: $ace-small-element-size;
+}
+.ace-efld.ace-progress-bar {
+  padding: $meas-pad-0;
+}
+
+.ace-progress-inner-bar {
+  text-align: center !important;
+  background-color: $primary-color !important;
+  color: $contrast-font-color;
+  height: $ace-small-element-size;
+}
+@include floatToLTR('.ace-progress-inner-bar',left);
+/* end progressbar */
+
+/* begin progressbar modifiers */
+
+.ace-thin-progress-bar .ace-progress-bar {
+  height: $meas-10;
+}
+.ace-thin-progress-bar .ace-progress-inner-bar {
+  height: $meas-10;
+  font-size: xx-small;
+}
+
+.ace-thinnest-progress-bar .ace-progress-bar {
+  height: $meas-2;
+}
+.ace-thinnest-progress-bar .ace-progress-inner-bar {
+  height: $meas-2;
+  font-size: $font-size-0;
+}
+
+/* end progressbar modifiers */

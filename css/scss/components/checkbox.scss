@@ -1,0 +1,190 @@
+/* begin checkbox */
+/*
+
+ACE CODE:
+>>>>>>>>>>>>>>>>
+<div
+  class="ace-auto-gen ace-col-8"
+  type="checkbox"
+
+  label="Ex. 2 - custom on and off values"
+  labelalign="left"
+  labelwidth="400px"
+
+  on="123"
+  off="321"
+
+  checked="true"
+  onchange="onCheckboxChange"
+>
+</div>
+
+<<<<<<<<<<<<<<<<
+
+RESULT:
+>>>>>>>>>>>>>>>>
+<div class="ace-auto-gen ace-col-8 ace-field-container ace-label-align-left" type="checkbox" label="Ex. 2 - custom on and off values" labelalign="left" labelwidth="400px" on="123" off="321" checked="true" onchange="onCheckboxChange">
+  <div class="ace-checkbox-field" tabindex="0">
+    <label class="ace-label">
+      <input class="ace-efld" aceid="ace-60" value="" checked="" type="checkbox" name="">
+      <span>Ex. 2 - custom on and off values</span>
+    </label>
+    <span class="ace-error-msg"></span>
+  </div>
+</div>
+
+main_page.js:573
+
+
+ */
+
+@use '../variables/all' as *;
+
+.ace-checkbox-field .ace-label {
+  cursor: pointer;
+}
+.ace-checkbox-field input[type="checkbox"] {
+  display: none !important;
+}
+
+.ace-checkbox-field input[type="checkbox"] + span:before {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: $meas-radius-50p;
+  color: $checkbox-unchecked-color;
+  line-height: $meas-line-height-null;
+  font-size: 1.5 * $ace-standard-font-size;//half as big as the size of the label text
+  text-align: center;
+  content: "\f055";
+  font-family: $primary-font-family;
+}
+html[dir="ltr"] .ace-checkbox-field input[type="checkbox"] + span:before {
+  margin: (-$meas-marg-3) $meas-marg-5 $meas-marg-0 $meas-marg-0;
+}
+html[dir="rtl"] .ace-checkbox-field input[type="checkbox"] + span:before {
+  margin: (-$meas-marg-3) $meas-marg-0 $meas-marg-0 $meas-marg-5;
+}
+
+.ace-checkbox-field input[type="checkbox"] + span:after {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: $meas-radius-50p;
+  color: $checkbox-unchecked-color;
+  line-height: $meas-line-height-null;
+  font-size: 1.5 * $ace-standard-font-size;//half as big as the size of the label text
+  text-align: center;
+  font-family: $primary-font-family;
+}
+html[dir="rtl"] .ace-checkbox-field input[type="checkbox"] + span:after {
+  margin: -$meas-marg-3 $meas-marg-0 $meas-marg-0 $meas-marg-5;
+}
+
+.ace-checkbox-field input[type="checkbox"]:checked + span:before {
+  content: "\f058";
+  color: $checkbox-checked-color;
+  font-family: $primary-font-family;
+}
+
+.ace-checkbox-field input[type="checkbox"]:checked + span {
+  background-color: $checkbox-background-color !important;
+}
+
+.ace-checkbox-field input[type="checkbox"] + span {
+  display: inline-block;
+  border-radius: $ace-common-radius;
+  color: $checkbox-label-color;
+   line-height: $meas-line-height-1d5;
+  cursor: pointer;
+}
+@include sidePaddingLTR('.ace-checkbox-field input[type="checkbox"] + span',right,$meas-pad-15);
+
+.ace-checkbox-field-checked:before {
+  content: "\f058";
+  color: $checkbox-checked-color;
+  font-family: $primary-font-family;
+  padding: $meas-pad-4;
+}
+
+.ace-checkbox-field-unchecked:before {
+  content: "\f055";
+  color: $checkbox-unchecked-color;
+  font-family: $primary-font-family;
+  padding: $meas-pad-4;
+}
+
+.ace-checkbox-field {
+  padding-top: $meas-pad-5;
+  font-size: $ace-standard-font-size;
+}
+
+.ace-checkbox-field .ace-label {
+  padding: $meas-pad-0 $meas-pad-0 $meas-pad-10;
+  pointer-events: all !important;
+}
+
+/* end checkbox */
+
+/* begin checkbox modifiers */
+
+.ace-checkbox-title {
+  font-size: $ace-small-title-size;
+}
+.ace-checkbox-title span:before {
+  font-size: $ace-large-title-size !important;
+}
+
+.ace-state-check .ace-checkbox-field .ace-label,
+.ace-state-check .ace-checkbox-field .ace-label span {
+  cursor: default !important;
+}
+.ace-state-check .ace-checkbox-field input[type="checkbox"] + span {
+  background: $secondary-bg-color;
+}
+.ace-state-check .ace-checkbox-field input[type="checkbox"] + span:before,
+.ace-state-check .ace-checkbox-field input[type="checkbox"] + span:after {
+  content: "\f00d";
+  font-family: $primary-font-family;
+  display: inline;
+  color: $checkbox-state-icon-unchecked-color;
+  cursor: default;
+  vertical-align: sub;
+}
+html[dir="rtl"] .ace-state-check .ace-checkbox-field input[type="checkbox"] + span:before {
+  display: none !important;
+}
+html[dir="ltr"] .ace-state-check .ace-checkbox-field input[type="checkbox"] + span:after {
+  display: none !important;
+}
+
+.ace-state-check .ace-checkbox-field input[type="checkbox"]:checked + span {
+  background: $secondary-bg-color;
+}
+.ace-state-check .ace-checkbox-field input[type="checkbox"]:checked + span:before,
+.ace-state-check .ace-checkbox-field input[type="checkbox"]:checked + span:after {
+  content: "\f00c";
+  font-family: $primary-font-family;
+  color: $checkbox-state-icon-checked-color;
+  background: $secondary-bg-color;
+}
+html[dir="rtl"] .ace-state-check .ace-checkbox-field input[type="checkbox"]:checked + span:before {
+  display: none !important;
+}
+html[dir="ltr"] .ace-state-check .ace-checkbox-field input[type="checkbox"]:checked + span:after {
+  display: none !important;
+}
+
+.ace-attention .ace-checkbox-field input[type="checkbox"]:checked+span:before {
+  color: $attention-color;
+}
+
+.ace-checkbox-field input[type="checkbox"][disabled] + span {
+  background-color: $checkbox-disabled-bg-color !important;
+}
+.ace-checkbox-field input[type="checkbox"][disabled] + span:before,
+.ace-checkbox-field input[type="checkbox"][disabled] + span:after {
+  background-color: $checkbox-disabled-bg-color !important;
+  color: $checkbox-unchecked-color !important;
+}
+/* end checkbox modifiers */

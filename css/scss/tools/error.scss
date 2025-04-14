@@ -1,0 +1,93 @@
+/* begin error */
+@use '../variables/all' as *;
+
+iframe.ace-error {
+  @include addBorder(bottom,$meas-bord-2,$ace-border-default-pattern,$error-color-text);
+}
+
+.ace-error input {
+  //border-bottom: $meas-bord-1 solid $error-color-text !important;
+//  $error-color-text
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$error-color-text,true);
+}
+.ace-hide-errors input {
+  border-bottom: initial !important;
+}
+.ace-error-msg {
+  display: none;
+  color: $error-color-text;
+}
+
+.ace-error .ace-text-field .ace-error-msg {
+  margin-top: $meas-marg-20;
+}
+.row-input-data .ace-error .ace-text-field .ace-error-msg {
+  margin-top: $meas-marg-12;
+}
+
+@include floatToLTR('.ace-error-msg',right);
+@include sideMarginLTR('.ace-error-msg',right,$meas-marg-10);
+
+.ace-autocomplete-field .ace-error-msg,
+.ace-datepicker-field .ace-error-msg,
+.ace-combo-field .ace-error-msg {
+  position: absolute !important;
+}
+@include positionLTR('.ace-autocomplete-field .ace-error-msg',right,$position-10);
+@include positionLTR('.ace-combo-field .ace-error-msg',right,$position-10);
+@include positionLTR('.ace-datepicker-field .ace-error-msg',right,$position-22);
+
+.ace-autocomplete-field .ace-error-msg {
+  top:  $position-14 !important;
+}
+.ace-combo-field .ace-error-msg {
+  top:  $position-0 !important;
+}
+.ace-datepicker-field .ace-error-msg {
+  top:  $position-14 !important;
+}
+
+.ace-error-msg:before {
+  content: "\f071";
+  font-family: $primary-font-family;
+}
+
+.ace-error .ace-error-msg {
+  display: block;
+  padding: $meas-pad-5 $meas-pad-5 $meas-pad-5;
+  position: relative;
+  font-size: $ace-tiny-title-size;
+}
+
+.ace-error .ace-efld,
+.ace-error .ace-valid .ace-efld {
+  border-bottom: transparent;
+}
+.ace-error .ace-efld {
+  width: $meas-full;
+}
+
+.ace-error .ace-hide-errors .ace-error-msg {
+  display: none !important;
+}
+
+.ace-error-req .ace-focus .ace-label {
+  color: $error-color-text;
+}
+
+.ace-error-req > div:after {
+  color: $error-color-text !important;
+  content: "\f069";
+  font-family: $primary-font-family;
+  display: block;
+  position: absolute;
+  font-size: ceil(0.65 * $ace-smaller-font-size);//just somewhat smaller than normal
+  top:  $position-13;
+}
+
+@include floatToLTR('.ace-error-req > div:after',right);
+
+.ace-error-req > div .ace-efld {
+  width: $meas-full;
+}
+/* end error */

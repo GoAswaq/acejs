@@ -1,0 +1,13 @@
+/* begin searchform */
+@use '../variables/all' as *;
+
+.ace-search-panel input {
+  color: $disabled-color;
+  background-color: $secondary-bg-color;
+}
+.ace-search-panel a.fa-search {
+  color: $primary-color;
+  background-color: transparent;
+}
+
+/* end searchform field */

@@ -1,0 +1,174 @@
+/* begin datepicker */
+@use '../variables/all' as *;
+
+.ui-datepicker {
+  display: none;
+  padding: $meas-pad-15;
+  margin: $meas-marg-5 auto $meas-marg-0;
+  box-shadow: $box-shad-0 $box-shad-4 $box-shad-16 $primary-shadow-color;
+  background: $datepicker-background;
+  font-family: $datepicker-ui-font-family;
+}
+
+.ui-datepicker:before {
+  @include addBorder(bottom,$meas-bord-7,solid,$datepicker-background);
+  @include addBorder(right,$meas-bord-7);
+  @include addBorder(left,$meas-bord-7);
+  top: - $position-7;
+  content: "";
+  display: block;
+  position: absolute;
+  z-index: 50;
+}
+@include sideMarginLTR('.ui-datepicker:before',left,-$meas-marg-7);
+@include positionLTR('.ui-datepicker:before',left,$position-25p);
+
+.ui-datepicker a {
+  text-decoration: none;
+}
+.ui-datepicker-header {
+}
+.ui-datepicker-calendar {
+  padding: $meas-pad-25;
+}
+.ui-datepicker-prev,
+.ui-datepicker-next {
+  display: inline-block;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  color: $datepicker-highlight-color;
+  font-size: $ace-tiny-title-size;
+  border: none;
+  background: none;
+  transition: ease 0.1s;
+  padding: $meas-pad-10 $meas-pad-5 $meas-pad-10 $meas-pad-5;
+}
+
+.ui-datepicker-prev:hover,
+.ui-datepicker-next:hover {
+  background: $datepicker-highlight-color;
+  color: $datepicker-contrast-color;
+}
+//ATTENTION these next two lines must nut be customized for ltr/rtl direction
+.ui-datepicker-prev { float: left; }
+.ui-datepicker-next { float: right; }
+
+input.ace-datepicker {
+  width: 80%;
+}
+.ui-datepicker-trigger {
+  margin: $meas-marg-0 !important;
+  padding: $meas-pad-4 !important;
+  height: $ace-standard-element-size;
+  width: $ace-standard-element-size !important;
+  background: none;
+  transition: ease 0.1s;
+  cursor: pointer;
+  color: $datepicker-highlight-color;
+  text-align: center;
+  z-index:1000;
+  @include addBorder();
+}
+@include floatToLTR('.ui-datepicker-trigger',right);
+
+.ui-datepicker-trigger:hover {
+  background: $datepicker-highlight-color;
+  color: $datepicker-contrast-color;
+  box-shadow: $box-shad-0 $box-shad-2 $box-shad-4 $primary-shadow-color;
+}
+.ui-datepicker-unselectable .ui-state-default {
+  background: $datepicker-disabled-bg-color;
+  color: $datepicker-disabled-color;
+}
+.ui-datepicker td span,
+.ui-datepicker td a {
+  display: inline-block;
+  text-align: center;
+  width: $meas-30;
+  height: $meas-30;
+  line-height: $meas-30;
+  color: $datepicker-primary-color;
+}
+.ui-datepicker th {
+  font-size: 10pt;
+  padding: $meas-pad-5 $meas-pad-2;
+  margin: $meas-marg-0 $meas-marg-2;
+  color: $datepicker-highlight-color;
+  text-transform: uppercase;
+}
+
+.ui-datepicker-calendar .ui-state-active {
+  background: $datepicker-highlight-color !important;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $primary-shadow-color;
+  color: $datepicker-contrast-color;
+}
+.ui-datepicker-calendar .ui-state-hover {
+  background: $highlight-bg-subtle-color;
+}
+.ui-datepicker-title {
+  text-align: center;
+  color: $datepicker-highlight-color;
+  background-color: $datepicker-background;
+  font-size: $ace-small-title-size;
+  padding-top: $meas-pad-5;
+  margin-bottom: $meas-marg-15;
+}
+.ui-datepicker-title select {
+  color: $datepicker-primary-color;
+  background-color: $datepicker-background;
+}
+
+.ace-field-container .ace-datepicker-field {
+  white-space: nowrap;
+}
+.ace-datepicker-field {
+  position: relative;
+  padding: $meas-pad-0 $meas-pad-0 $meas-pad-0 $meas-pad-0;
+  width: $meas-full;
+  box-sizing: border-box;
+  line-height: $meas-line-height-null;
+}
+.ace-no-bottom-padding .ace-datepicker-field {
+  padding-bottom: $meas-pad-0;
+}
+@include floatToLTR('.ace-datepicker-field',left);
+
+.ace-datepicker-container {
+  width: $meas-200;
+}
+
+#ui-datepicker-div {
+  z-index: 1000 !important;
+}
+
+.hasDatepicker {
+  background: $secondary-bg-color;
+  height: $ace-standard-element-size;
+  @include addBorder(top);
+  @include addBorder(bottom);
+}
+
+.ui-datepicker-trigger i {
+  margin: $meas-marg-0 !important;
+}
+.hasDatepicker[disabled] {
+  background: $secondary-bg-color !important;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+[readonly="readonly"] .ui-datepicker-trigger {
+  display:none;
+}
+
+.ace-label-align-top .ace-datepicker-field {
+  padding-bottom: $ace-label-align-top-inner-bottom-padding;
+}
+.ace-label-align-left .ace-datepicker-field .ace-label {
+  padding-top: $ace-label-align-left-inner-top-padding;
+}
+
+.ace-grid-cell .ace-label-align-top .ace-datepicker-field {
+  padding-bottom: $meas-0; /*SM-not sure*/
+}
+
+/* end datepicker */

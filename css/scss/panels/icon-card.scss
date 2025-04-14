@@ -1,0 +1,35 @@
+/* begin icon card */
+@use '../variables/all' as *;
+
+.ace-icon-card {
+  text-align: center;
+}
+.ace-icon-card i {
+  display: block;
+  width: $meas-80;
+  height: $meas-80;
+  padding: $meas-pad-5;
+  font-size: $font-size-48;
+  text-align: center;
+  color: $contrast-font-color;
+  border-radius: $meas-radius-50p;
+  background: $primary-color;
+  margin: $meas-marg-0 auto;
+}
+
+.ace-icon-card.ace-icon-card-small i {
+  width: $meas-40;
+  height: $meas-40;
+  font-size: $ace-medium-title-size;
+}
+@include sideMarginLTR('.ace-icon-card.ace-icon-card-small i',right,$meas-marg-10);
+
+.ace-icon-card i{
+  line-height: $meas-line-height-1d5;
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-600) {
+  @include sideMarginLTR('.ace-icon-card',left,$meas-marg-8);
+}
+
+/* end icon card */

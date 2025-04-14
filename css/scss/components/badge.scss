@@ -1,0 +1,34 @@
+@use '../variables/all' as *;
+
+/* begin badge related classes */
+.ace-badge {
+  margin-top: $meas-marg-0;
+  line-height: $meas-line-height-1d2;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  height: $ace-standard-element-size;
+  color: $badge-color;
+  background: $badge-bg-color;
+  z-index: 3;
+  position: relative;
+  font-size: $ace-tiny-title-size;
+}
+@include sideMarginLTR('.ace-badge',right,$meas-marg-5);
+@include floatToLTR('.ace-badge',right);
+
+
+.ace-badge-pointer { cursor: pointer; }
+
+.ace-text-editor .ace-badge { top: -20px; }
+.ace-display-field span.ace-badge{
+  color: $badge-color,
+}
+
+.ace-round-badge .ace-badge {
+  border-radius: $ace-common-radius;
+}
+
+.ace-badge i {
+  line-height: $meas-line-height-1d0 !important;
+}
+
+/* end badge related classes */

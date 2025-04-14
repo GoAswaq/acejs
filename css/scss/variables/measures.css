@@ -1,0 +1,106 @@
+/* Used for:
+TOP: .ace-filter-container:hover .ace-filter-remove,.ace-deblur-zone > div > .ace-autocomplete-field > .ace-empty ~ .ace-label, .ace-deblur-zone > div > .ace-autocomplete-field > button,
+		.ace-popover:before,
+WIDTH: .ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-efld,
+HEIGHT: .ace-dropdown-list li, .ace-thin-progress-bar .ace-progress-bar, .ace-thin-progress-bar .ace-progress-inner-bar,
+LEFT/RIGHT: .ace-combo-field:after , .ace-radio-field .ace-error-msg, .ace-lateral-form .ace-soft-close,
+ */
+/* Used for:
+TOP: .ace-efld ~ label, .ace-efld:focus ~ label, .ace-empty:focus ~ label, .ace-autocomplete-details-field .ace-efld.ace-hide ~ .ace-label, .ace-label-align-top .ace-file-upload .ace-label,
+		.ace-radio-field .ace-error-msg, .ace-text-editor .ace-efld:focus ~ label, .ace-text-editor .ace-efld ~ label ,
+BOTTOM: .ace-text-field:after
+WIDTH: .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, span.ace-card-highlight:after,
+HEIGHT: .ace-efld ~ label,  .ace-thin-row, .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, .ace-radio + span, span.ace-card-highlight:after,
+PADDING: .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field, .ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"],
+		.ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger, .ace-accordion-list,  a.ace-breadcrumbs-link, .ace-mask-el > div,
+LINE-HEIGHT: span.ace-selectoption,
+BORDER: .ace-breadcrumbs-separator:after, .ace-arrow-down,
+ */
+/* Used for:
+TOP: [class*="ace-huge-text-"] .ace-empty:focus ~ .ace-label, [class*="ace-huge-text-"] .ace-efld ~ .ace-label,
+HEIGHT: .ace-nested-grid-header .ace-grid-groupped-header-col, .ui-datepicker td span, .ui-datepicker td a, .ace-accordion, .ace-deblur-zone i,
+LINE-HEIGHT: div.ace-selectbox, .ui-datepicker td span, .ui-datepicker td a,
+WIDTH: .ui-datepicker td span, .ui-datepicker td a
+LEFT/RIGHT: .ace-adv-search-panel .ace-advanced-expand, .ace-floating-button, .ace-arrow-down,
+ */
+/* Used for:
+TOP: .ace-text-center .ace-deblur-zone.ace-show .ace-autocomplete-field .ace-grid-auto-complete,
+MARIGIN: .ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before
+HEIGHT: .ace-flex-grid .ace-grid-footer, .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+WIDTH: .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+LEFT/RIGHT: .ace-timeline .ace-grid-body:before
+ */
+/* Used for:
+HEIGHT: .ace-main-nav, .ace-main-nav .ace-logo, .ace-grid-height-minus-50 .ace-grid, .recaptcha_div table td img, [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-menu-trigger, .ace-main-nav .ace-dropdown-trigger-click,
+		.ace-height-minus-50, .ace-i-height-minus-50, .ace-height-minus-50-vh, .ace-i-height-minus-50-vh ,
+WIDTH: .ace-autocomplete-field .ace-grid-pagination input,
+TOP: .ace-main-nav .ace-dropdown-list, .ace-side-container,
+MARGIN: .ace-content, .ace-margin-top-50
+ */
+/* Used for:
+HEIGHT: .ace-grid-height-minus-60 .ace-grid, ace-height-minus-60, ace-i-height-minus-60, .ace-height-minus-60-vh, .ace-i-height-minus-60-vh
+PADDING LEFT/RIGHT: .ace-search-bar input
+MARGIN: .ace-margin-top-60,
+ */
+/* Used for:
+WIDTH: .ace-main-nav .ace-logo
+HEIGHT: .ace-nested-grid-header > .ace-grid-cell, .ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after
+PADDING LEFT/RIGHT: [class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder
+ */
+/* Used for:
+WIDTH: .ace-icon-card i.icofont
+HEIGHT: .ace-icon-card i.icofont, .ace-height-minus-80, .ace-i-height-minus-80, .ace-height-minus-80-vh, .ace-i-height-minus-80-vh , .ace-grid-body, .ace-grid-height-minus-80 .ace-grid,
+BOX-SHADDOW: .ace-advanced-panel.from-top.ace-show,
+MARGIN: .ace-margin-top-80
+ */
+/* Used for:
+WIDTH: .ace-side-container .ace-expand, .ace-side-menu, .ace-hidden-menu-screen
+TRANSFORM: .ace-hidden-menu-screen,
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-140, .recaptcha_div td.recaptcha_image_cell
+ */
+/* Used for:
+LEFT/RIGHT: .ace-main-nav .ace-right ul li .ace-dropdown-list
+MARIGN: .ace-margin-top-150
+HEIGHT: .ace-grid-height-minus-150 .ace-grid, .ace-i-height-minus-150-vh, .ace-height-minus-150-vh, .ace-i-height-minus-150, .ace-height-minus-150
+WIDTH: .ace-file-upload span, .ace-label-align-top .ace-display-field .ace-label
+ */
+/* Used for:
+WIDTH: .ace-advanced-panel
+*/
+/* Used for:
+HEIGHT: .ace-blur-zone .ace-scrollview
+ */
+/* Used for:
+HEIGHT: .ace-grid-height-minus-200 .ace-grid, .ace-height-minus-200, .ace-i-height-minus-200, .ace-height-minus-200-vh, .ace-i-height-minus-200-vh, .ace-height-minus-200
+ */
+/* Used for:
+.ace-timeline .ace-grid-body, .recaptcha_div span#recaptcha_privacy
+ */
+/* Used for:
+ace-adv-search-panel, ace-grid-height-minus-250, ace-info-side, ace-quick-access-bar, ace-height-minus-250, ace-margin-top-250
+ */
+/*
+Used for timeline
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-300, .ace-i-height-minus-300, .ace-height-minus-300-vh, .ace-i-height-minus-300-vh, .ace-height-minus-300
+LEFT/RIGHT: .ace-advanced-panel.ace-quick-access-bar
+WIDTH:.ace-advanced-panel.ace-quick-access-bar.ace-show
+HEIGHT: .ace-flex-grid-height-300 .ace-grid-auto-complete, .ace-flex-grid-height-300 .ace-grid
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-350, .ace-i-height-minus-350, .ace-height-minus-350-vh, .ace-i-height-minus-350-vh, .ace-height-minus-350
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-400, .ace-i-height-minus-400, .ace-height-minus-400-vh, .ace-i-height-minus-400-vh, .ace-height-minus-400
+ */
+/* Used for:
+HEIGHT: .ace-height-minus-450, .ace-i-height-minus-450, .ace-height-minus-450-vh, .ace-i-height-minus-450-vh, .ace-height-minus-450
+ */
+/* Used for:
+.ace-entry-card
+ */
+
+/*# sourceMappingURL=measures.css.map */

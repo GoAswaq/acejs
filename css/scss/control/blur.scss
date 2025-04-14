@@ -1,0 +1,133 @@
+@use '../variables/all' as *;
+
+/* begin blur - this control is hiding menus and other controls till something is selected in an autocomplete input (also defined as "deblur zone") */
+.ace-blur-zone {
+  transform: translateY(350%);
+  transition: ease-in-out 0.3s;
+}
+.ace-blur-zone .ace-scrollview {
+  height: calc(#{$meas-full} - #{$meas-190});
+}
+.ace-blur-zone.ace-show {
+  transform: translateY(0);
+  position: relative;
+  z-index: 1;
+}
+
+.ace-deblur-zone {
+  margin: $meas-marg-35 $meas-marg-0;
+  position: relative;
+  transition: ease-in-out 0.3s;
+  z-index: 2;
+
+  border: $meas-bord-1 solid $primary-border-color;
+  display: flex;
+  justify-content: center;
+
+  height: 58px;
+  display: flex;
+  align-items: center;
+  width: $meas-full;
+}
+
+.ace-deblur-zone.ace-show {
+  transform: scale(1);
+  height: $ace-standard-element-size;
+  display: flex;
+  align-items: center;
+  width: 60%;
+}
+
+.ace-deblur-zone.ace-show .ace-grid-auto-complete {
+  transform: scale(1);
+}
+
+.ace-deblur-zone > i,
+.ace-deblur-zone > div > .ace-autocomplete-field > .ace-label {
+  font-size: $ace-large-title-size;
+  height: auto !important;
+}
+.ace-deblur-zone > div > .ace-autocomplete-field > .ace-efld ~ .ace-label {
+  top: - $position-38;
+}
+.ace-deblur-zone > div > .ace-autocomplete-field > .ace-empty ~ .ace-label {
+  top:  $position-10;
+}
+.ace-deblur-zone
+> div
+> .ace-autocomplete-field
+> .ace-efld:focus
+~ .ace-label {
+  top: - $position-38;
+}
+.ace-deblur-zone .ace-autocomplete-field > input {
+  height: $meas-full;
+  display: flex;
+  font-size: $font-size-38 !important;
+}
+
+.ace-deblur-zone > div > .ace-autocomplete-field > button {
+  top:  $position-10;
+}
+.ace-deblur-zone .ace-field-container {
+  flex-basis: $meas-full;
+}
+
+.ace-deblur-zone i {
+  width: $meas-30;
+  padding: $meas-pad-5;
+  opacity: 0.5;
+}
+.ace-deblur-zone input {
+  flex-basis: $meas-full;
+  max-width: $meas-full;
+  background: $secondary-bg-color !important;
+  border: none !important;
+}
+.ace-deblur-zone .ace-autocomplete-field {
+  padding-bottom: $meas-pad-0;
+}
+
+.ace-deblur-zone.ace-show > i,
+.ace-deblur-zone.ace-show > div > .ace-autocomplete-field > .ace-label {
+  font-size: $ace-bigger-font-size;
+}
+.ace-deblur-zone.ace-show
+> div
+> .ace-autocomplete-field
+> .ace-efld
+~ .ace-label {
+  top: - $position-24;
+}
+.ace-deblur-zone.ace-show
+> div
+> .ace-autocomplete-field
+> .ace-empty
+~ .ace-label {
+  top:  $position-6;
+}
+.ace-deblur-zone.ace-show
+> div
+> .ace-autocomplete-field
+> .ace-efld:focus
+~ .ace-label {
+  top: - $position-24;
+}
+.ace-deblur-zone.ace-show .ace-autocomplete-field > input {
+  height: $meas-full;
+  display: flex;
+  font-size: $ace-bigger-font-size !important;
+}
+.ace-deblur-zone.ace-show > div > .ace-autocomplete-field > button {
+  top:  $position-0;
+}
+
+.ace-text-center .ace-deblur-zone .ace-autocomplete-field .ace-grid-auto-complete {
+  left:  $position-0;
+  right:  $position-0;
+}
+.ace-text-center .ace-deblur-zone.ace-show .ace-autocomplete-field .ace-grid-auto-complete {
+  top:  $position-40 !important;
+}
+
+/* end blur */

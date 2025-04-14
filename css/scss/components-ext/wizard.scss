@@ -1,0 +1,32 @@
+/* begin wizard */
+// .ace-wizard-field {
+// }
+@use '../variables/all' as *;
+
+.ace-wizard-top-bar,
+.ace-wizard-bottom-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+// .ace-wizard-container {
+// }
+// .ace-wizard-progress-bar {
+// }
+
+// .ace-wizard-next-button {
+// }
+// .ace-wizard-prev-button {
+// }
+// .ace-wizard-final-button {
+// }
+
+html[dir="rtl"] .ace-wizard-next-button .ace-icon:before,
+html[dir="rtl"] .ace-wizard-prev-button .ace-icon:before {
+  transform: rotate(180deg);
+  display: inline-block;
+}
+
+// .ace-wizard-step {
+// }
+/* end wizard */

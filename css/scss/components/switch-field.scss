@@ -1,0 +1,71 @@
+/* begin switch field */
+@use '../variables/all' as *;
+
+.ace-switch-field input[type="checkbox"] {
+  display: none;
+}
+@include floatToLTR('.ace-switch-field span.ace-label',left);
+html[dir="ltr"] .ace-switch-field span.ace-label {
+  margin: $meas-marg-5 $meas-marg-5 $meas-marg-0 $meas-marg-0;
+}
+html[dir="rtl"] .ace-switch-field span.ace-label {
+  margin: $meas-marg-5 $meas-marg-0 $meas-marg-0 $meas-marg-5;
+}
+.ace-switch-field .ace-label {
+  pointer-events: all !important;
+  font-size: $ace-standard-font-size;
+}
+
+.ace-switch-field input[type="checkbox"] + span {
+  height: $ace-small-element-size;
+  width: 1.8 * $ace-small-element-size;
+//  padding: $meas-pad-5 $meas-pad-0 $meas-pad-5;
+  position: relative;
+  background: $checkbox-disabled-bg-color;
+  display: inline-block;
+  content: "";
+  cursor: pointer;
+  border-radius: $ace-small-element-size - 1;
+  transition: ease-in-out 0.1s;
+  margin: $meas-marg-0 !important;
+  font-family: $primary-font-family;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+@include floatToLTR('.ace-switch-field input[type="checkbox"] + span',right);
+
+.ace-switch-field input[type="checkbox"] + span:before {
+  display: inline-block;
+  vertical-align: middle;
+  transition: ease-in-out 0.1s;
+  top: -$position-2;
+  margin: -$meas-marg-1 $meas-marg-1;
+  cursor: pointer;
+  border-radius: $meas-radius-50p;
+  color: $switch-highlight-color;
+  font-size: $ace-large-title-size;
+  text-align: center;
+  line-height: $meas-line-height-1d3;;
+  content: "\f111";
+  font-family: $primary-font-family;
+  position: absolute;
+  text-shadow: 0px 1px 2px $primary-shadow-color;
+}
+@include positionLTR('.ace-switch-field input[type="checkbox"] + span:before',left,$position-1);
+
+.ace-switch-field input[type="checkbox"]:checked + span:before {
+  animation: 0.2s radio;
+}
+@include sideMarginLTR('.ace-switch-field input[type="checkbox"]:checked + span:before',left,$meas-marg-18);
+
+.ace-switch-field input[type="checkbox"]:checked + span,
+.ace-switch-field label input[type="checkbox"]:checked ~ span {
+  background: $checkbox-checked-color;
+}
+
+.ace-switch-field input[type="checkbox"][disabled]:checked + span {
+  background-color: $checkbox-disabled-bg-color;
+}
+.ace-switch-field input[type="checkbox"][disabled] + span:before {
+  color: $checkbox-disabled-bg-color;
+}
+/* end switch field */

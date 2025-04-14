@@ -1,0 +1,126 @@
+/* begin advanced panel */
+@use '../variables/all' as *;
+
+.ace-presentation-container{
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  align-items: stretch;
+}
+@include sidePaddingLTR('.ace-presentation-container',left,$ace-container-default-side-padding);
+@include sidePaddingLTR('.ace-grid .ace-presentation-container',left,$meas-pad-0);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  @include sidePaddingLTR('.ace-presentation-container', left, $meas-pad-1);
+}
+
+.ace-presentation-container.ace-presentation-container-reverse{
+  flex-direction: row-reverse;
+}
+
+.ace-presentation-container > .ace-presentation-main,
+.ace-grid .ace-presentation-container > .ace-presentation-main.ace-grid-body {
+  width: 66.66%;
+  flex-basis: 66.66%;
+  max-width: 66.66%;
+
+  background-color: $presentation-main-bg-color;
+  color: $presentation-main-color;
+}
+
+.ace-presentation-container.ace-presentation-transparent-main > .ace-presentation-main {
+  background-color: transparent;
+}
+
+.ace-presentation-container > .ace-presentation-info,
+.ace-grid .ace-presentation-container > .ace-presentation-info {
+  width: 33.33%;
+  flex-basis: 33.33%;
+  max-width: 33.33%;
+
+  background-color: $presentation-info-bg-color;
+  color: $presentation-info-color;
+}
+.ace-presentation-container.ace-presentation-transparent-info > .ace-presentation-info {
+  background-color: transparent;
+  color: $presentation-main-color;
+}
+
+.ace-grid .ace-presentation-container > .ace-presentation-info {
+  background-color: $presentation-grid-info-bg-color;
+  color: $presentation-grid-info-color;
+}
+.ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main,
+.ace-grid .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main.ace-grid-body {
+  width: 83.33%;
+  flex-basis: 83.33%;
+  max-width: 83.33%;
+}
+.ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-info,
+.ace-grid .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-info {
+  width: 16.66%;
+  flex-basis: 16.66%;
+  max-width: 16.66%;
+}
+
+.ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main,
+.ace-grid .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main.ace-grid-body {
+  width: 50%;
+  flex-basis: 50%;
+  max-width: 50%;
+}
+.ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-info,
+.ace-grid .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-info {
+  width: 50%;
+  flex-basis: 50%;
+  max-width: 50%;
+}
+
+.ace-presentation-container.ace-presentation-hidden-info > .ace-presentation-main,
+.ace-presentation-container.ace-presentation-hidden-info.ace-presentation-ration-10-2 > .ace-presentation-main,
+.ace-presentation-container.ace-presentation-hidden-info.ace-presentation-ration-6-6 > .ace-presentation-main,
+.ace-grid .ace-presentation-container.ace-presentation-hidden-info > .ace-presentation-main.ace-grid-body,
+.ace-grid .ace-presentation-container.ace-presentation-hidden-info.ace-presentation-ration-10-2 > .ace-presentation-main.ace-grid-body,
+.ace-grid .ace-presentation-container.ace-presentation-hidden-info.ace-presentation-ration-6-6 > .ace-presentation-main.ace-grid-body{
+  width: 100%;
+  flex-basis: 100%;
+  max-width: 100%;
+}
+.ace-presentation-container.ace-presentation-hidden-info > .ace-presentation-info {
+  display:none;
+}
+
+@include sidePaddingLTR('.ace-presentation-container > .ace-presentation-info',left,$meas-pad-1);
+@include sidePaddingLTR('.ace-presentation-container.ace-presentation-container-reverse > .ace-presentation-info',left,$meas-pad-0);
+@include sidePaddingLTR('.ace-presentation-container.ace-presentation-container-reverse > .ace-presentation-info',right,$meas-pad-1);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+
+  .ace-presentation-container{
+    flex-wrap: wrap;
+  }
+
+  .ace-presentation-container > .ace-presentation-main,
+  .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main,
+  .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main,
+  .ace-grid .ace-presentation-container > .ace-presentation-main.ace-grid-body,
+  .ace-grid .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main.ace-grid-body,
+  .ace-grid .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main.ace-grid-body{
+    width: $meas-full;
+    max-width: $meas-full;
+    flex-basis: $meas-full;
+  }
+
+  .ace-presentation-container > .ace-presentation-info {
+    width: $meas-full;
+    max-width: $meas-full;
+    flex-basis: $meas-full;
+    padding-top: $ace-common-top-bottom-padding;
+  }
+  @include sidePaddingLTR('.ace-presentation-container > .ace-presentation-info',left,$meas-pad-0);
+  @include sidePaddingLTR('.ace-presentation-container.ace-presentation-container-reverse > .ace-presentation-info',right,$meas-pad-0);
+
+  .ace-presentation-container.ace-presentation-hide-mobile-info > .ace-presentation-info {
+    display:none;
+  }
+}

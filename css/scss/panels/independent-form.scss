@@ -1,0 +1,68 @@
+/* begin independent form */
+@use '../variables/all' as *;
+
+.ace-independent-form {
+  position: absolute !important;
+  width: $meas-full !important;
+  height: $meas-full;
+  top:  $position-0;
+  z-index: 6;
+  overflow: hidden;
+  background: $form-bg-color;
+
+  will-change: transform;
+  transition: ease 0.3s;
+}
+@include sidePaddingLTR('.ace-independent-form',left,$ace-container-default-side-padding);
+
+.ace-independent-form .ace-grid .ace-entry-card {
+  margin-bottom: $meas-marg-10;
+}
+
+.ace-independent-form.ace-show {
+  -webkit-transform: translateX(0) !important;
+  transform: translateX(0) translateZ(0px) !important;
+  transition: ease-out 0.3s;
+  box-shadow: $box-shad-null $box-shad-0 $box-shad-24 $form-shadow-color;
+}
+html[dir="ltr"] .ace-independent-form {
+  -webkit-transform: translateX(100%) translate3d(0px,0px,0px);
+  transform: translateX(150%) translate3d(0px,0px,0px);
+}
+html[dir="rtl"] .ace-independent-form {
+  -webkit-transform: translateX(-100%) translate3d(0px,0px,0px);
+  transform: translateX(-150%) translate3d(0px,0px,0px);
+
+}
+
+.ace-lateral-form {
+  max-width: $meas-400;
+}
+@media screen and (min-width: $screen-small) and (max-width: $screen-medium), screen and (min-device-width: $screen-small) and (max-device-height: $screen-medium) and (orientation: landscape) {
+  .ace-lateral-form {
+    max-width: $meas-full-vw;
+  }
+}
+
+@include positionLTR('.ace-lateral-form .ace-soft-close',left,$position-10);
+@include positionLTR('.ace-lateral-form',right,$position-0);
+
+.ace-lateral-form [class*="ace-col-"],
+.ace-lateral-form [class*="ace-thin-col-"],
+.ace-lateral-form [class*="ace-extra-thin-col-"] {
+  width: $meas-full;
+  max-width: $meas-full;
+  flex-basis: $meas-full;
+}
+
+@for $i from 1 to 13 {
+  $per : floor(percentage( (100/12)*$i/100) * 100) / 100;
+  .ace-lateral-form .ace-col-fm-#{$i} {
+    width: $per;
+    flex-basis: $per;
+    max-width: $per;
+  }
+}
+
+
+/* end independent form */

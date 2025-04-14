@@ -1,0 +1,132 @@
+/* begin radio group */
+@use '../variables/all' as *;
+
+.ace-radio-field input[type="radio"] {
+  display: none !important;
+}
+
+.ace-radio-field input[type="radio"] + span:before {
+  display: block;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: $meas-radius-50p;
+  box-sizing: content-box;
+  height: 12px;
+  top:  $position-4;
+  font-size: $ace-standard-font-size;
+  transform-origin: 6px;
+  text-align: center;
+  width: $meas-12;
+  content: " ";
+  position: absolute;
+}
+@include positionLTR('.ace-radio-field input[type="radio"] + span:before ',left,$position-4);
+
+.ace-radio-field span {
+  position: relative;
+}
+
+.ace-radio-field .ace-error-msg {
+  position: absolute !important;
+  padding: $meas-pad-0 !important;
+  top:  $position-20;
+}
+@include positionLTR('.ace-radio-field .ace-error-msg',right,$position-10);
+
+.ace-auto-gen[type="radiogroup"] {
+  padding-bottom: $meas-pad-20;
+}
+.ace-auto-gen[type="radiogroup"].ace-error .ace-radio-field {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$radiogroup-error-color);
+}
+.ace-auto-gen[type="radiogroup"].ace-flex .ace-radio-field {
+  display: flex;
+}
+
+.ace-radio-field input[type="radio"]:checked + span:after {
+  color: $radiogroup-checked-color;
+}
+
+.ace-radio-field input[type="radio"] + span:after {
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+  color: $radiogroup-label-color;
+  position: absolute;
+  box-sizing: content-box;
+  top:  $position-0;
+  border-radius: $meas-radius-50p;
+  height: 16px;
+  line-height: $meas-line-height-18;
+  transition: ease 0.2s;
+  transform-origin: 8px;
+  width: $meas-16;
+  content: " ";
+  @include addBorder(all,$meas-bord-2,$ace-border-default-pattern,$radiogroup-label-color);
+}
+@include positionLTR('.ace-radio-field input[type="radio"] + span:after',left,$position-0);
+
+.ace-radio-field input[type="radio"]:checked + span:before {
+  color: $radiogroup-checked-color;
+  animation: 0.2s radio;
+  background-color: $radiogroup-checked-color;
+}
+
+.ace-radio-field input[type="radio"] + span {
+  display: inline-block;
+  height: $ace-small-element-size;
+  border-radius: $ace-common-radius;
+  color: $radiogroup-label-color;
+  vertical-align: middle;
+  cursor: pointer;
+  position: relative;
+  margin-bottom: $meas-marg-5;
+  padding-left: $ace-common-left-right-padding;
+  padding-right: $ace-common-left-right-padding;
+}
+@include sidePaddingLTR('.ace-radio-field input[type="radio"] + span',left,$meas-pad-25);
+
+.ace-radio-field input[type="radio"][disabled="disabled"] + span,
+.ace-radio-field input[type="radio"][disabled="disabled"] + span:before,
+.ace-radio-field input[type="radio"][disabled="disabled"] + span:after{
+  color: $radiogroup-disabled-color;
+}
+
+.ace-radio-field {
+  position: relative;
+  padding-top: $meas-pad-5;
+  white-space: normal;
+  font-size: $ace-standard-font-size;
+}
+.ace-radio-field > label {
+  pointer-events: all !important;
+  clear: both;
+  padding: $meas-pad-0;
+  width: $meas-full;
+  height: $ace-standard-element-size;
+}
+.ace-auto-gen[label].ace-error .ace-radio-field .ace-label:nth-child(2) {
+  color: $chips-clear-color;
+}
+
+.ace-label-align-top.ace-auto-gen[label]
+  .ace-radio-field
+  .ace-label:nth-child(2) {
+  width: $meas-full !important;
+  position: absolute;
+  top: - $position-18;
+}
+
+/* end radio group */
+
+/* begin radio group modifiers */
+
+.ace-inline-radio-group > .ace-radio-field > .ace-label {
+  width: auto;
+}
+
+.ace-fixed-radio-label .ace-radio-field > label > span {
+  width: $meas-190;
+}
+
+/* end radio group modifiers */

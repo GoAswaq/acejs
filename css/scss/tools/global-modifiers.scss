@@ -1,0 +1,40 @@
+/* begin global */
+@use '../variables/all' as *;
+
+div {
+  color: $primary-font-color;
+}
+
+a {
+  color: $link-color;
+  text-decoration: $link-text-decoration;
+}
+a:hover {
+  color: $link-hover-color; //as s
+  text-decoration: $link-hover-text-decoration;
+}
+
+a[disabled] { pointer-events: none; }
+
+[readonly="true"],[readonly="readonly"] {
+  pointer-events: none;
+  color: $disabled-color;
+}
+
+input[disabled]:focus { background: $disabled-bg-color; }
+input[readonly] { background:transparent !important; }
+input[placeholder] ~ label { top: $ace-label-top-offset; }
+
+h3 span:before,
+h2 span:before {
+  line-height:1.3;
+}
+
+[disabled] * { pointer-events:none; }
+
+::placeholder {
+  color: $disabled-color;
+  opacity: 1;
+}
+
+/* end global */

@@ -1,0 +1,312 @@
+@use "../variables/all" as *;
+
+.ace-tiny-margin-top {
+  margin-top: $meas-marg-5;
+}
+html[dir="ltr"] .ace-tiny-margin-left {
+  margin-left: $meas-marg-5;
+}
+html[dir="rtl"] .ace-tiny-margin-left {
+  margin-right: $meas-marg-5;
+}
+html[dir="ltr"] .ace-tiny-margin-right {
+  margin-right: $meas-marg-5;
+}
+html[dir="rtl"] .ace-tiny-margin-right {
+  margin-left: $meas-marg-5;
+}
+.ace-tiny-margin-bottom {
+  margin-bottom: $meas-marg-5;
+}
+.ace-tiny-margin {
+  margin: $meas-marg-5;
+}
+
+.ace-small-margin-top {
+  margin-top: $meas-marg-10;
+}
+html[dir="ltr"] .ace-small-margin-left {
+  margin-left: $meas-marg-10;
+}
+html[dir="rtl"] .ace-small-margin-left {
+  margin-right: $meas-marg-10;
+}
+html[dir="ltr"] .ace-small-margin-right {
+  margin-right: $meas-marg-10;
+}
+html[dir="rtl"] .ace-small-margin-right {
+  margin-left: $meas-marg-10;
+}
+.ace-small-margin-bottom {
+  margin-bottom: $meas-marg-10;
+}
+.ace-small-margin {
+  margin: $meas-marg-10;
+}
+
+.ace-medium-margin-top {
+  margin-top: $meas-marg-15;
+}
+html[dir="ltr"] .ace-medium-margin-left {
+  margin-left: $meas-marg-15;
+}
+html[dir="rtl"] .ace-medium-margin-left {
+  margin-right: $meas-marg-15;
+}
+html[dir="ltr"] .ace-medium-margin-right {
+  margin-right: $meas-marg-15;
+}
+html[dir="rtl"] .ace-medium-margin-right {
+  margin-left: $meas-marg-15;
+}
+.ace-medium-margin-bottom {
+  margin-bottom: $meas-marg-15;
+}
+.ace-medium-margin {
+  margin: $meas-marg-15;
+}
+
+.ace-big-margin-top {
+  margin-top: $meas-marg-25;
+}
+html[dir="ltr"] .ace-big-margin-left {
+  margin-left: $meas-marg-25;
+}
+html[dir="rtl"] .ace-big-margin-left {
+  margin-right: $meas-marg-25;
+}
+html[dir="ltr"] .ace-big-margin-right {
+  margin-right: $meas-marg-25;
+}
+html[dir="rtl"] .ace-big-margin-right {
+  margin-left: $meas-marg-25;
+}
+.ace-big-margin-bottom {
+  margin-bottom: $meas-marg-25;
+}
+.ace-big-margin {
+  margin: $meas-marg-25;
+}
+
+.ace-large-margin-top {
+  margin-top: $meas-marg-35;
+}
+html[dir="ltr"] .ace-large-margin-left {
+  margin-left: $meas-marg-35;
+}
+html[dir="rtl"] .ace-large-margin-left {
+  margin-right: $meas-marg-35;
+}
+html[dir="ltr"] .ace-large-margin-right {
+  margin-right: $meas-marg-35;
+}
+html[dir="rtl"] .ace-large-margin-right {
+  margin-left: $meas-marg-35;
+}
+.ace-large-margin-bottom {
+  margin-bottom: $meas-marg-35;
+}
+.ace-large-margin {
+  margin: $meas-marg-35;
+}
+
+.ace-i-tiny-margin-top {
+  margin-top: $meas-marg-5 !important;
+}
+html[dir="ltr"] .ace-i-tiny-margin-left {
+  margin-left: $meas-marg-5 !important;
+}
+html[dir="rtl"] .ace-i-tiny-margin-left {
+  margin-right: $meas-marg-5 !important;
+}
+html[dir="ltr"] .ace-i-tiny-margin-right {
+  margin-right: $meas-marg-5 !important;
+}
+html[dir="rtl"] .ace-i-tiny-margin-right {
+  margin-left: $meas-marg-5 !important;
+}
+.ace-i-tiny-margin-bottom {
+  margin-bottom: $meas-marg-5 !important;
+}
+.ace-i-tiny-margin {
+  margin: $meas-marg-5 !important;
+}
+
+.ace-i-small-margin-top {
+  margin-top: $meas-marg-10 !important;
+}
+html[dir="ltr"] .ace-i-small-margin-left {
+  margin-left: $meas-marg-10 !important;
+}
+html[dir="rtl"] .ace-i-small-margin-left {
+  margin-right: $meas-marg-10 !important;
+}
+html[dir="ltr"] .ace-i-small-margin-right {
+  margin-right: $meas-marg-10 !important;
+}
+html[dir="rtl"] .ace-i-small-margin-right {
+  margin-left: $meas-marg-10 !important;
+}
+.ace-i-small-margin-bottom {
+  margin-bottom: $meas-marg-10 !important;
+}
+.ace-i-small-margin {
+  margin: $meas-marg-10 !important;
+}
+
+.ace-i-medium-margin-top {
+  margin-top: $meas-marg-15 !important;
+}
+html[dir="ltr"] .ace-i-medium-margin-left {
+  margin-left: $meas-marg-15 !important;
+}
+html[dir="rtl"] .ace-i-medium-margin-left {
+  margin-right: $meas-marg-15 !important;
+}
+html[dir="ltr"] .ace-i-medium-margin-right {
+  margin-right: $meas-marg-15 !important;
+}
+html[dir="rtl"] .ace-i-medium-margin-right {
+  margin-left: $meas-marg-15 !important;
+}
+.ace-i-medium-margin-bottom {
+  margin-bottom: $meas-marg-15 !important;
+}
+.ace-i-medium-margin {
+  margin:  $meas-marg-15 !important;
+}
+
+.ace-i-big-margin-top {
+  margin-top: $meas-marg-25 !important;
+}
+html[dir="ltr"] .ace-i-big-margin-left {
+  margin-left: $meas-marg-25 !important;
+}
+html[dir="rtl"] .ace-i-big-margin-left {
+  margin-right: $meas-marg-25 !important;
+}
+html[dir="ltr"] .ace-i-big-margin-right {
+  margin-right: $meas-marg-25 !important;
+}
+html[dir="rtl"] .ace-i-big-margin-right {
+  margin-left: $meas-marg-25 !important;
+}
+.ace-i-big-margin-bottom {
+  margin-bottom: $meas-marg-25 !important;
+}
+.ace-i-big-margin {
+  margin: $meas-marg-25 !important;
+}
+
+.ace-i-large-margin-top {
+  margin-top: $meas-marg-35 !important;
+}
+html[dir="ltr"] .ace-i-large-margin-left {
+  margin-left: $meas-marg-35 !important;
+}
+html[dir="rtl"] .ace-i-large-margin-left {
+  margin-right: $meas-marg-35 !important;
+}
+html[dir="ltr"] .ace-i-large-margin-right {
+  margin-right: $meas-marg-35 !important;
+}
+html[dir="rtl"] .ace-i-large-margin-right {
+  margin-left: $meas-marg-35 !important;
+}
+.ace-i-large-margin-bottom {
+  margin-bottom: $meas-marg-35 !important;
+}
+.ace-i-large-margin {
+  margin:  $meas-marg-35 !important;
+}
+
+.ace-no-margin {
+  margin: $meas-marg-0 !important;
+}
+.ace-no-margin * {
+  margin: $meas-marg-0 !important;
+}
+.ace-no-margin-top {
+  margin-top: $meas-marg-0 !important;
+}
+html[dir="ltr"] .ace-no-margin-left {
+  margin-left: $meas-marg-0 !important;
+}
+html[dir="rtl"] .ace-no-margin-left {
+  margin-right: $meas-marg-0 !important;
+}
+html[dir="ltr"] .ace-no-margin-right {
+  margin-right: $meas-marg-0 !important;
+}
+html[dir="rtl"] .ace-no-margin-right {
+  margin-left: $meas-marg-0 !important;
+}
+.ace-no-margin-bottom {
+  margin-bottom: $meas-marg-0 !important;
+}
+.ace-margin-auto {
+  margin: auto !important;
+}
+.ace-margin-left-auto {
+  margin-left: auto !important;
+}
+.ace-margin-right-auto {
+  margin-right: auto !important;
+}
+.ace-margin-top-50 {
+  margin-top: $meas-marg-50;
+}
+.ace-margin-top-60 {
+  margin-top: $meas-marg-60;
+}
+.ace-margin-top-80 {
+  margin-top: $meas-marg-80;
+}
+.ace-margin-top-100 {
+  margin-top: $meas-marg-100;
+}
+.ace-margin-top-120 {
+  margin-top: $meas-marg-120;
+}
+.ace-margin-top-150 {
+  margin-top: $meas-marg-150;
+}
+.ace-margin-top-200 {
+  margin-top: $meas-marg-200;
+}
+.ace-margin-top-230 {
+  margin-top: $meas-marg-230;
+}
+.ace-margin-top-250 {
+  margin-top: $meas-marg-250;
+}
+
+.ace-margin-top-50 {
+  margin-top: $meas-marg-50 !important;
+}
+.ace-margin-top-60 {
+  margin-top: $meas-marg-60 !important;
+}
+.ace-margin-top-80 {
+  margin-top: $meas-marg-80 !important;
+}
+.ace-margin-top-100 {
+  margin-top: $meas-marg-100 !important;
+}
+.ace-margin-top-120 {
+  margin-top: $meas-marg-120 !important;
+}
+.ace-margin-top-150 {
+  margin-top: $meas-marg-150 !important;
+}
+.ace-margin-top-200 {
+  margin-top: $meas-marg-200 !important;
+}
+.ace-margin-top-230 {
+  margin-top: $meas-marg-230 !important;
+}
+.ace-margin-top-250 {
+  margin-top: $meas-marg-250 !important;
+}
+
+/* end margin controll classes */

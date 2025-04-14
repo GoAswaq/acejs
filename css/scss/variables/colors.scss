@@ -1,0 +1,353 @@
+/* BEGIN HARDCODED COLORS - DO NOT MODIFY - they should NOT be overwritten by themes*/
+$blue-light: #46c3ff;
+$blue-dark: #0d6ffa;
+$blue-very-dark: #013751;
+
+$green: #7dd575; // this green is used when you use  ".ace-green-fresh"  class
+$green-secondary: #32d2a7;// this green is used when you use  ".ace-green"  class
+$dark-green: #1a7541;
+
+$dark-red: #c0392b; // this color is used when you use ".ace-dark-red"
+$red-soft: rgba(255, 5, 101, 0.09); //
+$red: red;// this color is used when you use ".ace-red"
+$red-hard: #da1010; // used for '.red-hard' classes
+
+$orange: orange; // this color is used for '.ace-orange' classes
+$orange-secondary: #de8a33; // this color is used for '.ace-orange' classes
+
+$yellow: #fdd248; // this color is used for '.ace-yellow' classes
+$yellow-secondary: rgba(253, 210, 72, 0.09); // ace-panel-yellow
+
+$gray-disabled: #f2f2f2; //used for 'ace-gray-disabled' classes
+$gray: #7f7f7f; // used for 'ace-gray50' classes
+$gray-dark:#383838;
+
+$black: #000000;
+
+$pink: #ff7a7a;
+
+$white: white;
+$white-barely-transparent: rgba(255, 255, 255, 0.8);//used as background for some elements, when an almost transparent background is needed
+/* END DO NOT MODIFY */
+
+$primary-color: #46c3ff !default;    // main scheme color, used in a large variety of places to add color and character
+
+$primary-bg-color: #f2f4f8 !default; // main bg color, used in most places that require a color
+$secondary-bg-color: transparent !default; // secondary bg color
+$background-bg-color: $secondary-bg-color !default; // bg color for all non ace divs
+$highlight-bg-color: #27c3bb !default; // this color is used to highlight the background of several items
+$highlight-bg-subtle-color: rgba(93, 158, 183, 0.08) !default; // used to differentiate. ex: on hover cases
+
+$primary-shadow-color: rgba(0, 0, 0, 0.26) !default; //shadow color
+$highlight-shadow-color: rgba(0, 0, 0, 0.26) !default; //shadow color
+
+$primary-border-color : rgba(0, 0, 0, 0.1) !default; //main border color
+$highlight-border-color : $primary-color !default; //border color for highlighting elements
+
+$primary-font-color: rgba(0, 0, 0, 0.8) !default; // this color is used in the field modifiers , forms , buttons
+$primary-font-color-highlight: rgba(0, 0, 0, 0.9) !default; // the color is used for accordion nodes, and grid footer cells, and other things which might need a bit of emphasis
+$secondary-font-color: rgba(0, 0, 0, 0.8) !default; // this color is used in the field modifiers , forms , buttons
+$secondary-font-color-highlight: rgba(0, 0, 0, 0.9) !default; // the color is used for accordion nodes, and grid footer cells, and other things which might need a bit of emphasis
+$contrast-font-color: $white !default;//used everywhere where a color needs to contrast with a background, and an explicit one is not defined
+
+$link-color: $primary-color !default;
+$link-hover-color: $primary-color !default;
+$disabled-color: #8f8f8f !default;//text color for disabled elements
+$disabled-bg-color: #f2f2f2 !default;//background for some disabled elements
+$highlight-disabled-background: #abadae !default;//highlight background for some disabled elements
+$select-soft-bg-color: rgba(70, 195, 255, 0.15) !default;//used when selecting some elements, such as grid cells
+
+$variant-check-color: #46c392 !default;
+$variant-uncheck-color: #ff6579 !default;
+
+$attention-color: #C0392B !default;//use this color to draw attention to some elements, usually activated by the ace-attention modifier class
+$success-color: #cbeceb !default;//toast success background
+$success-color-v2: #82d57a !default;//prompt ok
+$success-color-v3: #8ee684 !default;//used on some hover elements
+$error-color: #ffeeee !default;//toast error background
+$error-color-v2: #e07474 !default;//toast error icon background, + other backgrounds or text warnings
+$error-color-v3: #f18686 !default;//used on some hover elements
+$error-color-text: #d64343 !default;//used to display various error texts
+$warning-color: #fff3c6 !default;//toast warning background
+$warning-color-v2: #ffc800 !default;//toast icon warning background
+$help-color: #fcf3cc !default;//toast help background
+$help-color-v2: #f1c40f !default;//toast help icon background
+
+/*
+ * begin specific TOAST colors
+ */
+$toast-color: $primary-font-color !default;
+$toast-icon-color: $contrast-font-color !default;
+$toast-error-bg-color: $error-color !default;
+$toast-error-border-color: $error-color-v2 !default;
+$toast-error-bg-icon-color: $error-color-v2 !default;
+$toast-warning-bg-color: $warning-color !default;
+$toast-warning-border-color: $warning-color-v2 !default;
+$toast-warning-bg-icon-color: $warning-color-v2 !default;
+$toast-success-bg-color: $success-color !default;
+$toast-success-border-color: $highlight-bg-color !default;
+$toast-success-bg-icon-color: $highlight-bg-color !default;
+$toast-help-bg-color: $help-color !default;
+$toast-help-border-color: $help-color-v2 !default;
+$toast-help-bg-icon-color: $help-color-v2 !default;
+
+/*
+ * begin specific PROMPT colors
+ */
+$prompt-button-ok-color: $contrast-font-color !default;
+$prompt-button-ok-bg-color: $success-color-v2 !default;
+$prompt-button-ok-bg-hover-color: $success-color-v3 !default;
+$prompt-button-ok-border-color: transparent-color !default;
+$prompt-button-cancel-color: $contrast-font-color !default;
+$prompt-button-cancel-bg-color: $error-color-v2 !default;
+$prompt-button-cancel-bg-hover-color: $error-color-v3 !default;
+$prompt-button-cancel-border-color: transparent-color !default;
+
+/*
+ * begin common controls
+ */
+$label-color: $disabled-color !default;
+$label-envelope-color: $label-color !default;
+$label-envelope-highlight-color: $primary-color !default;
+
+$input-color: $primary-font-color !default;
+$input-disabled-color: $disabled-color !default;
+
+$badge-color: $primary-font-color !default;
+$badge-bg-color: $highlight-disabled-background !default;
+
+$display-state-unchecked-color: $variant-uncheck-color !default;
+$display-state-checked-color: $variant-check-color !default;
+
+$hr-bg-color: $disabled-bg-color !default;
+$focus-bg-color: $highlight-bg-subtle-color !default;
+$focus-border-color: $highlight-border-color !default;
+
+$field-expanded-border-color: $highlight-border-color !default;
+$field-expanded-bg-color: $primary-bg-color !default;
+
+/*
+ * begin loader & masks &checks
+ */
+$loader-primary:$primary-color !default;
+$loader-secondary:$blue-dark !default;
+$primary-mask-color: rgba(0, 0, 0, 0.7) !default; // used for the backgrounds of disabling/covering elements, such as screen masks
+$mask-spinner-bg-color: $white !default;
+$mask-spinner-color: $primary-color !default;
+$check-bg-color:$primary-color !default;
+$check-color:$contrast-font-color !default;
+
+/*
+ * begin select
+ */
+$combo-main-color: $primary-font-color !default;
+$combo-highlight-color: $primary-color !default;
+$combo-main-bg-color: $secondary-bg-color !default;
+$combo-option-bg-color: $primary-bg-color !default;
+$combo-main-border-color: $primary-border-color !default;
+$combo-disabled-bg-color: $disabled-bg-color !default;
+$combo-disabled-border-color: $primary-shadow-color !default;
+$combo-focus-bg-color: $focus-bg-color !default;
+$combo-focus-border-color: $focus-border-color !default;
+
+/*
+ * begin specific BUTTON colors
+ */
+$button-main-color: $primary-font-color !default;
+$button-main-bg-color: $primary-bg-color !default;
+$button-highlight-color: $primary-color !default;
+$button-highlight-bg-color: $secondary-bg-color !default;
+$button-contrast-color: $contrast-font-color !default;
+$button-disabled-color: $disabled-color !default;
+$button-disabled-bg-color: $disabled-bg-color !default;
+
+/*
+ * begin UPLOAD BUTTON colors
+ */
+$upload-main-color: $button-main-color !default;
+$upload-main-highlight-color: $button-highlight-color !default;
+$upload-main-border-color: $primary-border-color !default;
+$upload-main-contrast-color: $button-contrast-color !default;
+$upload-main-icon-bg-color: $highlight-disabled-background !default;
+$upload-main-disabled-bg-color: $button-disabled-bg-color !default;
+$upload-button-bg-color: $primary-color !default;
+$upload-button-color: $white !default;
+$upload-button-bg-color-hover: $highlight-bg-color !default;
+$upload-button-color-hover: $white !default;
+$remove-button-bg-color: $error-color-v2 !default;
+$remove-button-color: $white !default;
+$remove-button-bg-color-hover: $error-color-v3 !default;
+$remove-button-color-hover: $white !default;
+
+/*
+ * begin CHECKBOX coloring
+ */
+$checkbox-label-color: $primary-font-color !default;
+$checkbox-checked-color: $primary-color !default;
+$checkbox-unchecked-color: $disabled-color !default;
+$checkbox-background-color: $select-soft-bg-color !default;
+$checkbox-state-icon-unchecked-color: $variant-uncheck-color !default;
+$checkbox-state-icon-checked-color: $variant-check-color !default;
+$checkbox-disabled-bg-color: $disabled-bg-color !default;
+$switch-highlight-color: $white !default;
+
+/*
+ * begin radiogroup
+ */
+$radiogroup-label-color: $checkbox-label-color !default;
+$radiogroup-checked-color: $checkbox-checked-color !default;
+$radiogroup-error-color: $error-color-text !default;
+$radiogroup-disabled-color: $disabled-color !default;
+
+/*
+ * begin chips
+ */
+$chips-background-color: $primary-color !default;
+$chips-text-color: $contrast-font-color !default;
+$chips-clear-color: $error-color-text !default;
+$chips-clear-bg-color: $contrast-font-color !default;
+
+/*
+ * begins tags
+ */
+$tags-color: $primary-color !default;
+
+/*
+ * begin breadcrumbs
+ */
+$breadcrumb-active-element-text-color: $white !default;
+$breadcrumb-active-element-bg-color: $primary-color !default;
+$breadcrumb-disabled-element-text-color: $disabled-color !default;
+$breadcrumb-disabled-element-bg-color: $disabled-bg-color !default;
+$breadcrumb-enabled-element-text-color: $primary-color !default;
+$breadcrumb-enabled-element-bg-color: $white !default;
+
+/*
+ * begin specific GRID colors
+ */
+$grid-main-text-color: $primary-font-color !default;
+$grid-main-bg-color: $primary-bg-color !default;
+$grid-secondary-bg-color: $secondary-bg-color !default;
+$grid-main-shadow-color: $primary-shadow-color !default;
+$grid-main-error-color: $error-color-text !default;
+$grid-action-button-color: $grid-main-text-color !default;
+$grid-action-button-bg-color: $grid-main-bg-color !default;
+$grid-action-button-disabled-color: $disabled-color !default;
+$grid-action-button-disabled-bg-color: $disabled-bg-color !default;
+$grid-column-lines-color: $primary-border-color !default;
+$grid-row-lines-color: $primary-border-color !default;
+$grid-cell-bg-color: $white-barely-transparent !default;
+$grid-cell-selected-bg-color: $select-soft-bg-color !default;
+$grid-cell-selected-color: $primary-color !default;
+$grid-cell-input-bg-color: $white !default;
+$grid-header-cell-bg-color: $secondary-bg-color !default;
+$grid-header-cell-color: $primary-font-color-highlight !default;
+$grid-header-border-color: $highlight-border-color !default;
+$grid-footer-totals-cell-bg-color: $secondary-bg-color !default;
+$grid-footer-totals-cell-color: $primary-font-color-highlight !default;
+$grid-footer-totals-cell-border-color: $primary-border-color !default;
+$grid-footer-border-color: $highlight-border-color !default;
+$grid-footer-bg-color: $secondary-bg-color !default;
+$grid-body-bg-color: $secondary-bg-color !default;
+$grid-checkbox-checked-color: $primary-color !default;
+$grid-inline-ctrls-color: $white !default;
+$grid-inline-ctrls-focus-border-color: $highlight-border-color !default;
+$grid-pagination-color: $grid-main-text-color !default;
+$grid-pagination-focus-color: $primary-color !default;
+$grid-pagination-bg-color: $secondary-bg-color !default;
+
+/*
+ * begin form specific color
+ */
+$form-bg-color: $white !default; //main background color of forms
+$form-inside-highlight-color: $white !default; //some forms, like the standard ones have an inside which can be highlighted
+$form-focus-bg-color: $focus-bg-color !default;//element background highlight on hover
+$form-popup-mask-color: $primary-mask-color !default;
+$form-shadow-color: $primary-shadow-color !default;
+$form-highlight-shadow-color: $highlight-shadow-color !default;
+$form-popup-shadow-color: $primary-mask-color !default;
+
+/*
+ * begin autocomplete
+ */
+$autocomplete-main-color: $primary-font-color !default;
+$autocomplete-main-bg-color: $primary-bg-color !default;
+$autocomplete-main-shadow-color: $primary-shadow-color !default;
+$autocomplete-contrast-color: $contrast-font-color !default;
+$autocomplete-highlight-bg-color: $highlight-disabled-background !default;
+$autocomplete-highlight-bg-color-hover: $disabled-color !default;
+
+/*
+ * begin accordion
+ */
+$accordion-bg-color: $secondary-bg-color !default;
+$accordion-active-bg-color: $secondary-bg-color !default;
+$accordion-hover-bg-color: $secondary-bg-color !default;
+$accordion-primary-node-color: $primary-font-color-highlight !default;
+$accordion-leaf-color: $primary-font-color !default;
+$accordion-checkbox-checked-color: $checkbox-checked-color !default;
+$accordion-checkbox-unchecked-color: $checkbox-unchecked-color !default;
+$accordion-active: $primary-color !default;
+$accordion-active-border: $accordion-active !default;
+
+
+/*
+ * begin datepicker
+ */
+$datepicker-primary-color: $primary-font-color !default;
+$datepicker-background: $primary-bg-color !default;
+$datepicker-highlight-color: $primary-color !default;
+$datepicker-contrast-color: $contrast-font-color !default;
+$datepicker-disabled-color: $disabled-color !default;
+$datepicker-disabled-bg-color: $disabled-bg-color !default;
+
+/*
+ * begin menubutton
+ */
+$menubutton-main-color: $primary-font-color !default;
+$menubutton-main-bg-color: $primary-bg-color !default;
+$menubutton-main-shadow-color: $primary-shadow-color !default;
+$menubutton-secondary-bg-color: $secondary-bg-color !default;
+$menubutton-contrast-color: $contrast-font-color !default;
+$menubutton-contrast-bg-color: $primary-color !default;
+$menubutton-highlight-color: $primary-color !default;
+$menubutton-disabled-color: $disabled-color !default;
+$menubutton-checked-color: $checkbox-checked-color !default;
+$menubutton-separator-color: $primary-border-color !default;
+
+/*
+ * begin side menu
+ */
+$side-menu-trigger-bg-color: $success-color-v2 !default;
+$side-menu-trigger-color: $white !default;
+$side-menu-bg-color: $primary-bg-color !default;
+$side-menu-a-color: $disabled-color !default;
+$side-menu-a-hover-color: $white !default;
+$side-menu-standard-icon-bg-color: $disabled-bg-color !default;
+$side-menu-active-color: $accordion-active !default;
+
+/*
+ * presentation panel
+ */
+$presentation-main-bg-color: $white !default;
+$presentation-main-color: $primary-font-color !default;
+
+$presentation-info-bg-color: $highlight-disabled-background !default;
+$presentation-info-color: $contrast-font-color !default;
+
+$presentation-grid-info-bg-color: $primary-bg-color !default;
+$presentation-grid-info-color: $primary-font-color !default;
+
+/*
+ * mobile elements
+ */
+$fullscreen-main-bg-color: $white !default;
+$fullscreen-close-main-bg-color: $primary-color !default;
+$fullscreen-close-main-color: $contrast-font-color !default;
+
+/*
+ * shadows
+ */
+$titlebar-border-color: $disabled-bg-color !default;
+$titlebar-shadow-color: $primary-shadow-color !default;
+

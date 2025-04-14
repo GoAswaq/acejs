@@ -1,0 +1,34 @@
+/* begin collaps */
+@use '../variables/all' as *;
+
+.ace-collapsible {
+  position: relative;
+}
+
+.ace-collapsible .ace-collapsible-content {
+  max-height: $meas-0;
+  overflow: hidden;
+  transition: all cubic-bezier(0, 0.53, 0.22, 0.9) 0.2s;
+  position: relative;
+  opacity: 0;
+}
+
+.ace-collapsible .ace-collapsible-trigger:before {
+  content: "\f107";
+  transition: all ease 0.2s;
+  display: inline-block;
+  padding: $meas-pad-0 $meas-pad-5;
+}
+.ace-collapsible.ace-show .ace-collapsible-trigger:before {
+  transform: rotate(180deg);
+  top: - $position-3;
+  position: relative;
+}
+
+.ace-collapsible.ace-show .ace-collapsible-content.ace-show {
+  max-height: $meas-1000;
+  transition: all ease 0.2s;
+  overflow: visible;
+  opacity: 1;
+}
+/* end collaps */

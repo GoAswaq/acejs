@@ -1,0 +1,76 @@
+/* begin app top bar */
+@use '../variables/all' as *;
+
+.ace-main-nav {
+  background: $primary-bg-color;
+  height: $ace-main-title-bar-height;
+  padding: $ace-main-title-bar-padding;
+  width: $meas-full;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-2 $titlebar-shadow-color;
+  position: fixed;
+  z-index: 4;
+}
+
+.ace-main-nav .ace-dropdown-list {
+  top:  $position-50;
+}
+@include positionLTR('.ace-main-nav .ace-dropdown-list',left,inherit);
+@include positionLTR('.ace-main-nav .ace-dropdown-list',right,$position-0);
+@include sidePaddingLTR('.ace-main-nav .ace-field-container',right,$meas-pad-0);
+
+.ace-main-nav .ace-logo {
+  width: $meas-70;
+  height: $ace-main-title-bar-height;
+  background-size: cover;
+  margin: $meas-marg-13;
+}
+
+.ace-main-nav .ace-right ul li ul li a {
+  width: $meas-full;
+}
+@include sideMarginLTR('.ace-main-nav .ace-right ul li ul li a i',right,$meas-marg-5);
+
+.ace-main-nav .ace-right ul li ul li a:hover {
+  color: $primary-color;
+}
+.ace-main-nav .ace-right ul li .ace-dropdown-list {
+  top:  $position-24;
+}
+@include positionLTR('.ace-main-nav .ace-right ul li .ace-dropdown-list',left,-$position-150);
+
+.ace-user-intro {
+  height: $meas-full;
+  padding: $meas-pad-0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+.ace-user-intro .ace-display-field span{
+  line-height: $meas-line-height-1d0;
+  font-size: $ace-tiny-title-size;
+  font-weight: $font-weight-500;
+}
+@include sidePaddingLTR('.ace-user-intro .ace-display-field span',left,$ace-common-left-right-padding, true);
+
+.ace-search-bar {
+  margin: $meas-marg-10;
+  height: $ace-standard-element-size;
+  position: relative;
+}
+@include floatToLTR('.ace-search-bar',left);
+@include sidePaddingLTR('.ace-search-bar input',right,$meas-pad-60);
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-large) {
+  .ace-main-nav .ace-search-bar {
+    width: 58% !important;
+  }
+  .ace-main-nav .ace-user-intro {
+    display: none;
+  }
+}
+
+@media screen and (min-width: $screen-small) and (max-width: $screen-600) {
+  .ace-logo {
+    display: none;
+  }
+}

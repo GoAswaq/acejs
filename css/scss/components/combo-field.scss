@@ -1,0 +1,144 @@
+/* begin combo field */
+@use '../variables/all' as *;
+
+.ace-combo-field {
+  position: relative;
+  line-height: $meas-line-height-null;
+}
+.ace-combo-field:after {
+  content: "\f107";
+  font-family: $primary-font-family;
+  top:  $position-8;
+  position: absolute;
+}
+@include positionLTR('.ace-combo-field:after',right,$position-10);
+
+.ace-label-align-top .ace-combo-field {
+  padding-bottom: $ace-label-align-top-inner-bottom-padding;
+}
+.ace-grid-cell .ace-label-align-top .ace-combo-field {
+  padding-bottom: $meas-0; /*SM-not sure*/
+}
+
+/*.ace-combo-field .ace-efld ~ label {
+  display: inline-block;
+  top: - $position-18;
+  position: absolute;
+}*//*SM-not sure*/
+@include positionLTR('.ace-combo-field .ace-efld ~ label',left,$position-0);
+
+.ace-combo-field .ace-efld:focus ~ label {
+  display: inline-block;
+  top: - $position-18;
+  position: absolute;
+  color: $combo-highlight-color !important;
+}
+.ace-label-align-left .ace-combo-field > label,
+.ace-label-align-left .ace-combo-field .ace-efld:focus ~ label {
+  display: inline;
+  top: initial;
+  position: initial;
+}
+.ace-label-align-left .ace-combo-field .ace-label {
+  padding-top: $ace-common-top-bottom-padding;
+}
+.ace-combo-field select option {
+  background-color: $combo-option-bg-color;
+  color: $combo-main-color;
+}
+.ace-combo-field select option:hover{
+  color: $combo-highlight-color;
+}
+.ace-combo-field select option:checked{
+  color: $combo-highlight-color;
+  font-weight: bold;
+}
+
+[class*="ace-"] select {
+  transition: all ease 0.1s;
+  -webkit-appearance: none;
+  -webkit-border-radius: $meas-radius-0;
+  border-radius: $meas-radius-0;
+  background-color: $combo-main-bg-color;
+  cursor: pointer;
+  color: $combo-main-color;
+  position: relative;
+  height: $ace-standard-element-size;
+  padding: $ace-common-top-bottom-padding $ace-common-left-right-padding;
+  -moz-appearance: none;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$combo-main-border-color);
+}
+html[dir="ltr"] [class*="ace-"] select {
+  text-align: left;
+}
+html[dir="rtl"] [class*="ace-"] select {
+  text-align: right;
+}
+[class*="ace-"] select:focus {
+  background-color: $combo-focus-bg-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$combo-focus-border-color);
+}
+[class*="ace-"] select:hover {
+  background-color: $combo-focus-bg-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$combo-highlight-color);
+}
+[class*="ace-"] select:disabled {
+  color: $combo-main-color;
+  background-color: $combo-disabled-bg-color;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-shadow-color);
+}
+
+@include sidePaddingLTR('.ace-popup-combo-target.ace-field-container',right,$meas-pad-0);
+@include sidePaddingLTR('.ace-popup-autocomplete-target.ace-field-container',right,$meas-pad-0);
+
+.ace-form-popup .ace-standard-form-popup-combo .ace-popup-combo-target .ace-combo-field select {
+  height: auto;
+  margin-top: $meas-marg-20;
+}
+
+.ace-form-popup .ace-standard-form-popup-combo .ace-popup-combo-target .ace-combo-field label,
+.ace-form-popup .ace-standard-form-popup-autocomplete .ace-popup-autocomplete-target .ace-autocomplete-field label, {
+  font-size: $ace-medium-title-size !important;
+  height: auto !important;
+  font-weight: $font-weight-600;
+}
+
+.ace-form-popup .ace-standard-form-popup-combo .ace-popup-combo-target .ace-combo-field select option {
+  padding: $meas-pad-10;
+  margin: $meas-marg-5;
+  border-radius: $ace-common-radius;
+  background-color: $combo-main-border-color;
+}
+
+.ace-form-popup .ace-standard-form-popup-combo .ace-popup-combo-target .ace-combo-field {
+  padding: $meas-pad-0;
+}
+.ace-form-popup .ace-standard-form-popup-autocomplete .ace-popup-autocomplete-target .ace-autocomplete-field {
+  padding-bottom: $meas-pad-0;
+}
+.ace-form-popup .ace-standard-form-popup-combo .ace-popup-combo-target .ace-combo-field:after{
+  display: none;
+}
+.ace-form-popup .ace-standard-form-popup-autocomplete .ace-popup-autocomplete-target .ace-autocomplete-field > input {
+  padding-top:$meas-pad-20;
+}
+
+.ace-form-popup.ace-standard-form-popup .ace-form-container {
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: $ace-common-radius;
+  margin:initial;
+}
+
+.ace-form-popup.ace-standard-form-popup .ace-form-container .ace-form-inner {
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: $ace-common-radius;
+}
+
+.ace-standard-form.ace-standard-form-popup.ace-form-show{
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

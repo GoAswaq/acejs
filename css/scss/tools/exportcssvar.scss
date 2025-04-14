@@ -1,0 +1,62 @@
+/* begin export css vars
+* Instruction:
+   as a name for css var, add -- in front of the scss var
+   Also: export as needed
+*/
+@use '../variables/all' as *;
+:root {
+
+  /*
+   * custom colors
+   */
+  --primary-color: #{$primary-color};
+  --primary-font-color-highlight: #{$primary-font-color-highlight};
+  --primary-shadow-color: #{$primary-shadow-color};
+  --primary-bg-color: #{$primary-bg-color};
+  --form-inside-highlight-color: #{$form-inside-highlight-color};
+  --contrast-font-color: #{$contrast-font-color};
+
+  /*
+   * hardcoded colors
+   */
+  --orange: #{$orange};
+  --gray: #{$gray};
+  --gray-dark: #{$gray-dark};
+  --blue-light: #{$blue-light};
+  --blue-dark: #{$blue-dark};
+  --blue-very-dark: #{$blue-very-dark};
+  --pink: #{$pink};
+  --green-secondary: #{$green-secondary};
+  --green: #{$green};
+  --white: #{$white};
+  --black: #{$black};
+  --red: #{$red};
+
+  /*
+   * measurements
+   */
+  --ace-container-default-side-padding: #{$ace-container-default-side-padding};
+  --ace-common-top-bottom-padding: #{$ace-common-top-bottom-padding};
+  --ace-common-left-right-padding: #{$ace-common-left-right-padding};
+
+  --ace-standard-bar-height: #{$ace-standard-bar-height};
+
+  --ace-main-title-bar-height: #{$ace-main-title-bar-height};
+  --ace-tittle-bar-height: #{$ace-tittle-bar-height};
+  --ace-footer-height: #{$ace-footer-height};
+  --ace-horizontal-tabs-height: #{$ace-horizontal-tabs-height};
+  --ace-recaptcha-height: #{$ace-recaptcha-height};
+  --ace-composite-height-main-title-bar-and-normal-title-bar: #{$ace-composite-height-main-title-bar-and-normal-title-bar};
+  --ace-composite-height-normal-title-bar-and-footer: #{$ace-composite-height-normal-title-bar-and-footer};
+  --ace-composite-height-normal-title-bar-and-horizontal-tabs: #{$ace-composite-height-normal-title-bar-and-horizontal-tabs};
+
+
+  /*
+   * fonts
+   */
+  --ace-smaller-font-size: #{$ace-smaller-font-size};
+  --ace-tiny-title-size: #{$ace-tiny-title-size};
+  --ace-small-title-size: #{$ace-small-title-size};
+  --ace-huge-title-size: #{$ace-huge-title-size};
+}
+/* end export css vars */

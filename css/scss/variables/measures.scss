@@ -1,0 +1,202 @@
+$meas-full:      100% !default;
+$meas-full-vh:      100vh !default;
+$meas-full-vw:      100vw !default;
+
+$meas-0: 0px !default;
+$meas-1: 1px !default;
+$meas-2: 2px !default;
+$meas-4: 4px !default;
+$meas-5: 5px !default;
+$meas-8: 8px !default;
+
+/* Used for:
+TOP: .ace-filter-container:hover .ace-filter-remove,.ace-deblur-zone > div > .ace-autocomplete-field > .ace-empty ~ .ace-label, .ace-deblur-zone > div > .ace-autocomplete-field > button,
+		.ace-popover:before,
+WIDTH: .ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-efld,
+HEIGHT: .ace-dropdown-list li, .ace-thin-progress-bar .ace-progress-bar, .ace-thin-progress-bar .ace-progress-inner-bar,
+LEFT/RIGHT: .ace-combo-field:after , .ace-radio-field .ace-error-msg, .ace-lateral-form .ace-soft-close,
+ */
+$meas-10: 10px !default;
+
+
+$meas-12: 12px !default;
+$meas-15: 15px !default;
+$meas-16: 16px !default;
+$meas-17: 17px !default;
+$meas-18: 18px !default;
+
+/* Used for:
+TOP: .ace-efld ~ label, .ace-efld:focus ~ label, .ace-empty:focus ~ label, .ace-autocomplete-details-field .ace-efld.ace-hide ~ .ace-label, .ace-label-align-top .ace-file-upload .ace-label,
+		.ace-radio-field .ace-error-msg, .ace-text-editor .ace-efld:focus ~ label, .ace-text-editor .ace-efld ~ label ,
+BOTTOM: .ace-text-field:after
+WIDTH: .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, span.ace-card-highlight:after,
+HEIGHT: .ace-efld ~ label,  .ace-thin-row, .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, .ace-radio + span, span.ace-card-highlight:after,
+PADDING: .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field, .ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"],
+		.ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger, .ace-accordion-list,  a.ace-breadcrumbs-link, .ace-mask-el > div,
+LINE-HEIGHT: span.ace-selectoption,
+BORDER: .ace-breadcrumbs-separator:after, .ace-arrow-down,
+ */
+$meas-20: 20px !default;
+
+$meas-22: 22px !default;
+$meas-25: 25px !default;
+
+/* Used for:
+TOP: [class*="ace-huge-text-"] .ace-empty:focus ~ .ace-label, [class*="ace-huge-text-"] .ace-efld ~ .ace-label,
+HEIGHT: .ace-nested-grid-header .ace-grid-groupped-header-col, .ui-datepicker td span, .ui-datepicker td a, .ace-accordion, .ace-deblur-zone i,
+LINE-HEIGHT: div.ace-selectbox, .ui-datepicker td span, .ui-datepicker td a,
+WIDTH: .ui-datepicker td span, .ui-datepicker td a
+LEFT/RIGHT: .ace-adv-search-panel .ace-advanced-expand, .ace-floating-button, .ace-arrow-down,
+ */
+$meas-30: 30px !default;
+
+$meas-34: 34px !default;
+$meas-35: 35px !default;
+
+
+/* Used for:
+TOP: .ace-text-center .ace-deblur-zone.ace-show .ace-autocomplete-field .ace-grid-auto-complete,
+MARIGIN: .ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before
+HEIGHT: .ace-flex-grid .ace-grid-footer, .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+WIDTH: .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
+LEFT/RIGHT: .ace-timeline .ace-grid-body:before
+ */
+$meas-40: 40px !default;
+$meas-45: 45px !default;
+$meas-48: 48px !default;
+
+/* Used for:
+HEIGHT: .ace-main-nav, .ace-main-nav .ace-logo, .ace-grid-height-minus-50 .ace-grid, .recaptcha_div table td img, [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-menu-trigger, .ace-main-nav .ace-dropdown-trigger-click,
+		.ace-height-minus-50, .ace-i-height-minus-50, .ace-height-minus-50-vh, .ace-i-height-minus-50-vh ,
+WIDTH: .ace-autocomplete-field .ace-grid-pagination input,
+TOP: .ace-main-nav .ace-dropdown-list, .ace-side-container,
+MARGIN: .ace-content, .ace-margin-top-50
+ */
+$meas-50: 50px !default;
+
+$meas-52: 52px !default;
+$meas-56: 56px !default;
+
+/* Used for:
+HEIGHT: .ace-grid-height-minus-60 .ace-grid, ace-height-minus-60, ace-i-height-minus-60, .ace-height-minus-60-vh, .ace-i-height-minus-60-vh
+PADDING LEFT/RIGHT: .ace-search-bar input
+MARGIN: .ace-margin-top-60,
+ */
+$meas-60: 60px !default;
+
+/* Used for:
+WIDTH: .ace-main-nav .ace-logo
+HEIGHT: .ace-nested-grid-header > .ace-grid-cell, .ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after
+PADDING LEFT/RIGHT: [class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder
+ */
+$meas-70: 70px !default;
+
+/* Used for:
+WIDTH: .ace-icon-card i.icofont
+HEIGHT: .ace-icon-card i.icofont, .ace-height-minus-80, .ace-i-height-minus-80, .ace-height-minus-80-vh, .ace-i-height-minus-80-vh , .ace-grid-body, .ace-grid-height-minus-80 .ace-grid,
+BOX-SHADDOW: .ace-advanced-panel.from-top.ace-show,
+MARGIN: .ace-margin-top-80
+ */
+$meas-80: 80px !default;
+
+/* Used for:
+WIDTH: .ace-side-container .ace-expand, .ace-side-menu, .ace-hidden-menu-screen
+TRANSFORM: .ace-hidden-menu-screen,
+ */
+$meas-90: 90px !default;
+
+$meas-100: 100px !default;
+$meas-110: 110px !default;
+$meas-120: 120px !default;
+$meas-130: 130px !default;
+
+/* Used for:
+HEIGHT: .ace-height-minus-140, .recaptcha_div td.recaptcha_image_cell
+ */
+$meas-140: 150px !default;
+
+/* Used for:
+LEFT/RIGHT: .ace-main-nav .ace-right ul li .ace-dropdown-list
+MARIGN: .ace-margin-top-150
+HEIGHT: .ace-grid-height-minus-150 .ace-grid, .ace-i-height-minus-150-vh, .ace-height-minus-150-vh, .ace-i-height-minus-150, .ace-height-minus-150
+WIDTH: .ace-file-upload span, .ace-label-align-top .ace-display-field .ace-label
+ */
+$meas-150: 150px !default;
+
+/* Used for:
+WIDTH: .ace-advanced-panel
+*/
+$meas-180: 180px !default;
+
+/* Used for:
+HEIGHT: .ace-blur-zone .ace-scrollview
+ */
+$meas-190: 190px !default;
+
+/* Used for:
+HEIGHT: .ace-grid-height-minus-200 .ace-grid, .ace-height-minus-200, .ace-i-height-minus-200, .ace-height-minus-200-vh, .ace-i-height-minus-200-vh, .ace-height-minus-200
+ */
+$meas-200: 200px !default;
+
+/* Used for:
+.ace-timeline .ace-grid-body, .recaptcha_div span#recaptcha_privacy
+ */
+$meas-220: 220px !default;
+
+$meas-230: 230px !default;
+
+/* Used for:
+ace-adv-search-panel, ace-grid-height-minus-250, ace-info-side, ace-quick-access-bar, ace-height-minus-250, ace-margin-top-250
+ */
+$meas-250: 250px !default;
+/*
+Used for timeline
+ */
+$meas-270: 270px !default;
+$meas-290: 290px !default;
+
+$meas-290: 290px !default;
+
+/* Used for:
+HEIGHT: .ace-height-minus-300, .ace-i-height-minus-300, .ace-height-minus-300-vh, .ace-i-height-minus-300-vh, .ace-height-minus-300
+LEFT/RIGHT: .ace-advanced-panel.ace-quick-access-bar
+WIDTH:.ace-advanced-panel.ace-quick-access-bar.ace-show
+HEIGHT: .ace-flex-grid-height-300 .ace-grid-auto-complete, .ace-flex-grid-height-300 .ace-grid
+ */
+$meas-300: 300px !default;
+
+
+/* Used for:
+HEIGHT: .ace-height-minus-350, .ace-i-height-minus-350, .ace-height-minus-350-vh, .ace-i-height-minus-350-vh, .ace-height-minus-350
+ */
+$meas-350: 350px !default;
+
+/* Used for:
+HEIGHT: .ace-height-minus-400, .ace-i-height-minus-400, .ace-height-minus-400-vh, .ace-i-height-minus-400-vh, .ace-height-minus-400
+ */
+$meas-400: 400px !default;
+/* Used for:
+HEIGHT: .ace-height-minus-450, .ace-i-height-minus-450, .ace-height-minus-450-vh, .ace-i-height-minus-450-vh, .ace-height-minus-450
+ */
+$meas-450: 450px !default;
+
+/* Used for:
+.ace-entry-card
+ */
+$meas-750: 750px !default;
+$meas-800: 800px !default;
+$meas-1000: 1000px !default;
+$meas-1500: 1500px !default;
+$meas-2500: 2500px !default;
+
+
+$side-menu-icon-min-width: $meas-20 !default;
+$side-menu-icon-max-width: auto !default;
+$side-menu-icon-min-height: auto !default;
+
+$autocomplete-clear-button-width: $meas-20 !default;
+$autocomplete-clear-button-height: $meas-20 !default;
+$autocomplete-clear-button-min-height: $meas-20 !default;
+
+$autocomplete-extra-link-min-width: $meas-20 !default;
+$autocomplete-extra-link-min-height: $meas-20 !default;

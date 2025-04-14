@@ -1,0 +1,97 @@
+/* begin recaptcha re-styling */
+@use '../variables/all' as *;
+
+.recaptcha_div table {
+  display: block;
+  position: relative;
+  height: 142px;
+}
+.recaptcha_div table tbody {
+  display: block;
+}
+.recaptcha_div table tr {
+  display: block;
+}
+.recaptcha_div table td {
+  display: inline-block;
+}
+.recaptcha_div table td img {
+  max-width: $meas-200;
+  max-height: $ace-recaptcha-height;
+}
+
+.recaptcha_div div#recaptcha_image {
+  max-width: $meas-full;
+}
+
+.recaptcha_div center {
+  width: $meas-full;
+}
+
+.recaptcha_div .recaptcha_input_area {
+  width: 213px !important;
+}
+
+.recaptcha_div input#recaptcha_response_field {
+  width: $meas-full !important;
+  border: none !important;
+  @include addBorder(bottom);
+}
+.recaptcha_div input#recaptcha_response_field:focus {
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-color);
+}
+
+.recaptcha_div img#recaptcha_logo {
+  width: 57px;
+  height: 28px;
+  margin-top: $meas-marg-5;
+}
+@include sideMarginLTR('.recaptcha_div img#recaptcha_logo',left,-$meas-marg-25);
+
+.recaptcha_div td.recaptcha_image_cell {
+  height: $meas-140 !important;
+  width: $meas-full;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}
+
+.recaptcha_div a#recaptcha_reload_btn {
+  position: absolute;
+  top:  $position-0;
+}
+@include positionLTR('.recaptcha_div a#recaptcha_reload_btn',right,-$position-25);
+
+.recaptcha_div .recaptcha-field {
+  position: relative;
+}
+
+.recaptcha_div a#recaptcha_switch_audio_btn {
+  position: absolute;
+  top:  $position-17;
+}
+@include positionLTR('.recaptcha_div a#recaptcha_switch_audio_btn',right,-$position-25);
+
+.recaptcha_div img#recaptcha_whatsthis {
+  position: absolute;
+  top:  $position-31;
+}
+@include positionLTR('.recaptcha_div img#recaptcha_whatsthis',right,-$position-25);
+
+.recaptcha_div span#recaptcha_privacy {
+  margin: auto;
+  width: $meas-220;
+  text-align: center;
+}
+a#recaptcha_switch_img_btn {
+  position: absolute;
+  top:  $position-17;
+}
+@include positionLTR('a#recaptcha_switch_img_btn',right,-$position-25);
+
+.recaptcha_div a {
+  color: $primary-color !important;
+}
+.recaptcha_div a:hover {
+  color: $highlight-bg-color !important;
+}
+/* end recaptcha re-styling */
+

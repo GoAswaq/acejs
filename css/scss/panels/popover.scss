@@ -1,0 +1,54 @@
+/* begin popover */
+@use '../variables/all' as *;
+
+.ace-popover {
+  background: $primary-bg-color;
+  z-index: 2;
+  padding: $meas-pad-15;
+  border-radius: $ace-common-radius;
+  top:  $position-41;
+  position: absolute;
+  transform: translateY(-15%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  box-shadow: $box-shad-0 $box-shad-0 $box-shad-10 $primary-shadow-color;
+  transition: height 0s, opacity ease 0.2s, transform ease 0.2s !important;
+}
+
+.ace-popover.ace-show {
+  height: auto;
+  pointer-events: all;
+  transform: translateY(0);
+  visibility: visible;
+  opacity: 1;
+}
+@include sidePaddingLTR('.ace-popover .ace-field-container',right,$meas-pad-0);
+
+.ace-popover:before {
+  position: absolute;
+  left:  $position-0;
+  right:  $position-0;
+  margin: auto;
+  top: - $position-10;
+  width: $meas-0;
+  height: $meas-0;
+  content: " ";
+  @include addBorder(bottom,$meas-bord-10,solid,$primary-border-color);
+  @include addBorder(left,$meas-bord-10);
+  @include addBorder(right,$meas-bord-10);
+}
+.ace-pop-over:before {
+  top: - $position-7;
+  content: "";
+  display: block;
+  left:  $position-50p;
+  position: absolute;
+  z-index: 50;
+  @include addBorder(bottom,$meas-bord-7,solid,$primary-border-color);
+  @include addBorder(right,$meas-bord-7);
+  @include addBorder(left,$meas-bord-7);
+}
+@include sideMarginLTR('.ace-pop-over:before',left,-$meas-marg-7);
+
+/* end popover */

@@ -1,0 +1,278 @@
+@use '../variables/all' as *;
+
+/* begin colors */
+.ace-primary-color,
+.ace-primary-color input,
+.ace-primary-color select,
+.ace-primary-color input.ace-efld,
+.ace-primary-color select.ace-efld,
+.ace-primary-color span.ace-efld{
+  color: $primary-color !important;
+}
+.ace-primary-color-bg {
+  background: $primary-color;
+  color: $contrast-font-color !important;
+}
+.ace-primary-color-important {
+  color: $blue-light !important;
+}
+.ace-primary-color-bg-important {
+  background: $blue-light !important;
+  color: $white !important;
+}
+.ace-primary-color-bg * {
+  color: $white;
+}
+
+.ace-white {
+  color: $white;
+}
+.ace-white-bg {
+  background: $white;
+}
+.ace-white-important {
+  color: $white !important;
+}
+.ace-white-bg-important {
+  background: $white !important;
+}
+
+.ace-blue {
+  color: $blue-light;
+}
+.ace-blue-bg {
+  background: $blue-light;
+  color: $white !important;
+}
+.ace-blue-important {
+  color: $blue-light !important;
+}
+.ace-blue-bg-important {
+  background: $blue-light !important;
+  color: $white !important;
+}
+.ace-blue-bg * {
+  color: $white;
+}
+
+.ace-blue-semi {
+  color: $blue-dark;
+}
+.ace-blue-semi-bg {
+  background: $blue-dark;
+  color: $white !important;
+}
+.ace-blue-semi-important {
+  color: $blue-dark !important;
+}
+.ace-blue-semi-bg-important {
+  background: $blue-dark !important;
+  color: $white !important;
+}
+.ace-blue-semi-bg * {
+  color: $white;
+}
+
+.ace-yellow {
+  color: $yellow;
+}
+.ace-yellow-bg {
+  background: $yellow;
+  color: $white !important;
+}
+.ace-yellow-important {
+  color: $yellow !important;
+}
+.ace-yellow-bg-important {
+  background: $yellow !important;
+  color: $white !important;
+}
+.ace-yellow-bg * {
+  color: $white;
+}
+
+.ace-orange {
+  color: $orange;
+}
+.ace-orange-bg {
+  background-color: $orange;
+  color: $white !important;
+}
+.ace-orange-important {
+  color: $orange !important;
+}
+.ace-orange-bg-important {
+  background: $orange !important;
+  color: $white !important;
+}
+.ace-orange-bg * {
+  color: $white;
+}
+
+.ace-green-bg,
+div.ace-green-bg,
+.ace-green-bg > div{
+  background: $green-secondary;
+  color: $white;
+}
+.ace-green-bg-important {
+  background: $green-secondary !important;
+}
+.ace-auto-gen .ace-color-green, .ace-auto-gen.ace-color-green .ace-efld { color:$green-secondary !important; }
+.ace-green-color {
+  color: $green-secondary;
+}
+.ace-green-color-important {
+  color: $green-secondary !important;
+}
+.ace-fresh-green-bg {
+  background: $green;
+}
+.ace-auto-gen .ace-color-fresh-green, .ace-auto-gen.ace-color-fresh-green .ace-efld { color:$green !important; }
+.ace-fresh-green-color {
+  color: $green;
+}
+.ace-fresh-green-bg-important {
+  background: $green !important;
+}
+.ace-fresh-green-color-important {
+  color: $green !important;
+}
+.ace-dark-green-bg {
+  background: $dark-green;
+}
+.ace-auto-gen .ace-color-dark-green, .ace-auto-gen.ace-color-dark-green .ace-efld { color:#1a7541 !important; }
+.ace-dark-green {
+  color: $dark-green;
+}
+.ace-dark-green-bg-important {
+  background: $dark-green !important;
+}
+.ace-dark-green-important {
+  color: $dark-green !important;
+}
+.ace-dark-red-bg {
+  background: $dark-red;
+  color: $white;
+}
+.ace-dark-red {
+  color: $dark-red;
+}
+.ace-dark-red-bg-important {
+  background: $dark-red !important;
+}
+.ace-dark-red-important {
+  color: $dark-red !important;
+}
+
+.ace-auto-gen .ace-color-red,
+.ace-auto-gen.ace-color-red .ace-efld {
+  color: $red !important;
+}
+
+.ace-red {
+  color: $red;
+}
+.ace-red-important {
+  color: $red !important;
+}
+.ace-red-bg {
+  background: $red;
+  color: $white;
+}
+.ace-red-bg-important {
+  background: $red !important;
+  color: $white !important;
+}
+.ace-red-bg-btn .ace-dropdown-trigger-click {
+  background-color: $red !important;
+  color: $white;
+}
+.ace-red-error {
+  color: $error-color-v2;
+}
+.ace-red-error-bg,
+div.ace-red-error-bg,
+.ace-red-error-bg > div {
+  background: $error-color-v2;
+  color: $white;
+}
+.ace-red-hard {
+  color: $red-hard;
+}
+.ace-red-hard-bg {
+  background: $red-hard;
+  color: $white;
+}
+.ace-red-hard-important {
+  color: $red-hard !important;
+}
+.ace-red-hard-bg-important {
+  background: $red-hard !important;
+}
+.ace-red-hard-bg-btn .ace-dropdown-trigger-click {
+  background-color: $red-hard !important;
+  color: $white;
+}
+
+.ace-black {
+  color: $black;
+}
+.ace-black-important {
+  color: $black !important;
+}
+.ace-black-bg {
+  background: $black;
+}
+.ace-black-bg-important {
+  background: $black !important;
+}
+.ace-black-bg-btn .ace-dropdown-trigger-click {
+  background-color: $black !important;
+  color: $white;
+}
+
+.ace-gray50 {
+  color: $gray;
+}
+.ace-gray50-important {
+  color: $gray !important;
+}
+.ace-gray50-bg {
+  background: $gray;
+}
+.ace-gray50-bg-important {
+  background: $gray !important;
+}
+.ace-gray50-bg-btn .ace-dropdown-trigger-click {
+  background-color: $gray !important;
+  color: $black;
+}
+
+.ace-gray-disabled {
+  color: $disabled-color;
+}
+.ace-gray-disabled-important {
+  color: $disabled-color !important;
+}
+.ace-gray-disabled-bg {
+  background: $gray-disabled;
+}
+
+.ace-purple {
+  color: purple;
+}
+
+.ace-purple-important {
+  color: purple !important;
+}
+
+.ace-purple-bg {
+  background: purple;
+}
+
+.ace-dark-color {
+  color: $blue-very-dark;
+}
+
+/* end colors */

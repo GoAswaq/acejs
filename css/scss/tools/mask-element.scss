@@ -1,0 +1,90 @@
+/* begin mask element: this is used to mask a specific elements during operations*/
+@use '../variables/all' as *;
+
+.ace-screen-mask .ace-loader.ace-loader-overlay:after {
+  background: $secondary-bg-color;
+}
+
+.ace-mask-el {
+  position: fixed;
+  height: $meas-full;
+  width: $meas-full;
+  background: $primary-mask-color;
+  top:  $position-0;
+  z-index: 999999;
+}
+@include positionLTR('ace-mask-el',left,$position-0);
+
+.ace-mask-el > div {
+  width: $meas-400;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: $meas-marg-per-17;
+  margin-bottom: auto;
+  padding: $meas-pad-5 $meas-pad-20 $meas-pad-13 $meas-pad-20;
+  color: $contrast-font-color;
+  font-size: $ace-bigger-font-size;
+}
+.ace-mask-el div p {
+  padding: $meas-pad-25 $meas-pad-0 $meas-pad-10;
+  overflow-wrap: break-word;
+}
+
+.ace-mask-el.ace-prompt-el {
+  background: $primary-mask-color;
+}
+
+.ace-mask-div {
+  text-align: center;
+  margin-top: -$meas-marg-5;
+  opacity: 0.3;
+  background-color: $disabled-bg-color;
+  position: absolute;
+  z-index: 999998;
+}
+.ace-mask-div:before {
+  font-size: 2em;
+  -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  line-height: $meas-line-height-1d0;
+  animation: fa-spin 1s infinite steps(8);
+  content: "\f110";
+  color: $mask-spinner-color;
+  background: $mask-spinner-bg-color;
+  border-radius: $meas-radius-50p;
+  position: absolute;
+  left: 40%;
+  top: 40%;
+}
+
+@media (max-width: $screen-480) {
+  .ace-mask-el > div {
+    width: 90%;
+  }
+  .ace-content {
+    height: $meas-full;
+    clear: none;
+    padding: $meas-pad-0;
+  }
+}
+
+.ace-check-div {
+  text-align: center;
+  background-color: $check-bg-color;
+  position: absolute;
+  z-index: 999998;
+  width: $meas-20;
+  height: $meas-20;
+  color: $check-color;
+  border-radius: $meas-50;
+}
+.ace-check-div .ace-icon {
+  font-size: small;
+  margin: auto;
+}
+
+/* end mask element: this is used to mask a specific elements during operations*/

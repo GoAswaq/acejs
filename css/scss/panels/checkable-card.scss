@@ -1,0 +1,66 @@
+/* begin checkable card */
+@use '../variables/all' as *;
+
+.ace-checkable-card {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  background: $primary-bg-color;
+  align-items: flex-start;
+  padding: $meas-pad-18 $meas-pad-12 $meas-pad-12 $meas-pad-12;
+  transition: ease 0.2s;
+  box-shadow: $box-shad-0 $box-shad-1 $box-shad-4 $primary-shadow-color;
+  cursor: pointer;
+  position: relative;
+}
+.ace-checkable-card span.ace-card-highlight {
+  content: " ";
+  position: absolute;
+  width: $meas-full;
+  height: $meas-full;
+  z-index: 1;
+  top:  $position-0;
+  transition: ease 0.3s;
+  pointer-events: none;
+  @include addBorder();
+}
+@include positionLTR('.ace-checkable-card span.ace-card-highlight',left,$position-0);
+
+.ace-checkable-card input[type="checkbox"]:checked ~ span.ace-card-highlight {
+  border-color: $primary-color;
+}
+
+span.ace-card-highlight:after {
+  position: absolute;
+  top: - $position-8;
+  content: "\f00c";
+  transition: ease 0.3s;
+  background: $primary-color;
+  font-size: $ace-tiny-title-size;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0);
+  padding: $meas-pad-4;
+  width: $meas-20;
+  height: $meas-20;
+  color: $contrast-font-color;
+  border-radius: $meas-radius-50p;
+}
+@include positionLTR('span.ace-card-highlight:after',left,-$position-16);
+
+.ace-checkable-card
+  input[type="checkbox"]:checked
+  ~ span.ace-card-highlight:after {
+  opacity: 1;
+  transform: scale(1);
+}
+.ace-checkable-card input[type="checkbox"] {
+  display: none;
+}
+@include sideMarginLTR('.ace-checkable-card p',right,auto);
+
+.ace-checkable-card:hover {
+  box-shadow: $box-shad-0 $box-shad-0 $primary-shadow-color;
+}
+
+/* end checkable card */

@@ -1,0 +1,210 @@
+@use '../variables/all' as *;
+/* begin expand classes */
+.ace-field-force-overflow-visible {overflow: visible !important;}
+
+@keyframes ace-field-expand-50-kf {
+  from {
+    width: $meas-full;
+    left:  $position-0p;
+  }
+  to {
+    width: 150%;
+    left: - $position-50p;
+  }
+}
+
+@keyframes ace-field-expand-50-reverse-kf {
+  from {
+    width: 150%;
+    left: - $position-50p;
+    max-width: 150% !important;
+  }
+  to {
+    width: $meas-full;
+    left:  $position-0p;
+    max-width: $meas-full !important;
+  }
+}
+
+@keyframes ace-field-expand-75-kf {
+  from {
+    width: $meas-full;
+    left:  $position-0p;
+  }
+  to {
+    width: 175%;
+    left: - $position-75p;
+  }
+}
+
+@keyframes ace-field-expand-75-reverse-kf {
+  from {
+    width: 175%;
+    left: - $position-75p;
+    max-width: 175% !important;
+  }
+  to {
+    width: $meas-full;
+    left:  $position-0p;
+    max-width: $meas-full !important;
+  }
+}
+
+@keyframes ace-field-expand-100-kf {
+  from {
+    width: $meas-full;
+    left:  $position-0p;
+  }
+  to {
+    width: 200%;
+    left: - $position-100p;
+  }
+}
+
+@keyframes ace-field-expand-100-reverse-kf {
+  from {
+    width: 200%;
+    left: - $position-100p;
+    max-width: 200% !important;
+  }
+  to {
+    width: $meas-full;
+    left:  $position-0p;
+    max-width: $meas-full !important;
+  }
+}
+
+@keyframes ace-field-expand-200-kf {
+  from {
+    width: $meas-full;
+    left:  $position-0p;
+  }
+  to {
+    width: 300%;
+    left: - $position-200p;
+  }
+}
+
+@keyframes ace-field-expand-200-reverse-kf {
+  from {
+    width: 300%;
+    left: - $position-200p;
+    max-width: 300% !important;
+  }
+  to {
+    width: $meas-full;
+    left:  $position-0p;
+    max-width: $meas-full !important;
+  }
+}
+
+.ace-field-expand-50 {
+  animation-duration: 0.2s;
+  animation-fill-mode: forwards;
+  max-width: 150% !important;
+  z-index: 100;
+  background: $field-expanded-bg-color !important;
+  position:relative;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$field-expanded-border-color);
+}
+
+html[dir="ltr"] .ace-field-expand-50 {
+  animation-name: ace-field-expand-50-kf;
+}
+
+.ace-field-expand-50-reverse {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  z-index: initial;
+  border: initial;
+  background: initial;
+}
+
+html[dir="ltr"] .ace-field-expand-50-reverse {
+  animation-name: ace-field-expand-50-reverse-kf;
+}
+
+.ace-field-expand-75 {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  max-width: 175% !important;
+  z-index: 100;
+  background: $field-expanded-bg-color !important;
+  position:relative;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$field-expanded-border-color);
+}
+
+html[dir="ltr"] .ace-field-expand-75 {
+  animation-name: ace-field-expand-75-kf;
+}
+
+.ace-field-expand-75-reverse {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  z-index: initial;
+  border: initial;
+  background: initial;
+}
+
+html[dir="ltr"] .ace-field-expand-75-reverse {
+  animation-name: ace-field-expand-75-reverse-kf;
+}
+
+.ace-field-expand-100 {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  max-width: 200% !important;
+  z-index: 100;
+  background: $field-expanded-bg-color !important;
+  position:relative;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$field-expanded-border-color);
+}
+
+html[dir="ltr"] .ace-field-expand-100 {
+  animation-name: ace-field-expand-100-kf;
+}
+
+.ace-field-expand-100-reverse {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  z-index: initial;
+  border: initial;
+  background: initial;
+}
+
+html[dir="ltr"] .ace-field-expand-100-reverse {
+  animation-name: ace-field-expand-100-reverse-kf;
+}
+
+.ace-field-expand-200 {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  max-width: 300% !important;
+  z-index: 100;
+  background: $field-expanded-bg-color !important;
+  position:relative;
+  @include addBorder(all,$ace-border-default-size,$ace-border-default-pattern,$field-expanded-border-color);
+}
+
+html[dir="ltr"] .ace-field-expand-200 {
+  animation-name: ace-field-expand-200-kf;
+}
+
+.ace-field-expand-200-reverse {
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
+  z-index: initial;
+  border: initial;
+  background: initial;
+}
+
+html[dir="ltr"] .ace-field-expand-200-reverse {
+  animation-name: ace-field-expand-200-reverse-kf;
+}
+
+html[dir="ltr"] .ace-field-expand-natural,
+html[dir="rtl"] .ace-field-expand-natural {
+  left: initial !important;
+  right: initial !important;
+}
+/* end expand classes */
