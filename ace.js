@@ -8291,6 +8291,14 @@
                         dataArr[rowIdx] = $.aceOverWatch.record.create(dataArr[rowIdx]);
                     }
                     settings.data.push(dataArr[rowIdx]);
+                }
+
+
+                for(let rowIdx in settings.data){
+                    if( !$.aceOverWatch.record.isRecord(dataArr[rowIdx]) ){
+                        dataArr[rowIdx] = $.aceOverWatch.record.create(dataArr[rowIdx]);
+                    }
+                    settings.data.push(dataArr[rowIdx]);
 
                     isEmpty=false;
                     let option = $('<option>'+settings.actualRenderer(settings.data[rowIdx].val(settings['displayname']), settings.data[rowIdx])+'</option>').attr("value", settings.data[rowIdx].val(settings['valuename']));
