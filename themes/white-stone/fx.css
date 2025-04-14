@@ -47,9 +47,6 @@ table {
 }
 */
 /**** END RESET ****/
-@-ms-viewport{
-  width: device-width;
-}
 html,body{
     padding: 0;
     margin: 0;
@@ -167,12 +164,8 @@ html[dir="rtl"] .fx-pull-flex-right{
 .fx-justify-space-between{
     justify-content: space-between;
 }
-.fx-justify-left{
-    justify-content: flex-start;
-}
-.fx-justify-right{
-    justify-content: flex-end;
-}
+.fx-justify-left{ justify-content: flex-start; }
+.fx-justify-right{ justify-content: flex-end; }
 
 .fx-valign-center{
     align-items: center;
@@ -634,7 +627,7 @@ html[dir="rtl"] .fx-dropdown-list.fx-dropdown-offscreen-right:after{
     pointer-events: none;
     height: 25px;
     margin-top: 5px;
-    padding: 5px 15px; */
+    padding: 5px 15px;
 }
 .fx-field-badge{
     text-align: center;
@@ -1170,10 +1163,10 @@ html[dir="rtl"] .fx-checkable-icon input ~ .fx-break:after{
     }
 }
 @keyframes transparency{
-    0%{
+    0% {
         opacity: 0;
     }
-    80{
+    80% {
         opacity: 0;
     }
     100%{
@@ -1342,7 +1335,7 @@ html[dir="rtl"] .fx-breadkrumbs a:after{
 .fx-sort-field {
     display:flex;
     flex-direction:column;
-    font-size:24;
+    font-size:24px;
     align-items:center;
     justify-content:center;
     height:35px;
@@ -1567,8 +1560,6 @@ html[dir="rtl"] button i{
 
 /** positioning **/
 .fx-experimental-sticky{
-    position: -webkit-sticky;
-    position: -moz-sticky;
     position: sticky;
 
     top: 80px;

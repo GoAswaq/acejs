@@ -82,7 +82,8 @@ $('#countries-grid').ace('create',{
 	net : {
 		remote : true,
 		autoload : false,
-		fid  : 280,
+		fid  : 50,
+		size: 200,
 	},
 	
 });
@@ -117,6 +118,12 @@ function saveCountries(){
  */
 function cancelCountries(){
 	objCountries.form.ace('cancel');
+}
+
+
+function showCountriesEditForm() {
+	refreshCountries();
+	switchMainMenuContent('countries_menutag');
 }
 
 /*

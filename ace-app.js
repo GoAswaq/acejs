@@ -53,7 +53,7 @@ function internalNavigation(tag, data, callback){
 	/*
 	 * display the card with the attribute exactly as that of the item clicked
 	 */
-	$.aceOverWatch.field.cardview.switchTo('#ace-content', '[tag="'+workingTag+'"]');
+	$.aceOverWatch.field.cardview.switchTo($('#ace-content'), '[tag="'+workingTag+'"]');
 	
 	/*
 	 * each of these menu entries should have a function to be called immidietly when it is displayed

@@ -15,7 +15,7 @@
 			moreMenuIcon : 'far fa-ellipsis-v',
 			editIcon2 : 'far fa-pencil-square-o',
 			trashIcon : 'far fa-trash',
-			calendarIcon : 'far fa-calendar-alt',
+			calendarIcon : 'fal fa-calendar-alt',
 			uploadIcon : 'far fa-upload',
 			nextIcon : 'far fa-angle-right',
 			prevIcon : 'far fa-angle-left',

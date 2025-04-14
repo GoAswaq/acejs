@@ -935,7 +935,7 @@ html[dir="rtl"] .ace-prompt-el > div > button {
     cursor: pointer;
     overflow: hidden;
     color:#009AFF;
-    font-size:: 36px;
+    font-size: 36px;
     border:none;
     background:none;
     transition: ease .1s;

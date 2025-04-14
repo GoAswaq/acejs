@@ -293,7 +293,7 @@ $(document).ready(function(){
         $('.ace-datepicker').datepicker({
             inline: true,
             showOn: "both",
-            buttonText: "<i class='fa fa-calendar'></i>",
+            buttonText: "<i class='fal fa-calendar'></i>",
             showOtherMonths: true,
             nextText: '<i class="fa fa-angle-right"></i>', 
             prevText: '<i class="fa fa-angle-left"></i>',

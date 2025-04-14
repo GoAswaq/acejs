@@ -682,7 +682,7 @@ html[dir="rtl"] [class*="ace-padding-right-"] .ace-badge{
     top: unset;
 }
 
-[class*="-field"] .ace-badge::not(.ace-ignore){
+[class*="-field"] .ace-badge:not(.ace-ignore){
     color:#000000;
     font-size:14px;
     border-radius:0;
@@ -696,7 +696,7 @@ html[dir="rtl"] [class*="ace-padding-right-"] .ace-badge{
     max-width: 50px;
     height: calc( 90% - 20px );
 	background-color:var(--primary-color);
-	top:18;
+	top:18px;
 }
 
 html[dir="ltr"] .ace-text-field .ace-badge {
@@ -1692,7 +1692,7 @@ html[dir="rtl"] .ace-label{
 .ace-message-field .ace-label{
     background-color:#ffffff;
     padding:12px 12px 0 12px;
-    transform-origin:center left;
+    transform-origin:center;
     width:100%;
     flex:1;
     min-width:100%;
@@ -1744,7 +1744,7 @@ html[dir="rtl"] .ace-label{
     transition:ease .3s;
 }
 
-.ace-image-upload-button label:hover{
+.ace-image-upload-button label:not(.ace-readonly):hover{
     display:flex;
     justify-content:center;
 
@@ -1752,7 +1752,7 @@ html[dir="rtl"] .ace-label{
 
     cursor:pointer;
 }
-.ace-image-upload-button label:before{
+.ace-image-upload-button label:not(.ace-readonly):before{
     display:flex;
     justify-content:center;
     align-items:center;
@@ -1775,7 +1775,7 @@ html[dir="rtl"] .ace-label{
     content:'\f3f5';
     transition:ease-in-out .3s;
 }
-.ace-image-upload-button label:after{
+.ace-image-upload-button label:not(.ace-readonly):after{
     display:flex;
     justify-content:center;
     align-items:center;
@@ -1800,11 +1800,11 @@ html[dir="rtl"] .ace-label{
     transform:translateY(-40%);
     opacity:0;
 }
-.ace-image-upload-button:hover label:before{
+.ace-image-upload-button:hover label:not(.ace-readonly):before{
     opacity:0;
      transform:translateY(40%);
 }
-.ace-image-upload-button:hover label:after{
+.ace-image-upload-button:hover label:not(.ace-readonly):after{
     opacity:1;
     transform:translateY(0);
 }
@@ -1996,7 +1996,7 @@ html[dir="rtl"] .ace-label{
 
 /* card */
 .ace-card{
-    padding: calc( 2 * var(--main-spacing));
+    padding: var(--main-spacing);
     box-shadow: 0px 1px 8px var(--box-shadow);
     color: inherit;
     background-color:rgb(var(--light-color));
@@ -2168,7 +2168,7 @@ card, usefull to make first view presentation */
     align-items:center;
     flex-wrap:nowrap;
 
-    background-color:rgb(--light-color);
+    background-color:var(--light-color);
     box-shadow:0px 1px 8px var(--box-shadow);
 }
 .ace-notification .ace-notification-icon{
@@ -2747,7 +2747,7 @@ html[dir="rtl"] .ace-state-timeline .ace-state-action:after{
 
      -webkit-appearance:menulist;
     -moz-appearance:menulist;
-    appearance: menulist;
+    appearance: auto;
     border:none;
     box-shadow:0px 1px 3px rgba(0,0,0,0.12);
 }
@@ -2990,7 +2990,7 @@ stylish readonly box */
 
 /**/
 @media (-webkit-min-device-pixel-ratio: 2),(-moz-device-pixel-ratio: 2),
-    (-webkit-min-device-pixel-ratio: 3),(-moz-device-pixel-ratio: 3),,
+    (-webkit-min-device-pixel-ratio: 3),(-moz-device-pixel-ratio: 3),
     (min-width:320px) and (max-width:737px),
     (min-resolution: 192dpi){
 
@@ -3431,7 +3431,7 @@ html[dir="rtl"] .ya-interactive-card .ya-interactive-card-more a{
 .ace-state-timeline .ace-popover.ace-show{
 }
 .ace-state-timeline .ace-state-action[ace-toggle="popover"],
-.ace-state-timeline .ace-state-action.ace-popover-toggle]{
+.ace-state-timeline .ace-state-action.ace-popover-toggle{
     z-index: 4;
 }
 html[dir="ltr"] .ace-state-timeline .ace-popover{
@@ -3444,9 +3444,8 @@ html[dir="rtl"] .ace-state-timeline .ace-popover{
     left: -52px;
     margin: initial;
 }
-@media (-webkit-min-device-pixel-ratio: 2),(-moz-device-pixel-ratio: 2),
-@media (-webkit-min-device-pixel-ratio: 3),(-moz-device-pixel-ratio: 3),,
-    (min-width:320px) and (max-width:737px),
+
+@media screen and  (min-width:320px) and (max-width:737px),
     (min-resolution: 192dpi){
     .ace-mobile{
 

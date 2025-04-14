@@ -354,7 +354,6 @@ html[dir="rtl"] .ace-side-menu-current {
     color: rgba(0, 0, 0, 0.7);
     cursor: pointer;
     padding: 8px;
-    14px;
     height: 45px;
     font-weight: 400;
     clear: both;
@@ -639,7 +638,7 @@ a.ace-normal-button i, button.ace-normal-button i, .ace-normal-button a i, .ace-
     position: absolute;
     top: 0;
     right: 0;
-    padding: 5px 8;
+    padding: 5px 8px;
     height: 34px;
     margin: 0;
 }
@@ -708,7 +707,7 @@ a.ace-normal-button:hover .ace-red, button.ace-normal-button:hover .ace-red, .ac
     left: -145px;
     top: 36px;
     padding: 10px;
-    width: 235;
+    width: 235px;
     padding: 15px 15px;
     z-index: 13;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.26);
@@ -888,7 +887,7 @@ input:hover[type=submit] {
     cursor: pointer;
     overflow: hidden;
     color: #46C3FF;
-    font-size: : 36px;
+    font-size: 36px;
     border: none;
     background: none;
     transition: ease .2s;
@@ -1323,7 +1322,7 @@ html[dir="rtl"] .ace-side-menu i.ace-accordion-icon {
         width: 220px;
     }
     .ace-content {
-        bottom: 100;
+        bottom: 100px;
     }
     .ace-search-form {
         width: 280px;
@@ -2036,7 +2035,7 @@ html[dir="rtl"] .ace-title-bar {
     border: 0;
     font-size: 16px;
     color: #53ca9f !important;
-    border: 1ox solid aliceblue;
+    border: 1px solid aliceblue;
 }
 
 
@@ -2294,7 +2293,7 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     .ace-select-border select[disabled]{
         border: 1px solid rgba(0,0,0,0.2) !important;
         background: rgb(243, 245, 248) !important;
-        color: 8a8a8a;
+        color: #8a8a8a;
     }
     .ace-shop-preview{
         position:relative;
@@ -2844,7 +2843,7 @@ input.ace-efld {}
 	padding-bottom: 18px !important;
 }
 .ace-entry-card [class*="-field"].ace-big-padding-bottom{
-	padding-bottom:18 !important;
+	padding-bottom:18px !important;
 }
 .ace-entry-card .row-display-data {
 	padding-bottom: 0px !important;
@@ -2954,7 +2953,7 @@ input.ace-efld {}
     z-index: 1;
     padding-bottom: 0 !important;
 }
-.ace-entry-card > ..ace-link-button-to-input [class*="-field"]{
+.ace-entry-card > .ace-link-button-to-input [class*="-field"]{
     padding-bottom:0 !important;
 }
 .ace-vertical-rows .ace-checkbox-field .ace-label {
@@ -2977,7 +2976,6 @@ html[dir="ltr"] button[action="cancel"] {
     right: initial;
 }
 .ace-logo {
-    background: url('images/qplogolong.png') no-repeat;
     background-size: cover;
     margin: 13px;
     width: 120px !important;
@@ -3028,8 +3026,8 @@ html[dir="rtl"] .ace-entry-card .ace-grid-auto-complete{
 }
 #invoices-ed-frm-renderer [fieldname="_inv_no"]{
     position: absolute;
-    right: 15;
-    top: 15;
+    right: 15px;
+    top: 15px;
     font-size: 18px;
     font-weight: 600;
     opacity: 0.6;
@@ -3121,7 +3119,6 @@ html[dir="rtl"] .ace-entry-card .ace-grid-auto-complete{
     }
     #invoices-ed-frm-renderer{
         padding-left:0 !important;
-        margin-top:104
     }
     .ace-independent-style .ace-soft-close button{
         text-indent:-9999px;

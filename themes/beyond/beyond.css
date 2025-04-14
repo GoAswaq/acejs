@@ -206,14 +206,14 @@ html[dir="rtl"] [class^="ace-"] h2 .ace-field-container,html[dir="ltr"] h3 .ace-
 
 }
 .ace-grid-cell-selected{/*if a cell is selected, this class is added to the cell*/
-	background-color: #ddf3da;
+	background-color: #f1f8ff;
 }
 .ace-grid-cell:hover{
     /*background: rgba(221, 243, 218,0.3) !important;
     filter: brightness(100%) grayscale(0%);*/
 }
 .ace-grid-row:hover::after {
-    border-bottom: 1px solid #ddf3da !important;
+    border-bottom: 1px solid #f1f8ff !important;
 }
 .ace-grid-row:hover {
     /*;
@@ -521,7 +521,6 @@ html[dir="rtl"] .ace-side-menu-current {
     color: rgba(0, 0, 0, 0.7);
     cursor: pointer;
     padding: 8px;
-    14px;
     height: 45px;
     font-weight: 400;
     clear: both;
@@ -1010,7 +1009,7 @@ a.ace-normal-button:hover .ace-red, button.ace-normal-button:hover .ace-red, .ac
     left: -145px;
     top: 36px;
     padding: 10px;
-    width: 235;
+    width: 235px;
     padding: 15px 15px;
     z-index: 13;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.26);
@@ -1206,7 +1205,7 @@ input:hover[type=submit] {
     cursor: pointer;
     overflow: hidden;
     color: #82d57a;
-    font-size: : 36px;
+    font-size:36px;
     border: none;
     background: none;
     transition: ease .2s;
@@ -1648,7 +1647,7 @@ html[dir="rtl"] [class*="ace-padding-right-"] .ace-badge{
     right:initial;
 }
 
-[class*="-field"] .ace-badge::not(.ace-ignore){
+[class*="-field"] .ace-badge:not(.ace-ignore){
     color:#000000;
     font-size:14px;
     border-radius:0;
@@ -1695,7 +1694,7 @@ html[dir="rtl"] [class*="ace-padding-right-"] .ace-badge{
         width: 220px;
     }
     .ace-content {
-        bottom: 100;
+        bottom: 100px;
     }
     .ace-search-form {
         width: 280px;
@@ -2220,9 +2219,7 @@ h2:before{
 .ace-grid-disputes .ace-grid-top-toolbar{
     display:none;
 }
-.ace-grid-header .ace-grid-action-cell, .ace-grid-footer-totals .ace-grid-action-cell{
-    padding:initial !important;
-}
+
 div.stars {
     display: inline-block;
 }
@@ -2488,7 +2485,7 @@ html[dir="rtl"] .ace-title-bar {
     padding: 0 5px;
     font-size: 16px;
     color: #013751 !important;
-    border: 1ox solid aliceblue;
+    border: 1px solid aliceblue;
 }
 
 
@@ -2749,7 +2746,7 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     .ace-select-border select[disabled]{
         border: 1px solid rgba(0,0,0,0.2) !important;
         background: rgb(243, 245, 248) !important;
-        color: 8a8a8a;
+        color: #8a8a8a;
     }
     .ace-shop-preview{
         position:relative;
@@ -2928,7 +2925,7 @@ a.ace-entries-menu-trigger {
 .ace-submenu.ace-horizontal-tabs {
     background: #f2f4f8;
     box-shadow: none;
-    height: 47px;
+    height: 39px;
 }
 
 .ace-submenu.ace-horizontal-tabs .ace-accordion{
@@ -3113,7 +3110,9 @@ a.ace-accordion.ace-active {
     border-bottom: 1px solid #82d57a
 }
 .ace-grid-header{
+    border-top: 2px solid #82d57a;
     border-bottom: 2px solid #82d57a;
+    background-color: #f3fff3;
 }
 .ace-grid-footer-totals{
     border-top: 2px solid #82d57a;
@@ -3128,7 +3127,7 @@ a.ace-accordion.ace-active {
 }
 
 .ace-entry-card [class*="-field"].ace-big-padding-bottom{
-	padding-bottom:18 !important;
+	padding-bottom:18px !important;
 }
 .ace-entry-card .row-display-data {
 	padding-bottom: 0px !important;
@@ -3211,6 +3210,9 @@ a.ace-accordion.ace-active {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.ace-simple-card button.ace-efld, button.ace-simple-card .ace-efld:hover{
+    border-bottom:1px solid rgba(0,0,0,0.1) !Important;
+}
 .ace-simple-card span.ace-efld{
     width:auto !important;
 }
@@ -3244,7 +3246,7 @@ a.ace-accordion.ace-active {
     z-index: 1;
     padding-bottom: 0 !important;
 }
-.ace-entry-card > ..ace-link-button-to-input [class*="-field"]{
+.ace-entry-card > .ace-link-button-to-input [class*="-field"]{
     padding-bottom:0 !important;
 }
 .ace-vertical-rows .ace-checkbox-field .ace-label {
@@ -3385,10 +3387,13 @@ html[dir="rtl"] .ace-entry-card .ace-grid-auto-complete{
 }
 
 .ace-accordion i.ace-checked{
-	color: #82d57a;	
+	color: #82d57a;
 	animation: .2s checkbox;
 }
 
+.ace-side-container .ace-accordion.ace-active p{
+    color: #fff !important;
+}
 .ace-accordion.ace-active p{
     color: #4bc340 !important;
 }
@@ -3815,7 +3820,7 @@ html[dir="rtl"] .ace-offcanvas-panel.ace-show {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2),
-@media (-webkit-min-device-pixel-ratio: 3),
+(-webkit-min-device-pixel-ratio: 3),
 (min-width:320px) and (max-width:737px),
 (min-resolution: 192dpi){
     .ace-offcanvas-window{

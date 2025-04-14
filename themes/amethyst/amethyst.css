@@ -26,7 +26,7 @@ body {
     line-height: 1.8;
     margin-bottom: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.1);
-	font-size: 26px;
+    font-size: 26px;
 
 }
 [class^="ace-"] > h4 {
@@ -45,18 +45,18 @@ body {
     text-overflow: ellipsis;
 }
 html[dir="ltr"] [class^="ace-"] h3 i{
-	float:left;
-	margin-right:5px;
+    float:left;
+    margin-right:5px;
 }
 html[dir="rtl"]  [class^="ace-"] h3 i{
-	float:right;
-	margin-left: 5px;
+    float:right;
+    margin-left: 5px;
 }
 html[dir="ltr"] [class^="ace-"] h2 .ace-field-container,html[dir="ltr"] h3 .ace-field-container{
-	padding-right:0 !important;
+    padding-right:0 !important;
 }
 html[dir="rtl"] [class^="ace-"] h2 .ace-field-container,html[dir="ltr"] h3 .ace-field-container{
-	padding-left:0 !important;
+    padding-left:0 !important;
 }
 
 [class^="ace-"] p {
@@ -237,11 +237,11 @@ html[dir="rtl"] .ace-notification .ace-soft-close{
     height:56px;
 }
 .ace-notification-text{
-	line-height: 1.8;
-	width: 75%;
-	overflow: hidden;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+    line-height: 1.8;
+    width: 75%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 .ace-notification.ace-success-notification {
     background: rgba(157, 255, 0, 0.1);
@@ -267,30 +267,30 @@ html[dir="rtl"] .ace-notification .ace-soft-close{
 }
 .ace-notification.ace-danger-notification i.ace-notification-icon{
 
-color: #E91E63;
+    color: #E91E63;
 }
 .ace-notification i.ace-notification-icon{
-	font-size: 28px;
-	line-height:1.2 !important;
+    font-size: 28px;
+    line-height:1.2 !important;
 }
 .ace-notification i.ace-notification-icon:before{
-	font-size: 28px;
-	line-height:1.2 !important;
+    font-size: 28px;
+    line-height:1.2 !important;
 }
 .ace-notification.ace-activity-card i.ace-notification-icon{
-	opacity: 0;
-	transition: ease .2s;
-	position: absolute;
-	top: 10px;
+    opacity: 0;
+    transition: ease .2s;
+    position: absolute;
+    top: 10px;
 }
 html[dir="ltr"] .ace-notification.ace-activity-card i.ace-notification-icon{
-	right:15px;
+    right:15px;
 }
 html[dir="rtl"] .ace-notification.ace-activity-card i.ace-notification-icon{
-	left:15px;
+    left:15px;
 }
 .ace-notification.ace-activity-card:hover i.ace-notification-icon{
-	opacity: 0.7;
+    opacity: 0.7;
 }
 .ace-notification.ace-activity-card .ace-activity-no-badge .ace-display-field{
     text-align:center;
@@ -309,7 +309,7 @@ html[dir="rtl"] .ace-notification.ace-activity-card i.ace-notification-icon{
     padding-top: 1px;
 }
 .ace-notification.ace-activity-card:hover .ace-activity-no-badge{
-	opacity: 0;
+    opacity: 0;
 }
 .ace-activity-card .ace-notification-icon i {
     color: rgba(0,0,0,0.6);
@@ -353,7 +353,6 @@ html[dir="rtl"] .ace-side-menu-current {
     color: rgba(0, 0, 0, 0.7);
     cursor: pointer;
     padding: 8px;
-    14px;
     height: 45px;
     font-weight: 400;
     clear: both;
@@ -381,9 +380,9 @@ html[dir="rtl"] .ace-side-menu-current {
     position: relative;
 }
 .ace-profile-photo {} .ace-profile-photo i {
-    font-size: 32pt;
-    color: rgba(0, 0, 0, 0.6);
-}
+                          font-size: 32pt;
+                          color: rgba(0, 0, 0, 0.6);
+                      }
 #first_name {
     font-size: 20px;
     color: #000000;
@@ -487,7 +486,7 @@ html[dir="rtl"] .ace-side-menu-current {
 
 }
 .ace-search-panel .ace-trigger-btn-container{
-        display: flex;
+    display: flex;
     flex-direction: row;
 }
 .ace-search-panel a.fa-search{
@@ -660,7 +659,7 @@ a.ace-normal-button i, button.ace-normal-button i, .ace-normal-button a i, .ace-
     position: absolute;
     top: 0;
     right: 0;
-    padding: 5px 8;
+    padding: 5px 8px;
     height: 34px;
     margin: 0;
 }
@@ -670,9 +669,9 @@ a.ace-normal-button i, button.ace-normal-button i, .ace-normal-button a i, .ace-
     border: 1px solid #46C3FF;
 }
 .ace-custom-add {} .ace-custom-add i {
-    color: #46C3FF;
-    margin-right: 10px;
-}
+                       color: #46C3FF;
+                       margin-right: 10px;
+                   }
 .ace-element-group {
     padding: 10px;
     display: inline-block;
@@ -688,9 +687,9 @@ a.ace-normal-button i, button.ace-normal-button i, .ace-normal-button a i, .ace-
     width: 100%;
 }
 .ace-element-group ul li span {} .ace-element-group ul li .ace-switch + label {
-    float: right;
-    z-index: 2;
-}
+                                     float: right;
+                                     z-index: 2;
+                                 }
 
 .ace-radio-field input[type="radio"]:checked + span:before {
     color: #46C3FF;
@@ -699,20 +698,20 @@ a.ace-normal-button i, button.ace-normal-button i, .ace-normal-button a i, .ace-
 .ace-checkbox-field input[type="checkbox"]:checked + span:before{
     animation: .2s checkbox;
     color: #3b2aac;
-  }
-  .ace-checkbox-field input[type="checkbox"] + span:before{
-        height:2px;
+}
+.ace-checkbox-field input[type="checkbox"] + span:before{
+    height:2px;
 
-    }
-    .ace-checkbox-field input[type="checkbox"] + span{
-        /* height:20px; */
-    }
-  .ace-checkbox-field input[type="checkbox"]:checked + span{
-      background: rgba(144, 130, 238,0.1);
-  }
-  .fa-file-text-add:before{
-      content:'+\f15c'
-  }
+}
+.ace-checkbox-field input[type="checkbox"] + span{
+    /* height:20px; */
+}
+.ace-checkbox-field input[type="checkbox"]:checked + span{
+    background: rgba(144, 130, 238,0.1);
+}
+.fa-file-text-add:before{
+    content:'+\f15c'
+}
 i {
     font-style: normal;
     /* font-family: FontAwesome,"Font Awesome 5 Pro"; */
@@ -729,7 +728,7 @@ a.ace-normal-button:hover .ace-red, button.ace-normal-button:hover .ace-red, .ac
     left: -145px;
     top: 36px;
     padding: 10px;
-    width: 235;
+    width: 235px;
     padding: 15px 15px;
     z-index: 13;
     box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.26);
@@ -766,7 +765,7 @@ input:hover[type=submit] {
     background: #46C3FF;
     opacity: 1;
 }
-    .ace-select-fix select{height:auto; padding:0;}
+.ace-select-fix select{height:auto; padding:0;}
 .ace-pop-over li {
     text-align: center;
     margin: 5px 0;
@@ -902,18 +901,18 @@ input:hover[type=submit] {
     text-decoration: none;
 }
 .ui-datepicker-header {} .ui-datepicker-prev,
-.ui-datepicker-next {
-    display: inline-block;
-    text-align: center;
-    cursor: pointer;
-    overflow: hidden;
-    color: #46C3FF;
-    font-size: : 36px;
-    border: none;
-    background: none;
-    transition: ease .2s;
-    padding: 10px;
-}
+                         .ui-datepicker-next {
+                             display: inline-block;
+                             text-align: center;
+                             cursor: pointer;
+                             overflow: hidden;
+                             color: #46C3FF;
+                             font-size: 36px;
+                             border: none;
+                             background: none;
+                             transition: ease .2s;
+                             padding: 10px;
+                         }
 .ui-datepicker-prev:hover,
 .ui-datepicker-next:hover {
     background: #46C3FF;
@@ -1202,22 +1201,22 @@ table {
 }
 
 html[dir="ltr"] .ace-side-menu i.ace-accordion-icon {
-	/* margin-right:5px; */
-	font-size: 34px;
-	clear: both;
-	display: block;
-	width: 100%;
-	text-align: center;
+    /* margin-right:5px; */
+    font-size: 34px;
+    clear: both;
+    display: block;
+    width: 100%;
+    text-align: center;
 }
 html[dir="rtl"] .ace-side-menu i.ace-accordion-icon {
-	margin-left:5px;
+    margin-left:5px;
 }
 
 .ace-side-menu .ace-add-icon, .ace-side-menu .ace-edit-icon {
-	background-color: #32d2a7;
+    background-color: #32d2a7;
 }
 .ace-accordion-item-remote-load:hover .ace-add-icon, .ace-accordion-item-remote-load:hover .ace-edit-icon {
-	color:white;
+    color:white;
 }
 .ace-search-form {
     transition: opacity ease-in-out .2s;
@@ -1233,15 +1232,15 @@ html[dir="rtl"] .ace-side-menu i.ace-accordion-icon {
     transition: ease-in-out .2s;
 }
 .ace-dialog-action-border{
-	display:block;
-	width:30%;
-	height: 2px;
-	background: #46C3FF;
-	margin-top: 10px;
-	transition: width ease-in-out .1s;
-	position: relative;
-	z-index: 1;
-	position: absolute;
+    display:block;
+    width:30%;
+    height: 2px;
+    background: #46C3FF;
+    margin-top: 10px;
+    transition: width ease-in-out .1s;
+    position: relative;
+    z-index: 1;
+    position: absolute;
 }
 .ace-back-to-site p {
     float:left;
@@ -1386,7 +1385,7 @@ html[dir="rtl"] .ace-side-menu i.ace-accordion-icon {
     /* *** SIDE MENU *** */
     /* *** CONTENT *** */
 
-     .ace-side-menu {
+    .ace-side-menu {
         visibility: hidden;
         height: 0;
         width: 0;
@@ -1400,7 +1399,7 @@ html[dir="rtl"] .ace-side-menu i.ace-accordion-icon {
         width: 220px;
     }
     .ace-content {
-        bottom: 100;
+        bottom: 100px;
     }
     .ace-search-form {
         width: 280px;
@@ -1582,7 +1581,7 @@ html[dir="rtl"] .fa-angle-left{
     transform:rotate(180deg);
 }
 html[dir="rtl"] .fa-angle-right{
-     transform:rotate(180deg);
+    transform:rotate(180deg);
 }
 .ace-card-action-bar a{
     margin-right:5px;
@@ -1628,13 +1627,13 @@ soft {
     line-height: 1.8;
     color: rgba(0, 0, 0, 0.5);
 }
- .ace-soft-text {
+.ace-soft-text {
     /* line-height: 1.8; */
     opacity: 0.65;
 }
-    .ace-text-negative,.ace-text-negative span, .ace-text-negative .ace-label{
-        color:#ffffff !important;
-    }
+.ace-text-negative,.ace-text-negative span, .ace-text-negative .ace-label{
+    color:#ffffff !important;
+}
 .ace-nowrap {
     white-space: nowrap;
 }
@@ -1682,8 +1681,8 @@ a.ace-small-button.active,
     font-size: 16px;
 }
 .ace-medium input{
-   font-size: 18px;
-   font-weight:600;
+    font-size: 18px;
+    font-weight:600;
 }
 .ace-medium span{
     font-size: 18px;
@@ -1718,14 +1717,14 @@ a.ace-filled-button, button.ace-filled-button, .ace-filled-button a, .ace-filled
     color:#ffffff;
 }
 a.ace-red-button, button.ace-red-button, .ace-red-button a, .ace-red-button button{
-        background: #ff3355;
-        border-color: #ff3355;
-        color:#ffffff !important;
+    background: #ff3355;
+    border-color: #ff3355;
+    color:#ffffff !important;
 }
 a.ace-red-button:hover, button.ace-red-button:hover, .ace-red-button a:hover, .ace-red-button button:hover{
-        background: #ef2534;
-        border-color: #ef2534;
-        color:#ffffff !important;
+    background: #ef2534;
+    border-color: #ef2534;
+    color:#ffffff !important;
 }
 a.ace-filled-button:hover, button.ace-filled-button:hover, .ace-filled-button a:hover, .ace-filled-button button:hover {
     background: #4D7A9F;
@@ -1830,7 +1829,7 @@ h2:before{
 }
 .ace-radio-rate input:checked + span:before {
     content: "\f005";
-	font-family:FontAwesome,"Font Awesome 5 Pro";
+    font-family:FontAwesome,"Font Awesome 5 Pro";
     color: #46C3FF;
     animation: check 0.4s;
 }
@@ -2033,21 +2032,21 @@ html[dir="rtl"] .ace-independent-style div.ace-auto-gen[type="button"].ace-soft-
     left:initial;
 }
 .ace-independent-form .ace-soft-close i, .ace-independent-style .ace-soft-close i{
-   font-size:28px;
-   margin-top:-10px;
+    font-size:28px;
+    margin-top:-10px;
 }
 
 .ace-independent-form .ace-soft-close button div, .ace-independent-form .ace-soft-close a span, .ace-independent-style .ace-soft-close button div, .ace-independent-style .ace-soft-close a span{
-   font-size:28px;
-   margin-top:-10px;
+    font-size:28px;
+    margin-top:-10px;
 }
 .ace-independent-form .ace-soft-close span, .ace-independent-style .ace-soft-close span{
-   top:-3px;
+    top:-3px;
     position: relative;
 }
 .ace-independent-form .ace-soft-close button span, .ace-independent-style .ace-soft-close button span{
-   top: -3px;
-   position: relative;
+    top: -3px;
+    position: relative;
 }
 html[dir="ltr"] .ace-independent-form .ace-soft-close i, html[dir="ltr"] .ace-independent-style .ace-soft-close i{
     margin-right:8px;
@@ -2114,17 +2113,17 @@ html[dir="rtl"] .ace-title-bar {
     border: 0;
     font-size: 16px;
     color: #3b2aac !important;
-    border: 1ox solid aliceblue;
+    border: 1px solid aliceblue;
 }
 
 
 .ace-title-bar .ace-del-bg a, .ace-title-bar .ace-del-bg button{
-	background:#FF6B6B;
-	color: #ffffff;
+    background:#FF6B6B;
+    color: #ffffff;
 }
 .ace-title-bar .ace-del-bg a:hover, .ace-title-bar .ace-del-bg button:hover{
-	background: #ff5454;
-	color: #ffffff;
+    background: #ff5454;
+    color: #ffffff;
 }
 .ace-title-bar div[type="button"]{
     padding: 7px 0;
@@ -2141,14 +2140,14 @@ html[dir="rtl"] .ace-title-bar {
     padding: 6px 10px;
 }
 .ace-entry-card-title{
-	border-bottom: 1px solid rgba(0, 4, 15, 0.12);
-	background: transparent;
+    border-bottom: 1px solid rgba(0, 4, 15, 0.12);
+    background: transparent;
 }
 .ace-expired .ace-entry-card-title{
-	background: #686868;
+    background: #686868;
 }
 .ace-expired:hover .ace-entry-card-title{
-	background: #888888;
+    background: #888888;
 }
 .ace-entry-card.ace-expired {
     background: #f1f6fb;
@@ -2203,10 +2202,10 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     background: #5d94c1;
 }
 .ace-advanced-panel-trigger i{
-        margin-right: 5px;
-    }
- html[dir="ltr"] .ace-disputes-meessage-send .ace-auto-gen[type="iconbutton"]{margin-left: -38px;}
-   html[dir="rtl"] .ace-disputes-meessage-send .ace-auto-gen[type="iconbutton"]{margin-right:-44px}
+    margin-right: 5px;
+}
+html[dir="ltr"] .ace-disputes-meessage-send .ace-auto-gen[type="iconbutton"]{margin-left: -38px;}
+html[dir="rtl"] .ace-disputes-meessage-send .ace-auto-gen[type="iconbutton"]{margin-right:-44px}
 
 .ace-disputes-meessage-send a{
     color: black !important;
@@ -2231,10 +2230,10 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
 
 .ace-advanced-panel-trigger.active-filters .ace-numbered-badge {
 }
-    .ace-menu-trigger{
-        color: #000000!important;
-        background: transparent;
-    }
+.ace-menu-trigger{
+    color: #000000!important;
+    background: transparent;
+}
 .ace-advanced-panel {
     box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.26);
     background: rgb(243, 248, 250);
@@ -2252,85 +2251,85 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     border-color: #4D7A9F;
     color:#4D7A9F;
 }
-    @keyframes ace-aswaq-loader{
-        from{transform:rotate(0deg)}
-        to{transform:rotate(360deg)}
-    }
-    @-webkit-keyframes ace-aswaq-loader{
-        from{-webkit-transform:rotate(0deg)}
-        to{-webkit-transform:rotate(360deg)}
-    }
-    @keyframes ace-reverse-badge{
-        from{transform:rotate(0deg)}
-        to{transform:rotate(-360deg)}
-    }
-    @-webkit-keyframes ace-reverse-badge{
-        from{-webkit-transform:rotate(0deg)}
-        to{-webkit-transform:rotate(-360deg)}
-    }
+@keyframes ace-aswaq-loader{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+@-webkit-keyframes ace-aswaq-loader{
+    from{-webkit-transform:rotate(0deg)}
+    to{-webkit-transform:rotate(360deg)}
+}
+@keyframes ace-reverse-badge{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(-360deg)}
+}
+@-webkit-keyframes ace-reverse-badge{
+    from{-webkit-transform:rotate(0deg)}
+    to{-webkit-transform:rotate(-360deg)}
+}
 
-    .ace-loader{
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-        align-items: center;
-    }
-    .ace-loader-spinner{
-        width: 42px;
-        flex-basis: 42px 42px;
-        float: left;
-        z-index: 3;
-        box-sizing: content-box;
-        border-radius: 50%;
-        height: 42px;
-        border: 4px solid #5d94c1;
-        border-top: 4px solid #46c3ff;
-        -webkit-animation: ace-aswaq-loader cubic-bezier(0,1.28,.76,-0.23);
-        animation: ace-aswaq-loader cubic-bezier(0,1.28,.76,0.77) .8s infinite;
-    }
-    .ace-loader-text{
-        z-index:1
+.ace-loader{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.ace-loader-spinner{
+    width: 42px;
+    flex-basis: 42px 42px;
+    float: left;
+    z-index: 3;
+    box-sizing: content-box;
+    border-radius: 50%;
+    height: 42px;
+    border: 4px solid #5d94c1;
+    border-top: 4px solid #46c3ff;
+    -webkit-animation: ace-aswaq-loader cubic-bezier(0,1.28,.76,-0.23);
+    animation: ace-aswaq-loader cubic-bezier(0,1.28,.76,0.77) .8s infinite;
+}
+.ace-loader-text{
+    z-index:1
 
-    }
-    .ace-loader-spinner.ace-middle{
-        left:0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-        position: absolute;
-    }
-    .ace-loader-text:before{
-        content:attr(data-loadtext);
-    }
-    .ace-loader.ace-loader-overlay{
-        position: absolute;
-        top:0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        margin: auto;
-    }
-    .ace-loader.ace-middle{
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        float: left;
-        /* display: block; */
-        margin: auto;
-    }
-    .ace-loader.ace-loader-overlay:after{
-        content: ' ';
-        left:0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        background: rgba(255,255,255,0.8);
-        position: absolute;
-    }
+}
+.ace-loader-spinner.ace-middle{
+    left:0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    position: absolute;
+}
+.ace-loader-text:before{
+    content:attr(data-loadtext);
+}
+.ace-loader.ace-loader-overlay{
+    position: absolute;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+}
+.ace-loader.ace-middle{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    float: left;
+    /* display: block; */
+    margin: auto;
+}
+.ace-loader.ace-loader-overlay:after{
+    content: ' ';
+    left:0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background: rgba(255,255,255,0.8);
+    position: absolute;
+}
 
 
 
@@ -2339,8 +2338,8 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     color:#ffffff;
 }
 .ace-content{
-        height: calc(100% - 50px);
-        padding-left: 90px !important;
+    height: calc(100% - 50px);
+    padding-left: 90px !important;
 }
 /* TinyMCE Fixes */
 .mce-ico {
@@ -2363,108 +2362,108 @@ a.ace-advanced-panel-trigger.ace-top,button.ace-advanced-panel-trigger.ace-top, 
     background-color: #f3f5f8 !important;
 }
 
-    .ace-thumbs-up:before{
-        color:#32d2a7;
-    }
-    .ace-select-border select{
-        border: 1px solid rgba(0,0,0,0.2) !important;
-        background: rgba(255,255,255,0.8);
-    }
-    .ace-select-border select[disabled]{
-        border: 1px solid rgba(0,0,0,0.2) !important;
-        background: rgb(243, 245, 248) !important;
-        color: 8a8a8a;
-    }
-    .ace-shop-preview{
-        position:relative;
-        box-shadow: 0px 4px 24px rgba(0,0,0,0.26);
-        padding-top:204px;
-        padding-bottom: 170px;
-        background: #f7f7f7;
-        border-radius: 8px;
-    }
-    .ace-shop-preview:before{
-        content:'Shop Header';
-        position:absolute;
-        font-size:20px;
-        top: 90px;
-        width:120px;
-        left:0;
-        right:0;
-        margin:auto;
-    }
-    .ace-shop-preview:after{
-        content:'Logo';
-        position:absolute;
-        font-size:16px;
-        top: 75px;
-        padding: 17px 12px;
-        box-sizing:border-box;
-        width:60px;
-        height:60px;
-        border-radius:50%;
-        background: #ebebeb;
-    }
-    html[dir="ltr"] .ace-shop-preview:after{
-        left:15px;
-    }
-    html[dir="rtl"] .ace-shop-preview:after{
-        right:15px;
-    }
-    .ace-browser-button{width: 15px;height: 15px;position: absolute;border-radius: 50%;top: 22px;}
-    .ace-browser-button.ace-red-bg{background: #d46363;}
-    .ace-browser-button.ace-yellow-bg{background: #fdd248;}
+.ace-thumbs-up:before{
+    color:#32d2a7;
+}
+.ace-select-border select{
+    border: 1px solid rgba(0,0,0,0.2) !important;
+    background: rgba(255,255,255,0.8);
+}
+.ace-select-border select[disabled]{
+    border: 1px solid rgba(0,0,0,0.2) !important;
+    background: rgb(243, 245, 248) !important;
+    color: #8a8a8a;
+}
+.ace-shop-preview{
+    position:relative;
+    box-shadow: 0px 4px 24px rgba(0,0,0,0.26);
+    padding-top:204px;
+    padding-bottom: 170px;
+    background: #f7f7f7;
+    border-radius: 8px;
+}
+.ace-shop-preview:before{
+    content:'Shop Header';
+    position:absolute;
+    font-size:20px;
+    top: 90px;
+    width:120px;
+    left:0;
+    right:0;
+    margin:auto;
+}
+.ace-shop-preview:after{
+    content:'Logo';
+    position:absolute;
+    font-size:16px;
+    top: 75px;
+    padding: 17px 12px;
+    box-sizing:border-box;
+    width:60px;
+    height:60px;
+    border-radius:50%;
+    background: #ebebeb;
+}
+html[dir="ltr"] .ace-shop-preview:after{
+    left:15px;
+}
+html[dir="rtl"] .ace-shop-preview:after{
+    right:15px;
+}
+.ace-browser-button{width: 15px;height: 15px;position: absolute;border-radius: 50%;top: 22px;}
+.ace-browser-button.ace-red-bg{background: #d46363;}
+.ace-browser-button.ace-yellow-bg{background: #fdd248;}
 
-    html[dir="ltr"] .ace-browser-button.ace-red-bg{
-        left: 21px;
-    }
-    html[dir="ltr"] .ace-browser-button.ace-yellow-bg{
-        left: 42px;
-    }
-    html[dir="ltr"] .ace-browser-button.ace-green-bg{
+html[dir="ltr"] .ace-browser-button.ace-red-bg{
+    left: 21px;
+}
+html[dir="ltr"] .ace-browser-button.ace-yellow-bg{
+    left: 42px;
+}
+html[dir="ltr"] .ace-browser-button.ace-green-bg{
 
-    }
-    html[dir="rtl"] .ace-browser-button.ace-red-bg{
-        right: 21px;
-    }
-    html[dir="rtl"] .ace-browser-button.ace-yellow-bg{
-        right: 42px;
-    }
-    html[dir="rtl"] .ace-browser-button.ace-green-bg{
-        left:initial;
-        right:62px;
-    }
-    .ace-browser-bar{float: left;position: absolute;top: 0;width: 100%;height: 52px;border-top-left-radius: 6px;border-top-right-radius: 6px;background: #ebebeb;}
-    .ace-browser-address-bar {
-        background: #ffffff;
-        width: 86%;
-        border-radius: 10px;
-        height: 25px;
-        position: absolute;
-        top: 16px;
-    }
-    html[dir="ltr"] .ace-browser-address-bar{
-         left: 93px;
-    }
-    html[dir="rtl"] .ace-browser-address-bar{
-         right: 93px;
-    }
-    .ace-viewonly input, .ace-viewonly select{
-        background: transparent !important;
-        border: 0 !important;
-    }
+}
+html[dir="rtl"] .ace-browser-button.ace-red-bg{
+    right: 21px;
+}
+html[dir="rtl"] .ace-browser-button.ace-yellow-bg{
+    right: 42px;
+}
+html[dir="rtl"] .ace-browser-button.ace-green-bg{
+    left:initial;
+    right:62px;
+}
+.ace-browser-bar{float: left;position: absolute;top: 0;width: 100%;height: 52px;border-top-left-radius: 6px;border-top-right-radius: 6px;background: #ebebeb;}
+.ace-browser-address-bar {
+    background: #ffffff;
+    width: 86%;
+    border-radius: 10px;
+    height: 25px;
+    position: absolute;
+    top: 16px;
+}
+html[dir="ltr"] .ace-browser-address-bar{
+    left: 93px;
+}
+html[dir="rtl"] .ace-browser-address-bar{
+    right: 93px;
+}
+.ace-viewonly input, .ace-viewonly select{
+    background: transparent !important;
+    border: 0 !important;
+}
 
-    .ace-window{
-        display: block;
-    }
-    .ace-advanced-panel.ace-quick-access-bar{
-        width:0;
-        display: block;
-        position: relative;
-    }
-    .ace-advanced-panel.ace-quick-access-bar.ace-show{
-        width: 250px;
-    }
+.ace-window{
+    display: block;
+}
+.ace-advanced-panel.ace-quick-access-bar{
+    width:0;
+    display: block;
+    position: relative;
+}
+.ace-advanced-panel.ace-quick-access-bar.ace-show{
+    width: 250px;
+}
 a.ace-entries-menu-trigger {
     background: #46c3ff;
     float: left;
@@ -2532,7 +2531,7 @@ a.ace-entries-menu-trigger {
     line-height:1;
 }
 .ace-submenu{
-     /* Safari 5.1 to 6.0 */
+    /* Safari 5.1 to 6.0 */
     background: #ffffff;
     box-shadow: 0px 5px 2px rgba(0, 0, 0, 0.26);
     transition: ease .3s;
@@ -2630,12 +2629,12 @@ i.fa.fa-many-arrows:after{
     display: block;
     float: right;
 }
-    .ace-fixed-height-bar {
-        height: 52px;
-        margin-top: -1px; /* it helps in cases where a bordered title bar is bellow another bordered or box shadowed element */
-        min-height: 52px;
-        overflow: hidden;
-    }
+.ace-fixed-height-bar {
+    height: 52px;
+    margin-top: -1px; /* it helps in cases where a bordered title bar is bellow another bordered or box shadowed element */
+    min-height: 52px;
+    overflow: hidden;
+}
 @media screen and (min-width:320px) and (max-width:1024px){
     .ace-content{
         clear:none !important;
@@ -2651,7 +2650,7 @@ div[value="cancel"] button{
     color:#EF3831 !important;
 }
 div[value="save"] button{
-        color: #41d195 !important;
+    color: #41d195 !important;
 }
 
 /***************-------------- INVOICE MANAGER RELATED ----------**************/
@@ -2743,37 +2742,37 @@ html[dir="ltr"] .row-input-data  .ace-field-container{
     top: 0px;
 }
 .row-input-data .delete-current button, .row-display-data .delete-current button{
-	/* position:absolute; */
-	width:22px;
-	height:22px;
-	padding:0;
-	border-radius:50%;
-	overflow:hidden;
-	top: -16px;
-	margin: 0 10px;
-	z-index:1;
-	/* right: -35px; */
-	background:#E07474;
-	transition:ease-in-out .2s;
-	color:rgba(0,0,0,0);
+    /* position:absolute; */
+    width:22px;
+    height:22px;
+    padding:0;
+    border-radius:50%;
+    overflow:hidden;
+    top: -16px;
+    margin: 0 10px;
+    z-index:1;
+    /* right: -35px; */
+    background:#E07474;
+    transition:ease-in-out .2s;
+    color:rgba(0,0,0,0);
 }
 .row-display-data .delete-current button{
     top:0;
 }
 .row-input-data .delete-current button:before, .row-display-data .delete-current button:before{
-	content: 'X';
-	width:100%;
-	line-height: 1.6;
-	text-align:center;
-	display:block;
-	height:100%;
-	color:#ffffff;
+    content: 'X';
+    width:100%;
+    line-height: 1.6;
+    text-align:center;
+    display:block;
+    height:100%;
+    color:#ffffff;
 }
 .row-input-data .delete-current button:hover, .row-display-data .delete-current button:hover{
     background:#E07474;
 }
 .row-input-data .delete-current button:hover, .row-display-data .delete-current button:hover{
-	box-shadow:0px 3px 5px rgba(0,0,0,0.26);
+    box-shadow:0px 3px 5px rgba(0,0,0,0.26);
 
 }
 .row-input-data .ace-text-field{
@@ -2855,8 +2854,8 @@ input.ace-efld {}
 }
 
 .ace-vertical-rows .ace-grid-row:hover{
-     box-shadow: 0 7px 14px rgba(0,0,0,0.25);
-     background: #ffffff !important;
+    box-shadow: 0 7px 14px rgba(0,0,0,0.25);
+    background: #ffffff !important;
 }
 
 .ace-vertical-rows, .ace-vertical-rows *{
@@ -2903,8 +2902,8 @@ input.ace-efld {}
 .ace-vertical-rows .ace-text-field input{
     padding:20px 0;
     text-align:center;
-   font-size:18px;
-   font-weight:600;
+    font-size:18px;
+    font-weight:600;
 
 }
 .ace-vertical-rows .ace-field-container{
@@ -2919,14 +2918,14 @@ input.ace-efld {}
     box-shadow: 0px 1px 3px rgba(0,0,0,0.26);
     border-radius: 50%;
 }
- .ace-entry-card > div > div > div  > [class*="-field"]{
-	padding-bottom: 18px !important;
+.ace-entry-card > div > div > div  > [class*="-field"]{
+    padding-bottom: 18px !important;
 }
 .ace-entry-card [class*="-field"].ace-big-padding-bottom{
-	padding-bottom:18 !important;
+    padding-bottom:18px !important;
 }
 .ace-entry-card .row-display-data {
-	padding-bottom: 0px !important;
+    padding-bottom: 0px !important;
 }
 .save-existing button, .ace-row-flat-button button{
     background: none;
@@ -3033,7 +3032,7 @@ input.ace-efld {}
     z-index: 1;
     padding-bottom: 0 !important;
 }
-.ace-entry-card > ..ace-link-button-to-input [class*="-field"]{
+.ace-entry-card > .ace-link-button-to-input [class*="-field"]{
     padding-bottom:0 !important;
 }
 .ace-vertical-rows .ace-checkbox-field .ace-label {
@@ -3114,8 +3113,8 @@ html[dir="rtl"] .ace-entry-card .ace-grid-auto-complete{
 }
 #invoices-ed-frm-renderer [fieldname="_inv_no"]{
     position: absolute;
-    right: 15;
-    top: 15;
+    right: 15px;
+    top: 15px;
     font-size: 18px;
     font-weight: 600;
     opacity: 0.6;
@@ -3170,8 +3169,8 @@ html[dir="rtl"] .ace-entry-card .ace-grid-auto-complete{
     background:aliceblue !important;
 }
 .invoice-payments-grid .ace-autocomplete-field .ace-scrollview{
-     overflow:hidden !important;
-     overflow-y:auto !important;
+    overflow:hidden !important;
+    overflow-y:auto !important;
 
 }
 .invoice-payments-grid .ace-autocomplete-field .ace-grid-pagination{

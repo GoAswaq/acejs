@@ -47,12 +47,24 @@
         settings : {
             fieldPrefix:'ace',		//add as a prefix in front of all created fields
             aceSettings:'as',			//the name of the data object which holds the settings for each fields
+            aceSettingsTmp:'ast',			//temporary ace settings for not ace fields
             overviewids:0,			//add special property to all fields, to identify them somehow; TODO - when cloning them, make it so this id is increased
             url:null,				//this is the custom URL of the place to which ace directs all network calls
+            //debugEnabled:false,		//if true, debug type logs will be displayed
             debugEnabled:false,		//if true, debug type logs will be displayed
             showAllLogsAsToasts:false,//if true, all LOGS will be shown as a toast
 
+            removeTemplatesFromDom:true,
+
             useflex:false,/*some html syntax has been changed to use flex functionality; to keep backwards compatibility to some themes, this should only be set to true IF we use a new, flex theme*/
+
+            enableHistory : true, //true, if the history should be recorded
+            autosaveTimeout: 1000,
+            usingNewCSSVersion : false,//set to true, when using the new CSS version; affects datepicker
+            hasGeneralErrorCodeHandler : false,//if true, then the user defined custom function aceGeneraErrorHandler(error_code) exists
+
+            mouseTrackingIsOn : false,
+            mousePosition : {x:0,y:0},
         },//end settings
 
         /**
@@ -76,6 +88,7 @@
             autocompleteCellIgnore:'ace-ignore-cell',
             label:'ace-label',
             badge:'ace-badge',
+            badgePointer:'ace-badge-pointer',
             radio:'ace-radio-field',
             check:'ace-checkbox-field',
             aswitch:'ace-switch-field',
@@ -84,6 +97,11 @@
             chipsField:'ace-chips-field',
             chip:'ace-chip',
             chipRemove:'ace-chip-remove',
+            chipClear:'ace-chip-clear',
+
+            tagsField:'ace-tags-field',
+            tagsForm:'ace-tags-form',
+            tagsChipsField:'ace-tags-chips-field',
 
             autocompleteTemplate:'ace-autocomplete-details-field',
             autocompleteInnerTemplate:'ace-autocomplete-details-inner-field',
@@ -96,10 +114,10 @@
             breadcrumbsActive:'ace-breadcrumbs-active',
 
             textareaField:'ace-text-editor',
-            
+
             progressbarField:'ace-progress-bar',
             progressbarInner:'ace-progress-inner-bar',
-            
+
             wizardField:'ace-wizard-field',
             wizardTopBar:'ace-wizard-top-bar',
             wizardBottomBar:'ace-wizard-bottom-bar',
@@ -114,7 +132,8 @@
             cardViewItem : 'ace-card-view-item',
             tabView : 'ace-tab-view',
             tabViewItem : 'ace-tab-view-item',
-            tabViewItem : 'ace-tab-view-item',
+
+            tagEdit : 'ace-tag-edit',
 
             grid:'ace-grid',
             gridCell:'ace-grid-cell',
@@ -151,7 +170,7 @@
             gridPanelCancelButton:'ace-grid-panel-cancel-button',
             gridPanelDeleteButton:'ace-grid-panel-delete-button',
             gridPanelEditButton:'ace-grid-panel-edit-button',
-            
+
             gridNHeader:'ace-nested-grid-header',
             gridNHeaderCol:'ace-grid-groupped-header-col',
             gridNHeaderColLast:'ace-grid-grouped-header-col-last',
@@ -211,6 +230,7 @@
             promptInner:'ace-prompt-inner-el', //used by the prompt inner popup
             promptInnerButtons:'ace-prompt-inner-buttons', //used by the prompt inner popup
             maskDiv:'ace-mask-div',
+            checkDiv:'ace-check-div',
 
             buttonBar:'ace-button-bar',
 
@@ -272,7 +292,8 @@
             moreMenuIcon : 'fa fa-ellipsis-v',
             editIcon2 : 'fa fa-pencil-square-o',
             trashIcon : 'fa fa-trash',
-            calendarIcon : 'fa fa-calendar',
+            calendarIcon : 'fal fa-calendar',
+            calendarIconOld : 'fa fa-calendar',
             uploadIcon : 'fa fa-upload',
             nextIcon : 'fa fa-angle-right',
             prevIcon : 'fa fa-angle-left',
@@ -290,21 +311,451 @@
             accordionItemRemoteLoading : 'ace-accordion-item-remote-loading',
             accordionList : 'ace-accordion-list',
             accordionActive : 'ace-active',
-            
+
             accordionCheck : 'ace-accordion-checkbox',
             checked : 'ace-checked',
             iconChecked : 'fa-check-circle',
             iconPlus : 'fa-plus-circle',
-            
+
             appContent : 'ace-content',
-            appMobileWindow : 'ace-mobile-window',
-            
+
             parseTpl : 'ace-pt',
         },//end classes object
 
         defaults: {
             labelsuffix: ':',
         },
+
+        /**
+         *
+         * begin history
+         *
+         * this object records:
+         *  - a brief history of log messages
+         *  - a brief history of all failed server ajax communications
+         *
+         */
+        history : {
+
+            maxLogStack : 10,
+            maxAjaxStack : 10,
+
+            logStack : [],
+            ajaxStack : [],
+
+            templateId : 'ace-history-tpl',
+            rendertoId : 'ace-history-form',
+            norecordsId  : 'ace-history-no-data-tpl',
+            norecordsForUserId  : 'ace-history-no-logs-tpl',
+
+
+            recordLog : function(severity, text) {
+                if (!$.aceOverWatch.settings.enableHistory) {
+                    return;
+                }
+                if (this.logStack.length >= this.maxLogStack) {
+                    this.logStack.pop();
+                }
+                this.logStack.push({
+                    severity    : severity,
+                    text        : text,
+                    timestamp   : moment().format('YYYY/MM/DD H:mm'),
+                    type        : 'logs',
+                    saved       : false,
+                });
+                this.updateIfFormVisible('logs');
+            },
+            recordAjax : function(url, params, statusCode, statusText, responseText) {
+                if (!$.aceOverWatch.settings.enableHistory) {
+                    return;
+                }
+                if (this.ajaxStack.length >= this.maxAjaxStack) {
+                    this.ajaxStack.pop();
+                }
+                this.ajaxStack.push({
+                    urls        : url,
+                    params      : params,
+                    statusCode  : statusCode,
+                    statusText  : statusText,
+                    responseText : responseText,
+                    timestamp   : moment().format('YYYY/MM/DD H:mm'),
+                    type        : 'ajax',
+                    saved       : false,
+                });
+                this.updateIfFormVisible('ajax');
+            },
+            show : function(){
+                this.getForm().ace('show');
+            },
+
+            createGeneralLogTemplateIfNeeded : function(){
+
+                if( this.generalTempalteCreated ){
+                    return;
+                }
+                this.generalTempalteCreated = true;
+
+                $('body').append('<div id="'+this.templateId+'" class="'+[$.aceOverWatch.classes.hide,$.aceOverWatch.classes.col12].join(' ')+'">' +
+                    '<h1 class="ace-col-12 title" style="padding-bottom:10px">Log History</h1>' +
+                    '<div class="ace-col-12 ace-row ace-centered-blocks" style="height:50%">'+
+                    '<div class="ace-col-2 ace-small-margin-bottom ace-small-padding-right ace-normal-accordion navigator">'+ '</div>'+
+                    '<div class="ace-col-10 ace-small-margin-bottom ace-small-padding-right ace-grid-hide-toolbar ace-grid-hide-header log-grid" style="height: 100%;">'+ '</div>'+
+                    '</div>'+
+                    '</div>'
+                ).append('<div class="'+$.aceOverWatch.classes.hide+'" id="'+this.norecordsId+'">Nothing has been recorded so far, all is well!</div>');
+
+            },
+
+            getForm : function(){
+                if( !this.form ){
+
+                    this.createGeneralLogTemplateIfNeeded();
+
+                    $('body').append('<div class="'+[$.aceOverWatch.classes.formPopup].join(' ')+'" id="'+this.rendertoId+'"></div>');
+
+                    this.form = $('#'+this.rendertoId);
+                    this.form.ace('create',{
+                        type:               'form',
+                        ftype:              'popup',
+                        template:           this.templateId,
+                        renderto:           this.rendertoId,
+                        customsavetext:     _aceL.upload,
+                        displaysavebtn:     true,
+                        displaycancelbtn:   true,
+                        net:                {},
+                        hideaftersave :     true,
+
+                        oninit : function(){
+                            $.aceOverWatch.history.onFormInit();
+                        },
+                        onlocalsavesuccessfull : function(){
+                            $.aceOverWatch.history.upload();
+                        },
+                        onshow : function(){
+                            $.aceOverWatch.history.onShow();
+                        }
+                    });
+                }
+
+                return this.form;
+
+            },
+
+            onFormInit : function(){
+
+                this.form.find('.'+$.aceOverWatch.classes.formContainer).css({
+                    "min-height": "50vh",
+                    "max-height": "80vh",
+                    "display": "block",
+                });
+
+                this.form.find('.'+$.aceOverWatch.classes.formInner).css('display','block');
+
+                this.navigator = this.form.find('.navigator');
+                this.navigator.ace('create',{
+                    type:'accordion',
+                    data : [
+                        {
+                            name : 'Ajax',
+                            'tag' : 'ajax',
+                        },
+                        {
+                            name : 'Logs',
+                            'tag' : 'logs',
+                        },
+                    ],
+
+                    handler:function(tag){
+                        $.aceOverWatch.history.onTagSelection(tag);
+                    }
+                });
+
+                this.grid = this.form.find('.log-grid');
+                this.grid.ace('create',{
+                    type:'grid',
+                    norecordstpl:this.norecordsId,
+                    pagination:false,
+                    displayrowlines:true,
+                    idfield: 'timestamp',
+                    width:'100%',
+
+                    allowedit: false,
+                    allowadd: false,
+                    allowdelete: false,
+                    allowrefresh:false,
+
+                    columns : [
+                        {
+                            aditionalclasses: 'ace-col-12',
+                            fieldname: 'timestamp',
+                            renderer : function(value, record){
+                                return $.aceOverWatch.history.rowRenderer(value, record);
+                            }
+                        }
+                    ],
+                    net : {
+                        remote:false,
+                        size:10,
+                    }
+                });
+            },
+
+            onShow : function(){
+                $.aceOverWatch.field.accordion.openTag(this.navigator, 'ajax');
+            },
+
+            onTagSelection : function(tag){
+                this.lastTagUsed = tag;
+                switch( tag ){
+                    case 'ajax':
+                        $.aceOverWatch.field.grid.setData(this.grid,this.ajaxStack,this.ajaxStack.length,true);
+                        break;
+                    case 'logs':
+                        $.aceOverWatch.field.grid.setData(this.grid,this.logStack,this.logStack.length,true);
+                        break;
+                }
+            },
+
+            updateIfFormVisible : function(tag){
+                if( tag != this.lastTagUsed || !this.form || !this.form.hasClass('ace-form-show') ){
+                    return;
+                }
+                this.onTagSelection(tag);
+            },
+
+            rowRenderer : function(value, record){
+                let content = '<i>'+record.val('timestamp')+'</i>';
+                switch( record.val('type') ){
+
+                    case 'ajax':
+
+                        content += ', '+record.val('url')+', Code: ['+record.val('statusCode')+'], Status: ['+record.val('statusText')+']<br>'+
+                            'Response: <br><code>'+record.val('responseText')+'</code><br>'+
+                            'Params:<br>'+ JSON.stringify(record.val('params'));
+
+                        break;
+
+                    case 'logs':
+                        content += ', <b>'+record.val('severity')+'</b><br>'+record.val('text');
+                        break;
+                }
+                return content;
+            },
+
+            upload : function(){
+
+                if( this.ajaxStack.length == 0 && this.logStack.length == 0 ){
+                    $.aceOverWatch.toast.show('warning', 'There is nothing currently to sent');
+                    return;
+                }
+
+                $.aceOverWatch.prompt.show('Are you sure you want to upload the current log data?',function() {
+                    $.aceOverWatch.history.uploadActual();
+                },{type:'question'});
+
+            },
+
+            uploadActual : function(){
+                if( !this.netHelper ){
+                    this.netHelper = $('<div></div>').ace('create',{
+                        type		:	'hidden',
+                        net			: 	{
+                            remote	:	true,
+                            fid		:	'acelogupload',
+                        },
+                    });
+                }
+
+                $.aceOverWatch.net.save(this.netHelper,
+                    {
+                        _payload : JSON.stringify({
+                            'ajax' : this.ajaxStack,
+                            'logs' : this.logStack,
+                        })
+                    },{
+
+                        onsuccess : function(){
+                            $.aceOverWatch.history.onUploadSuccessful();
+                        },
+
+                        oncomplete:function(){
+
+                        }
+                    },null,{
+                        type: 'POST'
+                    });
+
+            },
+
+            onUploadSuccessful : function(){
+                $.aceOverWatch.toast.show('success', 'The log data has been uploaded successfully!');
+                this.form.ace('hide');
+            },
+
+            loadLogsForUser : function(targetGrid, userId){
+                if( targetGrid.length == 0 ){
+                    $.aceOverWatch.toast.show('error', 'No grid detected for displaying user logs!');
+                    return;
+                }
+
+                if( !this.haveLogsBeenDisplayedBefore ){
+                    this.haveLogsBeenDisplayedBefore = true;
+                    $('body').append('<div class="'+$.aceOverWatch.classes.hide+'" id="'+this.norecordsForUserId+'">No logs have been found for the current user</div>');
+                }
+
+                if( !targetGrid.attr('agrid') ){
+
+                    this.createGeneralLogTemplateIfNeeded();
+
+                    targetGrid.ace('create',{
+                        type:'grid',
+                        norecordstpl:this.norecordsForUserId,
+
+                        displayrowlines:true,
+                        idfield: '_users_ace_log_id',
+                        width:'100%',
+
+                        allowedit: true,
+                        allowadd: false,
+                        allowdelete: false,
+                        allowrefresh:false,
+
+                        editcolumnname : _aceL.view,
+                        showeditcolumn : 'end',
+
+                        editform : {
+                            template:this.templateId,
+                            ftype:'popup',
+                            displaycancelbtn:true,
+                            displaysavebtn:false,
+                            autoloadfieldsonshow:false,
+                            validate:false,
+
+                            checkdirtyoncancel : false,
+
+                            oninit:function(form){
+                                let f = $(form);
+                                $.aceOverWatch.history.onInitLogViewForm(f);
+                            },
+
+                            onafterloadrecord:function(form, record){
+                                $.aceOverWatch.history.onAfterLoadRecordLogViewForm(record);
+                            },
+
+                        },
+
+                        columns : [
+                            {
+                                aditionalclasses: 'ace-col-11',
+                                fieldname: '_data_ins_users_ace_log_id',
+                            }
+                        ],
+                        net : {
+                            remote:true,
+                            fid:'acelogupload'
+                        }
+                    });
+                }
+
+                targetGrid.ace('value',{
+                    cleardata:true,
+                    page:1,
+                    net : {
+                        extraparams : {
+                            uid : userId
+                        }
+                    }
+
+                });
+                $.aceOverWatch.field.grid.reloadPage(targetGrid);
+
+            },
+
+            onInitLogViewForm : function(f){
+                this.viewLogForm = f;
+
+                f.find('.'+$.aceOverWatch.classes.formContainer).css({
+                    "min-height": "50vh",
+                    "max-height": "80vh",
+                    "display": "block",
+                });
+
+                f.find('.'+$.aceOverWatch.classes.formInner).css('display','block');
+
+                this.navigatorView = f.find('.navigator');
+                this.navigatorView.ace('create',{
+                    type:'accordion',
+                    data : [
+                        {
+                            name : 'Ajax',
+                            'tag' : 'ajax',
+                        },
+                        {
+                            name : 'Logs',
+                            'tag' : 'logs',
+                        },
+                    ],
+
+                    handler:function(tag){
+                        $.aceOverWatch.history.onTagSelectionView(tag);
+                    }
+                });
+
+                this.gridView = f.find('.log-grid');
+                this.gridView.ace('create',{
+                    type:'grid',
+                    norecordstpl:this.norecordsId,
+                    pagination:false,
+                    displayrowlines:true,
+                    idfield: 'timestamp',
+                    width:'100%',
+
+                    allowedit: false,
+                    allowadd: false,
+                    allowdelete: false,
+                    allowrefresh:false,
+
+                    columns : [
+                        {
+                            aditionalclasses: 'ace-col-12',
+                            fieldname: 'timestamp',
+                            renderer : function(value, record){
+                                return $.aceOverWatch.history.rowRenderer(value, record);
+                            }
+                        }
+                    ],
+                    net : {
+                        remote:false,
+                        size:10,
+                    }
+                });
+            },
+            onAfterLoadRecordLogViewForm : function(record){
+                this.currentPayload = record.val('_payload');
+                try {
+                    this.currentPayload = JSON.parse(record.val('_payload'));
+                }catch (e) {
+                    this.currentPayload = {
+                        ajax : [],
+                        logs : [],
+                    };
+                }
+                $.aceOverWatch.field.accordion.openTag(this.navigatorView, 'ajax');
+            },
+
+            onTagSelectionView : function(tag){
+                switch( tag ){
+                    case 'ajax':
+                        $.aceOverWatch.field.grid.setData(this.gridView,this.currentPayload.ajax,this.currentPayload.ajax.length,true);
+                        break;
+                    case 'logs':
+                        $.aceOverWatch.field.grid.setData(this.gridView,this.currentPayload.logs,this.currentPayload.logs.length,true);
+                        break;
+                }
+            }
+
+        },
+
         /**
          *
          * outsideclick - click outside of an element
@@ -312,6 +763,7 @@
         eventManager : {
 
             isDocumentClickHandlerRunning : false,
+            lastOutsideTargetClicked : false,
 
             eventsCollections : {
 
@@ -330,16 +782,23 @@
                 delete $.aceOverWatch.eventManager.eventsCollections[eventname][settings.id];
             },
 
+            /**
+             *
+             * @param eventname the global event name to watch out for; currently only outsideclick is supported
+             * @param testField the field which is tested for particular event
+             * @param targetField the field which will receive the callback method when the event is triggered on the test field
+             * @param method the method which will be called, with the targetField as parameter, when the event is triggered on the test field
+             */
             registerEvent : function(eventname, testField, targetField, method){
 
                 if( !$.aceOverWatch.eventManager.eventsCollections.hasOwnProperty(eventname) ){
-                    $.aceOverWatch.eventManager.eventsCollections[eventname] = [];
+                    $.aceOverWatch.eventManager.eventsCollections[eventname] = {};
                 }
 
-
-                var settings = testField.data($.aceOverWatch.settings.aceSettings);
+                let settings = testField.data($.aceOverWatch.settings.aceSettings);
                 if( !settings ){
-
+                    $.aceOverWatch.utilities.log('ACE - Register EVENT: test fied for "'+eventName+'" does not have ace id.','debug');
+                    return;
                 }
 
                 $.aceOverWatch.eventManager.eventsCollections[eventname][settings.id] = {
@@ -348,6 +807,21 @@
                     method : method
                 };
 
+                /*
+                 * the outside document click handler is triggered ONLY the first time someone registers for the outsideclick event
+                 */
+                if( eventname == 'outsideclick' ) {
+                    this.enableDocumentClickHandlerIfNeeded();
+                }
+            },
+            deregisterEvent : function(eventname, testField){
+                let settings = testField.data($.aceOverWatch.settings.aceSettings);
+                if( settings && $.aceOverWatch.eventManager.eventsCollections[eventname] ){
+                    delete($.aceOverWatch.eventManager.eventsCollections[eventname][settings.id]);
+                }
+            },
+
+            enableDocumentClickHandlerIfNeeded : function(){
 
                 if( $.aceOverWatch.eventManager.isDocumentClickHandlerRunning ){
                     return true;
@@ -360,6 +834,8 @@
                     if( !jQuery.contains(document, event.target) ){
                         return;
                     }
+
+                    $.aceOverWatch.eventManager.lastOutsideTargetClicked = event.target;
 
                     /*
 					 * ok.. lets deal with various events..
@@ -377,9 +853,8 @@
                     }
 
                 });
-            },
 
-
+            }
         },
 
 
@@ -468,6 +943,29 @@
 
         },
 
+        cookies : {
+            set : function(cname, cvalue, exdays=100){
+                let d = new Date();
+                d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                document.cookie = cname + "=" + cvalue + ";" + "expires="+ d.toUTCString() + ";path=/";
+            },
+
+            get : function(cname){
+                let name = cname + "=";
+                let ca = document.cookie.split(';');
+                for(let i = 0; i <ca.length; i++) {
+                    let c = ca[i];
+                    while (c.charAt(0)==' ') {
+                        c = c.substring(1);
+                    }
+                    if (c.indexOf(name) == 0) {
+                        return c.substring(name.length,c.length);
+                    }
+                }
+                return "";
+            }
+        },
+
         /**
          * begin screenmask object
          * screenMask - used to create screen wide masks while doing some background data
@@ -478,28 +976,28 @@
             maskInner:null,
             show:function(msg, withLoader = false){
                 this.create();
-                
+
                 /*
                  * if we display a loader, the msg will be added to the loader itself
                  * in which case, the mask message will be an empty string ( necessary, otherwise the div will not be displayed
                  */
                 let displayMsg = withLoader ? '&nbsp' : msg;
                 if( displayMsg ){
-                	this.maskMsg.html(displayMsg);
-                	this.maskInner.removeClass($.aceOverWatch.classes.hide);
+                    this.maskMsg.html(displayMsg);
+                    this.maskInner.removeClass($.aceOverWatch.classes.hide);
                 }else{
-                	this.maskInner.addClass($.aceOverWatch.classes.hide);
+                    this.maskInner.addClass($.aceOverWatch.classes.hide);
                 }
                 if( !withLoader ){
-                	this.loaderEl.addClass($.aceOverWatch.classes.hide);
+                    this.loaderEl.addClass($.aceOverWatch.classes.hide);
                 }else{
-                	
-                	if( msg ){
-                		this.loaderTextEl.attr('data-loadtext',msg);
-                	}else{
-                		this.loaderTextEl.attr('data-loadtext','');
-                	}
-                	
+
+                    if( msg ){
+                        this.loaderTextEl.attr('data-loadtext',msg);
+                    }else{
+                        this.loaderTextEl.attr('data-loadtext','');
+                    }
+
                     this.loaderEl.removeClass($.aceOverWatch.classes.hide);
                 }
 
@@ -507,17 +1005,17 @@
             },
             hide:function(){
                 if( !this.mask ){
-                	return;
+                    return;
                 }
                 this.mask.fadeOut();
             },
             create : function(){
-            	if( this.mask ){
-            		return;
-            	}
-            	$('<div class="ace-screen-mask '+ ' '+$.aceOverWatch.classes.mask +'" id="ace_mask_el"><div id="ace_mask_el_div"><h2 id="ace_mask_el_msg"></h2>'+
-                        $.aceOverWatch.utilities.getLoaderCode()+
-                        +'</div></div>').appendTo('body');
+                if( this.mask ){
+                    return;
+                }
+                $('<div class="ace-screen-mask '+ ' '+$.aceOverWatch.classes.mask +'" id="ace_mask_el"><div id="ace_mask_el_div"><h2 id="ace_mask_el_msg"></h2>'+
+                    $.aceOverWatch.utilities.getLoaderCode()+
+                    +'</div></div>').appendTo('body');
                 this.mask = $('#ace_mask_el');
                 this.maskInner = $('#ace_mask_el_div');
                 this.maskMsg = $('#ace_mask_el_msg');
@@ -548,11 +1046,11 @@
             // cancelText -> custom Cancel Text
             show:function(msg,callbackOk,cfg){
 
-            	if( !cfg ){
-            		cfg = {
-        				type : 'prompt'
-            		}
-            	}
+                if( !cfg ){
+                    cfg = {
+                        type : 'prompt'
+                    }
+                }
 
                 let okText = $.aceOverWatch.utilities.isVoid(cfg.okText, true) ? _aceL.ok : cfg.okText;
                 let cancelText = $.aceOverWatch.utilities.isVoid(cfg.cancelText, true) ? _aceL.cancel : cfg.cancelText;
@@ -562,6 +1060,7 @@
                     $('<div tabindex="0" class="'+ $.aceOverWatch.classes.hide + ' '+$.aceOverWatch.classes.mask + ' ' + $.aceOverWatch.classes.prompt+'" id="mask_el_prompt">\
 							<div class="'+$.aceOverWatch.classes.promptInner+'">\
 								<p id="mask_el_prompt_msg"></p>\
+								<p id="mask_el_prompt_subtitle" class="ace-hide ace-font-size-75p ace-text-right"></p>\
 								<input id="mask_el_prompt_in"  type="text">\
 								'+($.aceOverWatch.settings.useflex?'<div class="'+$.aceOverWatch.classes.buttonBar+'">':'')+'\
 									<button id="mask_el_prompt_cancel">'+ cancelText +'</button>\
@@ -571,7 +1070,9 @@
 						</div>').appendTo('body');
 
                     this.wnd = $('#mask_el_prompt');
+                    this.wndi = this.wnd.find('.'+$.aceOverWatch.classes.promptInner);
                     this.msg = $('#mask_el_prompt_msg');
+                    this.subtitle = $('#mask_el_prompt_subtitle');
                     this.input = $('#mask_el_prompt_in');
 
                     this.okBtn = $('#mask_el_prompt_ok');
@@ -583,21 +1084,26 @@
                     this.wnd.keyup(function (e) {
                         switch(e.keyCode){
                             case 27://escape
-                            	$.aceOverWatch.prompt.onCancel();
+                                $.aceOverWatch.prompt.onCancel();
                                 break;
                         }
                     });
                 }else{
-                	
-                	this.okBtn.html(okText);
-                	this.cancelBtn.html(cancelText);
-                	
+
+                    this.okBtn.html(okText);
+                    this.cancelBtn.html(cancelText);
+
                 }
 
                 this.wnd.data("callbackOk",callbackOk);
                 this.wnd.data("cfg",cfg);
 
                 this.msg.html(msg);
+                if( cfg.subtitle ){
+                    this.subtitle.html(cfg.subtitle).removeClass('ace-hide');
+                }else{
+                    this.subtitle.html(cfg.subtitle).addClass('ace-hide');
+                }
                 this.cancelBtn.show();
                 this.okBtn.show();
                 this.input.show();
@@ -612,7 +1118,7 @@
                     }
                     switch(cfg.type){
                         case 'question':	//displays message, button ok and cancel
-                        	this.input.hide();
+                            this.input.hide();
                             focusEl = this.cancelBtn;
                             break;
                         case 'prompt':		// asks for a message
@@ -629,31 +1135,33 @@
                             });
 
                             break;
-                            
+
                         case 'mask': //should be removed...
-                        	this.input.hide();
-                        	this.cancelBtn.hide();
-                        	this.okBtn.hide();
+                            this.input.hide();
+                            this.cancelBtn.hide();
+                            this.okBtn.hide();
                             break;
 
                         case 'alert':		//button ok
                         default:
-                        	this.cancelBtn.hide();
-                        	this.input.hide();
+                            this.cancelBtn.hide();
+                            this.input.hide();
                             focusEl = this.okBtn;
                             this.wnd.addClass($.aceOverWatch.classes.error);
                             break;
                     }
                     if (!$.aceOverWatch.utilities.isVoid(cfg.okBtnText)) {
-                    	this.okBtn.html(cfg.okBtnText);
+                        this.okBtn.html(cfg.okBtnText);
                     }
                     if (!$.aceOverWatch.utilities.isVoid(cfg.cancelBtnText)) {
-                    	this.cancelBtn.html(cfg.cancelBtnText);
+                        this.cancelBtn.html(cfg.cancelBtnText);
                     }
                 }
                 this.input.val(value);
                 this.wnd.removeClass($.aceOverWatch.classes.hide);
-                this.wnd.show();
+                setTimeout(function(promptEl){
+                    promptEl.wndi.addClass($.aceOverWatch.classes.show);
+                },50,this);
 
                 if(focusEl){
                     focusEl.focus();
@@ -661,27 +1169,21 @@
             },
 
             onCancel:function(ignoreCancelCallback){
-                this.wnd.fadeOut();
+                this.wndi.removeClass($.aceOverWatch.classes.show);
+                this.wnd.addClass($.aceOverWatch.classes.hide);
 
                 if( !ignoreCancelCallback ){
-                	let cfg = this.wnd.data('cfg');
-                    
-                	if( cfg ){
-                		$.aceOverWatch.utilities.runIt(cfg.callbackCancel,cfg);
-                	}
+                    let cfg = this.wnd.data('cfg');
+
+                    if( cfg ){
+                        $.aceOverWatch.utilities.runIt(cfg.callbackCancel,cfg);
+                    }
                 }
             },
 
             onOk:function(){
-                var callback = this.wnd.data('callbackOk');
-
-                if( jQuery.isFunction(callback) ){
-                    this.wnd.hide('fast',function(){
-                        callback($.aceOverWatch.prompt.input.val(),$.aceOverWatch.prompt.wnd.data("cfg"));
-                    });
-                }else{
-                    $.aceOverWatch.prompt.onCancel(true);
-                }
+                $.aceOverWatch.prompt.onCancel(true);
+                $.aceOverWatch.utilities.runIt(this.wnd.data('callbackOk'),$.aceOverWatch.prompt.input.val(),$.aceOverWatch.prompt.wnd.data("cfg"));
             }
         },//end prompt object
 
@@ -701,20 +1203,20 @@
             timeoutID:null,
             history:[],//a history of messages!
 
-			/**
-			 * @param string type error, success, warning, help
-			 * @param string type the message to display 
-			 */
+            /**
+             * @param string type error, success, warning, help
+             * @param string type the message to display
+             */
             show : function(type, message){
-            	this.create();
+                this.create();
 
                 this.wnd.removeClass(this.lastToastClass);
                 this.iconDiv.removeClass(this.lastIconClass);
 
                 switch(type){
                     case 'error':
-                    	this.lastToastClass = $.aceOverWatch.classes.toastError;
-                    	this.lastIconClass = $.aceOverWatch.classes.toastErrorIcon;
+                        this.lastToastClass = $.aceOverWatch.classes.toastError;
+                        this.lastIconClass = $.aceOverWatch.classes.toastErrorIcon;
                         break;
                     case 'success':
                         this.lastToastClass = $.aceOverWatch.classes.toastSuccess;
@@ -728,6 +1230,8 @@
                         this.lastToastClass = $.aceOverWatch.classes.toastHelp;
                         this.lastIconClass = $.aceOverWatch.classes.toastHelpIcon;
                         break;
+                    case 'custom':
+                        break;
                     default:
                         return;
                 }
@@ -737,10 +1241,10 @@
                     message:message,
                     time:new Date().toISOString(),
                 });
-                
+
                 if( this.history.length > 20 ){
-                	this.history.splice(20,this.history.length-20);
-                }                
+                    this.history.splice(20,this.history.length-20);
+                }
 
                 this.wnd.addClass(this.lastToastClass);
                 this.iconDiv.addClass(this.lastIconClass);
@@ -753,16 +1257,16 @@
             },
 
             hide : function(){
-            	if( !this.wnd ){
-            		return;
-            	}
+                if( !this.wnd ){
+                    return;
+                }
                 this.wnd.addClass($.aceOverWatch.classes.toastHide);
             },
-            
+
             create : function(){
-            	if( this.wnd ){
-            		return;
-            	}
+                if( this.wnd ){
+                    return;
+                }
 
                 $('<div id= "'+this.mainToastId+'" class="'+$.aceOverWatch.classes.toast+' '+$.aceOverWatch.classes.toastHide+'">\
 						<div class="'+$.aceOverWatch.classes.toastIcon+'">\
@@ -778,7 +1282,7 @@
                 this.msgP = this.wnd.find('.'+$.aceOverWatch.classes.toastText+' p');
 
                 this.wnd.click(function() {
-                	$.aceOverWatch.toast.wnd.addClass($.aceOverWatch.classes.toastHide);
+                    $.aceOverWatch.toast.wnd.addClass($.aceOverWatch.classes.toastHide);
                 });
             }
         },//end toast object
@@ -789,7 +1293,7 @@
          */
         record : {
             isRecord: function(obj){
-                return (obj && $.isFunction(obj.val) && typeof obj.data == 'object')
+                return (obj && $.isFunction(obj.val) && typeof obj.data == 'object');
             },
             create : function(data,identityName){
                 var record = {
@@ -839,6 +1343,9 @@
                                 return true;
                         }
                     },
+                    delete:function(fieldName){
+                        delete this.data[fieldName];
+                    },
                     //state - true to set the field as dirty; false to set it as not dirty
                     setDirty:function(fieldName,state){
                         if( this.data[fieldName] ){
@@ -846,8 +1353,8 @@
                         }
                     },
                     getOriginal:function(fieldName){
-                    	return this.data[fieldName].original;
-                	},
+                        return this.data[fieldName].original;
+                    },
                     makeItAllDirty:function(){
                         for(property in this.data){
                             this.data[property].isDirty = true;
@@ -896,7 +1403,9 @@
                     convert:function(data, extraInfo){
                         if( data ){
                             //on conversion from normal object to record, extraInfo holds the name of the identity field
-                            this.identity = extraInfo;
+                            if( !$.aceOverWatch.utilities.isVoid(extraInfo,true) ) {
+                                this.identity = extraInfo;
+                            }
 
                             if( typeof data !== 'object' ){
                                 return false;
@@ -925,6 +1434,9 @@
                             this.val(property, otherRecord.val(property),asDirty===true?false:true);
                         }
                     },
+                    doesFieldNameExists : function(fieldname){
+                        return this.data.hasOwnProperty(fieldname);
+                    }
 
                 };
 
@@ -934,31 +1446,273 @@
         },//end record object
 
         /**
+         * begin widget object
+         */
+        widget : {
+            dictionary : {},
+            lastVisibleWidgetIdString : false,
+            isWidget: function(obj){
+                return (obj && $.isFunction(obj.display));
+            },
+            wasItInit : false,
+            get : function(idString, targetEl){
+                if( this.dictionary[idString] ){ return this.dictionary[idString]; }
+                if( targetEl.length == 0 ){ return false; }
+
+                let aceId = $.aceOverWatch.utilities.getNextoverviewid();
+                let container = $('<div className="ace-widget-contaier ace-hide" id="awc-'+aceId+'" idstring="'+idString+'" style="position:absolute;border:1px solid black;padding:5px;background-color:white;"></div>');
+                targetEl.appendTo(container);
+                container.appendTo($('body'));
+                container.data($.aceOverWatch.settings.aceSettings,{id:aceId});
+
+                let widget = {
+                    identity : aceId,
+                    idString : idString,
+                    container : container,
+                    display : function(x,y){
+                        $.aceOverWatch.widget.display(this.idString,x,y);
+                    },
+                    hide : function(){
+                        $.aceOverWatch.widget.hide(this.idString);
+                    }
+                };
+
+                this.dictionary[idString] = widget;
+
+                return widget;
+            },
+            display : function(idString, x,y){
+                if( !this.dictionary[idString] ){ return false; }
+                this.hideLastVisible();
+                this.dictionary[idString].container.removeClass('ace-hide');
+                /*
+                 * if the widget will be displayed outside the window to the RIGHT, we will display it to the left of the mouse
+                 * if the widget will be displayed outside the window to the BOTTOM, we will display it to the top of the mouse
+                 */
+                let pageHeight = $(window).height();
+                let pageWidth = $(window).width();
+                let elementOuterWidth = this.dictionary[idString].container.outerWidth(true);
+                let elementOuterHeight = this.dictionary[idString].container.outerHeight(true);
+                let offset = 10;
+                if( pageWidth < x + elementOuterWidth ){
+                    x = x - elementOuterWidth - offset;
+                }else{
+                    x += offset;
+                }
+                if( pageHeight < y + elementOuterHeight ){
+                    y = y - elementOuterHeight - offset;
+                }else{
+                    y += offset;
+                }
+                this.dictionary[idString].container.css({'top':y,'left':x});
+
+                setTimeout(function(idString){
+                    $.aceOverWatch.eventManager.registerEvent('outsideclick',
+                        $.aceOverWatch.widget.dictionary[idString].container,
+                        $.aceOverWatch.widget.dictionary[idString].container,
+                        function()       {
+                            $.aceOverWatch.widget.hide(idString);
+                        }
+                    );
+                },100,idString)
+
+
+                this.lastVisibleWidgetIdString = idString;
+            },
+            hide : function(idString){
+                if( !this.dictionary[idString] ){ return false; }
+                this.dictionary[idString].container.addClass('ace-hide');
+
+                $.aceOverWatch.eventManager.deregisterEvent('outsideclick', this.dictionary[idString].container);
+                this.lastVisibleWidgetIdString = false;
+            },
+            hideLastVisible : function(){
+                if( !this.lastVisibleWidgetIdString ){ return; }
+                this.hide(this.lastVisibleWidgetIdString);
+                this.lastVisibleWidgetIdString = false;
+            }
+        },
+
+        /**
+         * some elements might add some special hash navigation operations
+         * - as we expand this functionality, other things might happen as well
+         * For forms:
+         *  - on opening, the form registers itself here, as freshly open, with it's ace id as the key
+         *  - the navigation then generates a location hash
+         *  - when navigating here, the ace onHashChange handler will catch it, and PRIME the form
+         *  - next time when the same hash is triggered, if the form is still primed, AND the form is visible,
+         *      the form will be told to hide itself
+         *  - if the form asks for confirmation before it closes itself, the form will register itself anew
+         *  - the form also unregisters itself on a successful hide
+         *  - ATTENTION: for the forms to use the special hash navigation, the form needs to have the parameter
+         *                  enablehashnavigation set to true
+         * For mainsidemenu
+         *  - basic functionality: press back, if it is visible, we close it
+         */
+        specialHashNavigation : {
+            map : {},//ace id to {target, type, and primed status}
+
+            register : function(aceId, target, type, explicitStep = false,onViewStepCallback){
+                switch( explicitStep ) {
+                    case 'v'://forces the id to go into the view step, but ONLY, if it is already registered, and already primed
+                        if( this.map[aceId] && this.map[aceId].primed ) {
+                            location.hash = 'acenav/' + String(aceId) + '/v';//view step
+                        }
+                        break;
+
+                    case 'p': //prime step
+                    default:
+                        this.map[aceId] = {
+                            target: target,
+                            type: type,
+                            primed: false,
+                            viewStepCallback : onViewStepCallback
+                        }
+                        location.hash = 'acenav/' + String(aceId) + '/p';//prime step
+                        break;
+                }
+            },
+
+            deregister : function(aceId,goBack){
+                delete this.map[aceId];
+                if( goBack ){
+                    history.back();
+                }
+            },
+
+            goto : function(aceId,actionCode){
+                if( !this.map[aceId] ){//if we landed on an item that is not register, we force a go back action
+                    history.back();
+                    return;
+                }
+                switch( this.map[aceId].type ){
+                    case 'form':
+                        switch( actionCode ) {
+                            case 'p':
+                                if (!this.map[aceId].primed) {
+                                    this.map[aceId].primed = true;
+                                    location.hash = 'acenav/'+String(aceId)+'/v';//view step
+                                    return;
+                                }
+                                if (this.map[aceId].target.is(':visible')) {
+                                    $.aceOverWatch.field.form.cancel(this.map[aceId].target,function(){
+                                        history.back();//it got closed, we go back once more
+                                    });
+                                }
+                                break;
+                            case 'v'://view step - we don't do anything here;
+                                //it is needed simply to have a place to go back to the prime step
+                                $.aceOverWatch.utilities.runIt(this.map[aceId].viewStepCallback,this.map[aceId].target);
+                                break;
+                        }
+                        break;
+                    case 'mainsidemenu':
+                        switch( actionCode ) {
+                            case 'p':
+                                if (!this.map[aceId].primed) {
+                                    this.map[aceId].primed = true;
+                                    location.hash = 'acenav/'+String(aceId)+'/v';//view step
+                                    return;
+                                }
+
+                                if ($.aceOverWatch.utilities.isElementInFullScreen(this.map[aceId].target)) {
+                                    $.aceOverWatch.utilities.dissmissViewInFullScreen(this.map[aceId].target);
+                                    history.back();//it got closed, we go back once more
+                                }
+                                break;
+                            case 'v'://view step - we don't do anything here;
+                                //it is needed simply to have a place to go back to the prime step
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
+        },
+
+        /**
          * begin utilities object
          * this is a series of functions which are used globaly by all other components of ace
          */
         utilities : {
 
-        	/**
-        	 * true, if the last runIt call actually executed a function
-        	 * use wasItRan to interogate the value
-        	 */
-        	wasLastFunctionRan : false,
-        	runIt : function(functionName,...args){
-        		this.wasLastFunctionRan = false;
-        		if( $.isFunction(functionName)){
-        			this.wasLastFunctionRan = true;
-        			return functionName(...args);
-                }else{
-                    if( $.isFunction(window[functionName])){
-                    	this.wasLastFunctionRan = true;
-                    	return window[functionName](...args);
-                    }
+            isReadonlyACEField : function(el){
+                let settings = el.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){
+                    return false;
                 }
-        	},
-        	wasItRan : function(){
-        		return this.wasLastFunctionRan;	
-        	},
+                return settings.readonly == true;
+            },
+
+            startTrackMouse : function() {
+                if ($.aceOverWatch.settings.mouseTrackingIsOn) {
+                    return;
+                }
+                $.aceOverWatch.settings.mouseTrackingIsOn = true;
+                $.aceOverWatch.settings.mousePosition = {x: 0, y: 0};
+                $(window).on('mousemove', function (e) {
+                    $.aceOverWatch.settings.mousePosition = {
+                        x: e.clientX,
+                        y: e.clientY
+                    };
+                });
+            },
+
+            /**
+             *
+             * @param param
+             * - onThisParentSelector - the click will be triggered only on the closest parent which matches this selector
+             * - ifHasClass - if element has class
+             */
+            triggerMouseClick : function(params){
+                let el = $(document.elementFromPoint($.aceOverWatch.settings.mousePosition.x, $.aceOverWatch.settings.mousePosition.y));
+                if( !this.isVoid(params.onThisParentSelector,true) ){
+                    el.parents(params.onThisParentSelector).first().trigger('click');
+                    return;
+                }
+                if( !this.isVoid(params.ifHasClass,true) && el.hasClass(params.ifHasClass)){
+                    el.trigger('click');
+                    return;
+                }
+                $(el).trigger('click');
+            },
+
+            copyToClipboardById : function(id){
+                let range = document.createRange();
+                range.selectNode(document.getElementById(id));
+                window.getSelection().removeAllRanges(); // clear current selection
+                window.getSelection().addRange(range); // to select text
+
+                let allOk = true;
+                try {
+                    document.execCommand("copy");
+                }catch (err) {
+                    allOk = false;
+                }
+                window.getSelection().removeAllRanges();// to deselect
+                if( allOk ){
+                    $.aceOverWatch.toast.show('success', _aceL.txtc);
+                }
+            },
+
+            /**
+             * true, if the last runIt call actually executed a function
+             * use wasItRan to interrogate the value
+             */
+            notExecutedReturnValue : '111555111.123',
+            runIt : function(functionName,...args){
+
+                if( $.isFunction(functionName)){ return functionName(...args);
+                }else{ if( $.isFunction(window[functionName])){ return window[functionName](...args); } }
+
+                return this.notExecutedReturnValue;
+            },
+            wasItRan : function(value){
+                return this.notExecutedReturnValue !== value;
+            },
 
             getLoaderCode : function($text=''){
                 return '<div class="ace-loader ace-loader-overlay" style="min-height:200px">'+
@@ -988,23 +1742,30 @@
              **/
             getWorkingURL : function(){
                 //in the case there is NO custom url specified, then return the url will be returned from the global variable app_path
-            	let workingURL = $.aceOverWatch.settings.url
-            					 ? $.aceOverWatch.settings.url
-				 				 : window.app_path;
-            	
-            	if( $.aceOverWatch.utilities.isVoid(workingURL,true) ){
-            		/*
-            		 * we want to ignore the # and everything after them
-            		 */
-            		let currentUrl = location.href; 
-            		let diezLocation = currentUrl.search('#');
-            		if( diezLocation != -1 ){
-            			currentUrl = currentUrl.substr(0,diezLocation);
-            		}
-            		return currentUrl;
-            	}
-            	
-            	return workingURL;
+                let workingURL = $.aceOverWatch.settings.url
+                    ? $.aceOverWatch.settings.url
+                    : window.app_path;
+
+                if( $.aceOverWatch.utilities.isVoid(workingURL,true) ){
+                    /*
+                     * we want to ignore the # and everything after them
+                     */
+                    let currentUrl = location.href;
+                    let position = currentUrl.search('#');
+                    if( position != -1 ){
+                        currentUrl = currentUrl.substr(0,position);
+                    }
+                    /*
+                     * we'll also want to ignore ? and everything after
+                     */
+                    position = currentUrl.search('\\?');
+                    if( position != -1 ){
+                        currentUrl = currentUrl.substr(0,position);
+                    }
+                    return currentUrl;
+                }
+
+                return workingURL;
             },
 
             /**
@@ -1059,6 +1820,13 @@
                 if (($.type(val) === "undefined") || ($.type(val) === "null") || (veryAsStringToo && val==="")) return true;
                 return false;
             },
+            replaceAll : function(str,mapObj){
+                let re = new RegExp(Object.keys(mapObj).map(key => key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')).join('|'),"gi");
+
+                return str.replace(re, function(matched){
+                    return mapObj[matched.toLowerCase()];
+                });
+            },
             /**
              * returns true if parameter is undefined or null
              */
@@ -1068,21 +1836,53 @@
             },
 
             /**
+             *
+             * @param target jQuery object
+             * @returns {boolean} true if all elements in the target are in the current view port
+             */
+            isInViewPortArr : function(target) {
+
+                let allOk = true;
+                target.each(function(){
+                    if( allOk && !$.aceOverWatch.utilities.isInViewPort(this) ){
+                        allOk = false;
+                    }
+                });
+
+                return allOk;
+            },
+
+            isInViewPort : function(element){
+                let rect = element.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            },
+
+            /**
+             * begin log
+             *
              * utility to display log messages, both in console, as well as in a toast
              * message - the message to be display; can be anything; only string or numeric messages will be displayed in a toast
              * logType - error, success, warning; default is error
              * showToast - default is false; will be overwritten by the global setting showAllLogsAsToasts, if set to true
              **/
             log : function(message, logType = 'error', showToast = false) {
-            	
-            	if( $.aceOverWatch.settings.showAllLogsAsToasts === true ){
-            		showToast = true;
-            	}
+
+                if( $.aceOverWatch.settings.showAllLogsAsToasts === true ){
+                    showToast = true;
+                }
 
                 var color = 'green';
                 switch(logType){
                     case 'error':
                         color = 'red';
+                        break;
+                    case 'warning':
+                        color = 'orange';
                         break;
                     case 'debug':
 
@@ -1094,7 +1894,9 @@
                         break;
                 }
 
-                var lCss = 'color:'+color;
+                let lCss = 'color:'+color;
+
+                $.aceOverWatch.history.recordLog(logType,message);
 
                 switch ($.type(message)) {
                     case "string":
@@ -1109,7 +1911,7 @@
                         break;
                     default:
 
-                        console.log('%c------ BEGIN ACE ['+logType+'] -------',lCss);
+                        console.log('%c------ b ['+logType+'] -------',lCss);
                         console.log(message);
                         console.log('%c------ END ACE ['+logType+'] -------',lCss);
 
@@ -1196,11 +1998,11 @@
 
                 store.children(recordNameTag).each(function(){
                     let record = {};
-                    let el = $(this); 
+                    let el = $(this);
                     if( el[0].tagName == 'FIELD' ){
                         $.aceOverWatch.utilities.getAsociatedFieldData($(this),record);
                     }else{
-                    	el.children('field').each(function(){
+                        el.children('field').each(function(){
                             $.aceOverWatch.utilities.getAsociatedFieldData($(this),record);
                         });
                     }
@@ -1231,14 +2033,14 @@
                         for( var idx in record[name] ){
                             for( var prop in record[name][idx] ){
                                 if( record[name][idx].hasOwnProperty(prop) ){
-                                    
+
                                     try {
-                                    	obj[prop] = eval(record[name][idx][prop]);
+                                        obj[prop] = eval(record[name][idx][prop]);
                                     }
                                     catch (e) {
-                                    	obj[prop] = record[name][idx][prop];
+                                        obj[prop] = record[name][idx][prop];
                                     }
-                                    
+
                                 }
                             }
                         }
@@ -1277,6 +2079,30 @@
                     $('body').append(tplObject.detach());
             },
 
+            templateMap : {},//id -> jquery obj
+
+            /**
+             * returns a json object, for the template specified
+             *
+             * @param templateId    - without the #
+             * @param useTemplateFromCash       - set this to false, to not remove the template from dom
+             * @returns {*|jQuery|HTMLElement}
+             */
+            getTemplate : function(templateId,useTemplateFromCash = true){
+                if( useTemplateFromCash !== true || !$.aceOverWatch.settings.removeTemplatesFromDom ){
+                    return $('#'+templateId);
+                }
+                if( this.templateMap[templateId] ){
+                    return this.templateMap[templateId];
+                }
+                let el = $('#'+templateId);
+                if( el.length == 0 ){
+                    return el;
+                }
+                this.templateMap[templateId] = el.detach();
+                return this.templateMap[templateId];
+            },
+
             parseAsAceTemplate : function(target, rec, veryAsStringToo) {
                 if (!target.selector) target=$(target);
 
@@ -1294,7 +2120,7 @@
                 }
 
                 target.find('.'+$.aceOverWatch.classes.parseTpl + '['+operations_attributes.ace_template_attr_list+']').each(function() {
-                	let el=$(this);
+                    let el=$(this);
                     var attr_list_str = el.attr(operations_attributes.ace_template_attr_list);
                     var attr_list = attr_list_str.split(",");
 
@@ -1303,13 +2129,10 @@
 
                     if (attr_list.length != attr_values.length) return;
                     for(idx in attr_list) {
-                        var val=attr_values[idx];
-                        if( $.isFunction(attr_values[idx]) ){
-                            val = attr_values[idx](target, rec);
-                        }else{
-                            if( $.isFunction(window[attr_values[idx]]) ){
-                                val = window[attr_values[idx]](target, rec);
-                            }
+                        let val=attr_values[idx];
+                        let res = $.aceOverWatch.utilities.runIt(attr_values[idx],target,rec);
+                        if( $.aceOverWatch.utilities.wasItRan(res) ){
+                            val = res;
                         }
                         if (attr_list[idx] === 'class') val += ' ' + $.aceOverWatch.classes.parseTpl; //add this class again otherwise when i need to reparse it i will not as it was rewritten
                         el.attr(attr_list[idx], val);
@@ -1317,7 +2140,7 @@
                 });
 
                 target.find('.'+$.aceOverWatch.classes.parseTpl + '['+operations_attributes.hide_if_field_is_void+']').each(function() {
-                	let el=$(this);
+                    let el=$(this);
                     if (($.aceOverWatch.utilities.isVoid(rec)) || ($.aceOverWatch.utilities.isVoid(rec.val(el.attr(operations_attributes.hide_if_field_is_void)), veryAsStringToo))) el.addClass($.aceOverWatch.classes.hide);
                     else el.removeClass($.aceOverWatch.classes.hide);
 
@@ -1331,78 +2154,56 @@
 
                 target.find('.'+$.aceOverWatch.classes.parseTpl + '['+operations_attributes.hide_if_fn_returns_true+']').each(function() {
                     let el=$(this);
-                    var fnName = el.attr(operations_attributes.hide_if_fn_returns_true);
-
-                    if (!$.aceOverWatch.utilities.isVoid(fnName)) {
-                        if( $.isFunction(fnName) ){
-                            if (fnName(target, rec)===true)  el.addClass($.aceOverWatch.classes.hide);
-                            else  el.removeClass($.aceOverWatch.classes.hide);
-                        }else{
-                            if( $.isFunction(window[fnName]) ){
-                                if (window[fnName](target, rec)===true) el.addClass($.aceOverWatch.classes.hide);
-                                else  el.removeClass($.aceOverWatch.classes.hide);
-                            }
+                    let fnName = el.attr(operations_attributes.hide_if_fn_returns_true);
+                    let hide = true;
+                    let res = $.aceOverWatch.utilities.runIt(fnName,target,rec);
+                    if( $.aceOverWatch.utilities.wasItRan(res) ){
+                        if( res !== true ){
+                            hide = false;
                         }
                     }
-                    else el.addClass($.aceOverWatch.classes.hide);
+                    hide ? el.addClass($.aceOverWatch.classes.hide) : el.removeClass($.aceOverWatch.classes.hide);
                 });
 
                 target.find('.'+$.aceOverWatch.classes.parseTpl + '['+operations_attributes.hide_if_fn_returns_false+']').each(function() {
                     let el=$(this);
-                    var fnName = el.attr(operations_attributes.hide_if_fn_returns_false);
-
-                    if (!$.aceOverWatch.utilities.isVoid(fnName)) {
-                        if( $.isFunction(fnName) ){
-                            if (fnName(target, rec)===false)  el.addClass($.aceOverWatch.classes.hide);
-                            else  el.removeClass($.aceOverWatch.classes.hide);
-                        }else{
-                            if( $.isFunction(window[fnName]) ){
-                                if (window[fnName](target, rec)===false) el.addClass($.aceOverWatch.classes.hide);
-                                else  el.removeClass($.aceOverWatch.classes.hide);
-                            }
+                    let fnName = el.attr(operations_attributes.hide_if_fn_returns_false);
+                    let hide = true;
+                    let res = $.aceOverWatch.utilities.runIt(fnName,target,rec);
+                    if( $.aceOverWatch.utilities.wasItRan(res) ){
+                        if( res !== false ){
+                            hide = false;
                         }
                     }
-                    else el.removeClass($.aceOverWatch.classes.hide);
+                    hide ? el.addClass($.aceOverWatch.classes.hide) : el.removeClass($.aceOverWatch.classes.hide);
                 });
 
 
                 target.find(operations_attributes.ace_template_var_tag).replaceWith(function() {
                     let el=$(this);
-                    var fldName = el.html();
-                    var fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
+                    let fldName = el.html();
+                    let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
                     if ($.aceOverWatch.utilities.isVoid(rec)) return null;
-                    var res = rec.val(fldName);
-                    if (!$.aceOverWatch.utilities.isVoid(fldRenderer)) {
-                        if( $.isFunction(fldRenderer) ){
-                            res = fldRenderer(rec.val(fldName), rec);
-                        }else{
-                            if( $.isFunction(window[fldRenderer]) ){
-                                res = window[fldRenderer](rec.val(fldName), rec);
-                            }
-                        }
+                    let res = rec.val(fldName);
+                    let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer,rec.val(fldName), rec);
+                    if( $.aceOverWatch.utilities.wasItRan(renderRes) ){
+                        res = renderRes;
                     }
                     return res;
                 });
 
                 target.find(operations_attributes.ace_template_reuse_var_tag).each(function() {
                     let el=$(this);
-                    var fldName = el.attr(operations_attributes.ace_template_var_fld);
-                    var fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
+                    let fldName = el.attr(operations_attributes.ace_template_var_fld);
+                    let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
                     if ($.aceOverWatch.utilities.isVoid(rec)) return null;
-                    var res = rec.val(fldName);
-                    if (!$.aceOverWatch.utilities.isVoid(fldRenderer)) {
-                        if( $.isFunction(fldRenderer) ){
-                            res = fldRenderer(rec.val(fldName), rec);
-                        }else{
-                            if( $.isFunction(window[fldRenderer]) ){
-                                res = window[fldRenderer](rec.val(fldName), rec);
-                            }
-                        }
+                    let res = rec.val(fldName);
+                    let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer,rec.val(fldName), rec);
+                    if( $.aceOverWatch.utilities.wasItRan(renderRes) ){
+                        res = renderRes;
                     }
                     el.html(res);
                 });
-
-
             },
 
             /**
@@ -1440,6 +2241,11 @@
                 tmpVal = parseFloat(tmpVal);
                 return tmpVal;
             },
+
+            parseHelperObjectText : function(value){ return $.aceOverWatch.utilities.getObjectFromText(value); },
+            parseHelperObjectTextNoEval : function(value){ return $.aceOverWatch.utilities.getObjectFromText(value,true); },
+            parseHelperBool : function(value){ return value == 'true'; },
+            parseHelperDefault : function(value){ return value },
 
             intValOrZero : function(rec, fieldname) {
                 if ($.aceOverWatch.utilities.isVoid(rec)) return 0;
@@ -1499,6 +2305,347 @@
                         return false;
                     });
                 }
+            },
+
+            /**
+             * this method clones the content of an ace template, into a destination field
+             * it also performs specific operations, which are needed so that the ace fields work correctly
+             *
+             * @param destinationElement
+             * @param templateId
+             * @param useTemplateFromCash - if true, it will try to use the template found in cash
+             */
+            cloneFromTemplate : function(destinationElement, templateId, useTemplateFromCash = true){
+
+                destinationElement.html( this.getTemplate(templateId,useTemplateFromCash).children().clone(true,true) ).find('.'+$.aceOverWatch.classes.containerField).each(function(){
+
+                    var settings = $(this).data($.aceOverWatch.settings.aceSettings);
+                    if( !settings ){
+                        return;
+                    }
+
+                    /*
+                     * here we need to get the settings to a new reference! otherwise all the fields will share the same one in all instances of the template
+                     * and this is not good
+                     */
+                    var newSettings = {};
+                    $.extend(true,newSettings, settings);
+                    settings = newSettings;
+                    $(this).data($.aceOverWatch.settings.aceSettings,settings);
+
+                    if( settings.readonly ){
+                        $(this).ace('modify',{readonly:true});
+                    }else{
+                        //on modify, after init is already ran... so for datepicker fields, if they just got themselves readonly, there is no need to run this AGAIN! I hope
+                        // same with AUTOCOMPLETE
+                        //TODO: verify this
+
+                        switch( settings.type ){
+
+                            case 'datepicker':
+                                $.aceOverWatch.field.datepicker.afterInit(this,{all:true});
+                                break;
+
+                            case 'autocomplete':
+                                if( $(this).hasClass('ace-auto-gen') ){
+                                    $(this).ace('create',settings);
+                                }
+
+                                break;
+                        }
+                    }
+
+                    switch( settings.type ){
+                        case 'tags':
+                            $.aceOverWatch.field.tags.afterInit(this,{recreateChips:true});
+                            break;
+                        case 'radiogroup':
+                            $(this).ace('modify',{updateid:true});
+                            break;
+                    }
+
+                });
+
+            },
+
+            setExpandOnHover : function(target, expandtype = 50, expanddirection = 'left', expandensureoverflowparents = 2){
+                let expandSettings = {
+                    expandonhover:true,//true, to expand the grid on hover
+                    expandtype:expandtype,//can be 50, 75, 100, 200
+                    expanddirection:expanddirection,//can be left or right
+                    expandensureoverflowparents:expandensureoverflowparents,//how many parents should ensure, that the overflow is visible
+                };
+
+                let currentSettings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !currentSettings ){
+                    currentSettings = {};
+                }
+
+                $.extend(true,currentSettings, expandSettings);
+
+                target.data($.aceOverWatch.settings.aceSettings,currentSettings);
+
+                target.unbind('mouseenter').mouseenter(function(){
+                    let g = $(this);
+                    if( g.data('ace-eoh-is-extended') == 1 ){ return; }
+
+                    let s = g.data($.aceOverWatch.settings.aceSettings);
+
+                    if( s.expandOnHoverTimeout ){
+                        clearTimeout(s.expandOnHoverTimeout);
+                        s.expandOnHoverTimeout = false;
+                    }
+
+                    let expandClassName = 'ace-field-expand-'+s.expandtype;
+                    g.removeClass(expandClassName+'-reverse ace-field-expand-natural');
+
+                    /*
+                     * by default, the expand is perform to the left
+                     * if it doesn't have space, it will try to the right
+                     * but only if it has enough space
+                     * if it doesn't, no expand will take place at all
+                     */
+
+                    let offset = g.offset();
+                    let width = parseInt(g.width());
+                    let expandSize = parseInt(s.expandtype);
+                    let deltaSize = width*expandSize/100;
+                    let useReverse = false;
+
+                    if( s.expanddirection == 'left'  ) {
+                        if (deltaSize > offset.left) {
+                            /*
+                             * but lets check if it HAS space to expand to the OTHER side
+                             */
+                            if (offset.left + width + deltaSize > window.innerWidth) {
+                                /*
+                                 * the grid doesn't have enough space to expand
+                                 */
+                                return;
+                            }
+                            useReverse = true;
+                        }
+                    }else{
+
+                        useReverse = true;
+
+                        if (offset.left + width + deltaSize > window.innerWidth) {
+                            if (deltaSize > offset.left) {
+                                return;
+                            }
+                            useReverse = false;
+                        }
+                    }
+                    g.data('ace-eoh-is-extended',1);
+
+                    g.addClass(expandClassName+(useReverse ? ' ace-field-expand-natural' : '') );
+                    let parents = g.parents();
+                    let maxParentIndex = s.expandensureoverflowparents-1;
+                    for(let idx in parents ){
+                        if( idx > maxParentIndex ){
+                            break;
+                        }
+                        let el = $(parents[idx]);
+                        let visibleCount = el.data('ace-eoh-count');
+                        if( !visibleCount) { visibleCount = 0; }
+                        el.data('ace-eoh-count',visibleCount+1);
+                        el.addClass('ace-field-force-overflow-visible');
+                    }
+                });
+                target.unbind('mouseleave').mouseleave(function(){
+                    let g = $(this);
+                    let s = g.data($.aceOverWatch.settings.aceSettings);
+                    if( g.data('ace-eoh-is-extended') != 1 ){ return; }
+                    g.data('ace-eoh-is-extended',0);
+
+                    let expandClassName = 'ace-field-expand-'+s.expandtype;
+                    g.addClass(expandClassName+'-reverse');
+
+                    let parents = g.parents();
+                    let maxParentIndex = s.expandensureoverflowparents-1;
+                    /*
+                     * the timeout is necessary because of the duration of the animation
+                     */
+                    s.expandOnHoverTimeout = setTimeout(function(p,mpi, ecn, ot){
+                        ot.removeClass(ecn);
+                        ot.removeClass(ecn+'-reverse');
+
+                        for(let idx in p ){
+                            if( idx > mpi ){
+                                break;
+                            }
+                            let el = $(p[idx]);
+                            let visibleCount = el.data('ace-eoh-count');
+                            if( !visibleCount || visibleCount < 0 ){
+                                visibleCount = 1;
+                                return;
+                            }
+                            visibleCount--;
+                            el.data('ace-eoh-count',visibleCount);
+                            if( visibleCount == 0 ) {
+                                el.removeClass('ace-field-force-overflow-visible');
+                            }
+                        }
+                    },500, parents, maxParentIndex, expandClassName, g);
+
+                });
+
+            },
+
+            getDeviceType : function(){
+                const ua = navigator.userAgent;
+                if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+                    return "tablet";
+                }
+                else if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                    return "mobile";
+                }
+                return "desktop";
+            },
+
+            isViewportForMobile : function(){
+                if( this.getDeviceType() == 'mobile' ){ return true; }
+                return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0) <= 680;
+            },
+
+            /**
+             * This method retrieves all elements of the specified target and displays them in a full screen window
+             * when the full screen window is dismissed (dissmissViewInFullScreen), the elements are restored to their initial container, if the container exists
+             *
+             * it is NOT recommended to apply this to internal components of ace fields; it might break the functionality of the ace fields
+             *
+             * IF the target has the class ace-field-container (at the moment when the view is fist displayed), the class will be added to the full screen view
+             * ALSO, any ace related data will be set each time the window is displayed, to preserve ace related functionality
+             *
+             * ATTENTION:
+             *  IF a FORM is displayed in a full screen window, when the form is hidden, the fullscreen will be dismissed
+             *
+             */
+            viewInFullScreen : function(target,config){
+
+                if( typeof config != 'object' ){
+                    config = {};
+                }
+
+                $.extend(true,config,$.extend(true,{
+                    displayinfullscreencancel : false,              //true, to display a floating cancel button
+                    customclassforpopupwindowwhendisplayed : '',    //css classes to add to the full screen window when displayed
+                    actualtarget : false,                           //this one is tricky
+                                                                    //if present, this will be the ACTUAL element which will be in fullscreen
+                                                                    //BUT: all full screen related settings will be saved on the target parameter specified
+                    ondissmissfullscreen : null,  //function ondismiss(target,internal), called after the full screen has dismissed
+                }, config ));
+
+                if( config.actualtarget
+                    && (
+                        config.actualtarget.length == 0
+                        || config.actualtarget.hasClass('ace-full-screen-popup')
+                    )
+                ){
+                    return;
+                }
+
+                if( target.length == 0 || target.hasClass('ace-full-screen-popup') ){ return; }
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( typeof settings != 'object' ){
+                    settings = {
+                        id: $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid(),
+                    };
+                    target.data($.aceOverWatch.settings.aceSettings,settings);
+                }
+                if( !settings.popupWindow ){
+                    settings.popupWindow = $('<div class="ace-col-12 ace-full-screen-popup"></div>');
+                    settings.popupOriginalWindow = target;
+                    if( target.hasClass('ace-field-container') ){
+                        settings.popupWindow.addClass('ace-field-container');
+                        settings.popupWindow.data($.aceOverWatch.settings.aceSettings,settings);
+                    }
+                }
+                settings.popupWindow.appendTo($('body'));
+
+                if( config.displayinfullscreencancel ) {
+                    if (!settings.cancelButton) {
+                        settings.cancelButton = $('<div class="ace-full-screen-popup-close"><i class="fa fa-times-circle fa-2x"></i></div>');
+                        settings.cancelButton.on('click',function(){
+                            $.aceOverWatch.utilities.dissmissViewInFullScreen(target,true);
+                        });
+                    }
+                    settings.cancelButton.appendTo($('body'));
+                }
+
+                let workingTarget = config.actualtarget ? config.actualtarget : target;
+                if( !settings.displayed ){
+                    settings.popupWindow.html('');
+                    workingTarget.children().detach().appendTo(settings.popupWindow);
+                }
+                settings.displayed = true;
+                settings.displayedCancel = config.displayinfullscreencancel;
+                settings.customClasses = config.customclassforpopupwindowwhendisplayed;
+                if( !$.aceOverWatch.utilities.isVoid(settings.customClasses) ){
+                    settings.popupWindow.addClass(settings.customClasses);
+                }
+                settings.ondissmissfullscreen = config.ondissmissfullscreen;
+                settings.actualOrigin = config.actualtarget ? config.actualtarget : false;
+            },
+
+            /**
+             * hides a previously displayed element in full screen, and restores the content at its original position
+             *
+             * this can work in 2 ways:
+             * - one, where the target is the original element whose content was displayed in full screen
+             * - second, where the target is the actual full screen view
+             * @param target
+             * @param internal - if true, this means that the call is marked as having been called by the internal dimiss mechanism ( the floating x button )
+             * @return the original target which was displayed in fullscreen
+             */
+            dissmissViewInFullScreen : function(target,internal){
+                if( target.length == 0 ){ return; }
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( typeof settings != 'object' ){
+                    return false;
+                }
+
+                if( target.hasClass('ace-full-screen-popup') ){
+                    //the call came on the actual full screen view
+                    settings = settings.popupOriginalWindow.data($.aceOverWatch.settings.aceSettings);
+                    target = settings.popupOriginalWindow;
+                }
+
+                if( !settings.displayed ){ return target; }
+
+                if( settings.displayedCancel ){
+                    settings.cancelButton.detach();
+                }
+
+                settings.popupWindow.children().detach().appendTo(settings.actualOrigin ? settings.actualOrigin : target);
+                settings.popupWindow.detach();
+                settings.displayed = false;
+                settings.displayedCancel = false;
+
+                if( settings.type == 'form' && target.is(':visible') ){
+                    $.aceOverWatch.field.form.cancel(target,false,true);//it bypasses the check form modifications
+                }
+
+                if( !$.aceOverWatch.utilities.isVoid(settings.customClasses) ){
+                    settings.popupWindow.removeClass(settings.customClasses);
+                }
+
+                $.aceOverWatch.utilities.runIt(settings.ondissmissfullscreen,target,internal);
+                return target;
+            },
+
+            isElementInFullScreen : function(target){
+                if( target.length == 0 ){ return false; }
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( typeof settings != 'object' ){
+                    return false;
+                }
+                if( target.hasClass('ace-full-screen-popup') ){
+                    settings = settings.popupOriginalWindow.data($.aceOverWatch.settings.aceSettings);
+                }
+                if( !settings.displayed ){ return false; }
+
+                return true;
             }
         },//end utilities object
 
@@ -1637,6 +2784,8 @@
                     }
                 }
 
+                data.ignore_total_count_query = settings.net.donotreturntotals ? 1 : 0;
+
                 var url = settings.net.url;
                 if( $.aceOverWatch.utilities.isVoid(url) ){
                     url = $.aceOverWatch.utilities.getWorkingURL();
@@ -1675,10 +2824,8 @@
                         $.aceOverWatch.net.loadProcessData(target, errData, callbacks);
                     },
                     oncomplete : function(target, responseText){
-                        if( 	callbacks
-                            && $.isFunction(callbacks.oncomplete)
-                        ){
-                            callbacks.oncomplete();
+                        if( callbacks ){
+                            $.aceOverWatch.utilities.runIt(callbacks.oncomplete,target);
                         }
                     }
                 }, settings.net.requestoptions);
@@ -1689,27 +2836,24 @@
             save : function(target, record, callbacks, customCmd, options ){
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
 
-                if( settings == null ){
+                if( settings == null || !record || record === null && typeof record !== 'object'){
+                    $.aceOverWatch.utilities.log('ACE - NET SAVE ERROR #10: invalid field or data','error');
                     return false;
                 }
 
-                if( !record || record === null && typeof record !== 'object'){
+                let res = $.aceOverWatch.utilities.runIt(settings.onbeforesave,target, record, true );
+                if( $.aceOverWatch.utilities.wasItRan(res) && !res){
+                    $.aceOverWatch.utilities.log('ACE - SNET AVE ERROR #20: did not pass before save custom operations','warning');
                     return false;
                 }
 
-                if( $.isFunction(settings.onbeforesave) && settings.onbeforesave(target, record, true) != true ){
-                    return false;
-                }
-                
-                if( settings.net.fid == null || settings.net.remote != true ){
-                    if( $.isFunction(settings.onlocalsavesuccessfull) && settings.onlocalsavesuccessfull(target, record) != true ){
-                        return false;
-                    }
+                if( settings.net.remote != true ){
+                    $.aceOverWatch.utilities.log('ACE - NET SAVE ERROR #30: executing local save instead','debug');
+                    $.aceOverWatch.utilities.runIt(settings.onlocalsavesuccessfull,target, record );
                     return false;
                 }
 
                 var data = {};
-                var haveExtraCmd = false;//true if in extraparams, or in extrasaveparams there is a cmd parameter explicitdly set; if it exists, then.. don't set the default cmd
 
                 //by default, only dirty fields are being sent
                 if( settings.net.extraparams ){//more extra parameters, if they exist
@@ -1737,7 +2881,8 @@
 
                 //if there is a save in progress, don't let another one start
                 if( settings.net.saveInProgress == true ){
-                    return;
+                    $.aceOverWatch.utilities.log('ACE - NET SAVE ERROR #35: save in progress','warning');
+                    return false;
                 }
                 settings.net.saveInProgress = true;
 
@@ -1752,7 +2897,10 @@
 				 */
                 if( settings.innewwindow == true ){
                     settings.net.saveInProgress = false;
-                    data.fid = settings.net.fid;
+
+                    if( !$.aceOverWatch.utilities.isVoid(settings.net.fid,true) ){
+                        data.fid = settings.net.fid;
+                    }
                     if( !data.cmd ){
                         data.cmd = ( !$.aceOverWatch.utilities.isVoid(customCmd) ) ? customCmd : 'update';
                     }
@@ -1762,7 +2910,7 @@
 
                 var saveUrl = url;
                 if ((settings.net.saveasrawdata) || (options.saveasrawdata)) data = JSON.stringify(data);
-                if (!options.differentoperationsurls) saveUrl = url + '?fid='+settings.net.fid+defaultCmdParam;
+                if (!options.differentoperationsurls) saveUrl = url + '?'+($.aceOverWatch.utilities.isVoid(settings.net.fid,true) ? '' : 'fid='+settings.net.fid)+defaultCmdParam;
                 else {
                     switch (defaultCmd) {
                         case 'update':
@@ -1791,7 +2939,7 @@
                     }
                 }
 
-                if (!options.differentoperationsurls) saveUrl = url + '?fid='+settings.net.fid+defaultCmdParam;
+                if (!options.differentoperationsurls) saveUrl = url + '?'+($.aceOverWatch.utilities.isVoid(settings.net.fid,true) ? '' : 'fid='+settings.net.fid)+defaultCmdParam;
                 $.aceOverWatch.net.ajax(target, saveUrl,
                     data,
                     {
@@ -1811,19 +2959,17 @@
 
                                 var hadErrorCallback = false;
                                 if( callbacks ){
-                                    if( $.isFunction(callbacks.onerror) ){
-                                        callbacks.onerror(target, data);
+                                    let res = $.aceOverWatch.utilities.runIt(callbacks.onerror,target, data );
+                                    if( $.aceOverWatch.utilities.wasItRan(res) ){
                                         hadErrorCallback = true;
-                                    }else{
-                                        if( $.isFunction(window[callbacks.onerror]) ){
-                                            window[callbacks.onerror](target, data);
-                                            hadErrorCallback = true;
-                                        }
                                     }
                                 }
 
                                 if( !hadErrorCallback ){
-                                    $.aceOverWatch.prompt.show(data.error,null,{type:'alert'});
+                                    $.aceOverWatch.prompt.show(data.error ? data.error : _aceL.ukne,null,{
+                                        type:'alert',
+                                        subtitle: !$.aceOverWatch.utilities.isVoid(data.error_code,true) ? data.error_code : false
+                                    });
                                 }
 
                                 return;
@@ -1831,6 +2977,7 @@
 
 
                             if( settings == null ){
+                                $.aceOverWatch.utilities.log('ACE - NET SAVE ERROR #40: ace object no longer exists','error');
                                 return;
                             }
 
@@ -1856,44 +3003,29 @@
                             }
 
                             if( callbacks ){
-                                if( $.isFunction(callbacks.onsuccess) ){
-                                    callbacks.onsuccess(target, data);
-                                }else{
-                                    if( $.isFunction(window[callbacks.onsuccess]) ){
-                                        window[callbacks.onsuccess](target, data);
-                                    }
-                                }
+                                $.aceOverWatch.utilities.runIt(callbacks.onsuccess, target, data);
                             }
                         },
 
                         oncomplete : function(target, responseText){
-                            var settings = $(target).data($.aceOverWatch.settings.aceSettings);
+                            let settings = $(target).data($.aceOverWatch.settings.aceSettings);
                             if( settings ){
                                 settings.net.saveInProgress = false;
+                            }else{
+                                $.aceOverWatch.utilities.log('ACE - NET SAVE ERROR #50: ace object no longer exists','error');
                             }
 
                             if( callbacks ){
-                                if( $.isFunction(callbacks.oncomplete) ){
-                                    callbacks.oncomplete(target, responseText);
-                                }else{
-                                    if( $.isFunction(window[callbacks.oncomplete]) ){
-                                        window[callbacks.oncomplete](target, responeText);
-                                    }
-                                }
+                                $.aceOverWatch.utilities.runIt(callbacks.oncomplete, target, responseText);
                             }
                         },
 
                         onerror:function(target, data){
                             var hadErrorCallback = false;
                             if( callbacks ){
-                                if( $.isFunction(callbacks.onerror) ){
-                                    callbacks.onerror(target, data);
+                                let res = $.aceOverWatch.utilities.runIt(callbacks.onerror,target, data );
+                                if( $.aceOverWatch.utilities.wasItRan(res) ){
                                     hadErrorCallback = true;
-                                }else{
-                                    if( $.isFunction(window[callbacks.onerror]) ){
-                                        window[callbacks.onerror](target, data);
-                                        hadErrorCallback = true;
-                                    }
                                 }
                             }
                             if( !hadErrorCallback ){
@@ -1903,6 +3035,7 @@
                     },
                     options
                 );
+                return true;
             },
 
             //if it is non void, the data will not be cached!
@@ -1929,19 +3062,16 @@
 
                     var hadErrorCallback = false;
                     if( callbacks ){
-                        if( $.isFunction(callbacks.onerror) ){
-                            callbacks.onerror(target, data);
+                        let res = $.aceOverWatch.utilities.runIt(callbacks.onerror,target, data );
+                        if( $.aceOverWatch.utilities.wasItRan(res) ){
                             hadErrorCallback = true;
-                        }else{
-                            if( $.isFunction(window[callbacks.onerror]) ){
-                                window[callbacks.onerror](target, data);
-                                hadErrorCallback = true;
-                            }
                         }
                     }
 
                     if( !hadErrorCallback ){
-                        $.aceOverWatch.prompt.show(data.error,null,{type:'alert'});
+                        $.aceOverWatch.prompt.show(data.error,null,{
+                            type:'alert',
+                            subtitle: !$.aceOverWatch.utilities.isVoid(data.error_code,true) ? data.error_code : false});
                     }
 
                     switch (settings['type']){
@@ -1962,6 +3092,10 @@
                     case 'combobox':
                         $.aceOverWatch.field.combobox.setData(target,data.rows,data.totalCount);
                         break;
+                    case 'multicheck':
+                        $.aceOverWatch.field.multicheck.setData(target,data.rows);
+                        $.aceOverWatch.field.multicheck.displaySelectionBox(target);
+                        break;
                     case 'radiogroup':
                         $.aceOverWatch.field.radiogroup.setData(target,data.rows,data.totalCount);
                         break;
@@ -1978,29 +3112,35 @@
                         if( !$.aceOverWatch.utilities.isVoid(data.rows) && data.rows.length > 0  ){
                             $.aceOverWatch.field.form.loadRecord(target, $.aceOverWatch.record.create(data.rows[0]));
                         }else{
-                        	
-                        	if( !$.aceOverWatch.utilities.isVoid(data.data) ){
-                        		$.aceOverWatch.field.form.loadRecord(target, $.aceOverWatch.record.create(data.data));
-                        	}else{
-                        	
-	                            if( callbacks && $.isFunction(callbacks.onerror) ){
-	                                callbacks.onerror(target, data);
-	                            }else{
-	                                $.aceOverWatch.prompt.show(_aceL.nodata,null,{type:'alert'});
-	                            }
-                        	}
+
+                            if( !$.aceOverWatch.utilities.isVoid(data.data) ){
+                                $.aceOverWatch.field.form.loadRecord(target, $.aceOverWatch.record.create(data.data));
+                            }else{
+
+                                let hadErrorCallback = false;
+                                if( callbacks ) {
+                                    let res = $.aceOverWatch.utilities.runIt(callbacks.onerror, target, data);
+                                    if ($.aceOverWatch.utilities.wasItRan(res)) {
+                                        hadErrorCallback = true;
+                                    }
+                                }
+
+                                if( !hadErrorCallback ){
+                                    $.aceOverWatch.prompt.show(_aceL.nodata,null,{type:'alert'});
+                                }
+                            }
                         }
                         break;
+                    default:
+                        let actualData = data.rows ? data.rows[0] : data.data;
+                        if( actualData && actualData[settings.fieldname]) {
+                            $(target).ace('value',actualData[settings.fieldname]);
+                        }
+
                 }
 
                 if( callbacks ){
-                    if( $.isFunction(callbacks.onsuccess) ){
-                        callbacks.onsuccess(target, data);
-                    }else{
-                        if( $.isFunction(window[callbacks.onsuccess]) ){
-                            window[callbacks.onsuccess](target, data);
-                        }
-                    }
+                    $.aceOverWatch.utilities.runIt(callbacks.onsuccess, target, data);
                 }
             },
 
@@ -2031,8 +3171,8 @@
                             break;
                     }
 
-                    if( callbacks && $.isFunction(callbacks.onsuccess) ){
-                        callbacks.onsuccess(target, data);
+                    if( callbacks ) {
+                        $.aceOverWatch.utilities.runIt(callbacks.onsuccess, target, data);
                     }
                     return true;
                 }
@@ -2061,10 +3201,19 @@
                         onsuccess:function(target, data){
                             if( data.success != true ){
 
-                                if( callbacks && $.isFunction(callbacks.onerror) ){
-                                    callbacks.onerror(target, data);
-                                }else{
-                                    $.aceOverWatch.prompt.show(data.error,null,{type:'alert'});
+                                let hadErrorCallback = false;
+                                if( callbacks ){
+                                    let res = $.aceOverWatch.utilities.runIt(callbacks.onerror,target, data );
+                                    if( $.aceOverWatch.utilities.wasItRan(res) ){
+                                        hadErrorCallback = true;
+                                    }
+                                }
+
+                                if( !hadErrorCallback ){
+                                    $.aceOverWatch.prompt.show(data.error,null,{
+                                        type:'alert',
+                                        subtitle: !$.aceOverWatch.utilities.isVoid(data.error_code,true) ? data.error_code : false
+                                    });
                                 }
 
                                 return;
@@ -2087,8 +3236,8 @@
                                     break;
                             }
 
-                            if( callbacks && $.isFunction(callbacks.onsuccess) ){
-                                callbacks.onsuccess(target, data);
+                            if( callbacks ){
+                                $.aceOverWatch.utilities.runIt(callbacks.onsuccess, target, data);
                             }
                         },
                     },
@@ -2142,10 +3291,19 @@
                             }
                         }
                         if( data.success != true ){
-                            if( callbacks && $.isFunction(callbacks.onerror) ){
-                                callbacks.onerror(target, data);
-                            }else{
-                                $.aceOverWatch.prompt.show(data.error,null,{type:'alert'});
+                            let hadErrorCallback = false;
+                            if( callbacks ){
+                                let res = $.aceOverWatch.utilities.runIt(callbacks.onerror,target, data );
+                                if( $.aceOverWatch.utilities.wasItRan(res) ){
+                                    hadErrorCallback = true;
+                                }
+                            }
+
+                            if( !hadErrorCallback ){
+                                $.aceOverWatch.prompt.show(data.error,null,{
+                                    type:'alert',
+                                    subtitle: !$.aceOverWatch.utilities.isVoid(data.error_code,true) ? data.error_code : false
+                                });
                             }
                             return;
                         }
@@ -2167,9 +3325,7 @@
                         }
 
                         if( callbacks ){
-                            if( $.isFunction(callbacks.onsuccess) ){
-                                callbacks.onsuccess(target, data);
-                            }
+                            $.aceOverWatch.utilities.runIt(callbacks.onsuccess, target, data);
                         }
                     }
                 },{
@@ -2183,7 +3339,10 @@
             //			- onerror
             //			- oncomplete
             ajax : function(target, url, data, callbacks, options){
-                $.aceOverWatch.field.mask(target,true);
+
+                if( !options || (options && !options.quietoperation) ) {
+                    $.aceOverWatch.field.mask(target, true);
+                }
 
                 var type = 'get';
                 var contentType = 'application/x-www-form-urlencoded; charset=UTF-8';
@@ -2209,7 +3368,9 @@
                     dataType : 'json',
                     target:target,
                     data:data,
+                    originalParams:data,//because the data member will not be available later on
                     callbacks:callbacks,
+                    options: options,
 
                     type:type,
                     contentType:contentType,
@@ -2219,34 +3380,76 @@
                         //TODO in case we want to add stuff
                     },
                     complete : function (jqXHRObj, textStatus) {
-                        $.aceOverWatch.field.mask(this.target,false);
-                        var dataObj = null;
-                        try {
-                            dataObj = JSON.parse(jqXHRObj.responseText);
-                        }
-                        catch (e) {
 
+                        if( this.options && this.options.checkafteroperation ) {
+                            $.aceOverWatch.field.check(this.target);
                         }
-                        if( this.callbacks && $.isFunction(this.callbacks.oncomplete) ){
-                            this.callbacks.oncomplete(this.target, jqXHRObj.responseText, dataObj);
+
+                        if( this.callbacks ){
+                            $.aceOverWatch.utilities.runIt(this.callbacks.oncomplete, this.target, jqXHRObj.responseText, jqXHRObj.responseJSON ? jqXHRObj.responseJSON : null);
                         }
                     },
-                    error : function(jqXHRObj, textStatus, errorThrown) {
-                        var dataObj = null;
-                        try {
-                            dataObj = JSON.parse(jqXHRObj.responseText);
-                        }
-                        catch (e) {
+                    error : function(jqXHRObj, textStatus) {
 
+                        if( !this.options || (this.options && !this.options.quietoperation) ) {//needs to be here and on success, and not on oncomplete
+                            $.aceOverWatch.field.mask(this.target, false);              //because on success or on error the initial field might disappear ( ex: grid rows )
+                        }                                                                      //therefore it needs to be processed BEFORE oncomplete
+
+
+                        $.aceOverWatch.history.recordAjax(this.url, this.originalParams, jqXHRObj.status, textStatus, jqXHRObj.responseText);
+
+                        let hadErrorCallback = false;
+                        if( this.callbacks ){
+                            let res = $.aceOverWatch.utilities.runIt(this.callbacks.onerror, this.target, jqXHRObj.responseText );
+                            if( $.aceOverWatch.utilities.wasItRan(res) ){
+                                hadErrorCallback = true;
+                            }
                         }
-                        if( this.callbacks && $.isFunction(this.callbacks.onerror) ){
-                            this.callbacks.onerror(this.target, jqXHRObj.responseText, dataObj);
-                        }else{
+
+                        if( !hadErrorCallback ){
                             $.aceOverWatch.prompt.show(_aceL.esc,null,{type:'alert'});
                         }
                     },
                     success : function (data, textStatus, jqXHR) {
-                        if( this.callbacks && $.isFunction(this.callbacks.onsuccess) ){
+
+                        if( !this.options || (this.options && !this.options.quietoperation) ) {//needs to be here and on error, and not on oncomplete
+                            $.aceOverWatch.field.mask(this.target, false);              //because on success or on error the initial field might disappear ( ex: grid rows )
+                        }                                                                      //therefore it needs to be processed BEFORE oncomplete
+
+
+                        let surpressNormalHandling = false;
+                        if( data && data.error ){
+                            let codeStart = data.error.indexOf('Code: ');
+                            if( codeStart != -1 ) {
+                                let codePart = data.error.substr(codeStart+6);
+                                let messagePart = data.error.substr(0,codeStart);
+
+                                codePart = $.aceOverWatch.utilities.replaceAll(codePart,{
+                                    "code: ": '',
+                                    "(":'',
+                                    ")":'',
+                                    " ":'-',
+                                    "#":'-',
+                                    ": ":'-',
+                                    ":":'-',
+                                });
+                                messagePart = messagePart.replaceAll('#',' ');
+
+                                data.error = messagePart;
+                                data.error_code = codePart;
+                            }
+
+                            if( !$.aceOverWatch.utilities.isVoid(data.error_code,true) && $.aceOverWatch.settings.hasGeneralErrorCodeHandler ){
+                                let res = $.aceOverWatch.utilities.runIt('aceGeneraErrorHandler',data.error_code);
+                                if( $.aceOverWatch.utilities.wasItRan(res) && res == 'surpress' ){
+                                    surpressNormalHandling = true;
+                                }
+
+                            }
+                        }
+
+
+                        if( !surpressNormalHandling && this.callbacks && $.isFunction(this.callbacks.onsuccess) ){
                             this.callbacks.onsuccess(this.target, data);
                         }
                     },
@@ -2286,6 +3489,9 @@
          **/
         template : {
 
+            loadingQueue : {},
+            timeId : 0,
+
             /**
              * the function loads a html file from the server into the dome
              * the content is going to be placed inside the body of the target element
@@ -2295,27 +3501,7 @@
                 if( !settings ){
                     //build the options from the properties of the field
                     settings = {};
-
-                    $.each(target.attributes, function() {
-                        // this.attributes is not a plain object, but an array
-                        // of attribute nodes, which contain both the name and value
-                        if(this.specified) {
-
-                            switch( this.name ){
-                                case 'extraparams':
-                                    settings[this.name] = $.aceOverWatch.utilities.getObjectFromText(this.value);
-                                    break;
-                                /*
-					    	 case 'displayexpanded':
-					    		settings[this.name] = (this.value=='true');
-					    		break;
-					    	*/
-                                default:
-                                    settings[this.name] = this.value;
-                                    break;
-                            }
-                        }
-                    });
+                    $.aceOverWatch.field.parseAttributes(target, settings);
                 };
 
                 $.extend(true,settings, $.extend(true,{
@@ -2325,36 +3511,132 @@
                     tplloadedcallback : null			//this function is called AFTER the ace field with the ace-auto-gen class are automatically created
                 }, settings ));
 
-                if (settings.tpl==='') return;
+                if( settings.tpl==='' || $(target).hasClass('ace-tpl-loaded') ) return;
 
-                if ($(target).hasClass('ace-tpl-loaded')) {
-                	return;
-                }
                 $(target).addClass('ace-tpl-loaded');
-                	
+
+                if( window.useTplLoadingQueue ) {
+                    clearTimeout(this.timerId);
+                    this.loadingQueue[settings.url+'/'+settings.tpl+'.html'] = {
+                        target: $(target),
+                        settings: settings
+                    };
+                    this.timerId = setTimeout(function(){
+                        $.aceOverWatch.template.loadQueue();
+                    },10);
+                    return;
+                }
+
                 $.ajax(settings.url+'/'+settings.tpl+'.html', {
                     cache: true,
                     dataType :'html',
-                    error : function(jqXHR, textStatus, errorTxt) {
+                    error : function(jqXHRObj, textStatus, errorTxt) {
+
+                        $.aceOverWatch.history.recordAjax(this.url, {}, jqXHRObj.status, textStatus, jqXHRObj.responseText);
+
                         if ($.isFunction(settings.tplloadedcallback)){
-                        	settings.tplloadedcallback(false, 'Eroare: ' +errorTxt);
+                            settings.tplloadedcallback(false, 'Eroare: ' +errorTxt);
                         }
                     },
-                    success: function(data, textStatus, jqXHR) {
-                    	
+                    success: function(data, textStatus, jqXHRObj) {
+
                         $(target).html(data);
-                        
+
                         $.aceOverWatch.utilities.runIt(settings.tplloadedbeforecallback,target);
 
                         if (!$(target).hasClass('ace-tpl-skip-auto-create-data')) {
                             $(target).find('.ace-auto-loadtpl').ace('loadtpl');
                             $(target).find('.ace-auto-gen').ace('create');
                         }
-                        
+
                         $.aceOverWatch.utilities.runIt(settings.tplloadedcallback,target);
                     }
                 });
-                
+
+            },
+
+            loadQueue : function(){
+                let queue = this.loadingQueue;
+                this.loadingQueue = {};
+
+                if( Object.keys(queue).length == 0 ){
+                    return;
+                }
+
+                let initialURL = false;
+                let other = [];
+                for( let url in queue ){
+                    if( !initialURL ){
+                        initialURL = url;
+                    }else{
+                        other.push(url);
+                    }
+                }
+
+                if( !window.testLoadCount ){
+                    window.testLoadCount = 0;
+                }window.testLoadCount++;
+                let currentLoadCount = window.testLoadCount;
+
+                $.ajax(initialURL, {
+                    cache: true,
+                    dataType :'html',
+                    data: {
+                        other : other.length > 0 ? other.join(',') : ''
+                    },
+                    type:'POST',
+                    error : function(jqXHRObj, textStatus, errorTxt) {
+
+                        $.aceOverWatch.history.recordAjax(this.url, {}, jqXHRObj.status, textStatus, jqXHRObj.responseText);
+
+                        if ($.isFunction(settings.tplloadedcallback)){
+                            settings.tplloadedcallback(false, 'Eroare: ' +errorTxt);
+                        }
+                    },
+                    success: function(data, textStatus, jqXHRObj) {
+
+                        if( Object.keys(queue).length == 1 ){
+                            queue[initialURL].target.html(data);
+
+                            $.aceOverWatch.utilities.runIt(queue[initialURL].settings.tplloadedbeforecallback,queue[initialURL].target);
+
+                            if (!queue[initialURL].target.hasClass('ace-tpl-skip-auto-create-data')) {
+                                queue[initialURL].target.find('.ace-auto-loadtpl').ace('loadtpl');
+                                queue[initialURL].target.find('.ace-auto-gen').ace('create');
+                            }
+
+                            $.aceOverWatch.utilities.runIt(queue[initialURL].settings.tplloadedcallback,queue[initialURL].target);
+                        }else{
+
+                            try {
+                                data = JSON.parse(data);
+                            }
+                            catch (e) {
+                                data = {};
+                            }
+
+                            for(let templateName in data ){
+                                if( !queue[templateName] ){
+                                    $.aceOverWatch.utilities.log('Failed to find setting for template url: '+templateName);
+                                    continue;
+                                }
+                                //console.log('------- BEGIN ------------> '+templateName);
+                                queue[templateName].target.html(data[templateName]);
+                                //console.log('------- END ------------> '+templateName);
+                                $.aceOverWatch.utilities.runIt(queue[templateName].settings.tplloadedbeforecallback,queue[templateName].target);
+
+                                if (!queue[templateName].target.hasClass('ace-tpl-skip-auto-create-data')) {
+                                    queue[templateName].target.find('.ace-auto-loadtpl').ace('loadtpl');
+                                    queue[templateName].target.find('.ace-auto-gen').ace('create');
+                                }
+
+                                $.aceOverWatch.utilities.runIt(queue[templateName].settings.tplloadedcallback,queue[templateName].target);
+                            }
+
+                        }
+
+                    }
+                });
             },
 
             /**
@@ -2394,6 +3676,130 @@
             return  !$.aceOverWatch.utilities.isVoid( $(target).data($.aceOverWatch.settings.aceSettings) );
         },
 
+        parseHelperObj : {
+            net:              $.aceOverWatch.utilities.parseHelperObjectText,
+            validation:       $.aceOverWatch.utilities.parseHelperObjectText,
+            editform:         $.aceOverWatch.utilities.parseHelperObjectText,
+            extrasaveparams:  $.aceOverWatch.utilities.parseHelperObjectText,
+            extraparams:      $.aceOverWatch.utilities.parseHelperObjectText,
+            gridsettings:     $.aceOverWatch.utilities.parseHelperObjectText,
+            defaultdata:      $.aceOverWatch.utilities.parseHelperObjectText,
+
+            extraparamsnoeval:  $.aceOverWatch.utilities.parseHelperObjectTextNoEval,
+
+            allowadd:         $.aceOverWatch.utilities.parseHelperBool,
+            allowdelete:      $.aceOverWatch.utilities.parseHelperBool,
+            allowduplicates:  $.aceOverWatch.utilities.parseHelperBool,
+            allowedit:        $.aceOverWatch.utilities.parseHelperBool,
+            alloweditinline:  $.aceOverWatch.utilities.parseHelperBool,
+            allowrefresh:     $.aceOverWatch.utilities.parseHelperBool,
+            allowsearchfield: $.aceOverWatch.utilities.parseHelperBool,
+            allowsort:        $.aceOverWatch.utilities.parseHelperBool,
+            alwayssend:       $.aceOverWatch.utilities.parseHelperBool,
+            autoloadrowfields:$.aceOverWatch.utilities.parseHelperBool,
+            autocompleteoff:   $.aceOverWatch.utilities.parseHelperBool,
+            autosaveonselectfile: $.aceOverWatch.utilities.parseHelperBool,
+            autosavesamevalue: $.aceOverWatch.utilities.parseHelperBool,
+            autosearchonfocus: $.aceOverWatch.utilities.parseHelperBool,
+            autoselect:       $.aceOverWatch.utilities.parseHelperBool,
+            cacheit:          $.aceOverWatch.utilities.parseHelperBool,
+            checkall:         $.aceOverWatch.utilities.parseHelperBool,
+            checked:          $.aceOverWatch.utilities.parseHelperBool,
+            cleardata:        $.aceOverWatch.utilities.parseHelperBool,
+            cleartags:        $.aceOverWatch.utilities.parseHelperBool,
+            clickonchips:     $.aceOverWatch.utilities.parseHelperBool,
+            deletenextonesonclick: $.aceOverWatch.utilities.parseHelperBool,
+            disablehideonbkclick: $.aceOverWatch.utilities.parseHelperBool,
+            displaycancelbtn: $.aceOverWatch.utilities.parseHelperBool,
+            displaycheckboxcolselectall: $.aceOverWatch.utilities.parseHelperBool,
+            displaycolumnlines: $.aceOverWatch.utilities.parseHelperBool,
+            displayexpanded:  $.aceOverWatch.utilities.parseHelperBool,
+            displayextralink: $.aceOverWatch.utilities.parseHelperBool,
+            displayinfullscreencancel: $.aceOverWatch.utilities.parseHelperBool,
+            displayinfullscreenonmobile: $.aceOverWatch.utilities.parseHelperBool,
+            displayrowlines:  $.aceOverWatch.utilities.parseHelperBool,
+            displaysavebtn:   $.aceOverWatch.utilities.parseHelperBool,
+            donotredrawselectedrow: $.aceOverWatch.utilities.parseHelperBool,
+            donotreturntotals: $.aceOverWatch.utilities.parseHelperBool,
+            editonselect:     $.aceOverWatch.utilities.parseHelperBool,
+            enabledexpand:    $.aceOverWatch.utilities.parseHelperBool,
+            enablehashnavigation: $.aceOverWatch.utilities.parseHelperBool,
+            enablehomelink:   $.aceOverWatch.utilities.parseHelperBool,
+            enablekeybasednavigation: $.aceOverWatch.utilities.parseHelperBool,
+            enablekeynavigation: $.aceOverWatch.utilities.parseHelperBool,
+            expandonhover:    $.aceOverWatch.utilities.parseHelperBool,
+            filterafterreset: $.aceOverWatch.utilities.parseHelperBool,//
+            forceinlineeditonselect: $.aceOverWatch.utilities.parseHelperBool,//
+            forceerror:       $.aceOverWatch.utilities.parseHelperBool,
+            hidden:           $.aceOverWatch.utilities.parseHelperBool,
+            hideafterfilter:  $.aceOverWatch.utilities.parseHelperBool,//
+            hideaftersave:    $.aceOverWatch.utilities.parseHelperBool,
+            hidearrowicons:   $.aceOverWatch.utilities.parseHelperBool,
+            hideheader:       $.aceOverWatch.utilities.parseHelperBool,
+            hideonescape:     $.aceOverWatch.utilities.parseHelperBool,
+            hideparentinfullscreen: $.aceOverWatch.utilities.parseHelperBool,
+            hidesorticonuntilfirstclick: $.aceOverWatch.utilities.parseHelperBool,
+            hidetagsoverviewwhennotags: $.aceOverWatch.utilities.parseHelperBool,
+            ignorecontrolenvelope: $.aceOverWatch.utilities.parseHelperBool,
+            includeemptyvalues: $.aceOverWatch.utilities.parseHelperBool,
+            infinitescroll:   $.aceOverWatch.utilities.parseHelperBool,
+            insertnewrowsatendofpage: $.aceOverWatch.utilities.parseHelperBool,
+            isdirectfilterfield: $.aceOverWatch.utilities.parseHelperBool,//filters related
+            iswizard:         $.aceOverWatch.utilities.parseHelperBool,
+            keepsearchstring: $.aceOverWatch.utilities.parseHelperBool,
+            loadtplfromdom: $.aceOverWatch.utilities.parseHelperBool,
+            onevalue:         $.aceOverWatch.utilities.parseHelperBool,
+            onlywhenvisible:  $.aceOverWatch.utilities.parseHelperBool,
+            neversend:        $.aceOverWatch.utilities.parseHelperBool,
+            pagination:       $.aceOverWatch.utilities.parseHelperBool,
+            parseastemplate:  $.aceOverWatch.utilities.parseHelperBool,
+            quietoperation:   $.aceOverWatch.utilities.parseHelperBool,
+            recordlastinputfocus: $.aceOverWatch.utilities.parseHelperBool,
+            readonly:         $.aceOverWatch.utilities.parseHelperBool,
+            rowparseastemplate: $.aceOverWatch.utilities.parseHelperBool,
+            settopvalue:    $.aceOverWatch.utilities.parseHelperBool,
+            showaddbutton:    $.aceOverWatch.utilities.parseHelperBool,
+            showcancelonadd:  $.aceOverWatch.utilities.parseHelperBool,
+            showsaveonadd:    $.aceOverWatch.utilities.parseHelperBool,
+            showtotalsrow:    $.aceOverWatch.utilities.parseHelperBool,
+            snal:             $.aceOverWatch.utilities.parseHelperBool,//strong not auto load
+            stayongridafterfocusout: $.aceOverWatch.utilities.parseHelperBool,
+            stoprowclickpropagation: $.aceOverWatch.utilities.parseHelperBool,
+            suppressdeletemessage: $.aceOverWatch.utilities.parseHelperBool,
+            suppressdeleteconfirmationmessage: $.aceOverWatch.utilities.parseHelperBool,
+            tooglecheckonrowclick: $.aceOverWatch.utilities.parseHelperBool,
+            textbellowicon:   $.aceOverWatch.utilities.parseHelperBool,
+            triggeronchange:  $.aceOverWatch.utilities.parseHelperBool,
+            usequeries:       $.aceOverWatch.utilities.parseHelperBool,
+            usesearchstringasvalueifneeded: $.aceOverWatch.utilities.parseHelperBool,
+            validaterowformfields: $.aceOverWatch.utilities.parseHelperBool,
+            visible:          $.aceOverWatch.utilities.parseHelperBool,
+            withtags:         $.aceOverWatch.utilities.parseHelperBool,
+            withcheckboxes:   $.aceOverWatch.utilities.parseHelperBool,
+            withclearbutton:  $.aceOverWatch.utilities.parseHelperBool,
+            withfilter:       $.aceOverWatch.utilities.parseHelperBool,
+            withquickmenuitems: $.aceOverWatch.utilities.parseHelperBool,
+
+            default:          $.aceOverWatch.utilities.parseHelperDefault,
+        },
+
+        parseAttributes : function(target, settings){
+            let actualTarget = target instanceof jQuery ? target.get()[0] : target;
+            if( !actualTarget ){ return; }
+            $.each(actualTarget.attributes, function() {
+                // this.attributes is not a plain object, but an array
+                // of attribute nodes, which contain both the name and value
+                if(this.specified) {
+                    settings[this.name] = ($.aceOverWatch.field.parseHelperObj[this.name] || $.aceOverWatch.field.parseHelperObj['default'])(this.value);
+                }
+
+                delete settings.id;
+                delete settings.class;
+                delete settings.style;
+                delete settings.listeners;
+            });
+        },
+
         //this creates a new field
         create : function(target, settings){
             var overviewid = $.aceOverWatch.utilities.getNextoverviewid();
@@ -2401,97 +3807,7 @@
             if( !settings ){
                 //build the options from the properties of the field
                 settings = {};
-
-                $.each(target.attributes, function() {
-                    // this.attributes is not a plain object, but an array
-                    // of attribute nodes, which contain both the name and value
-                    if(this.specified) {
-
-                        switch( this.name ){
-                            case 'net':
-                            case 'validation':
-                            case 'editform':
-                            case 'extrasaveparams':
-                            case 'extraparams':
-                            case 'editform':
-                            case 'gridsettings':
-                            case 'defaultdata':
-                                settings[this.name] = $.aceOverWatch.utilities.getObjectFromText(this.value);
-                                break;
-                            case 'extraparamsnoeval':
-                                settings[this.name] = $.aceOverWatch.utilities.getObjectFromText(this.value, true);
-                                break;
-                            case 'hideheader':
-                            case 'allowedit':
-                            case 'alloweditinline':
-                            case 'allowadd':
-                            case 'allowdelete':
-                            case 'allowrefresh':
-                            case 'allowsearchfield':
-                            case 'displaycancelbtn':
-                            case 'displaysavebtn':
-                            case 'displayrowlines':
-                            case 'displaycolumnlines':
-                            case 'editonselect':
-                            case 'hideaftersave':
-                            case 'readonly':
-                            case 'cacheit':
-                            case 'cleardata':
-                            case 'textbellowicon':
-                            case 'alwayssend':
-                            case 'neversend':
-                            case 'displaycheckboxcolselectall':
-                            case 'isdirectfilterfield'://filters related
-                            case 'filterafterreset'://
-                            case 'hideafterfilter'://
-                            case 'includeemptyvalues'://
-                            case 'enablekeybasednavigation':
-                            case 'hideonescape':
-                            case 'deletenextonesonclick':
-                            case 'iswizard':
-                            case 'showsaveonadd':
-                            case 'showcancelonadd':
-                            case 'visible':
-                            case 'hidden':
-                            case 'donotredrawselectedrow':
-                            case 'showaddbutton':
-                            case 'onlywhenvisible':
-                            case 'autosaveonselectfile':
-                            case 'checked':
-                            case 'displayextralink':
-                            case 'snal'://strong not auto load
-                            case 'pagination':
-                            case 'showtotalsrow':
-                            case 'infinitescroll':
-                            case 'forceerror':
-                            case 'triggeronchange':
-                            case 'autosearchonfocus':
-                            case 'allowsort':
-                            case 'hidesorticonuntilfirstclick':
-                            case 'enablekeynavigation':
-                            case 'stayongridafterfocusout':
-                            case 'rowparseastemplate':
-                            case 'usequeries':
-                            case 'enabledexpand':
-                            case 'tooglecheckonrowclick':
-                            case 'withcheckboxes':
-                            case 'checkall':
-                            case 'autoselect':
-                            case 'enablehomelink':
-                                settings[this.name] = (this.value=='true');
-                                break;
-                            default:
-                                settings[this.name] = this.value;
-                                break;
-                        }
-                    }
-
-                    delete settings.id;
-                    delete settings.class;
-                    delete settings.style;
-                    delete settings.listeners;
-
-                });
+                $.aceOverWatch.field.parseAttributes(target, settings);
             }
 
             //we are using 2 extend because we do not want the default settings to overwrite the given settings if any
@@ -2505,6 +3821,7 @@
                 labelwidth:'',			//width of the label
 
                 badge:'',
+                badgeicon:'',
                 badgealign:'right',
                 badgewidth:'',
 
@@ -2512,6 +3829,22 @@
 
                 usequeries : false,
                 queriesglue : ';',
+
+                hintselector : '',
+                hintstype : 'standalone',//standalone - multiple
+                                        //with standalone: all siblings with the class ace-hint are hidden
+
+                //some fields receive an additional class to their inner container: ace-control-envelope
+                //based on this class, the ace theme will customize their appearance in specific ways, depending on their
+                //placement in a page
+                //fields with control envelope: text, combobox, autocomplete, password, datepicker, searchform
+                //set to ignorecontrolenvelope to true, so that the field does not add this class to their inner element
+                ignorecontrolenvelope:false,
+
+                expandonhover:false,//true, to expand the grid on hover
+                expandtype:'50',//can be 50, 75, 100, 200
+                expanddirection:'left',//can be left or right
+                expandensureoverflowparents:2,//how many parents should ensure, that the overflow is visible
 
                 net:{			//object that keeps net related data, if any
                     fid:null,
@@ -2549,8 +3882,8 @@
                 alwayssend:false,		//send to true, if a field should always be sent on the net, even though it is not dirty
                 neversend:false,		//never send, if though they are dirty; only sent if explicitdly set
                 validation:{
-                	forceerror : false, //set this to true, to skip the display of warnings, and just display the error directly
-                	tries:0,			//the number of validation tries
+                    forceerror : false, //set this to true, to skip the display of warnings, and just display the error directly
+                    tries:0,			//the number of validation tries
                     validate:true,
                     minval:null,
                     maxval:null,
@@ -2558,7 +3891,7 @@
                     maxlength:null,
                     allowempty:true,
                     onlywhenvisible:false,//validate the field, only when the field is visible
-                    
+
                 },
 
                 parent : null,	//some elements may belong to some others.. like a form to a grid
@@ -2568,6 +3901,9 @@
                 onbeforesave : null,	//if it exists, and returns != 0, then the fields will not be able to save themselves ( those that can do that in the first place )
                 onsuccess : null,		// param: data, if exists, it is called after a network operation was successfull; data is the object retrieved from the net
                 onerror : null,			// param: data, if exists, it is called after a network operation returned with an error; data is the object retrieved from the net
+
+                quietoperation : false,//used by some fields to not show a mask when loading data
+                alternativemaskingtarget : false,//jquery object of an item to be masked INSTEAD of the current field
 
             }, settings ));
 
@@ -2598,6 +3934,13 @@
             $.extend(true, settings, options );
 
             return $.aceOverWatch.field.applySettings(target,settings);
+        },
+
+        displayHint : function(selector,type){
+            $(selector).fadeIn();
+            if( type == 'standalone' ){
+                $(selector).siblings('.ace-hint').fadeOut();
+            }
         },
 
         applySettings : function(target,settings){
@@ -2664,12 +4007,18 @@
 
             if (addEmptyCls) {
                 targetEl.on('keyup', function(){
-                	let el = $(this);
+                    let el = $(this);
                     if( el.val() == ""){
-                    	el.addClass($.aceOverWatch.classes.empty);
+                        el.addClass($.aceOverWatch.classes.empty);
                     }else{
-                    	el.removeClass($.aceOverWatch.classes.empty);
+                        el.removeClass($.aceOverWatch.classes.empty);
                     }
+                });
+            }
+
+            if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ){
+                targetEl.unbind('focus').bind('focus',function(){
+                    $.aceOverWatch.field.displayHint(settings.hintselector,settings.hintstype);
                 });
             }
 
@@ -2700,6 +4049,17 @@
             }
 
             $.aceOverWatch.utilities.activateLabelHelp(target, settings);
+
+            /*
+             * dealing with expand on hover logic logic
+             */
+            if( settings.expandonhover ){
+
+                $.aceOverWatch.utilities.setExpandOnHover(containerField, settings.expandtype, settings.expanddirection, settings.expandensureoverflowparents);
+
+            }
+
+
             return target;
         },
 
@@ -2729,16 +4089,28 @@
             return target;
         },
 
+        focus : function(target){
+            var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+            var fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
+            if( fieldObj && $.isFunction(fieldObj.focus) ){
+                return fieldObj.hide(target);		//custom object focus function
+            }
+
+            target.find('.ace-efld').focus();
+            return target;
+        },
+
         validate : function(target, options, debugValidate){
             var containerField = $(target);
             var settings = containerField.data($.aceOverWatch.settings.aceSettings);
             if( !settings ){
-                return true;//returning true if the field is not created or something happend with the settings..... I think.. TODO: investigate this...
+                return true;//returning true if the field is not created or something happened with the settings..... I think.. TODO: investigate this...
             }
             let config = settings.validation;
 
             if( !config ){
-                return true;//returning true if the field is not created or something happend with the settings..... I think.. TODO: investigate this...
+                return true;//returning true if the field is not created or something happened with the settings..... I think.. TODO: investigate this...
             }
             if( typeof debugValidate === "undefined" ){
                 debugValidate = {};
@@ -2766,7 +4138,7 @@
             config.tries++;
             debugValidate.s5 = 'tries: '+config.tries;
 
-            if( config.tries <= 2 ){	//because an EDIT form might have been displayed imedietly after a NEW form, so some fields have the warning class even on the first step
+            if( config.tries <= 2 ){	//because an EDIT form might have been displayed immediately after a NEW form, so some fields have the warning class even on the first step
                 debugValidate.s6 = 'tries <=2 removed class required';
                 containerField.removeClass($.aceOverWatch.classes.required);
             }
@@ -2798,11 +4170,11 @@
                     isValid = false;
                 }
             }
-            
-            
+
+
             let res = $.aceOverWatch.utilities.runIt(config.customvalidation,target, value, errorObj);
-            if( $.aceOverWatch.utilities.wasItRan() && !res ){
-            	debugValidate.s12 = 'custom validation - invalid';
+            if( $.aceOverWatch.utilities.wasItRan(res) && !res ){
+                debugValidate.s12 = 'custom validation - invalid';
                 isValid = false;
             }
 
@@ -2916,14 +4288,14 @@
          * function used to set or get the values from a field
          * if value is null or missing, the function will not set value of the field
          * if value is present, the value is set
-         * some fields may recieve an extra object, depending on each type of field 
+         * some fields may recieve an extra object, depending on each type of field
          */
         value : function(target, value, extra, record){
             var settings = $(target).data($.aceOverWatch.settings.aceSettings);
 
-            if( settings == null ){
-                return false;
-            }
+            if( !settings ){ return false; }
+
+            settings.net.lastautoaavevalue = false;//everytime this is set, we reset the last auto save value
 
             var fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
             if( fieldObj && $.isFunction(fieldObj.val) ){
@@ -2951,71 +4323,107 @@
 
             return targetElement.val(value).triggerHandler('change');//for a change event as well
         },
-        
+
+        /**
+         * some fields have a method defined called getValForPrint
+         * if this method exists, it will be called and it's returned value will be returned
+         * otherwise, the normal value method will be used
+         */
+        valueprint : function(target){
+            let settings = $(target).data($.aceOverWatch.settings.aceSettings);
+
+            if( !settings ){ return false; }
+
+            let fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
+            if( fieldObj && $.isFunction(fieldObj.getValForPrint) ){
+                return fieldObj.getValForPrint(target);
+            }
+
+            return this.value(target);
+        },
+
         /**
          * this method modifies or retrieves the settings of the object
-         * no extra operations are performed 
+         * no extra operations are performed
          */
         settings : function(target, newSettings){
-        	var settings = target.data($.aceOverWatch.settings.aceSettings);
-        	
-        	if( settings == null ){
+            var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+            if( settings == null ){
                 return false;
             }
-        	
-        	if( newSettings == null ){
+
+            if( newSettings == null ){
                 return settings;
             }
-        	
-        	if( typeof newSettings == 'object' ){
-        		$.extend(true, settings, newSettings );
-        		return settings;
-        	}
-        	
-        	return false;
+
+            if( typeof newSettings == 'object' ){
+                $.extend(true, settings, newSettings );
+                return settings;
+            }
+
+            return false;
         },
-        
+
         /**
          * this method modifies or retrieves the net extra params of an object
          * IF replace is true, the new parameters will be replaced entirely
          */
         netparams : function(target, newparams, replace = false ){
-        	
-        	var settings = target.data($.aceOverWatch.settings.aceSettings);
-        	
-        	if( settings == null ){
+
+            var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+            if( settings == null ){
                 return false;
             }
-        	
-        	if( newparams == null ){
+            if( !settings.net ){
+                settings.net = {
+                    extraparams : {}
+                };
+            }else{
+                if( !settings.net.extraparams ){
+                    settings.net.extraparams = {};
+                }
+            }
+
+            if( newparams == null ){
                 return settings.net.extraparams;
             }
-        	
-        	if( typeof newparams == 'object' ){
-        		
-        		if( replace ){
-        			settings.net.extraparams = newparams;
-        		}else{
-        			$.extend(true, settings.net.extraparams, newparams );
-        		}
-        	}
-        	
-        	return false;
+
+            if( typeof newparams == 'object' ){
+
+                if( replace ){
+                    settings.net.extraparams = newparams;
+                }else{
+                    $.extend(true, settings.net.extraparams, newparams );
+                }
+            }
+
+            return false;
         },
-        
+
 
         /**
          * used to mask a field during an operation, to prevent user interaction
          */
         mask : function(target, mask){
-            var containerField = $(target);
-            var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+            let containerField = $(target);
+            let settings = containerField.data($.aceOverWatch.settings.aceSettings);
             if( !settings ){
-                return false;
+                //small workaround to give masks to non ace fields
+                settings = containerField.data($.aceOverWatch.settings.aceSettingsTmp);
+                if( !settings ) {
+                    settings = {id: $.aceOverWatch.settings.fieldPrefix + '-' + $.aceOverWatch.utilities.getNextoverviewid()};
+                    containerField.data($.aceOverWatch.settings.aceSettingsTmp,settings);
+                }
             }
-            
-            if( mask && (settings.loading || settings.type == 'hidden') ){
-            	return false;
+            if( settings.alternativemaskingtarget ){
+                this.mask(settings.alternativemaskingtarget, mask);
+                return;
+            }
+
+            if( mask && (settings.loading || settings.type == 'hidden' || !target.is(':visible') ) ){
+                return false;
             }
 
             var existingMask = $('body').children('.'+$.aceOverWatch.classes.maskDiv+'[maceid="'+settings.id+'"]');
@@ -3033,7 +4441,8 @@
                 let top = containerField.offset().top;
                 let height = containerField.height();
                 if( height == 0 ){
-                    height = containerField.children('div').outerHeight();
+                    //height = containerField.children('div').outerHeight();
+                    height = containerField[0].scrollHeight;//gives a better idea about the height than the previous commented line
                 }
 
                 top -= extraHeight / 2 + extraOffset;
@@ -3047,19 +4456,58 @@
                 }).appendTo($('body')).fadeIn('slow');
 
             }else{///hide mask
-                if( existingMask.length == 0 ){
-                    return;
-                }
 
-                existingMask.fadeOut('slow',function(){
-                	let el = $(this);
-                    let settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                    if( !settings ){
-                        return false;
-                    }
-                    el.remove();
-                })
+                if( existingMask.length == 0 ){ return; }
+
+                existingMask.fadeOut('slow',function(){$(this).remove();})
             }
+        },
+
+        /**
+         * The method displays a quiet check signs bellow the lower right corner of an ace field
+         * @param target
+         * @returns boolean
+         */
+        check : function(target){
+            var containerField = $(target);
+            var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+            if( !settings ){
+                //small workaround to give masks to non ace fields
+                settings = containerField.data($.aceOverWatch.settings.aceSettingsTmp);
+                if( !settings ) {
+                    settings = {id: $.aceOverWatch.settings.fieldPrefix + '-' + $.aceOverWatch.utilities.getNextoverviewid()};
+                    containerField.data($.aceOverWatch.settings.aceSettingsTmp,settings);
+                }
+            }
+
+            let existingCheck = $('body').children('.'+$.aceOverWatch.classes.checkDiv+'[caceid="'+settings.id+'"]');
+            if( existingCheck.length > 0 ){ return false; }
+
+            let offset = containerField.offset();
+            if( !offset ){ return false; }
+
+            let extraHeight = parseInt(containerField.css('padding-top'))+parseInt(containerField.css('padding-bottom'))+parseInt(containerField.css('margin-top'))+parseInt(containerField.css('margin-bottom'));
+            let extraWidth = parseInt(containerField.css('padding-right'))+parseInt(containerField.css('padding-left'))+parseInt(containerField.css('margin-right'))+parseInt(containerField.css('margin-left'));
+
+            let top = offset.top;
+            let height = containerField.height();
+            if( height == 0 ){
+                height = containerField.children('div').outerHeight();
+            }
+
+            top -= extraHeight / 2 ;
+            let left = offset.left - extraWidth / 2;
+
+            let x = $('<div caceid="'+settings.id+'"><i class="fa fa-check ace-icon"></i></div>').addClass($.aceOverWatch.classes.checkDiv).css({
+                left: left+containerField.width()-20,
+                top: top,
+            }).appendTo($('body')).fadeIn('slow');
+
+            setTimeout(function(x){
+                x.fadeOut('slow',function(){$(this).remove();});
+            },1000,x);
+
+            return true;
         },
 
         /**
@@ -3096,7 +4544,7 @@
         },
 
 
-        
+
         cancel : function(target, validate){
             var containerField = $(target);
             var settings = containerField.data($.aceOverWatch.settings.aceSettings);
@@ -3109,50 +4557,84 @@
 
         /**
          * tries to autosave a field
-		 *  only works for some fields, which fit several criteria
-		 *  - settings.fieldname
-		 *  - settings.net.autosave == true
-		 *  - settings.net.idfieldname		//these two identify the record on the server side
-		 *  - settings.net.idfieldvalue ( positive!!!! ) ; doesn't work for negative values
-		 *  
-		 *  - ALSO! if the field has itself a SAVE function, that function will be ran instead!
+         *  only works for some fields, which fit several criteria
+         *  - settings.fieldname
+         *  - settings.net.autosave == true
+         *  - settings.net.idfieldname		//these two identify the record on the server side
+         *  - settings.net.idfieldvalue ( positive!!!! ) ; doesn't work for negative values
+         *
+         *  - ALSO! if the field has itself a SAVE function, that function will be ran instead!
          */
-        save : function(target, validate){
+        save : function(target, validate, fromAutosave){
 
-            var containerField = $(target);
-            var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+            let settings = target.data($.aceOverWatch.settings.aceSettings);
 
             //testing to see if the object knows how to save itself!
-            var fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
+            let fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
             if( fieldObj && $.isFunction(fieldObj.save) ){
                 return fieldObj.save(target);		//custom object save function
             }
 
             if( settings.net.autosave != true || settings.net.idfieldname == null || String(settings.net.idfieldname).length == 0 || settings.net.idfieldvalue == null ){
+                $.aceOverWatch.utilities.log('ACE - FIELD SAVE ERROR #10: invalid configuration','error');
                 return false;
             }
 
             if( validate && !$.aceOverWatch.field.validate(target) ){
+                $.aceOverWatch.utilities.log('ACE - FIELD SAVE ERROR #20: field not validated','warning');
                 return false;
             }
 
-            var currentValue = containerField.ace('value');
+            let currentValue = target.ace('value');
             if( 		!settings.net.autosavesamevalue
                 && 	settings.net.lastautoaavevalue == currentValue ){
+                $.aceOverWatch.utilities.log('ACE - FIELD SAVE ERROR #30: autos aving same value','warning');
                 return;//do not save the save value as last time
             }
             settings.net.lastautoaavevalue = currentValue;
 
-            var obj = {};
+            let obj = {};
             obj[settings.net.idfieldname] = settings.net.idfieldvalue;
             obj[settings.fieldname] = currentValue;
+
+            /*
+             * ALSO: if the field is part of a FORM, automatically we DO NOT save the same value on autosave
+             */
+            let actualOnBeforeSave = settings.onbeforesave;
+            if( fromAutosave && settings.parentForm){
+                if( settings.parentForm.ace('value').val(settings.fieldname) == currentValue ) {
+                    $.aceOverWatch.utilities.log('ACE - FIELD SAVE ERROR #35: auto saving same value','warning');
+                    return;
+                }
+                //if the field itself doesn't have something explicit given for onbefore save,
+                //then the onbeforesave of the parent form will be used
+                actualOnBeforeSave = settings.parentForm.data($.aceOverWatch.settings.aceSettings).onbeforesave;
+            }
 
             //an answer to a successful operation will come on saveSuccessful function bellow
             return $.aceOverWatch.net.save(target, obj , {
                 onsuccess: settings.onsuccess,
                 onerror:settings.onerror,
-                onbeforesave:settings.onbeforesave,
+                onbeforesave:actualOnBeforeSave,
+            },null,{
+                quietoperation : true,
+                checkafteroperation : true,
+                type : $.aceOverWatch.utilities.isVoid(settings.net.savetype) ? null : settings.net.savetype
             });
+        },
+
+        refresh : function(target, params={}){
+
+            let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+            //testing to see if the object knows how to refresh itself!
+            let fieldObj = $.aceOverWatch.field.getFieldObjectFromType(settings.type);
+            if( fieldObj && $.isFunction(fieldObj.refresh) ){
+                return fieldObj.refresh(target,params);		//custom object refresh function
+            }
+
+            //does nothing if the field does not know how to refresh itsel
+            return target;
         },
 
         //a response to an autosave field operation
@@ -3170,7 +4652,7 @@
 
             var form = containerField.closest('.'+$.aceOverWatch.classes.formContainer).parent();
 
-            if( form ){
+            if( form && form.length > 0 ){
                 //$.aceOverWatch.field.grid.saveSuccessful(target,data.data);
 
                 var fs = form.data($.aceOverWatch.settings.aceSettings);
@@ -3180,7 +4662,7 @@
 					 */
                     $.aceOverWatch.field.grid.saveSuccessful(fs.parent,data);
                 }else{
-                    $.aceOverWatch.field.form.updateRecord(form,settings.fieldname, data[settings.fieldname]);
+                    $.aceOverWatch.field.form.updateRecordBulk(form,data);
                 }
 
 
@@ -3259,23 +4741,42 @@
 
         /**
          * begin badge object
-         * SIMPLE helper object to create the body of a badge used by several fields: display, input, password, combobox, datepicker, autocomplate, etc
+         * SIMPLE helper object to create the body of a badge used by several fields: display, input, password, combobox, datepicker, autocomplete, etc
          * at this point, this is not a TRUE ace field, just a helper; maybe transform in the future if the need requires
+         *
+         * recognized settings parameters:
+         *      badge : the text
+         *      badgeicon: a class for an icon, to be displayed inside an <i> tag
+         *      badgewidth: custom wide, if specified
+         *      badgecallback: function, or the name of a function to be called
+         *
          */
         badge : {
             create : function(settings){
-                var text = settings.badge;
+                let text = settings.badge;
 
-                if( String(settings.badge).length == 0 ){
+                if( settings.badge.length == 0 && settings.badgeicon.length == 0 ){
                     return '';
                 }
 
-                var classes = [$.aceOverWatch.classes.badge];
-                var styles = [];
+                let classes = [$.aceOverWatch.classes.badge];
+                let styles = [];
                 if( settings.badgewidth.length > 0 ){
                     styles.push('width:'+settings.badgewidth);
                 }
-                return '<span class="'+classes.join(' ')+'" style="'+styles.join(';')+'">'+text+'</span>';
+                if( settings.badgecallback ){classes.push($.aceOverWatch.classes.badgePointer);};
+                return '<span class="'+classes.join(' ')+'" style="'+styles.join(';')+'">'+(settings.badgeicon ? '<i class="'+settings.badgeicon+'"></i>' : '')+text+'</span>';
+            },
+
+            afterInit : function(target, what){
+                let containerField = $(target);
+                let settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                if( settings.badgecallback && (settings.badge.length > 0 || settings.badgeicon.length > 0) ){
+                    containerField.find('.'+$.aceOverWatch.classes.badge).unbind('click').bind('click',function(e){
+                        let t = $(this).parents('.ace-field-container').first();
+                        $.aceOverWatch.utilities.runIt(t.data($.aceOverWatch.settings.aceSettings).badgecallback,t);
+                    });
+                }
             }
         },//end badge object
 
@@ -3293,7 +4794,7 @@
             create : function(target,settings){
 
                 $.extend(true, settings, $.extend(true,{
-                    separator : ' > ',
+                    separator : ' ',
                     homename : _aceL.home,		  //the name of the first element
                     displayhomewhennobreadcrumbs:true,//if false, if there are no custom breadcrumbs, the home will not be displayed
                     enablehomelink:true,		//if false, the home link, if dislayed, will not be clickable
@@ -3312,9 +4813,9 @@
                     iswizard:false,	//if true when activating one breadcrumb, the next ones will be disabled!
 
                     autoselect : false,//if true set after creation/modification the step to the first, or the
-                    				   //attention! this field resets to false after every use
-                    currentindex : false,//this is the index of the last triggered breadcrumb 
-                    
+                    //attention! this field resets to false after every use
+                    currentindex : false,//this is the index of the last triggered breadcrumb
+
                 }, settings ) );
 
 
@@ -3377,12 +4878,12 @@
                 targetField.html(breadcrumbsHtml);
 
                 targetField.find('a.'+$.aceOverWatch.classes.breadcrumbsLink).unbind().bind('click',function(e){
-                	let bc = $(this);
+                    let bc = $(this);
                     var target = bc.closest('.'+$.aceOverWatch.classes.containerField);
                     var settings = target.data($.aceOverWatch.settings.aceSettings);
 
                     var idx = parseInt(bc.attr('idx'));
-                                        
+
 
                     bc.addClass($.aceOverWatch.classes.breadcrumbsActive);
                     bc.siblings().removeClass($.aceOverWatch.classes.breadcrumbsActive);
@@ -3420,16 +4921,16 @@
                             window[settings.breadcrumbclick](target, idx, value);
                         }
                     }
-                    
+
                     settings.currentindex = idx;
 
                     return false;
 
                 });
-                
+
                 if( settings.autoselect && settings.currentindex !== false ){
-                	settings.autoselect = false;
-                	this.switchTo(target, settings.currentindex);
+                    settings.autoselect = false;
+                    this.switchTo(target, settings.currentindex);
                 }
             },
 
@@ -3487,9 +4988,9 @@
                 if( index < -1 || index > settings.data.length ){
                     return false;
                 }
-                
+
                 if( index == -1 ){
-                	return settings.displayhomewhennobreadcrumbs;
+                    return settings.displayhomewhennobreadcrumbs;
                 }
 
                 return settings.data[index].val('hidden') != true;
@@ -3507,14 +5008,43 @@
                     $.aceOverWatch.field.breadcrumbs.afterInit(target);
                 }
             },
-            
+
             /**
              * removes the last breadcrumb
              */
             getCurrentIndex : function(target){
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
                 if( settings ){
-                	return settings.currentindex;
+                    return settings.currentindex;
+                }
+            },
+
+            /**
+             * The method changes the text of a crumb, identified by value
+             * if there is no such field, the method will do nothing
+             *
+             * @param target
+             * @param value
+             * @param newName
+             */
+            changeCrumbText : function(target, value, newName){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                let found = false;
+                for(let idx in settings.data ){
+                    if( settings.data[idx].val('value') == value ){
+                        found = true;
+                        settings.data[idx].val('name',newName);
+                        break;
+                    }
+                }
+
+                if( found ){
+                    //build it!
+                    let index = this.getCurrentIndex(target);
+                    $.aceOverWatch.field.breadcrumbs.afterInit(target);
+                    this.switchTo(target,index);
                 }
             },
 
@@ -3578,7 +5108,7 @@
                     /*
                      * now.. in record, we have the new data...
                      * the default behaviour of this is to add the breadcrumb..//TODO... later on, add more.. like replace, or delete
-                     * 
+                     *
                      */
                     settings.data.push(record);
                 }
@@ -3630,42 +5160,42 @@
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
                 containerField.find('a[idx="'+index+'"]').triggerHandler('click');
             },
-            
+
             gotoNextIndex : function(target){
 
-            	var settings = $(target).data($.aceOverWatch.settings.aceSettings);
-            	
-            	let index = this.getCurrentIndex(target);
-            	
+                var settings = $(target).data($.aceOverWatch.settings.aceSettings);
+
+                let index = this.getCurrentIndex(target);
+
                 index++;
                 for( ; index < settings.data.length; index++ ){
-                	if( this.checkVisibility(target, index) ){
-                		break;
-                	}
+                    if( this.checkVisibility(target, index) ){
+                        break;
+                    }
                 }
                 if( index > settings.data.length ){
-                	return;
+                    return;
                 }
 
-            	this.switchTo(target,index);
+                this.switchTo(target,index);
             },
-            
+
             gotoPreviousIndex : function(target){
-        		var settings = $(target).data($.aceOverWatch.settings.aceSettings);
-            	
-            	let index = this.getCurrentIndex(target);
-            	
+                var settings = $(target).data($.aceOverWatch.settings.aceSettings);
+
+                let index = this.getCurrentIndex(target);
+
                 index--;
                 for( ; index >= -1; index-- ){
-                	if( this.checkVisibility(target, index) ){
-                		break;
-                	}
+                    if( this.checkVisibility(target, index) ){
+                        break;
+                    }
                 }
                 if( index < -1 ){
-                	return;
+                    return;
                 }
 
-            	this.switchTo(target,index);
+                this.switchTo(target,index);
             },
 
             switchToLastIndex : function(target){
@@ -3699,7 +5229,8 @@
                 /*
 				 * if we have a renderer, and an initial value, then process the value through the renderer!
 				 */
-                var displayValue = settings['value'];
+                let displayValue = settings['value'];
+
                 if( $.isFunction(settings.renderer)){
                     displayValue = settings.renderer(settings['value']);
                 }else{
@@ -3716,6 +5247,10 @@
                 fieldHtml += '</div>';
 
                 return fieldHtml;
+            },
+
+            afterInit : function(target, what){
+                $.aceOverWatch.field.badge.afterInit($(target), what);
             },
 
             val : function(target, value, extra, record){
@@ -3753,8 +5288,6 @@
                 $.extend(true,settings, $.extend(true,{
                     value:'',
                     onchange:null,	//function, or the name of a function to be called when the value changes; onchange(target, value, event)
-                    //private settings
-                    timerId:null,	 //in case of autosave, this will contain the id of the timer used by the keyup event to detect changes
                 }, settings ) );
                 fieldHtml = '<input type="hidden" class="'+$.aceOverWatch.classes.fieldValue+'" aceid="'+settings.id+'" value="'+settings['value']+'" >';
                 return fieldHtml;
@@ -3764,23 +5297,18 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
-                clearTimeout(settings.timerId); //making sure we kill whatever existing timer we have here
                 var inputField = containerField.find('input');
 
-                inputField.unbind('change').change(function (e) {
-                	let el = $(this);
-                	var target = el.closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
+                inputField.unbind('change');
+                if (!$.aceOverWatch.utilities.isVoid(settings.onchange,true)) {
+                    inputField.change(function (e) {
+                        let el = $(this);
+                        let target = el.closest('.' + $.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                    //run a callback as well, if it exists
-                    if( $.isFunction(settings.onchange)){
-                        settings.onchange(target,el.val(),e);
-                    }else{
-                        if( $.isFunction(window[settings.onchange])){
-                            window[settings.onchange](target,el.val(),e);
-                        }
-                    }
-                });
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target, el.val(), e);
+                    });
+                }
             },
         },//end hidden object
 
@@ -3937,7 +5465,7 @@
                     timerId:null,	 //in case of autosave, this will contain the id of the timer used by the keyup event to detect changes
                 }, settings ) );
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.textField+'" >';
+                var fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.textField+'" >';
 
                 var tooltip = '';
                 if( settings['tooltip'] ){
@@ -3979,12 +5507,12 @@
             },
 
             afterInit : function(target, what){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                $.aceOverWatch.field.badge.afterInit(target, what);
 
                 clearTimeout(settings.timerId); //making sure we kill whatever existing timer we have here
-                var inputField = containerField.find('input');
+                let inputField = target.find('input');
 
                 /*
 				 * displaying an initial value.. if we have one
@@ -3997,18 +5525,22 @@
                     $(this).select();
                 });
 
-                inputField.unbind('change').change(function (e) {
-                	
-                	let el = $(this);
-                    var target = el.closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                    settings.value = el.val();
-                    $.aceOverWatch.utilities.runIt(settings.onchange,target, settings.value,e);
-                });
+                inputField.unbind('change');
+                if (!$.aceOverWatch.utilities.isVoid(settings.onchange,true)) {
+                    inputField.change(function (e) {
+
+                        let el = $(this);
+                        let target = el.closest('.' + $.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                        settings.value = el.val();
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value, e);
+                    });
+                }
 
                 if(
-                		settings.net.autosave == true
+                    settings.net.autosave == true
                     ||	settings.onenter
                 ){
 
@@ -4016,7 +5548,7 @@
                     //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
 
                     inputField.keyup(function (e) {
-                    	let el = $(this);
+                        let el = $(this);
                         var target = el.closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = target.data($.aceOverWatch.settings.aceSettings);
 
@@ -4045,9 +5577,9 @@
                                         }
                                     }
 
-                                    $.aceOverWatch.field.save(target,true);
+                                    $.aceOverWatch.field.save(target,true, true);
                                 }
-                                
+
                                 $.aceOverWatch.utilities.runIt(settings.onenter,target,el.val(),e);
 
                                 break;
@@ -4057,8 +5589,8 @@
                             default:
                                 if( settings.net.autosave ){
                                     settings.timerId = setTimeout(function(){
-                                        $.aceOverWatch.field.save(target,true);
-                                    },2000);
+                                        $.aceOverWatch.field.save(target,true, true);
+                                    },$.aceOverWatch.settings.autosaveTimeout);
                                 }
                                 break;
                         }
@@ -4127,6 +5659,476 @@
         },//end text object
 
         /**
+         * begin tags
+         *
+         * all tags elements use the same template for their edit popup window
+         */
+        tags : {
+
+            overview : {
+
+                wasItInit : false,
+                templateId : 'ace-tag-template-form',
+                usedCounter : 0,
+                storeTop5InCookies : true,
+
+                init : function(){
+                    if( this.wasItInit ){
+                        return;
+                    }
+                    this.wasItInit = true;
+                    $('body').append('<div id="'+this.templateId+'" class="'+$.aceOverWatch.classes.hide+'">' +
+                        '<h2 class="ace-col-12 title"></h2>' +
+                        '<div class="ace-col-12 ace-small-margin-bottom"><div class="ace-col-1">'+$.aceOverWatch.field.label.create({label : _aceL.tagLabel})+'</div><div class="ace-col-11 tags-edit"></div></div>'+
+                        '<div class="ace-col-12 ace-small-margin-bottom suggestions-region"><div class="ace-col-1">'+$.aceOverWatch.field.label.create({label : _aceL.tagSuggestion})+'</div><div class="ace-col-11 tags-suggestions"></div></div>'+
+                        '</div>');
+                    /*
+                     * we attempt to restore from cookies...
+                     */
+                    if( this.storeTop5InCookies ) {
+                        let savedCookis = $.aceOverWatch.cookies.get('ace-t-t5');
+                        if (savedCookis && savedCookis.length > 0) {
+                            savedCookis.split(',').forEach(function (tag) {
+                                this.mostUsed10Tags.push(tag);
+                                this.usedTagsMap[tag] = {
+                                    id: 0,
+                                    count: 1,
+                                    usePriority: 1,
+                                    isTop10: true,
+                                    top10Position: this.mostUsed10Tags.length - 1
+                                };
+                            }, this);
+                        }
+                    }
+
+                },
+
+                usedTagsMap : {},//tag -> id and used count, and use priority
+                mostUsed10Tags : [],
+
+
+                registerUsedTag : function(tag, id){
+                    if( !this.usedTagsMap[tag] ){
+                        this.usedTagsMap[tag] = {
+                            id : 0,
+                            count : 0,
+                            usePriority : 0,
+                            isTop10 : false,
+                            top10Position : 99999999,
+                        };
+                    }
+                    this.usedTagsMap[tag].count++;
+                    this.usedTagsMap[tag].usePriority = ++this.usedCounter;
+                    if( id > 0 ){
+                        this.usedTagsMap[tag].id = 0;
+                    }
+
+                    /*
+                     * everytime we use a tag, we update the mostUsed10Tags
+                     */
+                    let jumpAsFarAsYouCanGo = false;
+                    if( this.mostUsed10Tags.length < 10 && !this.usedTagsMap[tag].isTop10 ){
+                        this.usedTagsMap[tag].isTop10 = true;
+                        this.mostUsed10Tags.push(tag);
+                        this.usedTagsMap[tag].top10Position = this.mostUsed10Tags.length-1;
+                    }else{
+                        /*
+                         * if it's already top 10, we chek to see if we need to change it's position
+                         */
+                        if( this.usedTagsMap[tag].isTop10  ) {
+                            if (this.usedTagsMap[tag].top10Position != 0) {
+                                /*
+                                 * it's not the first, so we could advance it, if we need to
+                                 */
+                                jumpAsFarAsYouCanGo = true;
+
+                            }
+                        }else{
+                            /*
+                             * if check, if the new tag might be added to the top tanks
+                             */
+                            let lastPosition = 9;
+                            let lastTag = this.mostUsed10Tags[lastPosition];
+                            if( this.usedTagsMap[tag].count >= this.usedTagsMap[lastTag].count ){
+                                /*
+                                 *
+                                 * the new tag becomes takes the last spot in top 10
+                                 * a >= type condition is used above, because, even if the count might be identical, we want to display the
+                                 * most recent ones as well
+                                 *
+                                 */
+                                this.mostUsed10Tags[lastPosition] = tag;
+                                this.usedTagsMap[tag].top10Position = lastPosition;
+                                this.usedTagsMap[tag].isTop10 = true;
+
+                                this.usedTagsMap[lastTag].top10Position = 99999999;
+                                this.usedTagsMap[lastTag].isTop10 = false;
+
+                                /*
+                                 * we'll try to advance it as much as we can go
+                                 */
+                                jumpAsFarAsYouCanGo = true;
+
+                            }
+                        }
+
+                        if( jumpAsFarAsYouCanGo == true ){
+                            let currentPosition = this.usedTagsMap[tag].top10Position;
+                            let aheadPosition = currentPosition;
+                            while( aheadPosition > 0 && this.usedTagsMap[this.mostUsed10Tags[aheadPosition-1]].count <=  this.usedTagsMap[tag].count ){
+                                aheadPosition--;
+                            }
+
+                            if( aheadPosition != currentPosition ){
+
+                                /*
+                                 * we shift everything from aheadPosition to currentPosition - 1, one to the right
+                                 */
+                                for(let shiftPosition = currentPosition-1; shiftPosition >= aheadPosition; shiftPosition--){
+
+                                    this.mostUsed10Tags[shiftPosition+1] = this.mostUsed10Tags[shiftPosition];
+                                    this.usedTagsMap[this.mostUsed10Tags[shiftPosition]].top10Position = shiftPosition+1;
+
+                                }
+
+                                /*
+                                 * now, we update the head
+                                 */
+                                this.mostUsed10Tags[aheadPosition] = tag;
+                                this.usedTagsMap[tag].top10Position = aheadPosition;
+
+                            }
+
+                        }
+                    }
+
+                    /*
+                     * we attempt to save the top 5, if we want to
+                     */
+                    if( this.storeTop5InCookies ) {
+                        let max = Math.min(5,this.mostUsed10Tags.length);
+                        if( max > 0 ){
+                            let top5 = [];
+                            for(let idx = 0; idx < max; idx++){
+                                top5.push(this.mostUsed10Tags[idx]);
+                            }
+                            $.aceOverWatch.cookies.set('ace-t-t5',top5.join(','));
+                        }
+                    }
+                },
+
+                getSuggestions : function(existingTagsMap,top=5){
+                    /*
+                     * we return an array of the top 10 most used tags
+                     */
+                    let tags = [];
+                    let idx = 0;
+                    for(let tagIdx in this.mostUsed10Tags ){
+                        let tag = this.mostUsed10Tags[tagIdx];
+                        if( existingTagsMap[tag] ){
+                            continue;
+                        }
+                        if( ++idx > top ){
+                            break;
+                        }
+                        tags.push({
+                            value:this.usedTagsMap[tag].id,
+                            name:tag,
+                        });
+                    }
+
+                    return tags;
+                }
+
+            },
+
+            create : function(target,settings){
+
+                $.extend(true,settings, $.extend(true,{
+
+                    editTitleRenderer : null,//a function, which should return the title of the edit window
+                    ontagsupdated : null,//a function, which will be called AFTER the tags have been updated through the edit window function(target)
+                    onclear : null,
+                    onremove : null,
+                }, settings ) );
+
+                let chipsWideColl = $.aceOverWatch.classes.col12;
+                let labelEl = '';
+                if( settings.label ){
+                    chipsWideColl = $.aceOverWatch.classes.col10;
+                    labelEl = '<div class="'+$.aceOverWatch.classes.col2+'">' + $.aceOverWatch.field.label.create(settings) + '</div>';
+                }
+
+                var fieldHtml = '<div class="'+$.aceOverWatch.classes.tagsField + ' ' + $.aceOverWatch.classes.formIgnore+' '+$.aceOverWatch.classes.col12+'" >'+
+                    labelEl+
+                    '<div class="'+$.aceOverWatch.classes.tagsChipsField+' '+chipsWideColl+'">'+
+                    '</div>'+
+                    '</div>';
+
+                return fieldHtml;
+            },
+
+            afterInit : function(target, what){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                /*
+                 * after we init the tags, we create the main chip element, and in the main chip element we insert
+                 * a button after the last element
+                 */
+                if( what.all || what.recreateChips ){
+
+                    /*
+                     * creating the chips element
+                     */
+                    settings.chipsField = containerField.find('.'+$.aceOverWatch.classes.tagsChipsField).ace('create',{
+                        type : 'chips',
+                        withclearbutton : true,
+                        clickonchips: true,
+                        visible : false,
+                        readonly : settings.readonly,
+                        parent : containerField,
+                        onclear : function(target){
+                            let s = target.data($.aceOverWatch.settings.aceSettings);
+                            let sp = s.parent.data($.aceOverWatch.settings.aceSettings);
+                            $.aceOverWatch.utilities.runIt(sp.onclear,target);
+                        },
+                        onremove : function(target){
+                            let s = target.data($.aceOverWatch.settings.aceSettings);
+                            let sp = s.parent.data($.aceOverWatch.settings.aceSettings);
+                            $.aceOverWatch.utilities.runIt(sp.onremove,target);
+                        },
+                    });
+
+                    if( !settings.readonly ) {
+                        settings.editButton = $('<a class="' + $.aceOverWatch.classes.tagEdit + '"><i class="far fa-edit"></i></a>').insertAfter(settings.chipsField.find('input').last());
+                        settings.editButton.click(function (e) {
+                            e.preventDefault();
+
+                            var target = $(this).closest('.' + $.aceOverWatch.classes.containerField).parent().closest('.' + $.aceOverWatch.classes.containerField);
+                            $.aceOverWatch.field.tags.edit(target);
+
+                            return false;
+                        });
+                    }
+
+                    /*
+                     * deleting the existing edit form
+                     */
+                    delete settings.editForm;
+
+                }
+
+            },
+
+            edit : function(target){
+
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){
+                    return;
+                }
+
+                if( settings.readonly ){
+                    return;
+                }
+
+                /*
+                 * ensuring the template exists
+                 */
+                this.overview.init();
+
+                /*
+                 * if an edit for does not exist, one will be created
+                 */
+                if( !settings.editForm ){
+
+                    settings.rendertoId = settings.id+'-form';
+                    let targetRender = $('#'+settings.rendertoId);
+                    if( targetRender.length == 0 ){
+                        $('body').append('<div class="'+[$.aceOverWatch.classes.formPopup,$.aceOverWatch.classes.tagsForm].join(' ')+'" id="'+settings.rendertoId+'"></div>');
+                        targetRender = $('#'+settings.rendertoId);
+                    }
+
+                    settings.editForm = targetRender.ace('create',{
+                        type:               'form',
+                        ftype:              'popup',
+                        template:           this.overview.templateId,
+                        renderto:           settings.rendertoId,
+                        customsavetext:     _aceL.Save,
+                        displaysavebtn:     true,
+                        displaycancelbtn:   true,
+                        parent:             target,
+                        net:                {},
+                        hideaftersave :     true,
+
+                        oninit : function(form){
+                            let f = $(form);
+                            let sf = f.data($.aceOverWatch.settings.aceSettings);
+                            if( !sf ){ return; }
+                            let sfp = sf.parent.data($.aceOverWatch.settings.aceSettings);
+                            if( !sfp ){ return; }
+
+                            sfp.editTagsEl = f.find('.tags-edit').ace('create',{
+                                type : 'chips',
+                                withclearbutton : true,
+                                placeholder : _aceL.tagPlaceholder
+                            });
+                            sfp.suggestionTagsEl = f.find('.tags-suggestions').ace('create',{
+                                type : 'chips',
+                                withclearbutton : false,
+                                visible : false,
+                                clickonchips : true,
+                                onremove : function(target, index, record){
+
+                                    $.aceOverWatch.field.tags.addTagInternal(
+                                        $(target).closest('.' + $.aceOverWatch.classes.containerField).parent()
+                                            .closest('.' + $.aceOverWatch.classes.containerField)
+                                            .data($.aceOverWatch.settings.aceSettings).parent,
+                                        record
+                                    );
+
+                                },
+                            });
+
+                            sfp.suggestionsRegion = f.find('.suggestions-region');
+                            sfp.editTitleEl = f.find('.title');
+                        },
+                        onlocalsavesuccessfull : function(form, record){
+                            $.aceOverWatch.field.tags.updateInternalValue($(form).data($.aceOverWatch.settings.aceSettings).parent);
+                        },
+                    });
+
+                }
+
+                /*
+                 * recording the current tags, so later we can determine the used ones
+                 */
+                let currentTags = settings.chipsField.ace('value');
+
+                settings.currentTagsMap = {};
+                for(let idx in currentTags ){
+                    settings.currentTagsMap[currentTags[idx].val('name')] = true;
+                }
+
+                settings.editTagsEl.ace('value',currentTags);
+
+                let suggestedTags = this.overview.getSuggestions(settings.currentTagsMap);
+                settings.suggestionTagsEl.ace('value',suggestedTags);
+                if( suggestedTags.length == 0 ){
+                    settings.suggestionsRegion.addClass('ace-hide');
+                }else{
+                    settings.suggestionsRegion.removeClass('ace-hide');
+                }
+
+                let customTitle = $.aceOverWatch.utilities.runIt(settings.editTitleRenderer);
+                if( !$.aceOverWatch.utilities.wasItRan(customTitle) ){
+                    customTitle = _aceL.tagsChange;
+                }
+                settings.editTitleEl.html(customTitle);
+
+                settings.editForm.ace('show');
+
+                $.aceOverWatch.field.chips.focus(settings.editTagsEl);
+            },
+
+            addTagInternal : function(target, record){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                $.aceOverWatch.field.chips.addChip(settings.editTagsEl,record.val('name'),record.val('value'));
+                if( $.aceOverWatch.field.chips.getChipsCount(settings.suggestionTagsEl) == 0 ){
+                    settings.suggestionsRegion.addClass('ace-hide');
+                }
+
+            },
+
+            updateInternalValue : function(target, value){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                /*
+                 * we create a map, of the existing tags, so that we can determine which tags we have just added
+                 */
+
+                let newTags = settings.editTagsEl.ace('value');
+                for(let idx in newTags ){
+                    let tag = newTags[idx].val('name');
+                    if( !settings.currentTagsMap[tag] ){
+                        this.overview.registerUsedTag(tag, newTags[idx].val('value'));
+                    }
+                }
+
+                settings.chipsField.ace('value',newTags);
+                settings.editForm.ace('hide');
+
+                $.aceOverWatch.utilities.runIt(settings.ontagsupdated,target);
+            },
+
+            /**
+             * the value return is a string, in the form of:
+             * id:tag,id:tag,...
+             *
+             * @param target
+             * @param value
+             * @returns {*}
+             */
+            val : function(target, value){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if( !settings ){
+                    return;
+                }
+
+                if( value == null ){
+                    /*
+                     * we return the tags
+                     */
+                    let tagsString = [];
+                    let tagsRecords = settings.chipsField.ace('value');
+                    for(let idx in tagsRecords ) {
+                        let id = tagsRecords[idx].val('value');
+                        if( id > 0 ){
+                            id = id + ':';
+                        }else{
+                            id = '';
+                        }
+                        tagsString.push(id+tagsRecords[idx].val('name'));
+                    }
+
+                    return tagsString.join(',');
+
+                }else{
+                    /*
+                     * we set the value
+                     * if we have an array, we set it directly
+                     * otherwise, we treat it as a comma separated string, of id:tag pairs
+                     */
+                    if( value instanceof Array ){
+                        settings.chipsField.ace('value',value);
+                        return;
+                    }
+
+                    let tagsFinalArray = [];
+                    let tagsArr = value.split(',');
+                    for(let idx in tagsArr ){
+                        let tagPair = tagsArr[idx].split(':');
+                        let newTag = {};
+                        if( tagPair.length == 1 ){
+                            newTag.name = tagPair[0];
+                        }else{
+                            newTag.value = tagPair[0];
+                            newTag.name = tagPair[1];
+                        }
+                        if( newTag.name.length > 0 ) {
+                            tagsFinalArray.push(newTag);
+                        }
+                    }
+                    settings.chipsField.ace('value',tagsFinalArray);
+                }
+
+                return settings;
+            },
+        },
+
+        /**
          * begin chips
          */
 
@@ -4154,17 +6156,25 @@
                     onadd:null,//function, or the name of a function to be called when a chip has been added onadd(target, record)
                     customallowadd:null,//function, or the name of a function to be called, for custom persmission to add a value customallowadd(target, value)
                                         //the function, if it exists, needs to return true, otherwise the value will not be added
+                    onclear:null,//function, or the name of a function to be called when all the chips are removed onclear(target);
 
                     visible : true,//if false, the input field will be hidden
 
                     inputtype : 'input',//can also be combobox
                     selectiondata : [],//used by the combobox, if inputtyype = combobox
-                    		//the data may be specified directly in the HTML using a <storecombo>...</storecombo> structure
-                    
+                    //the data may be specified directly in the HTML using a <storecombo>...</storecombo> structure
+
                     valuename:'id',
                     displayname:'name',
-                    
+
                     placeholder : '',
+
+                    withclearbutton : false,//after input, a clear button will appear, which, if clicked, will remove all the chips
+                    clickonchips : false,//if true, the user may click anywhere on the chips, not only on the x to remove chip
+
+                    valueformat : 'default',//
+                                    //if default: value returns an array of the inner data
+                                    //valuestring: value returns a comma separated array of the values of each data entity
 
                 }, settings ) );
 
@@ -4194,17 +6204,21 @@
 
                 var fieldHtml = '<div class="'+$.aceOverWatch.classes.chipsField+'" >';
 
+                if( settings.withclearbutton && !settings['readonly'] ){
+                    fieldHtml += '<a class="'+[$.aceOverWatch.classes.chipClear,(settings.data.length > 0 ? '' : $.aceOverWatch.classes.hide) ].join(' ')+'"> <i class="far fa-trash"></i>'+_aceL.clear+'</a>';
+                }
+
                 for(var idx in settings.data ){
                     fieldHtml += $.aceOverWatch.field.chips.getChipHtml(target,idx, settings);
                 }
 
                 switch( settings.inputtype ){
                     case 'combobox':
-                    	
-                    	if( settings.selectiondata.length == 0 ){
-                    		settings.selectiondata = $.aceOverWatch.utilities.getAsociatedDataArr(target,'storecombo');
-                    	}
-                    	
+
+                        if( settings.selectiondata.length == 0 ){
+                            settings.selectiondata = $.aceOverWatch.utilities.getAsociatedDataArr(target,'storecombo');
+                        }
+
                         fieldHtml += '<select placeholder="" class="'+$.aceOverWatch.classes.fieldValue+ ((settings['readonly'] || !settings['visible'])? (' '+$.aceOverWatch.classes.hide+' ') : '') +'" aceid="'+settings.id+'" '+tooltip+placeholder+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') +'></select>';
 
                         break;
@@ -4267,6 +6281,7 @@
                 switch( settings.inputtype ){
                     case 'combobox':
                         var selectField = containerField.find('select');
+                        settings.inputField = selectField;
                         settings.selectField = selectField;
                         selectField.unbind('change').bind('change',function(e){
                             $.aceOverWatch.field.chips.addChip(target,$(this).find('option:selected').text(),$(this).val());
@@ -4278,6 +6293,7 @@
                     case 'default':
 
                         var inputField = containerField.find('input');
+                        settings.inputField = inputField;
                         inputField.keyup(function (e) {
 
                             var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
@@ -4293,11 +6309,31 @@
 
                         break;
                 }
-                
+
                 /*
                  * becuse the elements have been recreated, we rebind all delete buttons
                  */
-                $.aceOverWatch.field.chips.bindRemoveEvent(target,-1);
+                $.aceOverWatch.field.chips.bindRemoveEvent(containerField,-1);
+
+                /*
+                 * we deal with the clear button, if it exists
+                 */
+                if( settings.withclearbutton ) {
+                    settings.clearEl = containerField.find('.' + $.aceOverWatch.classes.chipClear);
+                    settings.clearEl.unbind('click').bind('click', function (e) {
+                        e.preventDefault();
+
+                        let target = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                        $.aceOverWatch.field.chips.setData(target, []);
+                        $.aceOverWatch.utilities.runIt(settings.onclear,target);
+
+                        $.aceOverWatch.field.chips.focus(target);
+
+                        return false;
+                    });
+                }
             },
 
             addChip : function(target, chipName, value){
@@ -4339,6 +6375,7 @@
                     settings.nextnewvalue += settings.deltavalue;
                 }
 
+                if( !settings.data ){ settings.data = []; }
                 settings.data.push($.aceOverWatch.record.create({
                     name : chipName,
                     value : value,
@@ -4357,20 +6394,19 @@
                 }
 
                 $($.aceOverWatch.field.chips.getChipHtml(target,settings.data.length-1)).insertBefore(containerField.find(inputFieldType));
-                $.aceOverWatch.field.chips.bindRemoveEvent(target,settings.data.length-1);
+                $.aceOverWatch.field.chips.bindRemoveEvent(containerField,settings.data.length-1);
 
-                if( $.isFunction(settings.onadd)){
-                    settings.onadd(target,settings.data[settings.data.length-1]);
-                }else{
-                    if( $.isFunction(window[settings.onadd])){
-                        window[settings.onadd](target,settings.data[settings.data.length-1]);
-                    }
+                $.aceOverWatch.utilities.runIt(settings.onadd,containerField,settings.data[settings.data.length-1]);
+
+                if( settings.withclearbutton ){
+                    settings.clearEl.removeClass($.aceOverWatch.classes.hide);
                 }
 
+                $.aceOverWatch.field.chips.focus(target);
 
             },
 
-            removeLastChip : function(target, index){
+            removeLastChip : function(target){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
                 if ($.aceOverWatch.utilities.isVoid(settings)) return;
@@ -4380,10 +6416,13 @@
             },
 
             getData : function(target){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                var settings = $(target).data($.aceOverWatch.settings.aceSettings);
                 if ($.aceOverWatch.utilities.isVoid(settings)) return;
                 return settings.data;
+            },
+
+            getChipsCount : function(target){
+                return target.data($.aceOverWatch.settings.aceSettings).data.length;
             },
 
             /**
@@ -4395,6 +6434,7 @@
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
                 if ($.aceOverWatch.utilities.isVoid(settings)) return;
                 settings.data = data
+                if( !$.isArray(settings.data) ){ settings.data = []; }
 
                 if( settings.data.length > 0 && !$.aceOverWatch.record.isRecord(settings.data[0]) ){
                     var innerData = [];
@@ -4409,7 +6449,7 @@
 
                 //build new chips
                 var chipsHtml = '';
-                for(var idx in settings.data ){
+                for(let idx in settings.data ){
                     chipsHtml += $.aceOverWatch.field.chips.getChipHtml(target,idx);
                 }
 
@@ -4426,14 +6466,22 @@
                 }
 
                 $(chipsHtml).insertBefore(containerField.find(inputFieldType));
-                $.aceOverWatch.field.chips.bindRemoveEvent(target,-1);
+                $.aceOverWatch.field.chips.bindRemoveEvent(containerField,-1);
+
+                if( settings.withclearbutton ){
+                    if( data.length == 0 ) {
+                        settings.clearEl.addClass($.aceOverWatch.classes.hide);
+                    }else{
+                        settings.clearEl.removeClass($.aceOverWatch.classes.hide);
+                    }
+                }
 
             },
 
             getChipHtml : function(target, idx, explicitSettings = false){
                 let settings = explicitSettings == false
-                			   ? $(target).data($.aceOverWatch.settings.aceSettings)
-        					   : explicitSettings
+                    ? $(target).data($.aceOverWatch.settings.aceSettings)
+                    : explicitSettings
 
                 let workingData = settings.data;
 
@@ -4451,8 +6499,12 @@
                 if( idx < 0 || idx > (workingData.length - 1) ){
                     return '';
                 }
-                
-                return '<span class="'+$.aceOverWatch.classes.chip+'" idx="'+idx+'">'+workingData[idx].val('name')+(settings.readonly ? '' : '<a href="#" class="'+$.aceOverWatch.classes.chipRemove+'">X</a>')+'</span>';
+
+                if( settings.clickonchips ){
+                    return '<a href="#" class="' + $.aceOverWatch.classes.chip + ' ' + (settings.readonly?'':$.aceOverWatch.classes.chipRemove) + '" idx="' + idx + '">' + workingData[idx].val('name') + '</a>';
+                }else {
+                    return '<span class="'+$.aceOverWatch.classes.chip+'" idx="'+idx+'">'+workingData[idx].val('name')+(settings.readonly ? '' : '<a href="#" class="'+$.aceOverWatch.classes.chipRemove+'">X</a>')+'</span>';
+                }
 
             },
             /**
@@ -4460,15 +6512,14 @@
              *index if -1, then all chips will be binded
              *otherwise, only the specific chip
              */
-            bindRemoveEvent : function(target, index){
-                var containerField = $(target);
+            bindRemoveEvent : function(containerField, index){
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
                 var selector =  '.'+$.aceOverWatch.classes.chip;
                 if( index != -1 ){
                     selector += '[idx="'+index+'"]';
                 }
-                selector += ' a';
+                selector += settings.clickonchips ? '' : ' a';
 
                 containerField.find(selector).unbind('click').bind('click',function(e){
                     e.preventDefault();
@@ -4484,18 +6535,12 @@
                     settings.data.splice(chipIdx,1);
                     chip.remove();
 
-                    //now.. go through all other chip html elements, and adjust their indexes accordinly
+                    //now.. go through all other chip html elements, and adjust their indexes accordingly
                     for(var idx = chipIdx+1; idx <= settings.data.length; idx++){
                         target.find('[idx="'+idx+'"]').attr('idx',idx-1);//for all the rest of the elements, we decrease their idx attribute by one
                     }
 
-                    if( $.isFunction(settings.onremove)){
-                        settings.onremove(target,chipIdx,removedChipData);
-                    }else{
-                        if( $.isFunction(window[settings.onremove])){
-                            window[settings.onremove](target,chipIdx,removedChipData);
-                        }
-                    }
+                    $.aceOverWatch.utilities.runIt(settings.onremove,target,chipIdx,removedChipData);
 
                     switch( settings.inputtype ){
                         case 'combobox':
@@ -4506,18 +6551,57 @@
                             break;
                     }
 
-                    return false
+                    if( settings.withclearbutton && settings.data.length == 0 ){
+                        settings.clearEl.addClass($.aceOverWatch.classes.hide);
+                    }
+
+                    $.aceOverWatch.field.chips.focus(target);
+
+                    return false;
                 });
 
             },
-            
+
+            removeChipByValue : function(target,value){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let desiredIdx = -1;
+                for(let idx in settings.data ){
+                    if( settings.data[idx].val('value') == value ){
+                        desiredIdx = idx;
+                        break;
+                    }
+                }
+                if( desiredIdx === -1 ){
+                     return;
+                }
+                target.find('[idx="'+desiredIdx+'"]').trigger('click');
+            },
+
+            focus : function(target){
+                $(target).data($.aceOverWatch.settings.aceSettings).inputField.focus();
+            },
+
             val : function(target,value){
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
 
-            	if( value == null ){
-                    return this.getData(target);
+                if( value == null ){
+
+                    switch( settings.valueformat ){
+                        case 'valuestring':
+                            let values = [];
+                            if( $.isArray(settings.data) ) {
+                                for (let idx in settings.data) {
+                                    values.push(settings.data[idx].val('value'));
+                                }
+                            }
+                            return values.join(',');
+
+                        default:
+                            return settings.data;
+                    }
+
                 }else{
-                	this.setData(target,value);
+                    this.setData(target,value);
                 }
             }
 
@@ -4533,6 +6617,7 @@
             create : function(target,settings){
                 $.extend(true,settings, $.extend(true,{
                     value:'',
+                    autocompleteoff : false,//if true, the input and label fields will be wrapped in a form tag, and autocomplete=off will be set on the input element
 
                     /*
 					 * as oposed to a TEXT field, the onchange is triggered ONLY when ENTER is PRESSED
@@ -4543,22 +6628,25 @@
                     timerId:null,	 //in case of autosave, this will contain the id of the timer used by the keyup event to detect changes
                 }, settings ) );
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.textField+'" >';
+                let fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.textField+'" >';
 
-                var placeholder= '';
+                let placeholder= '';
                 if( settings['placeholder'] ){
                     placeholder = ' placeholder="'+settings['placeholder']+'" ';
                 }
 
-                var tooltip = '';
+                let tooltip = '';
                 if( settings['tooltip'] ){
                     tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
                 }
 
-                fieldHtml += '<input type="password" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" name="'+settings['fieldname']+'"  '+tooltip+placeholder+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') +'>';
+                if( settings.autocompleteoff ){ fieldHtml += '<form>'; }
+
+                fieldHtml += '<input type="password" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" name="'+settings['fieldname']+'"  '+tooltip+placeholder+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') + (settings.autocompleteoff?' autocomplete="off" ':'') + '>';
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
                 fieldHtml += $.aceOverWatch.field.badge.create(settings);
 
+                if( settings.autocompleteoff ){ fieldHtml += '</form>'; }
 
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
                 fieldHtml += '</div>';
@@ -4571,6 +6659,8 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
+
                 var inputField = containerField.find('input');
 
                 inputField.unbind('click').click(function(){//select all text on click
@@ -4581,23 +6671,23 @@
                     var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                     var settings = target.data($.aceOverWatch.settings.aceSettings);
 
+                    clearTimeout(settings.timerId);
+
                     switch(e.keyCode){
                         case 13://enter
-
-                            //run a callback as well, if it exists
-                            if( $.isFunction(settings.onchange)){
-                                settings.onchange(target,$(this).val(),e);
-                            }else{
-                                if( $.isFunction(window[settings.onchange])){
-                                    window[settings.onchange](target,$(this).val(),e);
-                                }
-                            }
-
+                            $.aceOverWatch.utilities.runIt(settings.onchange,target,$(this).val(),e);
                             break;
                         case 27://escape
                             //do nothing in this case, for now... change if needed?
                             break;
                         default:
+
+                            if( settings.net.autosave ){
+                                settings.timerId = setTimeout(function(){
+                                    $.aceOverWatch.field.save(target,true, true);
+                                },$.aceOverWatch.settings.autosaveTimeout);
+                            }
+
                             break;
                     }
                 });
@@ -4632,16 +6722,24 @@
                     placeholder = ' placeholder="'+settings['placeholder']+'" ';
                 }
 
+                /*
+				 * if we have a renderer, and an initial value, then process the value through the renderer!
+				 */
+                settings.displayValue = $.aceOverWatch.utilities.runIt(settings.renderer,settings['value']);
+                if( !$.aceOverWatch.utilities.wasItRan(settings.displayValue) ){
+                    settings.displayValue = settings['value'];
+                }
+
                 fieldHtml += '<textarea class="'+
                     $.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+
                     '" aceid="'+settings.id+
                     '" name="'+settings['fieldname']+
                     '"  '+tooltip+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') +
                     ' rows="'+settings.rows+'" "'+placeholder+'">'
-                    +settings['value']+'</textarea>';
+                    +settings.displayValue+'</textarea>';
 
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
-                //fieldHtml += $.aceOverWatch.field.badge.create(settings);	//uncomment if we want badges here
+                fieldHtml += $.aceOverWatch.field.badge.create(settings);	//uncomment if we want badges here
 
 
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
@@ -4654,7 +6752,17 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
-                containerField.find('textarea').focusin(function (e) {
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
+
+                let textareaField = containerField.find('textarea');
+                /*
+				 * displaying an initial value.. if we have one
+				 */
+                if( !$.aceOverWatch.utilities.isVoid(settings.displayValue) ){
+                    textareaField.val(settings.displayValue);
+                }
+
+                textareaField.focusin(function (e) {
                     var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                     var settings = target.data($.aceOverWatch.settings.aceSettings);
 
@@ -4670,706 +6778,803 @@
                         settings.onFocusIn(target);
                     }
                 });
+
+                if( settings.net.autosave == true ){
+
+                    //ok.. we have autosave.. so....
+                    //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
+
+                    textareaField.keyup(function (e) {
+                        let el = $(this);
+                        var target = el.closest('.'+$.aceOverWatch.classes.containerField);
+                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                        clearTimeout(settings.timerId);
+
+                        switch(e.keyCode){
+                            case 13://enter
+
+                                /*
+                                 * ok... in case the field doesn't have a fid of its own.. we look at the parent, if there is one
+                                 * in the parent, we look at the net, or at the parentNet fields, and we get the fid and remote from there
+                                 */
+                                if( settings.net.autosave == true ){
+                                    if( !settings.net.fid ){
+                                        if( settings.parentform ){
+                                            var pfd = settings.parentform.data($.aceOverWatch.settings.aceSettings);
+                                            if( pfd.net && pfd.net.fid ){
+                                                settings.net.fid = pfd.net.fid;
+                                                settings.net.remote  = true;
+                                            }else{
+                                                if( pfd.parentNet && pfd.parentNet.fid ){
+                                                    settings.net.fid = pfd.parentNet.fid;
+                                                    settings.net.remote  = true;
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    $.aceOverWatch.field.save(target,true, true);
+                                }
+
+                                break;
+                            case 27://escape
+                                //do nothing in this case, for now... change if needed?
+                                break;
+                            default:
+                                if( settings.net.autosave ){
+                                    settings.timerId = setTimeout(function(){
+                                        $.aceOverWatch.field.save(target,true, true);
+                                    },$.aceOverWatch.settings.autosaveTimeout);
+                                }
+                                break;
+                        }
+                    });
+
+                }
+            },
+
+            val : function(target, value, extra, record){
+                var containerField = $(target);
+                var targetElement = containerField.find('.'+$.aceOverWatch.classes.fieldValue);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if( targetElement.length == 0 ){
+                    return null;
+                }
+                if( value == null ){
+                    settings.value = targetElement.val();
+                    return settings.value;
+                }else{
+
+                    String(value).length > 0 ? targetElement.removeClass($.aceOverWatch.classes.empty) : targetElement.addClass($.aceOverWatch.classes.empty);
+
+                    settings.value = value;//saving the raw value
+                    settings.displayValue = $.aceOverWatch.utilities.runIt(settings.renderer,settings['value'],record);
+                    if( !$.aceOverWatch.utilities.wasItRan(settings.displayValue) ){
+                        settings.displayValue = settings['value'];
+                    }
+
+                    return targetElement.val(settings.displayValue);
+                }
             }
 
         },//end textarea object
-        
+
         /**
          * begin progressbar field
          */
         progressbar : {
-        	create : function(target,settings){
-        		$.extend(true,settings, $.extend(true,{
-        			value:0,
-        			withtext:true,
-        			
-        			onprogress : null,//user define method function(target, progressInterval)
-        			progressinterval : null,
-        			
-        			//private settings
-        			timerId:false,
-        			progressIntervals : {},
-        		}, settings ) );
-        		
-        		settings.value = parseInt(settings.value);
-        		if( settings.value < 0 ){
-        			settings.value = 0;
-        		}else{
-        			if( settings.value > 100 ){
-        				settings.value = 100;
-        			}
-        		}
-        		if( $.aceOverWatch.utilities.isVoid(settings.baseValue) ){
-        			settings.baseValue = settings.value;
-        		}
-        		
-        		if( !$.aceOverWatch.utilities.isVoid(settings.progressinterval) ){
-        			settings.progressIntervals = {};
-        			if( !$.isArray(settings.progressinterval) ){
-        				settings.progressinterval = String(settings.progressinterval).split(',');
-        			} 
-        			for(let idx in settings.progressinterval){
-        				settings.progressIntervals[parseInt(settings.progressinterval[idx])] = true;
-        			}
-        		}
-        		
-        		var fieldHtml = '<div class="'+[$.aceOverWatch.classes.progressbarField,$.aceOverWatch.classes.fieldValue].join(' ')+'" >\
+            create : function(target,settings){
+                $.extend(true,settings, $.extend(true,{
+                    value:0,
+                    withtext:true,
+
+                    onprogress : null,//user define method function(target, progressInterval)
+                    progressinterval : null,
+
+                    //private settings
+                    timerId:false,
+                    progressIntervals : {},
+                }, settings ) );
+
+                settings.value = parseInt(settings.value);
+                if( settings.value < 0 ){
+                    settings.value = 0;
+                }else{
+                    if( settings.value > 100 ){
+                        settings.value = 100;
+                    }
+                }
+                if( $.aceOverWatch.utilities.isVoid(settings.baseValue) ){
+                    settings.baseValue = settings.value;
+                }
+
+                if( !$.aceOverWatch.utilities.isVoid(settings.progressinterval) ){
+                    settings.progressIntervals = {};
+                    if( !$.isArray(settings.progressinterval) ){
+                        settings.progressinterval = String(settings.progressinterval).split(',');
+                    }
+                    for(let idx in settings.progressinterval){
+                        settings.progressIntervals[parseInt(settings.progressinterval[idx])] = true;
+                    }
+                }
+
+                var fieldHtml = '<div class="'+[$.aceOverWatch.classes.progressbarField,$.aceOverWatch.classes.fieldValue].join(' ')+'" >\
         								<div class="'+$.aceOverWatch.classes.progressbarInner+'"></div>\
 								</div>';
-        		
-        		return fieldHtml;
-        	},
-        	
-        	afterInit : function(target,what){
-        		var containerField = $(target);
-        		var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-        		
-        		settings.innerBar = containerField.find('.'+$.aceOverWatch.classes.progressbarInner);
-        		
-        		this.move(containerField);
-        	},
-        	
-        	move : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		if( !settings ){
-        			return;
-        		}
-        		
-        		let hasItMoved = false;
-        		if( settings.baseValue != settings.value ){
-	    			if( settings.baseValue > settings.value ){
-	    				settings.baseValue--;
-	    			}else{
-	    				settings.baseValue++;
-	    			}
-	    			hasItMoved = true;
-        		}
-    			
-        		let width = settings.baseValue+'%';
-    			settings.innerBar.css('width',width);
-    			settings.innerBar.html(settings.withtext ? width : '');
-    			
-    			if( hasItMoved && settings.progressIntervals[settings.baseValue] ){
-    				$.aceOverWatch.utilities.runIt(settings.onprogress,target, settings.baseValue);	
-    			}
-        		
-        		if( settings.baseValue < 0 || settings.baseValue > 100 || settings.baseValue == settings.value ){
-        		
-	        		if( settings.timerId ){
-		        		clearInterval(settings.timerId);
-		        		settings.timerId = false;
-	        		}
-	        		
-	        		return;
-        		}
-        		
-        		if( !settings.timerId ){
-        			settings.timerId = setInterval($.aceOverWatch.field.progressbar.move,10,target);
-        		}
 
-        	},
-        	
-        	val : function(target,value){
-        		var containerField = $(target);
+                return fieldHtml;
+            },
+
+            afterInit : function(target,what){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                settings.innerBar = containerField.find('.'+$.aceOverWatch.classes.progressbarInner);
+
+                this.move(containerField);
+            },
+
+            move : function(target){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){
+                    return;
+                }
+
+                let hasItMoved = false;
+                if( settings.baseValue != settings.value ){
+                    if( settings.baseValue > settings.value ){
+                        settings.baseValue--;
+                    }else{
+                        settings.baseValue++;
+                    }
+                    hasItMoved = true;
+                }
+
+                let width = settings.baseValue+'%';
+                settings.innerBar.css('width',width);
+                settings.innerBar.html(settings.withtext ? width : '');
+
+                if( hasItMoved && settings.progressIntervals[settings.baseValue] ){
+                    $.aceOverWatch.utilities.runIt(settings.onprogress,target, settings.baseValue);
+                }
+
+                if( settings.baseValue < 0 || settings.baseValue > 100 || settings.baseValue == settings.value ){
+
+                    if( settings.timerId ){
+                        clearInterval(settings.timerId);
+                        settings.timerId = false;
+                    }
+
+                    return;
+                }
+
+                if( !settings.timerId ){
+                    settings.timerId = setInterval($.aceOverWatch.field.progressbar.move,10,target);
+                }
+
+            },
+
+            val : function(target,value,forceProgress = false){
+                var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
                 if( value == null ){
                     return settings.baseValue;
                 }else{
-                	settings.value = parseInt(value);
+                    if( settings.timerId ){
+                        clearInterval(settings.timerId);
+                        settings.timerId = false;
+                    }
+                    settings.value = parseInt(value);
+                    if( forceProgress ){
+                        settings.baseValue = settings.value;
+                    }
                     this.move(containerField);
                 }
-            } 
-        	
+            }
+
         },//end progressbar object
-        
+
         /**
          * begin wizard
          */
         wizard : {
-        	create : function(target,settings){
-        		$.extend(true,settings, $.extend(true,{
-        			
-    			   progressbar : {
-    				 withprogressbar : true,
-    				 withtext : false,
-    				 displayposition: 'top',//can also be bottom
-    			   },
-    			   
-    			   nextbuttontext : _aceL.next,
-    			   nextbuttonicon : 'fal fa-forward',
-    			   nextbuttonposition : 'bottom',//can also be top
-    			   
-    			   previousbuttontext : _aceL.prev,
-    			   previousbuttonicon : 'fal fa-backward',
-    			   previousbuttonposition : 'bottom',//can also be top
-    			   
-    			   finalbuttontext : _aceL.finalize,	
-    			   finalbuttonicon : 'fal fa-check',
-    			   finalbuttonposition : 'bottom',//can also be top
-        			
-    			   /*
-    			    * each element in the steps array needs to be an object, which describe the step.
-    			    * the steps will be shown in the order given 
-    			    * each step will be built as a form
-    			    * 
-    			    * recognized properties are:
-    			    * - tag	-		a tag to identify a step, or a group of steps
-    			    * 				if it contains commas, the value will be treated as a comma separated string in which each term is a tag
-    			    * 				can also be set directly as an array of single tags
-    			    * 				default value: default
-    			    * 
-    			    * - visible - 	if the step is visible; if it isn't, when navigating betwen the steps they will be jumped
-    			    * 				default value: true
-    			    * 
-    			    * 
-    			    * - savedataon - Can be either of these values:
-    			    * 				next, prev, both, none
-    			    * 				for the next or both values, the step will save its current fields when moving forword
-    			    * 				for the prev or both values, the step will save its current fields when moving backwords
-    			    * 				default value: next 
-    			    * 
-    			    * 				ATTENTION:
-    			    * 					- if the data fails to be saved, 
-    			    * 					the wizard will not change its current step
-    			    * 
-    			    * - validate -  if true, the step form will validate it's members before the form is saved
-    			    * 			    ATTENTION: the validation of the fields is performed, only IF the step performs a saving operation
-    			    * 							when the step is changed; savedataon
-    			    * 				default value: true
-    			    * 
-		    		* - customvalidation - optional method; will be called BEFORE the step form save itself
-		    		* 				ATTENTION: the method is called, only IF the step performs a saving operation 
-		    		* 						when the step is changed; see savedataon
-    			    * 				
-    			    * 				If the method returns false, the step will not be changed   
-    			    * 				function(stepForm, record)
-    			    * 
-    			    * 
-    			    * - oncustomstepchange - optional method; if present, this method will be called 
-    			    * 				RIGHT BEFORE the step is about to be changed!
-    			    * 
-    			    * 				This allows the user to perform custom operations
-    			    * 				IF the method returns false, the next step will not be loaded
-    			    * 				function(wizard, record, forword) 		
-    			    * 					
-    			    * - template -  the id of a template which will be used to create the step
-    			    * - net -		a net object, with the standard fields: remote, fid, extraparams, etc
-    			    * 				if the net settings is remote, the step will send its data to the server, and will proceed to the next step only on a success message
-    			    * 
-    			    * - idfield - the name of the field from record which holds the identity data
-    			    * 
-    			    * - autoloadon - Can be either of these values 
-    			    * 				next, prev, both, none
-    			    * 				for the next or both values, the step will load some data from the server, right after it was displayed, when the wizard advanced at this step
-    			    * 				for the prev or both values, the step will load some data from the server, right after it was displayed, when the wizard returned at this step
-    			    * 				default value: none
-    			    * 
-    			    * 				ATTENTION:
-    			    * 					- the step will perform this action, only if the net.remote field setting is set to true, and a net.fid value exists
-    			    * 
-    			    * 				
-    			    * 
-    			    * - onbeforeloadstepdata - these are optional methods,which are called, if they exist, before and after the data is loaded in a step form
-    			    * - onafterloadstepdata		function(form, record)
-    			    * 
-    			    * 
-    			    */
-    			   steps : [],
-    			   
-    			   onwizardend : null,//user defined method, which is going to be called when the finalize button will be pressed
-    			   						//function(wizard,record)
-    			   
-    			   overviewform : null, //if defined, it should be an existing form
-    			   						//every time data is saved in a step, it will be also loaded in this form
-    			   
-        		}, settings ) );
-        		
-        		if( $.isArray(settings.steps) &&  settings.steps.length > 0 ){
-                	settings.innerSteps = [];
-                	for(let idx in settings.steps ){
-                		settings.steps[idx].created = false;
-                		settings.steps[idx].savedataonnext = false;
-                		settings.steps[idx].savedataonprev = false;
-                		settings.steps[idx].autoloadonnext = false;
-                		settings.steps[idx].autoloadonprev = false;
-                		
-                		/*
-                		 * making sure that the form will not have autoload true
-                		 */
-                		if( typeof settings.steps[idx].net != 'object' ){
-                			settings.steps[idx].net = {}
-                		};
-                		settings.steps[idx].net.autoload = false;
+            create : function(target,settings){
+                $.extend(true,settings, $.extend(true,{
 
-                		/*
-                		 * transforming the tags, from strings or array into an object
-                		 * for easy tag search
-                		 */
-                		if( !$.aceOverWatch.utilities.isVoid(settings.steps[idx].tag) ){
-                			
-                			if( !$.isArray(settings.steps[idx].tag) ){
-                				settings.steps[idx].tag = String(settings.steps[idx].tag).split(',');
-                			}
-                			
-                			let tagObj = {};
-                			for(let tidx in settings.steps[idx].tag){
-                				tagObj[settings.steps[idx].tag[tidx]] = true;
-                			}
-                			
-                			settings.steps[idx].tag = tagObj;
-                		}
-                		
-                		
-                		let stepData = $.extend(true, {
-                					tag : {'default' : true},
-                					visible : true,
-                					validate : true,
-                					savedataon : 'next',
-                						
-            						net : {
-            							remote : false,
-            						}
-            						
-        						},settings.steps[idx]);
-                		
-                		switch( stepData['savedataon'] ){
-                		case 'next':
-                			stepData['savedataonnext'] = true;
-                			break;
-                		case 'prev':
-                			stepData['savedataonprev'] = true;
-                			break;
-                		case 'both':
-                			stepData['savedataonnext'] = true;
-                			stepData['savedataonprev'] = true;
-                			break;
-                		}
-                		
-                		switch( stepData['autoloadon'] ){
-                		case 'next':
-                			stepData['autoloadonnext'] = true;
-                			break;
-                		case 'prev':
-                			stepData['autoloadonprev'] = true;
-                			break;
-                		case 'both':
-                			stepData['autoloadonnext'] = true;
-                			stepData['autoloadonprev'] = true;
-                			break;
-                		}
-                		
-                		settings.innerSteps.push($.aceOverWatch.record.create(stepData));
-                	}
-                	settings.steps = null;
+                    progressbar : {
+                        withprogressbar : true,
+                        withtext : false,
+                        displayposition: 'top',//can also be bottom
+                    },
+
+                    nextbuttontext : _aceL.next,
+                    nextbuttonicon : 'fal fa-forward',
+                    nextbuttonposition : 'bottom',//can also be top
+
+                    previousbuttontext : _aceL.prev,
+                    previousbuttonicon : 'fal fa-backward',
+                    previousbuttonposition : 'bottom',//can also be top
+
+                    finalbuttontext : _aceL.finalize,
+                    finalbuttonicon : 'fal fa-check',
+                    finalbuttonposition : 'bottom',//can also be top
+
+                    /*
+                     * each element in the steps array needs to be an object, which describe the step.
+                     * the steps will be shown in the order given
+                     * each step will be built as a form
+                     *
+                     * recognized properties are:
+                     * - tag	-		a tag to identify a step, or a group of steps
+                     * 				if it contains commas, the value will be treated as a comma separated string in which each term is a tag
+                     * 				can also be set directly as an array of single tags
+                     * 				default value: default
+                     *
+                     * - visible - 	if the step is visible; if it isn't, when navigating betwen the steps they will be jumped
+                     * 				default value: true
+                     *
+                     *
+                     * - savedataon - Can be either of these values:
+                     * 				next, prev, both, none
+                     * 				for the next or both values, the step will save its current fields when moving forword
+                     * 				for the prev or both values, the step will save its current fields when moving backwords
+                     * 				default value: next
+                     *
+                     * 				ATTENTION:
+                     * 					- if the data fails to be saved,
+                     * 					the wizard will not change its current step
+                     *
+                     * - validate -  if true, the step form will validate it's members before the form is saved
+                     * 			    ATTENTION: the validation of the fields is performed, only IF the step performs a saving operation
+                     * 							when the step is changed; savedataon
+                     * 				default value: true
+                     *
+                     * - customvalidation - optional method; will be called BEFORE the step form save itself
+                     * 				ATTENTION: the method is called, only IF the step performs a saving operation
+                     * 						when the step is changed; see savedataon
+                     *
+                     * 				If the method returns false, the step will not be changed
+                     * 				function(stepForm, record)
+                     *
+                     *
+                     * - oncustomstepchange - optional method; if present, this method will be called
+                     * 				RIGHT BEFORE the step is about to be changed!
+                     *
+                     * 				This allows the user to perform custom operations
+                     * 				IF the method returns false, the next step will not be loaded
+                     * 				function(wizard, record, forword)
+                     *
+                     * - template -  the id of a template which will be used to create the step
+                     * - net -		a net object, with the standard fields: remote, fid, extraparams, etc
+                     * 				if the net settings is remote, the step will send its data to the server, and will proceed to the next step only on a success message
+                     *
+                     * - idfield - the name of the field from record which holds the identity data
+                     *
+                     * - autoloadon - Can be either of these values
+                     * 				next, prev, both, none
+                     * 				for the next or both values, the step will load some data from the server, right after it was displayed, when the wizard advanced at this step
+                     * 				for the prev or both values, the step will load some data from the server, right after it was displayed, when the wizard returned at this step
+                     * 				default value: none
+                     *
+                     * 				ATTENTION:
+                     * 					- the step will perform this action, only if the net.remote field setting is set to true, and a net.fid value exists
+                     *
+                     *
+                     *
+                     * - onbeforeloadstepdata - these are optional methods,which are called, if they exist, before and after the data is loaded in a step form
+                     * - onafterloadstepdata		function(form, record)
+                     *
+                     *
+                     */
+                    steps : [],
+
+                    onwizardend : null,//user defined method, which is going to be called when the finalize button will be pressed
+                    //function(wizard,record)
+
+                    overviewform : null, //if defined, it should be an existing form
+                    //every time data is saved in a step, it will be also loaded in this form
+
+                }, settings ) );
+
+                if( $.isArray(settings.steps) &&  settings.steps.length > 0 ){
+                    settings.innerSteps = [];
+                    for(let idx in settings.steps ){
+                        settings.steps[idx].created = false;
+                        settings.steps[idx].savedataonnext = false;
+                        settings.steps[idx].savedataonprev = false;
+                        settings.steps[idx].autoloadonnext = false;
+                        settings.steps[idx].autoloadonprev = false;
+
+                        /*
+                         * making sure that the form will not have autoload true
+                         */
+                        if( typeof settings.steps[idx].net != 'object' ){
+                            settings.steps[idx].net = {}
+                        };
+                        settings.steps[idx].net.autoload = false;
+
+                        /*
+                         * transforming the tags, from strings or array into an object
+                         * for easy tag search
+                         */
+                        if( !$.aceOverWatch.utilities.isVoid(settings.steps[idx].tag) ){
+
+                            if( !$.isArray(settings.steps[idx].tag) ){
+                                settings.steps[idx].tag = String(settings.steps[idx].tag).split(',');
+                            }
+
+                            let tagObj = {};
+                            for(let tidx in settings.steps[idx].tag){
+                                tagObj[settings.steps[idx].tag[tidx]] = true;
+                            }
+
+                            settings.steps[idx].tag = tagObj;
+                        }
+
+
+                        let stepData = $.extend(true, {
+                            tag : {'default' : true},
+                            visible : true,
+                            validate : true,
+                            savedataon : 'next',
+
+                            net : {
+                                remote : false,
+                            }
+
+                        },settings.steps[idx]);
+
+                        switch( stepData['savedataon'] ){
+                            case 'next':
+                                stepData['savedataonnext'] = true;
+                                break;
+                            case 'prev':
+                                stepData['savedataonprev'] = true;
+                                break;
+                            case 'both':
+                                stepData['savedataonnext'] = true;
+                                stepData['savedataonprev'] = true;
+                                break;
+                        }
+
+                        switch( stepData['autoloadon'] ){
+                            case 'next':
+                                stepData['autoloadonnext'] = true;
+                                break;
+                            case 'prev':
+                                stepData['autoloadonprev'] = true;
+                                break;
+                            case 'both':
+                                stepData['autoloadonnext'] = true;
+                                stepData['autoloadonprev'] = true;
+                                break;
+                        }
+
+                        settings.innerSteps.push($.aceOverWatch.record.create(stepData));
+                    }
+                    settings.steps = null;
                 }
-        		
-        		return this.rebuildField(settings);
-        		
-        	},
-        	
-        	rebuildField : function(settings){
-        		let progressBar = settings.progressbar.withprogressbar ? '<div class="'+[$.aceOverWatch.classes.wizardProgressBar,$.aceOverWatch.classes.col12].join(' ')+'"></div>' : '';
+
+                return this.rebuildField(settings);
+
+            },
+
+            rebuildField : function(settings){
+                let progressBar = settings.progressbar.withprogressbar ? '<div class="'+[$.aceOverWatch.classes.wizardProgressBar,$.aceOverWatch.classes.col12].join(' ')+'"></div>' : '';
                 let nextButton = '<div class="'+$.aceOverWatch.classes.wizardNext+'"></div>';
                 let prevButton = '<div class="'+$.aceOverWatch.classes.wizardPrev+'"></div>';
                 let finalButton = '<div class="'+$.aceOverWatch.classes.wizardFinal+'"></div>';
-                
+
                 let topElements = [];
                 let bottomElements = [];
                 if( settings.progressbar.displayposition == 'top' ){
-                	topElements.push(progressBar);
+                    topElements.push(progressBar);
                 }else{
-                	bottomElements.push(progressBar);
+                    bottomElements.push(progressBar);
                 }
-                
+
                 if( settings.progressbar.previousbuttonposition == 'top' ){
-                	topElements.push(prevButton);
+                    topElements.push(prevButton);
                 }else{
-                	bottomElements.push(prevButton);
+                    bottomElements.push(prevButton);
                 }
-                
+
                 if( settings.progressbar.nextbuttonposition == 'top' ){
-                	topElements.push(nextButton);
+                    topElements.push(nextButton);
                 }else{
-                	bottomElements.push(nextButton);
+                    bottomElements.push(nextButton);
                 }
-                
+
                 if( settings.progressbar.finalbuttonposition == 'top' ){
-                	topElements.push(finalButton);
+                    topElements.push(finalButton);
                 }else{
-                	bottomElements.push(finalButton);
+                    bottomElements.push(finalButton);
                 }
-                
+
                 if( $.aceOverWatch.utilities.isVoid(settings.currentRecord) ){
-                	settings.currentRecord = $.aceOverWatch.record.create({});
+                    settings.currentRecord = $.aceOverWatch.record.create({});
                 }
-                
+
                 settings.visibleStepsCount = 0;
                 let stepContainers = [];
                 settings.firstVisibleStep = -1;
-                
+
                 let lastVisibleStepFound = -1;
-                
+
                 for(let idx in settings.innerSteps ){
-                	settings.innerSteps[idx].val('created',false);
-                	
-                	if( settings.innerSteps[idx].val('visible') ){
-                		
-                		settings.innerSteps[idx].val('stepNumber',settings.visibleStepsCount);//needs to be zero index
-                		
-                		settings.visibleStepsCount++;
-                		if( settings.firstVisibleStep == -1 ){
-                			settings.firstVisibleStep = parseInt(idx);
-                		}
-                		lastVisibleStepFound = parseInt(idx);
-                		
-                		stepContainers.push('<div class="'+[$.aceOverWatch.classes.wizardStep,$.aceOverWatch.classes.col12].join(' ')+'" step="'+idx+'" id="aw-'+settings.id+'-step-'+idx+'"></div>');
-                	}
+                    settings.innerSteps[idx].val('created',false);
+
+                    if( settings.innerSteps[idx].val('visible') ){
+
+                        settings.innerSteps[idx].val('stepNumber',settings.visibleStepsCount);//needs to be zero index
+
+                        settings.visibleStepsCount++;
+                        if( settings.firstVisibleStep == -1 ){
+                            settings.firstVisibleStep = parseInt(idx);
+                        }
+                        lastVisibleStepFound = parseInt(idx);
+
+                        stepContainers.push('<div class="'+[$.aceOverWatch.classes.wizardStep,$.aceOverWatch.classes.col12].join(' ')+'" step="'+idx+'" id="aw-'+settings.id+'-step-'+idx+'"></div>');
+                    }
                 }
                 settings.lastVisibleStep = lastVisibleStepFound;
-                
+
                 if( $.aceOverWatch.utilities.isVoid(settings.currentStepIndex) ){
-                	settings.currentStepIndex = settings.firstVisibleStep;
+                    settings.currentStepIndex = settings.firstVisibleStep;
                 }
                 if( settings.currentStepIndex < settings.firstVisibleStep ){
-                	settings.currentStepIndex = settings.firstVisibleStep;
+                    settings.currentStepIndex = settings.firstVisibleStep;
                 }else{
-                	if( settings.currentStepIndex > lastVisibleStepFound ){
-                		settings.currentStepIndex = settings.lastVisibleStepFound;
-                	}else{
+                    if( settings.currentStepIndex > lastVisibleStepFound ){
+                        settings.currentStepIndex = settings.lastVisibleStepFound;
+                    }else{
 
-                		while( settings.currentStepIndex >= 0 && !settings.innerSteps[settings.currentStepIndex].val('visible') ){
-                			settings.currentStepIndex--;
-                		}
-                	}
+                        while( settings.currentStepIndex >= 0 && !settings.innerSteps[settings.currentStepIndex].val('visible') ){
+                            settings.currentStepIndex--;
+                        }
+                    }
                 }
                 settings.currentStepIndex = parseInt(settings.currentStepIndex);
-                
-        		var fieldHtml = '<div class="'+[$.aceOverWatch.classes.wizardField,$.aceOverWatch.classes.col12].join(' ')+'" >\
-	        		<div class="'+[$.aceOverWatch.classes.wizardTopBar,$.aceOverWatch.classes.col12].join(' ')+'">'
-	        			+ topElements.join('') +
-	        		'</div>\
-	        		<div class="'+[$.aceOverWatch.classes.wizardContainer,$.aceOverWatch.classes.col12].join(' ')+'">'
-	        			+ stepContainers.join('') +
-	        		'</div>\
-	        		<div class="'+[$.aceOverWatch.classes.wizardBottomBar,$.aceOverWatch.classes.col12].join(' ')+'">'
-	        			+ bottomElements.join('') +
-	        		'</div>\
-        		</div>';
-        		
-        		return fieldHtml;
-        	},
-        	
-        	afterInit : function(target,what){
-        		var containerField = $(target);
-        		var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-        		
-        		if( settings.progressbar.withprogressbar ){
-        			settings.progressBar = containerField.find('.'+$.aceOverWatch.classes.wizardProgressBar).ace('create',{
-        				type : 'progressbar',
-        				withtext : settings.progressbar.withtext 
-        			});
-        		}else{
-        			settings.progressBar = false;
-        		}
-        		
-        		settings.nextButton = containerField.find('.'+$.aceOverWatch.classes.wizardNext).ace('create',{
-        				type : 'button',
-        				value : settings.nextbuttontext,
-        				iconcls : settings.nextbuttonicon,
-        				iconposition : 'after',
-        				action : function(button){ $.aceOverWatch.field.wizard.moveToNext(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
-        			});
-        		settings.finalButton = containerField.find('.'+$.aceOverWatch.classes.wizardFinal).ace('create',{
-        			type : 'button',
-        			value : settings.finalbuttontext,
-        			iconcls : settings.finalbuttonicon,
-        			action : function(button){ $.aceOverWatch.field.wizard.moveToNext(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
-        		});
-        		settings.previousButton = containerField.find('.'+$.aceOverWatch.classes.wizardPrev).ace('create',{
-        			type : 'button',
-        			value : settings.previousbuttontext,
-        			iconcls : settings.previousbuttonicon,
-        			action : function(button){ $.aceOverWatch.field.wizard.moveToPrevious(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
-        		});
-        		
-        		settings.cardView = containerField.find('.'+$.aceOverWatch.classes.wizardContainer).ace('create',{
-        			type : 'cardview',
-        			contentselector : '.'+$.aceOverWatch.classes.wizardStep,
-        			restricttoparent : true,
-        		});
-        		
-        		this.moveTo(containerField, settings.currentStepIndex, false);
-        	},
-        	
-        	reset : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		settings.currentRecord = $.aceOverWatch.record.create({});
-        		this.moveToActual(target,settings.firstVisibleStep);
-        	},
-        	
-        	/**
-        	 * the method sets the vizibility of some steps using the data from the visibilityObj
-        	 * Each property in visibilityObj represents the name of a step tag, and its value needs to be of type boolean
-        	 * All steps of given tags will be set vizibile, or invizibile based on these settings 
-        	 */
-        	setTagVisibility : function(target, visibilityObj){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		let atLeastOneChangeMade = false;
-        		for( let idx in settings.innerSteps ){
-        			
-        			for( let tag in visibilityObj ){
-        				if( settings.innerSteps[idx].val('tag')[tag] === true && settings.innerSteps[idx].val('visible') != visibilityObj[tag] ){
-        					settings.innerSteps[idx].val('visible',visibilityObj[tag]);
-        					atLeastOneChangeMade = true;
-        				}
-        			}
-        		}
-        		
-        		if( !atLeastOneChangeMade ){
-        			/*
-        			 * nothing else to do
-        			 */
-        			return;
-        		}
-        			
-    			for( let idx in settings.innerSteps ){
-    				settings.innerSteps[idx].val('created',false);
-    			}
-    			
-        		target.html(this.rebuildField(settings));
-        		this.afterInit(target,{all:true});
-        		
-        		/*
-        		 * we recompute the prevous nextRequestedStep, just in case something has changed
-        		 */
-        		settings.nextRequestedStep = this.getNextVisibleStepFromStep(settings,settings.previousCurrentStep);
-        	},
-        	
-        	getNextVisibleStepFromStep : function(settings, step){
-        		let nextStep = -1;
-        		if( step == settings.lastVisibleStep ){
-        			nextStep = settings.lastVisibleStep+1;
-        		}else{
-        		
-	        		if( step > settings.lastVisibleStep ){
-	        			nextStep = settings.firstVisibleStep;
-	        		}else{
-	        			for(let idx = step+1; idx <= settings.lastVisibleStep; idx++ ){
-	        				if( settings.innerSteps[idx].val('visible') ){
-	        					nextStep = parseInt(idx);
-	        					break;
-	        				}
-	        			}
-	        		}
-	        		
-        		}
-        		return nextStep;
-        	},
-        	
-        	moveToNext : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		this.moveTo(target, this.getNextVisibleStepFromStep(settings,settings.currentStepIndex), settings.innerSteps[settings.currentStepIndex].val('savedataonnext'));
-        	},
-        	
-        	moveToPrevious : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		if( settings.currentStepIndex == settings.firstVisibleStep ){
-        			return;
-        		}
-        		
-        		let nextStep = -1;
-        		if( settings.currentStepIndex < settings.firstVisibleStep ){
-        			nextStep = settings.lastVisibleStep;
-        		}else{
-        			for(let idx = settings.currentStepIndex-1; idx >= settings.firstVisibleStep; idx-- ){
-        				if( settings.innerSteps[idx].val('visible') ){
-        					nextStep = idx;
-        					break;
-        				}
-        			}
-        		}
-        		
-        		this.moveTo(target, nextStep, settings.innerSteps[settings.currentStepIndex].val('savedataonprev'));
-        	},
-        	
-        	moveTo : function(target, nextStep, withVerification){
-        		
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		let forword = nextStep > settings.previousCurrentStep ? true : false; 
-        		
-        		if( withVerification ){
-        			settings.previousCurrentStep = settings.currentStepIndex;
-        			settings.nextRequestedStep = nextStep;
-        			settings.innerSteps[settings.currentStepIndex].val('form').ace('save');
-        			return;
-        		}else{
-        			
-        			let result = $.aceOverWatch.utilities.runIt(settings.innerSteps[settings.currentStepIndex].val('oncustomstepchange'), target, settings.currentRecord, forword);
-            		if( $.aceOverWatch.utilities.wasItRan() && result !== true ){
-            			/*
-            			 * if a custom operation is performed, we'll move to the next step ONLY if the custom method returns a true  
-            			 */
-            			return;
-            		}
-        			
-        		}
 
-        		this.moveToActual(target, nextStep);
-        	},
-        	
-        	beforeMoveToLastRequestedStep : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		let result = $.aceOverWatch.utilities.runIt(settings.innerSteps[settings.currentStepIndex].val('oncustomstepchange'), target, settings.currentRecord, settings.nextRequestedStep > settings.previousCurrentStep ? true : false);
-        		if( $.aceOverWatch.utilities.wasItRan() && result !== true ){
-        			/*
-        			 * if a custom operation is performed, we'll move to the next step ONLY if the custom method returns a true  
-        			 */
-        			return;
-        		}
-        		
-        		this.moveToLastRequestedStep(target);
-        	},
-        	
-        	moveToLastRequestedStep : function(target){
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		let actualNextStep = settings.nextRequestedStep; 
-        		
-        		if( 	settings.nextRequestedStep < settings.innerSteps.length
-    				&& 	!settings.innerSteps[settings.nextRequestedStep].val('visible')
-				){
-        			/*
-        			 * if the step has for some reason beome not visible, we recompute the next one, 
-        			 * based on the current step that was at the time this one was initially computed
-        			 */
-        			actualNextStep = this.getNextVisibleStepFromStep(settings,settings.previousCurrentStep);
-        		}
-        		
-        		this.moveToActual(target, actualNextStep);
-        	},
-        	
-        	moveToActual : function(target, nextStep){
-        		
-        		var settings = target.data($.aceOverWatch.settings.aceSettings);
-        		
-        		if( settings.overviewform ){
-        			settings.overviewform.ace('value',settings.currentRecord);
-        		}
-        		
-        		nextStep = parseInt(nextStep);
-        		
-        		if( nextStep > settings.lastVisibleStep ){
-        			$.aceOverWatch.utilities.runIt(settings.onwizardend,target,settings.currentRecord);        			
-        			return;
-        		}
-        		
-        		let forword = nextStep > settings.currentStepIndex;
-        		let backwords = nextStep < settings.currentStepIndex;
-        		
-    			settings.currentStepIndex = parseInt(nextStep);
-    			
-    			let net = settings.innerSteps[settings.currentStepIndex].val('net');
-        		
-        		if( !settings.innerSteps[settings.currentStepIndex].val('created') ){
-        			settings.innerSteps[settings.currentStepIndex].val('created',true);
-        			let form = settings.cardView.find('[step="'+settings.currentStepIndex+'"]').ace('create',{
-        				type : 'form',
-        				ftype : 'custom',
-        				template : settings.innerSteps[settings.currentStepIndex].val('template'),
+                var fieldHtml = '<div class="'+[$.aceOverWatch.classes.wizardField,$.aceOverWatch.classes.col12].join(' ')+'" >\
+	        		<div class="'+[$.aceOverWatch.classes.wizardTopBar,$.aceOverWatch.classes.col12].join(' ')+'">'
+                    + topElements.join('') +
+                    '</div>\
+                    <div class="'+[$.aceOverWatch.classes.wizardContainer,$.aceOverWatch.classes.col12].join(' ')+'">'
+                    + stepContainers.join('') +
+                    '</div>\
+                    <div class="'+[$.aceOverWatch.classes.wizardBottomBar,$.aceOverWatch.classes.col12].join(' ')+'">'
+                    + bottomElements.join('') +
+                    '</div>\
+                </div>';
+
+                return fieldHtml;
+            },
+
+            afterInit : function(target,what){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if( settings.progressbar.withprogressbar ){
+                    settings.progressBar = containerField.find('.'+$.aceOverWatch.classes.wizardProgressBar).ace('create',{
+                        type : 'progressbar',
+                        withtext : settings.progressbar.withtext
+                    });
+                }else{
+                    settings.progressBar = false;
+                }
+
+                settings.nextButton = containerField.find('.'+$.aceOverWatch.classes.wizardNext).ace('create',{
+                    type : 'button',
+                    value : settings.nextbuttontext,
+                    iconcls : settings.nextbuttonicon,
+                    iconposition : 'after',
+                    action : function(button){ $.aceOverWatch.field.wizard.moveToNext(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
+                });
+                settings.finalButton = containerField.find('.'+$.aceOverWatch.classes.wizardFinal).ace('create',{
+                    type : 'button',
+                    value : settings.finalbuttontext,
+                    iconcls : settings.finalbuttonicon,
+                    action : function(button){ $.aceOverWatch.field.wizard.moveToNext(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
+                });
+                settings.previousButton = containerField.find('.'+$.aceOverWatch.classes.wizardPrev).ace('create',{
+                    type : 'button',
+                    value : settings.previousbuttontext,
+                    iconcls : settings.previousbuttonicon,
+                    action : function(button){ $.aceOverWatch.field.wizard.moveToPrevious(button.parents('.'+$.aceOverWatch.classes.wizardField).first().parent()); }
+                });
+
+                settings.cardView = containerField.find('.'+$.aceOverWatch.classes.wizardContainer).ace('create',{
+                    type : 'cardview',
+                    contentselector : '.'+$.aceOverWatch.classes.wizardStep,
+                    restricttoparent : true,
+                });
+
+                this.moveTo(containerField, settings.currentStepIndex, false);
+            },
+
+            reset : function(target){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                settings.currentRecord = $.aceOverWatch.record.create({});
+                this.moveToActual(target,settings.firstVisibleStep);
+            },
+
+            /**
+             * the method sets the vizibility of some steps using the data from the visibilityObj
+             * Each property in visibilityObj represents the name of a step tag, and its value needs to be of type boolean
+             * All steps of given tags will be set vizibile, or invizibile based on these settings
+             */
+            setTagVisibility : function(target, visibilityObj){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                let atLeastOneChangeMade = false;
+                for( let idx in settings.innerSteps ){
+
+                    for( let tag in visibilityObj ){
+                        if( settings.innerSteps[idx].val('tag')[tag] === true && settings.innerSteps[idx].val('visible') != visibilityObj[tag] ){
+                            settings.innerSteps[idx].val('visible',visibilityObj[tag]);
+                            atLeastOneChangeMade = true;
+                        }
+                    }
+                }
+
+                if( !atLeastOneChangeMade ){
+                    /*
+                     * nothing else to do
+                     */
+                    return;
+                }
+
+                for( let idx in settings.innerSteps ){
+                    settings.innerSteps[idx].val('created',false);
+                }
+
+                target.html(this.rebuildField(settings));
+                this.afterInit(target,{all:true});
+
+                /*
+                 * we recompute the prevous nextRequestedStep, just in case something has changed
+                 */
+                settings.nextRequestedStep = this.getNextVisibleStepFromStep(settings,settings.previousCurrentStep);
+            },
+
+            getNextVisibleStepFromStep : function(settings, step){
+                let nextStep = -1;
+                if( step == settings.lastVisibleStep ){
+                    nextStep = settings.lastVisibleStep+1;
+                }else{
+
+                    if( step > settings.lastVisibleStep ){
+                        nextStep = settings.firstVisibleStep;
+                    }else{
+                        for(let idx = step+1; idx <= settings.lastVisibleStep; idx++ ){
+                            if( settings.innerSteps[idx].val('visible') ){
+                                nextStep = parseInt(idx);
+                                break;
+                            }
+                        }
+                    }
+
+                }
+                return nextStep;
+            },
+
+            moveToNext : function(target){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                this.moveTo(target, this.getNextVisibleStepFromStep(settings,settings.currentStepIndex), settings.innerSteps[settings.currentStepIndex].val('savedataonnext'));
+            },
+
+            moveToPrevious : function(target, skip=1){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                if( settings.currentStepIndex == settings.firstVisibleStep ){
+                    return;
+                }
+
+                let nextStep = -1;
+                if( settings.currentStepIndex < settings.firstVisibleStep ){
+                    nextStep = settings.lastVisibleStep;
+                }else{
+                    if (!skip) {
+                        skip  = 1;
+                    }
+                    for(let idx = settings.currentStepIndex-1; idx >= settings.firstVisibleStep; idx--){
+                        if( settings.innerSteps[idx].val('visible') ){
+                            skip--;
+                            if (skip === 0) {
+                                nextStep = idx;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                this.moveTo(target, nextStep, settings.innerSteps[settings.currentStepIndex].val('savedataonprev'));
+            },
+
+            moveTo : function(target, nextStep, withVerification){
+
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                let forword = nextStep > settings.previousCurrentStep ? true : false;
+
+                if( withVerification ){
+                    settings.previousCurrentStep = settings.currentStepIndex;
+                    settings.nextRequestedStep = nextStep;
+                    settings.innerSteps[settings.currentStepIndex].val('form').ace('save');
+                    return;
+                }else{
+
+                    let result = $.aceOverWatch.utilities.runIt(settings.innerSteps[settings.currentStepIndex].val('oncustomstepchange'), target, settings.currentRecord, forword);
+                    if( $.aceOverWatch.utilities.wasItRan(result) && result !== true ){
+                        /*
+                         * if a custom operation is performed, we'll move to the next step ONLY if the custom method returns a true
+                         */
+                        return;
+                    }
+
+                }
+
+                this.moveToActual(target, nextStep);
+            },
+
+            beforeMoveToLastRequestedStep : function(target){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                let result = $.aceOverWatch.utilities.runIt(settings.innerSteps[settings.currentStepIndex].val('oncustomstepchange'), target, settings.currentRecord, settings.nextRequestedStep > settings.previousCurrentStep ? true : false);
+                if( $.aceOverWatch.utilities.wasItRan(result) && result !== true ){
+                    /*
+                     * if a custom operation is performed, we'll move to the next step ONLY if the custom method returns a true
+                     */
+                    return;
+                }
+
+                this.moveToLastRequestedStep(target);
+            },
+
+            moveToLastRequestedStep : function(target){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                let actualNextStep = settings.nextRequestedStep;
+
+                if( 	settings.nextRequestedStep < settings.innerSteps.length
+                    && 	!settings.innerSteps[settings.nextRequestedStep].val('visible')
+                ){
+                    /*
+                     * if the step has for some reason beome not visible, we recompute the next one,
+                     * based on the current step that was at the time this one was initially computed
+                     */
+                    actualNextStep = this.getNextVisibleStepFromStep(settings,settings.previousCurrentStep);
+                }
+
+                this.moveToActual(target, actualNextStep);
+            },
+
+            getCurrentOverviewRecord: function(target) {
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                return settings.currentRecord;
+            },
+            moveToActual : function(target, nextStep){
+
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                if( settings.overviewform ){
+                    settings.overviewform.ace('value',settings.currentRecord);
+                }
+
+                nextStep = parseInt(nextStep);
+
+                if( nextStep > settings.lastVisibleStep ){
+                    $.aceOverWatch.utilities.runIt(settings.onwizardend,target,settings.currentRecord);
+                    return;
+                }
+
+                let forword = nextStep > settings.currentStepIndex;
+                let backwords = nextStep < settings.currentStepIndex;
+
+                settings.currentStepIndex = parseInt(nextStep);
+
+                let net = settings.innerSteps[settings.currentStepIndex].val('net');
+
+                if( !settings.innerSteps[settings.currentStepIndex].val('created') ){
+                    settings.innerSteps[settings.currentStepIndex].val('created',true);
+                    let form = settings.cardView.find('[step="'+settings.currentStepIndex+'"]').ace('create',{
+                        type : 'form',
+                        ftype : 'custom',
+                        template : settings.innerSteps[settings.currentStepIndex].val('template'),
                         renderto : 'aw-'+settings.id+'-step-'+settings.currentStepIndex,
                         displaysavebtn : false,
                         displaycancelbtn : false,
-                        
+
                         validate : settings.innerSteps[settings.currentStepIndex].val('validate'),
-                        
-                        net : $.aceOverWatch.utilities.isVoid(net) ? {} : net, 
-                        
+
+                        net : $.aceOverWatch.utilities.isVoid(net) ? {} : net,
+
                         onlocalsavesuccessfull : function(form, record){
-                        	$.aceOverWatch.field.wizard.beforeMoveToLastRequestedStep($(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent());
+                            $.aceOverWatch.field.wizard.beforeMoveToLastRequestedStep($(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent());
                         },
                         onsavesuccessful : function(form, data){
-                        	$.aceOverWatch.field.wizard.beforeMoveToLastRequestedStep($(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent());
+                            $.aceOverWatch.field.wizard.beforeMoveToLastRequestedStep($(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent());
                         },
-                        
+
                         onbeforesave : function(form, record){
-                        	var s = $(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent().data($.aceOverWatch.settings.aceSettings);
-                        	let forword = settings.nextRequestedStep > settings.previousCurrentStep;
-                        	let res = $.aceOverWatch.utilities.runIt(s.innerSteps[settings.currentStepIndex].val('customvalidation'),form,record,forword);
-                        	
-                        	if( $.aceOverWatch.utilities.wasItRan() && !res ){
-                        		return false;
-                        	}
-                        	
-                        	return true;
+                            var s = $(form).parents('.'+$.aceOverWatch.classes.wizardField).first().parent().data($.aceOverWatch.settings.aceSettings);
+                            let forword = settings.nextRequestedStep > settings.previousCurrentStep;
+                            let res = $.aceOverWatch.utilities.runIt(s.innerSteps[settings.currentStepIndex].val('customvalidation'),form,record,forword);
+
+                            if( $.aceOverWatch.utilities.wasItRan(res) && !res ){
+                                return false;
+                            }
+
+                            return true;
                         },
                         onbeforeloadrecord : settings.innerSteps[settings.currentStepIndex].val('onbeforeloadstepdata'),
                         onafterloadrecord : settings.innerSteps[settings.currentStepIndex].val('onafterloadstepdata'),
-        			});
-        			
-        			settings.innerSteps[settings.currentStepIndex].val('form',form);
-        		}
-        		
-        		$.aceOverWatch.field.cardview.switchTo(settings.cardView,settings.innerSteps[settings.currentStepIndex].val('stepNumber'));
-        		
-        		if( settings.currentStepIndex == settings.firstVisibleStep ){
-        			settings.previousButton.addClass('ace-hide');
-        		}else{
-        			settings.previousButton.removeClass('ace-hide');
-        		}
-        		
-        		if( settings.currentStepIndex == settings.lastVisibleStep ){
-        			settings.nextButton.addClass('ace-hide');
-        			settings.finalButton.removeClass('ace-hide');
-        		}else{
-        			settings.nextButton.removeClass('ace-hide');
-        			settings.finalButton.addClass('ace-hide');
-        		}
-        		
-        		let form = settings.innerSteps[settings.currentStepIndex].val('form'); 
-        		
-        		form.ace('settings',{alwayskeeprecordreference:false});
-        		form.ace('value',settings.currentRecord);
-        		
-        		if( settings.progressBar ){
-        			settings.progressBar.ace('value',(settings.innerSteps[settings.currentStepIndex].val('stepNumber')+1)*100 / settings.visibleStepsCount);
-        		} 
-        		
-        		if( 
-    				   net
-    				&& !$.aceOverWatch.utilities.isVoid(net.fid)
-        			&& (	
-        					( forword && settings.innerSteps[settings.currentStepIndex].val('autoloadonnext') )
-        				||	( backwords && settings.innerSteps[settings.currentStepIndex].val('autoloadonprev') )
-    				)
-				){
-        			form.ace('settings',{alwayskeeprecordreference:true});
-        			form.ace('load');
-        		}
-        	},
-        	
-        	val : function(target,value){
-        		var containerField = $(target);
-        		var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-        		
-        		if( value == null ){
-        			return settings.currentRecord;
-        		}else{
-        			
-        			if( $.aceOverWatch.record.isRecord(value) ){
-        				settigs.currentRecord = value;
-        			}else{
-        				$.aceOverWatch.record.create(value);
-        			}
-        			
-        			this.moveTo(containerField,settings.currentStepIndex,false);
-        		}
-        	} 
-        	
+                    });
+
+                    settings.innerSteps[settings.currentStepIndex].val('form',form);
+                }
+
+                $.aceOverWatch.field.cardview.switchTo(settings.cardView,settings.innerSteps[settings.currentStepIndex].val('stepNumber'));
+
+                if( settings.currentStepIndex == settings.firstVisibleStep ){
+                    settings.previousButton.addClass('ace-hide');
+                }else{
+                    settings.previousButton.removeClass('ace-hide');
+                }
+
+                if( settings.currentStepIndex == settings.lastVisibleStep ){
+                    settings.nextButton.addClass('ace-hide');
+                    settings.finalButton.removeClass('ace-hide');
+                }else{
+                    settings.nextButton.removeClass('ace-hide');
+                    settings.finalButton.addClass('ace-hide');
+                }
+
+                let form = settings.innerSteps[settings.currentStepIndex].val('form');
+
+                form.ace('settings',{alwayskeeprecordreference:false});
+                form.ace('value',settings.currentRecord);
+
+                if( settings.progressBar ){
+                    settings.progressBar.ace('value',(settings.innerSteps[settings.currentStepIndex].val('stepNumber')+1)*100 / settings.visibleStepsCount);
+                }
+
+                if(
+                    net
+                    && !$.aceOverWatch.utilities.isVoid(net.fid)
+                    && (
+                        ( forword && settings.innerSteps[settings.currentStepIndex].val('autoloadonnext') )
+                        ||	( backwords && settings.innerSteps[settings.currentStepIndex].val('autoloadonprev') )
+                    )
+                ){
+                    form.ace('settings',{alwayskeeprecordreference:true});
+                    form.ace('load');
+                }
+            },
+
+            val : function(target,value){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if( value == null ){
+                    return settings.currentRecord;
+                }else{
+
+                    if( $.aceOverWatch.record.isRecord(value) ){
+                        settigs.currentRecord = value;
+                    }else{
+                        $.aceOverWatch.record.create(value);
+                    }
+
+                    this.moveTo(containerField,settings.currentStepIndex,false);
+                }
+            }
+
         },//end progressbar object
 
         /**
@@ -5401,7 +7606,7 @@
 
                 var readonlyCode = '';
                 if( settings['readonly'] ){
-                    readonlyCode = 'onclick="return false"';
+                    readonlyCode = 'onclick="return false" disabled="disabled"';
                 }
 
                 /*
@@ -5432,8 +7637,6 @@
 
                 clearTimeout(settings.timerId); //making sure we kill whatever existing timer we have here
 
-                //if( settings.net.autosave == true ){
-
                 containerField.find('input').change(function (e) {
                     let el = $(this);
                     var target = el.closest('.'+$.aceOverWatch.classes.containerField);
@@ -5442,9 +7645,9 @@
                     settings.checked = el.prop('checked');
 
                     if( settings.checked ){
-                    	settings.value = this.on;
+                        settings.value = this.on;
                     }else{
-                    	settings.value = this.off;
+                        settings.value = this.off;
                     }
 
                     if( settings.net.autosave == true ){
@@ -5454,19 +7657,16 @@
 
                         clearTimeout(settings.timerId);
                         settings.timerId = setTimeout(function(){
-                            $.aceOverWatch.field.save(target,true);
-                        },2000);
+                            $.aceOverWatch.field.save(target,true, true);
+                        },$.aceOverWatch.settings.autosaveTimeout);
                     }
 
-                    if( $.isFunction(settings.onchange)){
-                        settings.onchange(target,$.aceOverWatch.field.aswitch.val(target));
-                    }else{
-                        if( $.isFunction(window[settings.onchange])){
-                            window[settings.onchange](target,$.aceOverWatch.field.aswitch.val(target));
-                        }
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target,$.aceOverWatch.field.aswitch.val(target));
+
+                    if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ) {
+                        $.aceOverWatch.field.displayHint(settings.hintselector, settings.hintstype);
                     }
                 });
-                //}
             },
 
             val : function(target,value){
@@ -5480,7 +7680,7 @@
                 if( value == null ){
                     return targetElement.prop('checked') ? settings.on: settings.off;
                 }else{
-                	settings.value = value;//saving the raw value
+                    settings.value = value;//saving the raw value
                     return targetElement.prop('checked',( value == settings.on ));
                 }
             }
@@ -5517,7 +7717,7 @@
 
                 var readonlyCode = '';
                 if( settings['readonly'] ){
-                    readonlyCode = 'onclick="return false"';
+                    readonlyCode = 'onclick="return false" disabled="disabled"';
                 }
 
                 /*
@@ -5526,11 +7726,11 @@
                  * otherwise, the checked status will be given by the current checked status
                  */
                 if( settings.value !== undefined ){
-	                if( settings.value == settings.on || parseInt(settings.value) == parseInt(settings.on) ){
-	                    settings.checked = true;
-	                }else{
-	                	settings.checked = false;
-	                }
+                    if( settings.value == settings.on || parseInt(settings.value) == parseInt(settings.on) ){
+                        settings.checked = true;
+                    }else{
+                        settings.checked = false;
+                    }
                 }
 
                 fieldHtml += '<label class="'+classes+'" '+tooltip+'><input class="'+$.aceOverWatch.classes.fieldValue+'" aceid="'+settings.id+'" value="" '+(settings.checked?'checked':'')+' type="checkbox" name="'+settings['fieldname']+'" '+tooltip+' ' + readonlyCode +' ><span>'+settings['label']+'</span></label>';
@@ -5555,9 +7755,9 @@
 
                     settings.checked = el.prop('checked');
                     if( settings.checked ){
-                    	settings.value = this.on;
+                        settings.value = this.on;
                     }else{
-                    	settings.value = this.off;
+                        settings.value = this.off;
                     }
 
                     if( settings.net.autosave == true ){
@@ -5566,15 +7766,14 @@
                         //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
                         clearTimeout(settings.timerId);
                         settings.timerId = setTimeout(function(){
-                            $.aceOverWatch.field.save(target,true);
-                        },2000);
+                            $.aceOverWatch.field.save(target,true, true);
+                        },$.aceOverWatch.settings.autosaveTimeout);
                     }
-                    if( $.isFunction(settings.onchange)){
-                        settings.onchange(target,$.aceOverWatch.field.checkbox.val(target));
-                    }else{
-                        if( $.isFunction(window[settings.onchange])){
-                            window[settings.onchange](target,$.aceOverWatch.field.checkbox.val(target));
-                        }
+
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target,$.aceOverWatch.field.checkbox.val(target));
+
+                    if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ) {
+                        $.aceOverWatch.field.displayHint(settings.hintselector, settings.hintstype);
                     }
 
                 });
@@ -5591,11 +7790,396 @@
                 if( value == null ){
                     return targetElement.prop('checked') ? settings.on: settings.off;
                 }else{
-                	settings.value = value;//saving the raw value
-                    return targetElement.prop('checked',(( value == settings.on ) || (value === true)|| (value === "true")));
+                    settings.value = value;//saving the raw value
+                    let rez =  targetElement.prop('checked',(( value == settings.on ) || (value === true)|| (value === "true")));
+
+                    if( settings.triggeronchange === true ){
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target,value);
+                    }
+
+                    return rez;
                 }
             }
         },//end checkbox object
+
+        /**
+         * begin multicheck
+         */
+        multicheck : {
+            create : function(target,settings){
+                $.extend(true,settings, $.extend(true,{
+                    value:'',
+                    data:[],
+                    valuename:'id',
+                    displayname:'name',
+                    customtoptionsselectionclasses : '',//class to be added to the options displayed in the selection window
+
+                    onchange:null,		//a function, or the name of a function in window which is going to be called when the value changes
+                            // onchange(target, value, record)
+                    selectedValues : {},//if field to display name
+
+                    onbeforeload : null, //called before loading of new query (target)
+                    onevalue : false,//if true, only one value can be selected
+                    withfilter : true,//if true, a filter element will be displayed
+
+                }, settings ) );
+
+                if( settings.data.length == 0 ){
+                    settings.data = $.aceOverWatch.utilities.getAsociatedDataArr(target);
+                }
+
+                //convert data to inner data format
+                if( settings.data.length > 0 && !$.aceOverWatch.record.isRecord(settings.data[0]) ){
+                    let innerData = [];
+                    for(let idx = 0; idx < settings.data.length; idx++){
+                        innerData.push($.aceOverWatch.record.create(settings.data[idx]));
+                    }
+                    settings.data = innerData;
+                }
+
+                let fieldHtml = '<div class="ace-multicheck-field ace-col-12" >'+
+                                    '<div class="box-2 ace-col-12">'+
+                                        '<span class="um action-icon down-arrow"></span>'+
+                                        '<div class="box-2-title">'+settings.label+'</div>'+
+                                        '<div class="ace-multicheck-data-selection-container" style="max-height: 64px;display: block; overflow: auto">'+
+                                            this.getParsedDataSelectionInternal(settings)+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+                return fieldHtml;
+            },
+
+            getParsedDataSelectionInternal : function(settings){
+                let elements = [];
+                for(let field in settings.selectedValues){
+                    elements.push(
+                        '<div class="box-2-detail ace-small-padding-top ace-float-left">'+
+                            '<span class="">'+
+                                '<b>'+settings.selectedValues[field]+'</b>'+
+                                '<span class="um-filter delete-icon" val="'+field+'"></span>'+
+                            '</span>'+
+                        '</div>'
+                    );
+                }
+                return elements.join(' ');
+            },
+
+            clearSelection : function(target, triggerChange = true){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                settings.selectedValues = {};
+                this.redrawSelectionInternal(target,settings);
+                if( triggerChange ) {
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target, this.val(target));
+                }
+            },
+
+            removeValueFromSelection : function(target,value){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                delete settings.selectedValues[value];
+                this.redrawSelectionInternal(target,settings);
+                $.aceOverWatch.utilities.runIt(settings.onchange, target, this.val(target));
+            },
+            redrawSelectionInternal : function(target,settings){
+                target.find('.ace-multicheck-data-selection-container').html(this.getParsedDataSelectionInternal(settings));
+                this.afterInit(target,{delete:true});
+            },
+
+            afterInit : function(target, what){
+                if( what.all || what.delete ){
+                    target.find('.delete-icon').unbind('click').click(function(e){
+                        e.preventDefault();
+                        $.aceOverWatch.field.multicheck.removeValueFromSelection(
+                            $(this).closest('.' + $.aceOverWatch.classes.containerField),
+                            $(this).attr('val')
+                        );
+                        return false;
+                    });
+                }
+
+                if( what.all || what.down ){
+                    target.find('.down-arrow').unbind('click').click(function(e){
+                        e.preventDefault();
+                        $.aceOverWatch.field.multicheck.displaySelectionBoxOrLoadData( $(this).closest('.' + $.aceOverWatch.classes.containerField) );
+                        return false;
+                    });
+                }
+
+            },
+
+            displaySelectionBoxOrLoadData : function(target,forceReload = false){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if(
+                        (settings.data.length == 0 || forceReload == true)
+                    && settings.net.remote
+                ){
+                    $.aceOverWatch.utilities.runIt(settings.onbeforeload, target);
+                    $.aceOverWatch.net.load(target);
+                    return;
+                }
+
+                this.displaySelectionBox(target);
+            },
+
+            setData : function(target,dataArr,totalExpectedData){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){ return; }
+
+                settings.data = [];
+
+                let newSelectedValues = {};
+                for(let rowIdx in dataArr){
+
+                    if( !$.aceOverWatch.record.isRecord(dataArr[rowIdx]) ){
+                        dataArr[rowIdx] = $.aceOverWatch.record.create(dataArr[rowIdx]);
+                    }
+                    let val = dataArr[rowIdx].val(settings.valuename);
+                    if( settings.selectedValues[val] ){
+                        newSelectedValues[val] = dataArr[rowIdx].val(settings.displayname);
+                    }
+                    settings.data.push(dataArr[rowIdx]);
+                }
+
+                if( Object.keys(newSelectedValues).length != Object.keys(settings.selectedValues).length ){
+                    settings.selectedValues = newSelectedValues;
+                    //some values could not be found in the new dataset
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target, this.val(target));
+                    this.redrawSelectionInternal(target,settings);
+                }
+            },
+
+            displaySelectionBox : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                this.createSelectionWindowIfNeededInternal(target, settings);
+                settings.selectionWindowOptions.html('');
+
+                let rows = [];
+                $.each(settings.data, function (rowIdx, rowData) {
+                    let value = rowData.val(settings.valuename);
+
+                    rows.push($( '<div class="'+settings.customtoptionsselectionclasses+'" pval="'+value+'">' +
+                                    '<div class="ace-flex">' +
+                                        '<input type="checkbox" rowidx="'+rowIdx+'" val="'+value+'" id="'+settings.id+'-multi-check-'+rowIdx+'" '+(settings.selectedValues[value] ? 'checked="checked"' : '')+' >' +
+                                        '<label for="'+settings.id+'-multi-check-'+rowIdx+'">'+rowData.val(settings.displayname)+'</label>' +
+                                '   </div>' +
+                                '</div>' ));
+                });
+                settings.selectionWindowOptions.append(rows);
+
+                if( settings.onevalue == true ){
+                    settings.selectionWindowOptions.find('input[type="checkbox"]').unbind('change').change(function (e) {
+                        let el = $(this);
+                        let checked = el.prop('checked') ;
+                        if( checked ) {
+                            let parent = el.parents('.ace-mc-options').first();
+                            parent.find('input[type="checkbox"]').prop('checked', !checked);
+                            el.prop('checked', checked);
+                        }
+                    });
+                }
+
+                //we want to center the window relative to the down arrow icon
+                let arrowTrigger = target.find('.down-arrow');
+                let pos = arrowTrigger.offset();
+                let top = parseInt(pos.top);
+                let left = parseInt(pos.left);
+                if ($(document).width() - left < 480) {
+                    left = $(document).width() - 480;
+                }
+                settings.selectionWindowModalContent.css('margin-top', top + 'px');
+                settings.selectionWindowModalContent.css('margin-left',left + 'px');
+                settings.selectionWindow.removeClass('ace-hide');
+                settings.selectionWindow.show();
+
+                if( settings.withfilter ){
+                    settings.selectionWindow.find('.ace-mc-filter-input').focus();
+                }
+            },
+
+            createSelectionWindowIfNeededInternal : function(target, settings){
+                if( settings.selectionWindow){
+                    if( settings.withfilter ){
+                        settings.selectionWindow.find('.ace-mc-filter-input').val('');
+                    }
+                    return;
+                }
+                settings.selectionWindow = $('<div id="'+settings.id+'-multi-check" class="ace-hide ace-multicheck-wnd modal">' +
+                    '<div class="modal-content" style="min-width: 300px;max-width: 450px;">' +
+                        '<span class="action-icon close"></span>' +
+                        '<div class="ace-mc-options" style="height:240px; overflow: auto;"></div>' +
+                        (settings.withfilter ? '<div class="ace-mc-filter ace-small-padding-top ace-col-12"><div class="ace-col-1"><i class="fa fa-search"></i></div><input class="ace-col-11 ace-mc-filter-input" type="text" placeholder="'+_aceL.search+'"></div>' : '' )+
+                        '<div class="ace-col-12 ace-small-padding-top"></div>' +
+                        '<div class="ace-col-12 ace-small-padding-top split-top-line">' +
+                            '<input type="button" class="submit-btn" value="'+_aceL.apply+'">' +
+                        '</div>' +
+                    '</div>' +
+                '</div>');
+                settings.selectionWindow.find('.close').click(function(){
+                    let modalWnd = $(this).closest('.modal');
+                    modalWnd.addClass('ace-hide');
+                    modalWnd.hide();
+                });
+                if( settings.withfilter ){
+                    settings.selectionWindow.find('.ace-mc-filter-input').keyup(function(){
+                        $.aceOverWatch.field.multicheck.onFilterChange($(this).closest('.modal').data($.aceOverWatch.settings.aceSettings).parent,$(this).val());
+                    });
+                }
+                settings.selectionWindowOptions = settings.selectionWindow.find('.ace-mc-options');
+                settings.selectionWindowModalContent = settings.selectionWindow.find('.modal-content');
+
+                settings.selectionWindow.find('.modal-content').data($.aceOverWatch.settings.aceSettings,{
+                   id : $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid()
+                });
+                settings.selectionWindow.data($.aceOverWatch.settings.aceSettings,{
+                    id : $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid(),
+                    parent : target
+                });
+                $.aceOverWatch.eventManager.registerEvent('outsideclick',
+                    settings.selectionWindow.find('.modal-content'),
+                    settings.selectionWindow,
+                    function(el)       {
+                        el.addClass('ace-hide');
+                        el.hide();
+                    }
+                );
+                settings.selectionWindow.find('.submit-btn').click(function(){
+                    $.aceOverWatch.field.multicheck.applyCurrentSelection($(this).closest('.modal').data($.aceOverWatch.settings.aceSettings).parent);
+                });
+                $('body').append(settings.selectionWindow);
+            },
+
+            onFilterChange : function(target,filterValue){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                clearTimeout(settings.timerFilterId);
+                settings.timerFilterId = setTimeout(function(){
+                    $.aceOverWatch.field.multicheck.onFilterChangeActual(target,filterValue);
+                },300);
+            },
+
+            onFilterChangeActual : function(target,filterValue){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                filterValue = filterValue.trim().toLowerCase();
+
+                $.each(settings.data, function (rowIdx, rowData) {
+                    let value = rowData.val(settings.valuename);
+                    if( rowData.val(settings.displayname).trim().toLowerCase().indexOf(filterValue) == -1 ){
+                        settings.selectionWindowOptions.find('div[pval="'+value+'"]').addClass('ace-hide');
+                    }else{
+                        settings.selectionWindowOptions.find('div[pval="'+value+'"]').removeClass('ace-hide');
+                    }
+                });
+            },
+
+            applyCurrentSelection : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings.selectionWindow ){ return; }
+                settings.selectedValues = {};
+                settings.selectionWindow.find('input:checkbox:checked').each(function () {
+                    let el = $(this);
+                    settings.selectedValues[el.attr('val')] = settings.data[el.attr('rowidx')].val(settings.displayname);
+                });
+                settings.selectionWindow.addClass('ace-hide');
+                settings.selectionWindow.hide();
+
+                this.redrawSelectionInternal(target,settings);
+                $.aceOverWatch.utilities.runIt(settings.onchange, target, this.val(target));
+            },
+
+            getValForPrint : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let printValues = [];
+                for(let key in settings.selectedValues){
+                    printValues.push(settings.selectedValues[key]);
+                }
+                return printValues.join(', ');
+            },
+
+
+            /**
+             * @param target
+             * @param value
+             *          when setting a new value, IF it is an object,
+             *          then all current selected values become void, and the property names / values will become the
+             *          new values of the field
+             * @param extra - object
+             *          explicitdisplayname if it exist when setting a new value,
+             *                  AND the value is not an object
+             *                  it will be used for the new value as display value
+             *          triggerchange - if true when setting the value, the field will trigger a change event
+             * @param record
+             * @returns
+             */
+            val : function(target, value, extra){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                if( value == null ){
+                    settings.value = Object.getOwnPropertyNames(settings.selectedValues).join(',');
+                    return settings.value;
+                }else{
+
+                    if( $.aceOverWatch.utilities.isVoid(value,true) ){ return; }
+
+                    if( typeof value != 'object' ) {
+
+                        /*
+                         * if it's JSON, we test to see if it's an object of key / value
+                         * otherwise we treat is a simple value
+                         */
+
+                        let treatAsStringValue = false;
+                        try {
+                            let valueObj = JSON.parse(value);
+                            if( valueObj == value.trim() ){
+                                treatAsStringValue = true;
+                            }else{
+                                this.valBulk(target,valueObj);
+                            }
+                        } catch (e) {
+                            treatAsStringValue = true;
+                        }
+                        if( treatAsStringValue ){
+                            settings.selectedValues[value] = (extra && extra.explicitdisplayname) ? extra.explicitdisplayname : value;
+                        }
+
+                    }else{
+                        settings.selectedValues = {};
+                        for(let propName in value ){
+                            settings.selectedValues[propName] = value[propName];
+                        }
+                    }
+                    settings.value = Object.getOwnPropertyNames(settings.selectedValues).join(',');
+
+                    this.redrawSelectionInternal(target,settings);
+
+                    if( !extra || extra.triggerchange != false ){
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value);
+                    }
+                }
+            },
+
+            /**
+             *
+             * @param target
+             * @param valueBulk if null, then the current values are returned
+             *              otherwise it is an object, where each property name is the value, and the property value is the display name
+             * @return
+             */
+            valBulk : function(target,valueBulk){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                if( valueBulk == null ){
+                    return settings.selectedValues;
+                }else{
+
+                    for( let value in valueBulk ){
+
+                        this.val(target,value,{explicitdisplayname:valueBulk[value],triggerchange:false});
+
+                    }
+                }
+            }
+        },
 
         /**
          * begin combobox object
@@ -5613,21 +8197,32 @@
                     onchange:null,		//a function, or the name of a function in window which is going to be called when the value changes
                     // onchange(target, value, record)
                     renderer:null,	//function, or the name of a function to modify the set value / value, record
+
+                    displaytype: 'normal',//popup, popupmobile
+                    selectsize: 1,
+                    filter: '',//if not empty, only the options in which the filter can be found will be displayed
+
+                    settopvalue : false,//if this is false, after a new set of data is loaded into the combobox,
+                                        // the field will try to detect the previous set value in the current dataset
+                                        //if found, the field will set itself back to the previous value
+                                        //BUT
+                                        //when settopvalue is true, this does not happen, and the first data found becomes the selected one
+
                 }, settings ) );
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.comboField+'" >';
+                var fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.comboField+'" >';
 
                 var tooltip = '';
                 if( settings['tooltip'] ){
                     tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
                 }
-                var selectOptionsHtml = "", hasOptions = false;
+                var selectOptionsHtml = "";
 
                 if( settings.data.length == 0 ){
                     settings.data = $.aceOverWatch.utilities.getAsociatedDataArr(target);
                 }
 
                 var containerField = $(target);
-                var alreadySelectedValue = containerField.ace('value');
+
                 //convert data to inner data format
                 if( settings.data.length > 0 && !$.aceOverWatch.record.isRecord(settings.data[0]) ){
                     var innerData = [];
@@ -5636,7 +8231,7 @@
                     }
                     settings.data = innerData;
                 }
-                
+
                 if( $.isFunction(settings.renderer)){
                     settings.actualRenderer = settings.renderer;
                 }else{
@@ -5649,7 +8244,14 @@
 
                 if( settings.data != null && settings.data instanceof Array ){
 
-                    for(var valueIdx in settings.data ){
+                    for(let valueIdx in settings.data ){
+
+                        if( !$.aceOverWatch.utilities.isVoid(settings.filter,true) ){
+                            if( settings.data[valueIdx].val(settings['displayname']).toLowerCase().indexOf(settings.filter.toLowerCase()) == -1 ){
+                                continue;
+                            }
+                        }
+
                         selectOptionsHtml += '<option value="'+settings.data[valueIdx].val(settings['valuename'])+'"'+((settings.data[valueIdx].val(settings['valuename'])==settings.value)?' selected':'')+'>'+
                             settings.actualRenderer(settings.data[valueIdx].val(settings['displayname']), settings.data[valueIdx])+
                             '</option>';
@@ -5657,7 +8259,7 @@
                 }
                 settings.lastValueSet = settings.value;
 
-                fieldHtml += '<select class="'+$.aceOverWatch.classes.fieldValue+(selectOptionsHtml.length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="" type="select" name="'+settings['fieldname']+'" '+tooltip+' ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' >';
+                fieldHtml += '<select class="'+$.aceOverWatch.classes.fieldValue+(selectOptionsHtml.length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="" type="select" name="'+settings['fieldname']+'" '+tooltip+' ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' '+(settings.selectsize > 1 ? ' size="'+settings.selectsize+'"' : '')+' >';
                 fieldHtml += selectOptionsHtml;
                 fieldHtml += '</select>';
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
@@ -5673,56 +8275,46 @@
             },
 
             setData : function(target,dataArr,totalExpectedData,addToExisting){
-                var targetField = $(target);
-                var settings = targetField.data($.aceOverWatch.settings.aceSettings);
-                if( !settings ){
-                    return;
-                }
-                //settings.loading = false;
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){ return; }
 
-                var targetElement = targetField.find('.'+$.aceOverWatch.classes.fieldValue);
+                let targetElement = target.find('.'+$.aceOverWatch.classes.fieldValue);
 
                 targetElement.empty();
 
-                var foundLastValueSet = false, isEmpty=true;
+                let foundLastValueSet = false, isEmpty=true;
 
                 if( addToExisting !== true ){
                     settings.data = [];
                 }
-                for(var rowIdx in dataArr){
+                for(let rowIdx in dataArr){
 
                     if( !$.aceOverWatch.record.isRecord(dataArr[rowIdx]) ){
                         dataArr[rowIdx] = $.aceOverWatch.record.create(dataArr[rowIdx]);
                     }
-
                     settings.data.push(dataArr[rowIdx]);
 
-                }
-
-                for(var rowIdx in settings.data){
                     isEmpty=false;
-
-                    //var option = $('<option></option>').attr("value", settings.data[rowIdx].val(settings['valuename'])).text(settings.actualRenderer(settings.data[rowIdx].val(settings['displayname']), settings.data[rowIdx]));
-                    var option = $('<option>'+settings.actualRenderer(settings.data[rowIdx].val(settings['displayname']), settings.data[rowIdx])+'</option>').attr("value", settings.data[rowIdx].val(settings['valuename']));
-
-                    if( settings.lastValueSet == settings.data[rowIdx].val(settings['valuename']) ){
-                        foundLastValueSet = true;
-                        option.attr("selected", 'selected');
+                    let option = $('<option>'+settings.actualRenderer(settings.data[rowIdx].val(settings['displayname']), settings.data[rowIdx])+'</option>').attr("value", settings.data[rowIdx].val(settings['valuename']));
+                    if( settings.settopvalue ){
+                        if( rowIdx == 0 ){
+                            option.attr("selected", 'selected');
+                        }
+                    }else {
+                        if (settings.lastValueSet == settings.data[rowIdx].val(settings['valuename'])) {
+                            foundLastValueSet = true;
+                            option.attr("selected", 'selected');
+                        }
                     }
 
                     targetElement.append(option);
                 }
 
                 //used to signal a empty value in the field - so we can style the label
-                if (isEmpty) {
-                    targetElement.addClass($.aceOverWatch.classes.empty);
-                }
-                else {
-                    targetElement.removeClass($.aceOverWatch.classes.empty);
-                }
+                if (isEmpty) { targetElement.addClass($.aceOverWatch.classes.empty); }
+                else { targetElement.removeClass($.aceOverWatch.classes.empty); }
 
-                //set the default value
-                if( foundLastValueSet ){
+                if( foundLastValueSet ){//set the default value
                     targetElement.val(settings.lastValueSet).triggerHandler('change');
                 }else{//just trigger the change
                     targetElement.triggerHandler('change');
@@ -5813,28 +8405,19 @@
             },
 
             afterInit : function(target, what){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                $.aceOverWatch.field.badge.afterInit(target, what);
 
                 clearTimeout(settings.timerId); //making sure we kill whatever existing timer we have here
 
-                containerField.find('select').change(function (e) {
-                    var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
-
-                    if( settings.net.autosave == true ){
-
-                        //ok.. we have autosave.. so....
-                        //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
-
-                        clearTimeout(settings.timerId);
-                        settings.timerId = setTimeout(function(){
-                            $.aceOverWatch.field.save(target,true);
-                        },2000);
-                    }
+                let selectElement = target.find('select');
+                selectElement.change(function (e) {
+                    let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                     settings.value = $(this).val();//update the value on change...
+
                     /*
 					 * in some cases, the value might be set in form, and at this time the combo box is not exactly set.. soooooo if there is a lastvalueset, but the value is void.. the override the value with the last value set
 					 */
@@ -5844,16 +8427,117 @@
                         settings.lastValueSet = settings.value;
                     }
 
-                    //run a callback as well, if it exists
-                    if( $.isFunction(settings.onchange)){
-                        settings.onchange(target,settings.value,settings.data[$(this).prop('selectedIndex')]);
-                    }else{
-                        if( $.isFunction(window[settings.onchange])){
-                            window[settings.onchange](target,settings.value,settings.data[$(this).prop('selectedIndex')]);
-                        }
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value,settings.data[$(this).prop('selectedIndex')]);
+
+                    if( settings.net.autosave == true ){
+
+                        //ok.. we have autosave.. so....
+                        //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
+
+                        clearTimeout(settings.timerId);
+                        settings.timerId = setTimeout(function(){
+                            $.aceOverWatch.field.save(target,true, true);
+                        },$.aceOverWatch.settings.autosaveTimeout);
+                    }
+                });
+
+                selectElement.unbind('focus').bind('focus',function(){
+
+                    let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                    if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ) {
+                        $.aceOverWatch.field.displayHint(settings.hintselector, settings.hintstype);
+                    }
+
+                    switch( settings.displaytype ){
+                        case 'popupmobile':
+                            if( $.aceOverWatch.utilities.getDeviceType() == 'mobile' || !$.aceOverWatch.utilities.isViewportForMobile() ){
+                                //we ignore this for MOBILE, because on MOBILE devices the combobox is
+                                //automatically displayed differently
+                                break;
+                            }
+                            //if we are on mobile, we fall in the next case
+                        case 'popup':
+
+                            target.find('select').attr('disabled','disabled');
+
+                            $.aceOverWatch.field.combobox.ensureDisplayFormExists(target,settings);
+                            settings.popupCombobox.ace('modify',{
+                                data: settings.data,
+                                selectsize: settings.data.length+1,
+                                filter:'',
+                            });
+                            settings.displayForm.ace('show');
+
+                            break;
                     }
 
                 });
+
+            },
+
+            ensureDisplayFormExists : function(target,settings){
+                if( settings.displayForm ){
+                    return;
+                }
+
+                if( $('#ace-popup-combo-tpl').length == 0 ){
+                    $('body').append('<div id="ace-popup-combo-tpl" class="'+$.aceOverWatch.classes.hide+'">' +
+                        '<div class="ace-col-12 ace-standard-form-inside ace-standard-form-popup-combo"><div class="ace-popup-combo-target ace-col-12"></div><div class="ace-col-12"><input class="ace-col-12 ace-small-padding-top ace-combo-filter" placeholder="filter result"></div></div></div>');
+                }
+
+                settings.displayForm = $('<div class="ace-standard-form ace-standard-form-popup ace-form-popup-small"></div>').ace('create',{
+                    type:               'form',
+                    ftype:              'popup',
+                    template:           'ace-popup-combo-tpl',
+                    parent:             target,
+                    net:                {},
+                    hideonescape:       true,
+                    displaysavebtn:     false,
+                    displaycancelbtn:   false,
+
+                    //enablehashnavigation: true,//disabled because it may cause unwanted changes in the screen (like form resets)
+
+                    oninit : function(f){
+                        settings.popupCombobox = f.find('.ace-popup-combo-target').ace('create',{
+                            type: 'combobox',
+                            label: settings.label,
+                            labelalign: 'top',
+                            data : settings.data,
+                            selectsize: settings.data.length,
+                            displayname: settings.displayname,
+                            valuename: settings.valuename,
+                            onchange : function(target, value){
+                                let f = $.aceOverWatch.field.form.getParentForm(target);
+                                f.data($.aceOverWatch.settings.aceSettings).parent.ace('value',value);
+                                f.ace('hide');
+                            }
+                        });
+                          f.find('.ace-combo-filter').unbind('keyup').keyup(function (e) {
+
+                            switch(e.keyCode){
+                                default:
+                                    settings.popupCombobox.ace('modify',{filter:$(this).val()});
+                                    break;
+                            }
+                        });
+                    },
+                    onhide : function(f){
+                        f.data($.aceOverWatch.settings.aceSettings).parent.find('select').attr('disabled',false);
+                    }
+                });
+                $('body').append(settings.displayForm);
+            },
+
+            getValForPrint : function(target) {
+                return this.getRecord(target, true);
+            },
+
+            refresh : function(target,params){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                target.ace('netparams',params);
+                target.ace('load');
             },
 
         },//end combobox object
@@ -5893,34 +8577,41 @@
 
                     onsavesuccessful : null,//function, or the name of a global function to be called after a save was successfull: onsavesuccessful(target, record, wasAnEdit)
                                             // wasAnEdit - true if it was an edit of an existing entry; false if a new one was added
+                    getcustomdeletestring : null,//function(target,record) -> should return a string, for custom delete confirmation
+                    ondeletecompleted : null,//function(target,record)
 
-                    customformshow : null,//function, or the name of a function to be called when the editing form is displayed: customformshow(form)
+                    customforminit : null,//function, or the name of a function to be called when the editing form created: customforminit(form)
+                    customformshow : null,//function, or the name of a function to be called when the editing form is displayed: customformshow(radiogroup,form)
+                    customformbeforeloadrecord : null,//function, or the name of a function to be called before the record is loaded in the edit form: customformbeforeloadrecord(radiogroup,form,record)
+                    customformafterloadrecord : null,//function, or the name of a function to be called before the record is loaded in the edit form: customformafterloadrecord(radiogroup,form,record)
 
                     // - private members
                     innerData : [],	// - this is an array of records
 
                     addstaticdatatofront : false,
+                    allowdeletestaticdata :false,
 
                     /*
 					 * if no radio button is set, and this is SET, we'll return this as the field's value
 					 */
                     defaultunsetvalue:undefined,
 
+                    displaycustomcheck : null,//function(idx,record) - if return true, for this record a custom check box will be displayed as well
+                    displaycustomchecklabel : null,//the label of the custom checkbox, if there is one
+                    oncustomcheckchange : null,//function(field,value,record) - called whenever the value of this thing changes
+
                 }, settings ) );
+
+                if( settings.updateid ){//set when cloning the field by an internal ace operation
+                    settings.updateid = false;
+                    settings.id = $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid();
+                }
 
                 var fieldHtml = '<div class="'+$.aceOverWatch.classes.radio+'" >';
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
 
-                var classes = $.aceOverWatch.classes.label;
                 settings.labelalign = 'top';//always use top alignament with this one
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
-                //fieldHtml += $.aceOverWatch.field.badge.create(settings);//uncomment if we want badges on this one..
-
-                /*	//not sure where to place the tooltip?
-				var tooltip = '';
-				if( settings['tooltip'] ){
-					tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
-				}*/
 
                 if( settings.data.length == 0 ){
                     settings.data = $.aceOverWatch.utilities.getAsociatedDataArr(target);
@@ -5933,20 +8624,27 @@
                 return fieldHtml;
             },
 
+            getRadioNameFromSettings : function(settings){
+                return settings.fieldname? settings.fieldname+'-'+settings.id : settings.id;
+            },
+
 
             /**
              * internal function to rebuild the html of the radiogroup
              * - rebuildInnerData - true if the inner data should be rebuilt (based on the static data:  data)
              * - extraData - array of extra data to be added to the inner data
              *****/
-            buildRadioGroup:function(settings, rebuildInnerData, extraData){
+            buildRadioGroup:function(settings, rebuildInnerData, extraData, deleteStaticData){
 
                 if( !$.aceOverWatch.utilities.isVoid(settings.form) ){
-                    settings.form.detach(); //otherwise strange things happen..
+                    settings.form.detach(); //otherwise, strange things happen..
                 }
 
                 if( rebuildInnerData ){
                     settings.innerData = [];
+                }
+                if( deleteStaticData ){
+                    settings.data = [];
                 }
 
                 if( rebuildInnerData && settings.addstaticdatatofront ){
@@ -5991,14 +8689,9 @@
                 var radios = [];
                 for( var idx in settings.innerData ){
 
-                    var displayText = settings.innerData[idx].val(settings.displayname);
-
-                    if( $.isFunction(settings.renderer) ){
-                        displayText = settings.renderer(idx, settings.innerData);
-                    }else{
-                        if($.isFunction(window[settings.renderer])){
-                            displayText = window[settings.renderer](idx, settings.innerData);
-                        }
+                    let displayText = $.aceOverWatch.utilities.runIt(settings.renderer, idx, settings.innerData);
+                    if( !$.aceOverWatch.utilities.wasItRan(displayText) ) {
+                        displayText = settings.innerData[idx].val(settings.displayname);
                     }
 
                     settings.innerData[idx].val('radioActualText',displayText);
@@ -6006,17 +8699,22 @@
                     var icons = [];
 
                     if(
-                        (											//the case when the static memebers are in front
-                            idx >= settings.data.length
-                            && settings.addstaticdatatofront
-                        )
+                            (											//the case when the static memebers are in front
+                                idx >= settings.data.length
+                                && settings.addstaticdatatofront
+                            )
                         ||
-                        (											//the case when the static memebers are at the back
-                            idx < (settings.innerData.length - settings.data.length )
-                            && !settings.addstaticdatatofront
-                        )
+                            (											//the case when the static memebers are at the back
+                                idx < (settings.innerData.length - settings.data.length )
+                                && !settings.addstaticdatatofront
+                            )
+                        ||
+                            (
+                                   idx < settings.innerData.length
+                                && settings.allowdeletestaticdata
+                            )
 
-                    ){//we are doing this becaue the deleting and editing are disabled for STATIC radio members
+                    ){//we are doing this because the deleting and editing are disabled for STATIC radio members
 
                         if( settings.allowedit ){
                             icons.push('<a action="edit" idx="'+idx+'" ><i class="'+$.aceOverWatch.classes.editIcon2+'"></i></a>')
@@ -6027,19 +8725,25 @@
                         }
                     }
 
-                    var name=settings.fieldname;
-                    if( !settings.fieldname ){
-                        name=settings.id
+                    let name = this.getRadioNameFromSettings(settings);
+
+                    let customCheckbox = '';
+                    let addCustomCheckbox = $.aceOverWatch.utilities.runIt(settings.displaycustomcheck, idx, settings.innerData[idx]);
+                    if( $.aceOverWatch.utilities.wasItRan(addCustomCheckbox) && addCustomCheckbox ) {
+                        customCheckbox = '<label class="ace-col-12 ace-rg-custom-check" ><input type="checkbox" idx="'+idx+'"><span>'+settings.displaycustomchecklabel+'</span></label>';
                     }
-                    radios.push('<label idx="'+idx+'" class="'+$.aceOverWatch.classes.label+'"><input type="radio" name="'+name+'" value="'+settings.innerData[idx].val(settings.valuename)+'" ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' ><span>'+settings.innerData[idx].val('radioActualText')+'</span>'+icons.join('')+'</label>');
+
+                    radios.push('<label idx="'+idx+'" class="'+$.aceOverWatch.classes.label+'">'+
+                                '<input type="radio" name="'+name+'" value="'+settings.innerData[idx].val(settings.valuename)+'" ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' >'+
+                                '<span>'+settings.innerData[idx].val('radioActualText')+'</span>'+
+                                icons.join('')+
+                                customCheckbox+
+                    '</label>');
                 }
 
                 if( settings.allowadd ){
 
-                    var name=settings.fieldname;
-                    if( !settings.fieldname ){
-                        name=settings.id
-                    }
+                    let name = this.getRadioNameFromSettings(settings);
 
                     var addElement = '<label class="'+$.aceOverWatch.classes.label+'" idx="new"><input type="radio" name="'+name+'" value="'+settings.valueaddcode+'" ' + (settings['readonly'] ? 'readonly="readonly"' : '') +' ><span>'+settings.customaddtext+'</span></label>';
                     if(settings.addentryposition == 'first' ){
@@ -6059,16 +8763,21 @@
                 return radios.join('');
             },
 
-            val : function(target,value){
-                var settings = $(target).data($.aceOverWatch.settings.aceSettings);
+            /**
+             *
+             * @param target
+             * @param value
+             * @param extra
+             *          extra.forceAdd == true -> will display the add form when the value is set to add
+             * @returns {*}
+             */
+            val : function(target,value,extra = {}){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                var name=settings.fieldname;
-                if( !settings.fieldname ){
-                    name=settings.id
-                }
+                let name = this.getRadioNameFromSettings(settings);
 
                 if( value == null ){
-                    settings.value = $(target).find('input[name="'+name+'"]:checked').val();
+                    settings.value = target.find('input[name="'+name+'"]:checked').val();
 
                     if(
                         settings.value === undefined
@@ -6082,34 +8791,27 @@
                 }else{
                     settings.value = value;
 
-                    $(target).find('input[name="'+name+'"]').prop('checked',false);
-
+                    target.find('input[name="'+name+'"]').prop('checked',false);
 
                     if( settings.triggeronchange === true ){
-                        var r = settings.innerData[$(target).find('input[name="'+name+'"][value="'+value+'"]').closest('label').attr('idx')];
+                        /*
+                         * we trigger the change on this only if we have a record..
+                         */
+                        let r = settings.innerData[target.find('input[name="'+name+'"][value="'+value+'"]').closest('label').attr('idx')];
                         if( r ){
-                            /*
-							 * we trigger the change on this only if we have a record..
-							 */
-                            if( $.isFunction(settings.onchange)){
-                                settings.onchange(target,value,r);
-                            }else{
-                                if( $.isFunction(window[settings.onchange])){
-                                    window[settings.onchange](target,value,r);
-                                }
-                            }
+                            $.aceOverWatch.utilities.runIt(settings.onchange, target,value,r);
                         }
                     }
 
-                    return $(target).find('input[name="'+name+'"][value="'+value+'"]').prop('checked',true);
+                    if( value == settings.valueaddcode && extra && extra.forceAdd){
+                        this.add(target);
+                    }
+
+                    return target.find('input[name="'+name+'"][value="'+value+'"]').prop('checked',true);
                 }
             },
 
-            setData : function(target, dataArr, totalExpectedData, rebuildAll ){
-
-                if( $.aceOverWatch.utilities.isVoid(rebuildAll) ){
-                    rebuildAll = true;
-                }
+            setData : function(target, dataArr, totalExpectedData, rebuildAll = true , deleteStaticData){
 
                 var targetField = $(target);
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
@@ -6117,12 +8819,29 @@
                     return;
                 }
 
-                fieldHtml = $.aceOverWatch.field.radiogroup.buildRadioGroup(settings, rebuildAll, dataArr);
+                let fieldHtml = $.aceOverWatch.field.radiogroup.buildRadioGroup(settings, rebuildAll, dataArr,deleteStaticData);
 
                 targetField.find('label').remove();
                 targetField.find('span').after(fieldHtml);
 
                 $.aceOverWatch.field.radiogroup.afterInit(target);
+            },
+
+            getData : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){ return false; }
+                return settings.innerData;
+            },
+
+            selectFirst : function(target,valueFieldName){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings || !settings.innerData || settings.innerData.length == 0){
+                    if( settings.allowadd ){
+                        this.val(target,settings.valueaddcode,{forceAdd:true});
+                    }
+                    return false;
+                }
+                this.val(target,settings.innerData[0].val(valueFieldName));
             },
 
             afterInit : function(target, what){
@@ -6147,56 +8866,59 @@
                         settings.form.detach();
                     }
 
+                    var r = settings.innerData[$(this).closest('label').attr('idx')];
+                    settings.value = value;
+
                     //displaying the edit form to add a new row..
                     if( settings.allowadd && settings.valueaddcode == value ){
                         $.aceOverWatch.field.radiogroup.add(target);
-                        return;
-                    }
+                    }else {
 
-                    if( settings.net.autosave == true ){
+                        if (settings.net.autosave == true) {
 
-                        //ok.. we have autosave.. so....
-                        //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
+                            //ok.. we have autosave.. so....
+                            //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
 
-                        clearTimeout(settings.timerId);
-                        settings.timerId = setTimeout(function(){
-                            $.aceOverWatch.field.save(target,true);
-                        },2000);
-                    }
-
-
-                    var r = settings.innerData[$(this).closest('label').attr('idx')];
-                    
-                    settings.value = value;
-
-                    if( $.isFunction(settings.onchange)){
-                        settings.onchange(target,value,r);
-                    }else{
-                        if( $.isFunction(window[settings.onchange])){
-                            window[settings.onchange](target,value,r);
+                            clearTimeout(settings.timerId);
+                            settings.timerId = setTimeout(function () {
+                                $.aceOverWatch.field.save(target, true, true);
+                            }, $.aceOverWatch.settings.autosaveTimeout);
                         }
                     }
 
+                    $.aceOverWatch.utilities.runIt(settings.onchange, target, value, r);
+
                 });
 
-                if( settings.allowedit ){
-                    containerField.find('a[action="edit"]').unbind('click').click(function(e){
+                if( settings.allowedit ) {
+                    containerField.find('a[action="edit"]').unbind('click').click(function (e) {
                         e.preventDefault();
 
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                        var target = $(this).closest('.' + $.aceOverWatch.classes.containerField);
                         $.aceOverWatch.field.radiogroup.edit(target, $(this).attr('idx'));
 
                         return false;
                     });
 
+                }
+                if( settings.allowdelete ) {
                     containerField.find('a[action="delete"]').unbind('click').click(function(e){
                         e.preventDefault();
-
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        $.aceOverWatch.field.radiogroup.delete_(target, $(this).attr('idx'));
+                        $.aceOverWatch.field.radiogroup.delete_($(this).closest('.'+$.aceOverWatch.classes.containerField), $(this).attr('idx'));
                         return false;
                     });
                 }
+
+                containerField.find('.ace-rg-custom-check input[type="checkbox"]').unbind().change(function(e){
+                    e.preventDefault();
+                    let target =  $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
+                    let idx = $(this).attr('idx');
+
+                    $.aceOverWatch.utilities.runIt(settings.oncustomcheckchange, target, $(this).is(':checked'), settings.innerData[idx]);
+                    return false;
+                });
+
 
                 if( settings.value ){
                     $.aceOverWatch.field.radiogroup.val(target,settings.value);
@@ -6292,13 +9014,14 @@
             },
 
             delete_ : function(target, index){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                let deleteString = $.aceOverWatch.utilities.runIt(settings.getcustomdeletestring, target, settings.innerData[index]);
+                if( !$.aceOverWatch.utilities.wasItRan(deleteString) ){
+                    deleteString = _aceL.are_you_sure_delete_spec.replace("%s",settings.innerData[index].val('radioActualText'));
+                }
 
-                var question = _aceL.are_you_sure_delete_spec.replace("%s",settings.innerData[index].val('radioActualText'));
-
-                $.aceOverWatch.prompt.show(question,function() {
+                $.aceOverWatch.prompt.show(deleteString,function() {
 
                     $.aceOverWatch.field.radiogroup.val(target,settings.innerData[index].val(settings.valuename));//making sure the clicked row is selected
 
@@ -6320,13 +9043,11 @@
             /**
              * data - data from the wire, if it exists..
              */
-            deleteSuccessful : function(target, data, retData){
-
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-
-                settings.innerData.splice(settings.deletetingIndex, 1);
+            deleteSuccessful : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let deletedData = settings.innerData.splice(settings.deletetingIndex, 1);
                 $.aceOverWatch.field.radiogroup.setData(target,[],0,false);//the record should have changed on the form
+                $.aceOverWatch.utilities.runIt(settings.ondeletecompleted, target, deletedData[0]);
             },
 
             /**
@@ -6349,38 +9070,25 @@
                     template:settings.template,
                     renderto:settings.id+'-form',
                     autoloadfieldsonshow:false,
-                    oninit:function(form){
-                        //generating all ace fields with auto gen from the form
-                        $(form).find('.ace-auto-gen').ace('create');
+                    validate:true,
+                    oninit:function(f){
+                        //generating all ace fields with auto gen from the form if they are not already created
+                        f.find('.ace-auto-gen').not('.ace-field-container').ace('create');
+
+                        $.aceOverWatch.utilities.runIt(settings.customforminit, f);
                     },
-                    customshow : function(form, renderTo){
-                        var f = $(form);
+                    customshow : function(f, renderTo){
 
-                        var target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                        let target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        if( $.isFunction(settings.customformshow)){
-                            settings.customformshow(target);
-                        }else{
-                            if( $.isFunction(window[settings.customformshow])){
-                                window[settings.customformshow](target);
-                            }
-                        }
+                        $.aceOverWatch.utilities.runIt(settings.customformshow, target,f);
 
-                        //needed, otherwise it will become a popup..
                         f.removeClass($.aceOverWatch.classes.hide);
                     },
-                    customhide : function(form){
-                        /*settings.form.addClass($.aceOverWatch.classes.hide);
-
-						if( !settings.editingExisting ){
-							//if we were on an ADD.. then un-select the option
-							$.aceOverWatch.field.radiogroup.val(target,'');
-						}*/
-
-                        var f = $(form);
-                        var target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                    customhide : function(f){
+                        let target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                         settings.form.addClass($.aceOverWatch.classes.hide);
 
@@ -6390,14 +9098,23 @@
                         }
 
                     },
-                    onshow:function(form){
-                        //also.. load the countries as well..
-                    },
-                    onsavesuccessful:function(form, data){
+                    onbeforeloadrecord : function(f,record){
+                        let target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        var f = $(form);
-                        var target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                        $.aceOverWatch.utilities.runIt(settings.customformbeforeloadrecord, target, f, record);
+                    },
+                    onafterloadrecord : function(f,record){
+                        let target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                        $.aceOverWatch.utilities.runIt(settings.customformafterloadrecord, target, f, record);
+                    },
+                    onshow:function(form){},
+                    onsavesuccessful:function(f, data){
+
+                        let target = f.closest('.'+$.aceOverWatch.classes.radio).parent();
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                         settings.form.addClass($.aceOverWatch.classes.hide);
 
@@ -6411,13 +9128,7 @@
 
                         $.aceOverWatch.field.radiogroup.val(target,record.val(settings.idfield));///selecting the last element we operated
 
-                        if( $.isFunction(settings.onsavesuccessful) ){
-                            settings.onsavesuccessful(target,record,settings.editingExisting);
-                        }else{
-                            if($.isFunction(window[settings.onsavesuccessful])){
-                                window[settings.onsavesuccessful](target,record,settings.editingExisting);
-                            }
-                        }
+                        $.aceOverWatch.utilities.runIt(settings.onsavesuccessful, target,record,settings.editingExisting);
                     },
                     net:settings.net,
                     idfield : settings.idfield,
@@ -6456,7 +9167,6 @@
         /**
          * begin datepicker object
          * supports autosave
-         * TODO: add support for readonly
          */
         datepicker : {
 
@@ -6469,7 +9179,7 @@
                     onselect:null,
                 }, settings ) );
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.datepickerField+'" >';
+                var fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.datepickerField+'" >';
 
                 var tooltip = '';
                 if( settings['tooltip'] ){
@@ -6488,6 +9198,8 @@
             afterInit : function(target, what){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
 
                 clearTimeout(settings.timerId); //making sure we kill whatever existing timer we have here
 
@@ -6520,8 +9232,8 @@
                                 //ok.. we have autosave.. so....
                                 clearTimeout(settings.timerId);
                                 settings.timerId = setTimeout(function(){
-                                    $.aceOverWatch.field.save(containerField,true);
-                                },2000);
+                                    $.aceOverWatch.field.save(containerField,true, true);
+                                },$.aceOverWatch.settings.autosaveTimeout);
 
                             }
 
@@ -6536,44 +9248,43 @@
                         changeMonth		: true,
                         changeYear		: true,
                         yearRange		: "-100:+100",
-                        buttonText		: '<i class="'+$.aceOverWatch.classes.calendarIcon+'"></i>',
-                        nextText		: '<i class="'+$.aceOverWatch.classes.nextIcon+'"></i>',
-                        prevText		: '<i class="'+$.aceOverWatch.classes.prevIcon+'"></i>',
+
+                        //the new versions of jquery transform the TAGS in HTML variables, so this method of customizing the buttons no longer works
+                        //buttonText		: ' <i class="'+($.aceOverWatch.settings.usingNewCSSVersion ? $.aceOverWatch.classes.calendarIcon : $.aceOverWatch.classes.calendarIconOld)+'"></i> ',
+                        //nextText		: '<i class="'+$.aceOverWatch.classes.nextIcon+'"></i>',
+                        //prevText		: '<i class="'+$.aceOverWatch.classes.prevIcon+'"></i>',
+
                         dayNamesMin		: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
                     };
-                	
+
                     inputEl.datepicker(options).datepicker('option','dateFormat',settings.format);
                     inputEl.datepicker('setDate',settings.value);
-                    
+
+                    if( $.aceOverWatch.settings.usingNewCSSVersion ) {
+                        containerField.find('button').detach().insertBefore(inputEl);
+                    }
+
                     if( settings.readonly ){
                         inputEl.datepicker(options).datepicker('option','disabled',true);
-                    }
-
-                    if( $.isFunction(settings.onselect)){
-                        inputEl.select(settings.onselect);
+                        containerField.attr('readonly',true);
                     }else{
-                        if( $.isFunction(window[settings.onselect])){
-                            inputEl.select(window[settings.onselect]);
-                        }
+                        containerField.attr('readonly',false);
                     }
 
-                    inputEl.change( function(){
+                    $.aceOverWatch.utilities.runIt(settings.onselect);
 
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                    inputEl.change( function() {
 
-                        target.find('.'+$.aceOverWatch.classes.fieldValue).removeClass($.aceOverWatch.classes.empty);
-                        
+                        let target = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
+
                         settings.value = target.ace('value');
 
-                        if( $.isFunction(settings.onchange)){
-                            settings.onchange(target,settings.value);
-                        }else{
-                            if( $.isFunction(window[settings.onchange])){
-                                window[settings.onchange](target,settings.value);
-                            }
-                        }
+                        (String(settings.value).length==0)?
+                            target.find('.' + $.aceOverWatch.classes.fieldValue).addClass($.aceOverWatch.classes.empty):
+                            target.find('.' + $.aceOverWatch.classes.fieldValue).removeClass($.aceOverWatch.classes.empty);
 
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value);
                     });
                 }
             },
@@ -6591,12 +9302,269 @@
 
                     if ((typeof value !== "string") && (!(value instanceof Date))) value = "";
                     containerField.find('.'+$.aceOverWatch.classes.fieldValue).datepicker('setDate',value);
+                    settings.value = value;
 
                     return true;
                 }
             }
 
         },//end datepicker object
+
+        /**
+         * begin daterangepicker object
+         * - we create only one datepicker plugin widget, and we use that for all our datepicker
+         * - we do this because it will only be visible in a modal window
+         */
+        daterangepicker : {
+
+            modalWindow : false,
+            currentEditablePicker : false,
+            ensureModalWindowExists : function(target,settings){
+                if( settings.modalWindow ){ return; }
+                settings.modalWindow = $('<div class="ace-col-12 date-picker-wrapper-modal ace-hide"></div>');
+                $('body').append(settings.modalWindow);
+
+                settings.drpTrigger = target.find('.action-icon.down-arrow');
+                settings.drpTrigger.dateRangePicker({
+                    monthSelect: true,
+                    yearSelect: true,
+                    customOpenAnimation: function(cb)
+                    {
+                        $(this).fadeIn(0, cb);
+                    },
+                    customCloseAnimation: function(cb)
+                    {
+                        $(this).fadeOut(0, cb);
+                    }
+                }).bind('datepicker-close',function() {
+                    settings.modalWindow.addClass('ace-hide');
+                }).bind('datepicker-open',function() {
+                    settings.modalWindow.removeClass('ace-hide');
+                });
+
+                //the above created a date picker, added to the body, with the class .date-picker-wrapper
+                //we exchange its toolbar with ours
+                //to differentiate it from all other daterangepickers, we're adding a class to them
+                let dateRangePickerWidget = $('.date-picker-wrapper:not(.ace-drp-attached)');
+                dateRangePickerWidget.addClass('.ace-drp-attached');
+                dateRangePickerWidget.find('.drp_top-bar').
+                    html('').//empty existing content
+                    append($('<div class="ace-flex ace-jus-cont-space-beween" id="report-period-toolbar">' +
+                                '<div class="ace-flex">' +
+                                    '<div class="label ace-small-padding-right">'+_aceL.sel_i+'</div>' +
+                                        '<div>'+
+                                            '<select id="report-period-interval">' +
+                                                '<option value="0">'+_aceL.sel_ai+'</option>' +
+                                                '<option value="1">'+_aceL.sel_azi+'</option>' +
+                                                '<option value="2">'+_aceL.sel_ieri+'</option>' +
+                                                '<option value="3">'+_aceL.sel_u7z+'</option>' +
+                                                '<option value="9">'+_aceL.sel_sc+'</option>' +
+                                                '<option value="8">'+_aceL.sel_st+'</option>' +
+                                                '<option value="10">'+_aceL.sel_lc+'</option>' +
+                                                '<option value="4">'+_aceL.sel_lt+'</option>' +
+                                                '<option value="11">'+_aceL.sel_ac+'</option>' +
+                                                '<option value="5">'+_aceL.sel_at+'</option>' +
+                                                '<option value="6">'+_aceL.sel_u2a+'</option>' +
+                                                '<option value="7">'+_aceL.sel_td+'</option>' +
+                                            '</select>' +
+                            '           </div>' +
+                                    '</div>' +
+                                '<div class="action-icon close"></div>' +
+                            '</div>'));//creating our own
+                dateRangePickerWidget.find('.footer').append($('<div class="ace-col-12 ace-small-padding-top"  id="report-period-footer-toolbar">' +
+                    '<input type="button" class="submit-btn" value="'+_aceL.apply+'">' +
+                    '</div>'));
+
+                dateRangePickerWidget.detach().appendTo(settings.modalWindow);
+
+                //lets add functionality to this
+                settings.modalWindow.find('#report-period-footer-toolbar .submit-btn').click(function(){
+                    $.aceOverWatch.field.daterangepicker.updateData(target);
+                });
+
+                settings.modalWindow.find('#report-period-interval').change(function(){
+                    $.aceOverWatch.field.daterangepicker.setDatesForPeriod(target,$(this).val());
+                });
+                settings.modalWindow.find('#report-period-interval').select(function(){
+                    $.aceOverWatch.field.daterangepicker.setDatesForPeriod(target,$(this).val());
+                });
+
+                settings.modalWindow.find('.action-icon.close').click(function(){
+                    $.aceOverWatch.field.daterangepicker.close(target);
+                });
+
+            },
+
+            close : function(target){
+                target.data($.aceOverWatch.settings.aceSettings).drpTrigger.data('dateRangePicker').close();
+            },
+            open : function(target){
+                this.currentEditablePicker = target;
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                this.ensureModalWindowExists(target,settings);
+                if( $.aceOverWatch.utilities.isVoid(settings.startDate,true) ){
+                    this.setDatesForPeriod(target,1);
+                }else{
+                    settings.drpTrigger.data('dateRangePicker').setDateRange(settings.startDate, settings.endDate);
+                }
+                settings.drpTrigger.data('dateRangePicker').open();
+            },
+
+            setDatesForPeriod : function(target,periodType,period){
+                if ($.aceOverWatch.utilities.isVoid(period)) {
+                    period = this.returnDatesForPeriod(periodType);
+                }
+                if (period == false){ return false; }
+                target.data($.aceOverWatch.settings.aceSettings).drpTrigger.data('dateRangePicker').setDateRange(period.startDate.format('YYYY-MM-DD').toString(), period.stopDate.format('YYYY-MM-DD').toString());
+                return true;
+            },
+
+            returnDatesForPeriod : function(periodType){
+                let startDate, stopDate = false;
+                periodType = parseInt(periodType);
+                switch (periodType){
+                    case 1://Astazi
+                        startDate = moment();
+                        stopDate = startDate;
+                        break;
+                    case 2://Ieri
+                        startDate = moment().subtract(1,'days');
+                        stopDate = startDate;
+                        break;
+                    case 3://Ultimele 7 zile
+                        startDate = moment().subtract(7,'days');
+                        stopDate = moment();
+                        break;
+                    case 4://Luna trecuta
+                        startDate = moment().startOf('month').subtract(1,'months');
+                        stopDate = moment().startOf('month').subtract(1,'months').endOf('month');
+                        break;
+                    case 5://Anul trecut
+                        startDate = moment().startOf('year').subtract(1,'years');
+                        stopDate = moment().startOf('year').subtract(1,'years').endOf('year');
+                        break;
+                    case 6://Ultimii 2 ani
+                        startDate = moment().startOf('year').subtract(1,'years');
+                        stopDate = moment();
+                        break;
+                    case 7://Toate datele
+                        startDate = moment('1970-01-01');
+                        stopDate = moment();
+                        break;
+                    case 8://Saptamana trecuta
+                        startDate = moment().startOf('week').subtract(1,'weeks');
+                        stopDate = moment().startOf('week').subtract(1,'weeks').endOf('week');
+                        break;
+                    case 9://Saptamana curenta
+                        startDate = moment().startOf('week');
+                        stopDate = moment().endOf('week');
+                        break;
+                    case 10://Luna curenta
+                        startDate = moment().startOf('month');
+                        stopDate = moment().endOf('month');
+                        break;
+                    case 11://Anul curent
+                        startDate = moment().startOf('year');
+                        stopDate = moment().endOf('year');
+                        break;
+                    case 0:
+                    default:
+                        return false;
+                }
+
+                return {
+                    startDate:startDate,
+                    stopDate:stopDate
+                };
+            },
+
+
+            updateData : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let period = settings.drpTrigger.data('dateRangePicker').getPeriodDates();
+                let startDate = moment(period.start).format('YYYY-MM-DD').toString();
+                let endDate = moment(period.end).format('YYYY-MM-DD').toString();
+                if( startDate == 'Invalid date' || endDate == 'Invalid date' ) {
+                    if (startDate != 'Invalid date' ){
+                        endDate = startDate;
+                    }else{
+                        if (endDate != 'Invalid date' ){
+                            startDate = endDate;
+                        }else{
+                            startDate = endDate = moment().format('YYYY-MM-DD').toString();
+                        }
+                    }
+                }
+                this.val(target,startDate+','+endDate);
+                this.close(target);
+            },
+
+            setStartEndDatesInternal : function(settings){
+                if( !$.aceOverWatch.utilities.isVoid(settings.value,true) ){
+                    let dates = settings.value.split(',');
+                    settings.startDate = dates[0].trim();
+                    settings.endDate = dates[1].trim();
+                }else{
+                    settings.startDate = '';
+                    settings.endDate = '';
+                }
+            },
+
+            create : function(target,settings){
+                $.extend(true,settings, $.extend(true,{
+                    value:'',   //two dates, separated by coma: if only one, it's the start date
+                    //format:'yy-mm-dd',//not yet used
+                    onchange:null,
+                }, settings ) );
+
+                if( $.aceOverWatch.utilities.isVoid(settings.value,true) ){
+                    //we initialize with this week
+                    let period = this.returnDatesForPeriod(3);//last 7 days
+                    settings.value = period.startDate.format('YYYY-MM-DD').toString()+','+period.stopDate.format('YYYY-MM-DD').toString();
+                }
+
+                this.setStartEndDatesInternal(settings);
+
+                let fieldHtml = '<div class="ace-daterangepicker-field ace-col-12" >'+
+                                    '<div class="box-2 ace-col-12">'+
+                                        '<span class="action-icon down-arrow"></span>'+
+                                        '<div class="box-2-title">'+settings.label+'</div>'+
+                                        '<div class="box-2-detail">'+settings.startDate +' - ' + settings.endDate + '</div>'
+                                    '</div>'+
+                                '</div>';
+                return fieldHtml;
+            },
+
+            afterInit : function(target, what){
+                if( what.all || what.down ){
+                    target.find('.down-arrow').unbind('click').click(function(e){
+                        e.preventDefault();
+                        $.aceOverWatch.field.daterangepicker.open($(this).closest('.' + $.aceOverWatch.classes.containerField));
+                        return false;
+                    });
+                }
+
+            },
+
+            val : function(target,value, extra){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                if( value == null ){
+                    return settings.value;
+                }else{
+                    settings.value =value;
+                    this.setStartEndDatesInternal(settings);
+                    target.find('.box-2-detail').html(settings.startDate +' - ' + settings.endDate);
+
+                    if( !extra || extra.triggerchange != false ){
+                        $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value);
+                    }
+
+                    return true;
+                }
+            }
+
+        },//end daterangepicker object
 
         /**
          * begin autocomplete object
@@ -6631,8 +9599,8 @@
                     valuename:'',	//the field from the searched record from which the actual value of the field is taken
 
                     timerId:null,		//hold the id of the timer used by the input autocomplete
-                    timertimeout:3000,		//hold the id of the timer used by the input autocomplete
-                    minlength:5,		//the minimul lenght of the search field
+                    timertimeout:1000,		//hold the id of the timer used by the input autocomplete
+                    minlength:5,		//the min lenght of the search field
 
                     searchwide:'100%',	//the wide of the search grid
                     template:null,		//the ID of a template to display the information we have found
@@ -6668,6 +9636,11 @@
 
                     usequeries : false,//set to true, to use the chips method of writing queries
 
+                    keepsearchstring: true,//if TRUE, after typing a search string, the search string will remain in the input
+                                           //ATTENTION: is use queries is to true, then  this value will be automatically set to false
+                    usesearchstringasvalueifneeded:false,//if true, IF the autocomplete doesn't have a VALUE, BUT a search string is PRESENT, then
+                    //the search string will be used as the actual value
+
                     //
                     chipssettings : {},
                     lBSTime : 0,//last backspace press time; for the purpose of computing double backspace
@@ -6680,6 +9653,10 @@
                     bindtoexternalgridid : false,
                 }, settings ) );
 
+                if( settings.usequeries ){
+                    settings.keepsearchstring = false;
+                }
+
                 settings.actualDisplayClearButton = settings['displayclearbutton'] && !settings['readonly'];
 
                 //what is this?
@@ -6690,7 +9667,7 @@
                     settings.valuename = settings.searchname;
                 }
 
-                let classes = [$.aceOverWatch.classes.autocompleteField];
+                let classes = [(settings.ignorecontrolenvelope ? '' : "ace-control-envelope "),$.aceOverWatch.classes.autocompleteField];
                 if( settings.ignorecellcontainer == 1 ){
                     classes.push($.aceOverWatch.classes.autocompleteCellIgnore);
                 }
@@ -6752,12 +9729,15 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
+
                 var inputEl = containerField.find('.'+$.aceOverWatch.classes.fieldValue);
                 settings.inputEl = inputEl;
 
                 if ($.aceOverWatch.utilities.isVoid(settings.gridsettings)) settings.gridsettings = {};
                 $.extend(true,settings.gridsettings, $.extend(true,{
                     type:'grid',
+                    acParent:target,
                     allowdelete:false,
                     allowedit:false,
                     allowadd:false,
@@ -6779,6 +9759,10 @@
                     onselectionchange:function(grid,row,idx,record){
                         $.aceOverWatch.field.autocomplete.val(grid.parent().closest('.'+$.aceOverWatch.classes.containerField),record);
                     },
+                    onpreloadsuccessful : function(grid,dataArr, totalExpectedData){
+                        if (($.aceOverWatch.utilities.isVoid(grid)) || (!$.isFunction(grid.parent))) return;
+                        $.aceOverWatch.field.autocomplete.onpreloadsuccessful(grid.parent().closest('.'+$.aceOverWatch.classes.containerField),dataArr, totalExpectedData);
+                    },
                     onloadsuccessful : function(grid, data, startIdx, endIdx, totalExpectedData){
                         if (($.aceOverWatch.utilities.isVoid(grid)) || (!$.isFunction(grid.parent))) return;
                         $.aceOverWatch.field.autocomplete.onloadsuccessful(grid.parent().closest('.'+$.aceOverWatch.classes.containerField),data, startIdx, endIdx, totalExpectedData);
@@ -6793,7 +9777,7 @@
 
                             /*var charcode = e.charCode;
                             var char = String.fromCharCode(charcode);
-                            console.log(char);*/
+                            $.aceOverWatch.utilities.log(char,'debug');*/
 
                             var keycode = keyPressedEvent.charCode;
                             var isPrintableCharacter =
@@ -6807,7 +9791,7 @@
                             //(keycode > 218 && keycode < 223);   // [\]' (in order)
 
                             if( isPrintableCharacter ){
-                                //console.log('[pressed a printable chacater in the grid...] :> ' + String.fromCharCode(keycode));
+                                //$.aceOverWatch.utilities.log('[pressed a printable chacater in the grid...] :> ' + String.fromCharCode(keycode),'debug');
 
                                 //ok now.. want to add the character to the value already present in the input
 
@@ -6817,7 +9801,7 @@
 
 
                             }else{
-                                //console.log('[non printable character] ' + String.fromCharCode(keycode));
+                                //$.aceOverWatch.utilities.log('[non printable character] ' + String.fromCharCode(keycode),'debug');
                             }
                         }else{
                             switch( explicitSpecialCode ){
@@ -6842,48 +9826,35 @@
                     //applying the net settings here, otherwise, they are going to be re-written by those of the grid's
                     $.extend(true,settings.gridsettings.net,settings.net);
 
-                    var searchGrid = $('<div class="'+[$.aceOverWatch.classes.gridAutoComplete, $.aceOverWatch.classes.hideErrors].join(' ')+'" tabindex="0"></div>').ace('create',settings.gridsettings).hide().insertAfter(inputEl);
-                    searchGrid.parent().addClass($.aceOverWatch.classes.formIgnore);
+                    settings.grid = $('<div class="'+[$.aceOverWatch.classes.gridAutoComplete, $.aceOverWatch.classes.hideErrors, $.aceOverWatch.classes.hide].join(' ')+'" tabindex="0"></div>').insertAfter(inputEl).ace('create',settings.gridsettings);
+                    settings.grid.parent().addClass($.aceOverWatch.classes.formIgnore);
 
-                    searchGrid.keyup(function(e){
-                        switch(e.keyCode){
-                            case 27://escape.. the grid will have hidden itself, because of the hideonescape
-                                //so.. now.. transfer the focus to the inputEl
-                                var target = $(this).parent().closest('.'+$.aceOverWatch.classes.containerField);
-                                target.find('.'+$.aceOverWatch.classes.fieldValue).focus();
-                                $.aceOverWatch.field.autocomplete.renderTemplateIfNecessary(target);
-                                break;
+                }
+
+                /*
+                 * dealing with queries CHIPS, if this is the case!
+                 */
+
+                if( settings.usequeries === true ){
+
+                    $.extend(true,settings.chipssettings, $.extend(true,{
+
+                        type:'chips',
+                        allowduplicates : false,
+                        visible : false,
+                        parentAC : containerField,
+
+                        onremove : function(target, index, record){
+                            $.aceOverWatch.field.autocomplete.search($(target).data($.aceOverWatch.settings.aceSettings).parentAC);
                         }
-                    });
 
-                    $.aceOverWatch.eventManager.registerEvent('outsideclick',
-                        containerField,
-                        searchGrid,
-                        function(el)       {
-                            el.fadeOut(1);
-                        }
-                    );
+                    },settings.chipssettings));
 
-                    /*
-                     * dealing with queries CHIPS, if this is the case!
-                     */
-
-                    if( settings.usequeries === true ){
-
-                        $.extend(true,settings.chipssettings, $.extend(true,{
-
-                            type:'chips',
-                            allowduplicates : false,
-                            visible : false,
-
-                            onremove : function(target, index, record){
-                                $.aceOverWatch.field.autocomplete.search($(target).closest('.'+$.aceOverWatch.classes.autocompleteField).parent());
-                            }
-
-                        },settings.chipssettings));
-
-                        settings.chips = $('<div class="'+$.aceOverWatch.classes.col12+'"></div>').ace('create',settings.chipssettings);
-                        searchGrid.find('.'+$.aceOverWatch.classes.grid).prepend(settings.chips);
+                    settings.chips = $('<div class="'+$.aceOverWatch.classes.col12+'"></div>').ace('create',settings.chipssettings);
+                    if( settings.externalGrid ) {
+                        settings.externalGrid.find('.' + $.aceOverWatch.classes.grid).prepend(settings.chips);
+                    }else{
+                        settings.grid.find('.' + $.aceOverWatch.classes.grid).prepend(settings.chips);
                     }
                 }
 
@@ -6900,103 +9871,113 @@
 
                 });
 
-                if( 	settings.autosearchonfocus
-                    &&	!settings.readonly
-                ){
+                if( !settings.readonly ){
                     inputEl.unbind('focus').bind('focus',function(){
 
-                        var autoEl = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        $.aceOverWatch.field.autocomplete.search(autoEl);
+                        let autoEl = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        let s = autoEl.data($.aceOverWatch.settings.aceSettings);
+
+                        if( !$.aceOverWatch.utilities.isVoid(s.hintselector,true) ) {
+                            $.aceOverWatch.field.displayHint(s.hintselector, s.hintstype);
+                        }
+
+                        if( settings.autosearchonfocus && s.disableSearchAfterFocus !== true ) {
+                            $.aceOverWatch.field.autocomplete.search(autoEl);
+                        }
+
+                        switch( settings.displaytype ){
+                            case 'popupmobile':
+                                if( !$.aceOverWatch.utilities.isViewportForMobile() ){
+                                    break;
+                                }
+                            //if we are on mobile, we fall in the next case
+                            case 'popup':
+
+                                //target.find('select').attr('disabled','disabled');
+
+                                $.aceOverWatch.field.autocomplete.ensureDisplayFormExists(target,settings);
+                                settings.displayForm.ace('show');
+
+                                break;
+                        }
+
+                    });
+
+                    inputEl.keyup(function (e) {
+                        var autoEl = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        var settings = autoEl.data($.aceOverWatch.settings.aceSettings);
+
+                        if (e.keyCode == undefined) {
+                            let currentValue = $(this).val();
+                            if (currentValue.length > 0) {
+                                e.keyCode = currentValue.charCodeAt(currentValue.length - 1)
+                            }
+                        }
+
+                        clearTimeout(settings.timerId);
+
+                        switch (e.keyCode) {
+                            case 13://enter
+                                $.aceOverWatch.field.autocomplete.search(autoEl)
+                                break;
+                            case 27://escape
+                                if (!settings.bindtoexternalgridid) {
+                                    $.aceOverWatch.field.autocomplete.hideSelectionGrid(autoEl);
+                                }
+                                break;
+                            case 32://space
+                                if (settings.usequeries) {
+                                    let searchValue = settings.inputEl.val().trim();
+                                    if (searchValue.length > 0) {
+                                        $.aceOverWatch.field.chips.addChip(settings.chips, searchValue, searchValue);
+                                        settings.inputEl.val('');
+                                        settings.inputEl.focus();
+                                    }
+                                }
+                                break;
+
+                            case 40://down arrow
+                                if (!settings.bindtoexternalgridid) {
+                                    $.aceOverWatch.field.autocomplete.showGrid(autoEl);
+                                }
+                                break;
+
+                            case 8://backspace
+
+                                if (settings.usequeries) {
+
+                                    let cBSTime = moment().valueOf();
+                                    let diff = cBSTime - settings.lBSTime;
+
+                                    if (diff <= 600) {//a bit more than half a second...
+                                        /*
+                                         * we delete the last chip!
+                                         */
+                                        $.aceOverWatch.field.chips.removeLastChip(settings.chips);
+                                    }
+                                    settings.lBSTime = cBSTime;
+                                }
+                                break;
+
+
+                            default:
+                                if ($.isNumeric(settings.timertimeout)) settings.timertimeout = parseInt(settings.timertimeout);
+                                if (settings.timertimeout > 0) {
+                                    settings.timerId = setTimeout(function () {
+                                        $.aceOverWatch.field.autocomplete.search(autoEl);
+                                    }, settings.timertimeout);
+                                }
+                                break;
+                        }
+
+                        if ($.isFunction(settings.oninputelkeyup)) {
+                            settings.oninputelkeyup(target, settings.inputEl.val());
+                        } else if ($.isFunction(window[settings.oninputelkeyup])) {
+                            window[settings.oninputelkeyup](target, settings.inputEl.val());
+                        }
 
                     });
                 }
-
-
-                //treating key down in the input
-                inputEl.keyup(function (e) {
-                    var autoEl = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = autoEl.data($.aceOverWatch.settings.aceSettings);
-                    
-                    if( e.keyCode == undefined ){
-                    	let currentValue = $(this).val();
-                    	if( currentValue.length > 0 ){
-                    		e.keyCode = currentValue.charCodeAt(currentValue.length -1)
-                    	}
-                    }
-
-                    clearTimeout(settings.timerId);
-
-
-                    if( settings.readonly ){
-                        return;
-                    }
-
-                    switch(e.keyCode){
-                        case 13://enter
-                            $.aceOverWatch.field.autocomplete.search(autoEl)
-                            break;
-                        case 27://escape
-                            if( !settings.bindtoexternalgridid ){
-                                autoEl.find('.'+$.aceOverWatch.classes.gridAutoComplete).fadeOut(1);
-                                if( $.isFunction(settings.onclose) ){
-                                    settings.onclose(target);
-                                }
-                            }
-                            break;
-                        case 32://space
-                            if( settings.usequeries ){
-                                let searchValue = settings.inputEl.val().trim();
-                                if( searchValue.length > 0 ){
-                                    $.aceOverWatch.field.chips.addChip(settings.chips,searchValue,searchValue);
-                                    settings.inputEl.val('');
-                                    settings.inputEl.focus();
-                                }
-                            }
-                            break;
-
-                        case 40://down arrow
-                            if( !settings.bindtoexternalgridid ){
-                                $.aceOverWatch.field.autocomplete.showGrid(autoEl.find('.'+$.aceOverWatch.classes.gridAutoComplete));
-                            }
-                            break;
-
-                        case 8://backspace
-
-                            if( settings.usequeries ){
-
-                                let cBSTime = moment().valueOf();
-                                let diff = cBSTime - settings.lBSTime;
-
-                                if( diff <= 600 ){//a bit more than half a second...
-                                    /*
-                                     * we delete the last chip!
-                                     */
-                                    $.aceOverWatch.field.chips.removeLastChip(settings.chips);
-                                }
-                                settings.lBSTime = cBSTime;
-                            }
-                            break;
-
-
-                        default:
-                            if ($.isNumeric(settings.timertimeout)) settings.timertimeout = parseInt(settings.timertimeout);
-                            if (settings.timertimeout > 0) {
-                                settings.timerId = setTimeout(function () {
-                                    $.aceOverWatch.field.autocomplete.search(autoEl);
-                                }, settings.timertimeout);
-                            }
-                            break;
-                    }
-
-                    if( $.isFunction(settings.oninputelkeyup) ){
-                        settings.oninputelkeyup(target, settings.inputEl.val());
-                    }
-                    else
-                    if ($.isFunction(window[settings.oninputelkeyup])) {
-                        window[settings.oninputelkeyup](target, settings.inputEl.val());
-                    }
-
-                });
 
                 if( settings.actualDisplayClearButton ){
                     containerField.find('.'+$.aceOverWatch.classes.autocompleteClearButton).unbind('click').click(function(e){
@@ -7008,65 +9989,161 @@
 
                 if( settings.displayextralink ){
                     containerField.find('.'+$.aceOverWatch.classes.autocompleteLink).unbind('click').click(function(e){
-                        console.log('Clicked display extra link');
                         e.stopImmediatePropagation();
 
                         var autoEl = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = autoEl.data($.aceOverWatch.settings.aceSettings);
-
-                        if ($.isFunction(settings.extralinkcallback)) {
-                            return settings.extralinkcallback(autoEl,e);
-                        }else{
-                            if ($.isFunction(window[settings.extralinkcallback])) {
-                                return  window[settings.extralinkcallback](autoEl,e);
-                            }
-                        }
-
-
+                        $.aceOverWatch.utilities.runIt(settings.extralinkcallback, autoEl,e);
                     });
                 }
 
-                if ($.isFunction(settings.onafterinit)) {
-                    return settings.onafterinit(target);
-                }else{
-                    if ($.isFunction(window[settings.onafterinit])) {
-                        return  window[settings.onafterinit](target);
-                    }
+                $.aceOverWatch.utilities.runIt(settings.onafterinit, target);
+                this.renderTemplateIfNecessary(target);
+            },
+
+            ensureDisplayFormExists : function(target,settings){
+                if( settings.displayForm ){
+                    return;
                 }
 
-                $.aceOverWatch.field.autocomplete.renderTemplateIfNecessary(target);
-
-                settings.onLoadSuccessful = false;
-                if ($.isFunction(settings.onloadsuccessful)) {
-                    settings.onLoadSuccessful = settings.onloadsuccessful;
-                }else{
-                    if ($.isFunction(window[settings.onloadsuccessful])) {
-                        settings.onLoadSuccessful = window[settings.onloadsuccessful];
-                    }
+                if( $('#ace-popup-autocomplete-tpl').length == 0 ){
+                    $('body').append('<div id="ace-popup-autocomplete-tpl" class="'+$.aceOverWatch.classes.hide+'">' +
+                        '<div class="ace-col-12 ace-standard-form-inside ace-standard-form-popup-autocomplete">'+
+                        '<div class="ace-popup-autocomplete-target ace-col-12"></div>'+
+                        '<div class="ace-col-12 ace-medium-padding-top ace-autocomplete-select-button ace-text-center ace-filled-button"></div>'+
+                        '</div></div>');
                 }
+
+                settings.displayForm = $('<div class="ace-standard-form ace-standard-form-popup ace-form-popup-small"></div>').ace('create',{
+                    type:               'form',
+                    ftype:              'popup',
+                    template:           'ace-popup-autocomplete-tpl',
+                    parent:             target,
+                    net:                {},
+                    hideonescape:       true,
+                    displaysavebtn:     false,
+                    displaycancelbtn:   false,
+
+                    //enablehashnavigation: true,//disabled because it may cause unwanted changes in the screen (like form resets)
+
+                    oninit : function(f){
+                        f.find('.ace-form-inner').addClass('ace-visible-overflow');
+                        settings.popupCombobox = f.find('.ace-popup-autocomplete-target').ace('create',{
+                            type: 'autocomplete',
+                            label: settings.label,
+                            labelalign: 'top',
+
+                            displayname: settings.displayname,
+                            valuename: settings.valuename,
+                            searchname: settings.searchname,
+                            autosearchonfocus: true,
+
+                            gridsettings: settings.searchname,
+                            minlength: settings.minlength,
+                            net: settings.net,
+
+                            displayrenderer: settings.displayrenderer,
+                            onbeforeload: settings.onbeforeload,
+                            onclose: settings.onclose,
+                            onselect: settings.onselect,
+                            oninputelkeyup: settings.oninputelkeyup,
+                            onvaluecleared: settings.onvaluecleared,
+                            gridrowrenderer: settings.gridrowrenderer,
+                            gridsettings: settings.gridsettings,
+                            onbeforegridshow: settings.onbeforegridshow,
+                            onaftergridshow: settings.onaftergridshow,
+                            onbeforegridhide: settings.onbeforegridhide,
+                            onaftergridhide: settings.onaftergridhide,
+                            onloadsuccessful: settings.onloadsuccessful,
+                            onafterinit: settings.onafterinit,
+                            usequeries: settings.usequeries,
+
+                            onchange : function(target, value){
+                                let f = $.aceOverWatch.field.form.getParentForm(target);
+                                f.data($.aceOverWatch.settings.aceSettings).parent.ace('value',value);
+                                f.ace('hide');
+                            }
+                        });
+                        f.find('.ace-autocomplete-select-button').ace('create',{
+                            type:'button',
+                            value:'Select',
+                            action:function(target){
+                                let f = $.aceOverWatch.field.form.getParentForm(target);
+                                let ac = target.siblings('.ace-popup-autocomplete-target');
+                                let acValue = ac.ace('value');
+                                if( !$.aceOverWatch.utilities.isVoid(acValue,true) ){
+                                    f.data($.aceOverWatch.settings.aceSettings).parent.ace('value',acValue,ac.data($.aceOverWatch.settings.aceSettings).extravalue);
+                                }else{
+                                    f.data($.aceOverWatch.settings.aceSettings).parent.ace('value','',$.aceOverWatch.field.autocomplete.searchVal(ac));
+                                }
+                                f.ace('hide');
+                                ac
+                            }
+                        });
+                    },
+                    onshow: function(f){
+                        setTimeout(function(f){f.find('.ace-autocomplete-field > .ace-efld').focus();},100,f);
+                    },
+                    onhide : function(f){
+                        //f.data($.aceOverWatch.settings.aceSettings).parent.find('select').attr('disabled',false);
+                        $.aceOverWatch.field.autocomplete.hideGrid(f.data($.aceOverWatch.settings.aceSettings).parent);
+                    }
+                });
+                $('body').append(settings.displayForm);
+            },
+
+            onpreloadsuccessful : function(target,dataArr, totalExpectedData){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                $.aceOverWatch.utilities.runIt(settings.onpreloadsuccessful, target, dataArr, totalExpectedData);
             },
 
             onloadsuccessful : function(target, data, startIdx, endIdx, totalExpectedData){
                 var settings = target.data($.aceOverWatch.settings.aceSettings);
-                if( settings.onLoadSuccessful ){
-                    settings.onLoadSuccessful(target, data, startIdx, endIdx, totalExpectedData);
+
+                $.aceOverWatch.utilities.runIt(settings.onloadsuccessful, target, data, startIdx, endIdx, totalExpectedData);
+
+                /*
+                 * if we don't have data, we hide unnecessary elements
+                 * when we use queries, we only hide the footer, otherwise the chips element will not be visible
+                 */
+                if( totalExpectedData > 0 ){
+                    if( settings.usequeries ) {
+                        settings.grid.find('.ace-grid-footer').removeClass('ace-hide');
+                    }else{
+                        settings.grid.removeClass('ace-hide');
+                    }
+                }else{
+                    if( settings.usequeries ) {
+                        settings.grid.find('.ace-grid-footer').addClass('ace-hide');
+                    }else{
+                        settings.grid.addClass('ace-hide');
+                    }
                 }
+
+                settings.disableSearchAfterFocus = true;
+                settings.inputEl.focus();
+                settings.disableSearchAfterFocus = false;
             },
 
-            showGrid : function(target){
-                var gridField = $(target);
-                var settings = gridField.data($.aceOverWatch.settings.aceSettings);
+            showGrid : function(autocomplete,grid = false){
+                var settings = autocomplete.data($.aceOverWatch.settings.aceSettings);
+                var gridField = grid === false ? autocomplete.find('.'+$.aceOverWatch.classes.gridAutoComplete) : grid;
+                if( gridField.is(':visible') ){
+                    gridField.focus();
+                    return;
+                }
+                var settingsGrid = gridField.data($.aceOverWatch.settings.aceSettings);
 
-                if( settings.bindtoexternalgridid ){
+                if( settingsGrid.bindtoexternalgridid ){
                     return;
                 }
 
-                if( $.isFunction(settings.onbeforegridshow) ){
-                    if (settings.onbeforegridshow(target)===false) return;
+                if( $.isFunction(settingsGrid.onbeforegridshow) ){
+                    if (settingsGrid.onbeforegridshow(grid)===false) return;
                 }
                 else
-                if ($.isFunction(window[settings.onbeforegridshow])) {
-                    if (window[settings.onbeforegridshow](target)===false) return;
+                if ($.isFunction(window[settingsGrid.onbeforegridshow])) {
+                    if (window[settingsGrid.onbeforegridshow](grid)===false) return;
                 }
 
                 var autoEl = gridField.parent().closest('.'+$.aceOverWatch.classes.containerField);
@@ -7075,22 +10152,28 @@
                 });
                 gridField.removeClass($.aceOverWatch.classes.hide);
 
-                gridField.fadeIn(100).position({
+                gridField.position({
                     my:        "left top",
                     at:        "left bottom",
                     of:        autoEl.find('.'+$.aceOverWatch.classes.fieldValue),
                     collision: "fit"
-                });
+                }).removeClass('ace-hide');
 
-                gridField.focus();
-
-                if( $.isFunction(settings.onaftergridshow) ){
-                    if (settings.onaftergridshow(target)===false) return;
+                if( $.isFunction(settingsGrid.onaftergridshow) ){
+                    if (settingsGrid.onaftergridshow(grid)===false) return;
                 }
                 else
-                if ($.isFunction(window[settings.onaftergridshow])) {
-                    if (window[settings.onaftergridshow](target)===false) return;
+                if ($.isFunction(window[settingsGrid.onaftergridshow])) {
+                    if (window[settingsGrid.onaftergridshow](grid)===false) return;
                 }
+
+                $.aceOverWatch.eventManager.registerEvent('outsideclick',
+                    autocomplete,
+                    settings.grid,
+                    function(el)       {
+                        $.aceOverWatch.field.autocomplete.hideSelectionGrid(el.parents('.ace-field-container').first());
+                    }
+                );
 
             },
             hideGrid : function(target) {
@@ -7098,8 +10181,7 @@
             },
 
             setOneTimeSearchParams : function(target, oneTimeSearchParams){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
                 if( !settings ){
                     return;
                 }
@@ -7111,25 +10193,33 @@
              * selectFirstResult - if true, the field will autoselect the FIRST result it finds...
              */
             search : function(target,selectFirstResult, selectOnlyIfSingle = false, explicitFilter = false){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                if(
+                        !target.is(':visible')
+                    || !$.aceOverWatch.utilities.isInViewPort(target[0])
+                ){
+                    //no reason to trigger this if the field is not visible; it will also cause issues with the page layout due to the grid being shown
+                    return;
+                }
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
                 if( !settings ){
                     return;
                 }
-                var inputEl = containerField.find('.'+$.aceOverWatch.classes.fieldValue);
-
                 /*
                  * if we are using the chips / usequeries, attempt to add the current selection to the chips! :)
                  */
-                var query = inputEl.val();
+                var query = settings.inputEl.val().trim();
+
+                if( !settings.keepsearchstring ) {
+                    settings.inputEl.val('');
+                }
 
                 if( settings.usequeries ){
 
-                    let searchValue = inputEl.val().trim();
-                    if( searchValue.length > 0 ){
-                        $.aceOverWatch.field.chips.addChip(settings.chips,searchValue,searchValue);
-                        settings.inputEl.val('');
+                    if( query.length > 0 ){
+                        $.aceOverWatch.field.chips.addChip(settings.chips,query,query);
+                        settings.disableSearchAfterFocus = true;
                         settings.inputEl.focus();
+                        settings.disableSearchAfterFocus = false;
                     }
 
                     let chipsData = $.aceOverWatch.field.chips.getData(settings.chips);
@@ -7152,27 +10242,16 @@
 
                 var grid = settings.bindtoexternalgridid
                     ? settings.externalGrid
-                    : containerField.find('.'+$.aceOverWatch.classes.gridAutoComplete);
+                    : target.find('.'+$.aceOverWatch.classes.gridAutoComplete);
 
-                if( $.isFunction(settings.onbeforeload) ){
-                    if (settings.onbeforeload(target, grid, query)===false) return;
-                }
-                else
-                if ($.isFunction(window[settings.onbeforeload])) {
-                    if (window[settings.onbeforeload](target, grid, query)===false) return;
+                let callbackRes = $.aceOverWatch.utilities.runIt(settings.onbeforeload, target, grid, query);
+                if( $.aceOverWatch.utilities.wasItRan(callbackRes) && callbackRes===false ){
+                    return;
                 }
 
 
-                if (grid.hasClass($.aceOverWatch.classes.hide)) {
-                    $.aceOverWatch.field.autocomplete.showGrid(grid);
-                }
-                else{
-
-                    if(
-                        !settings.bindtoexternalgridid
-                    ){
-                        grid.fadeIn(100);
-                    }
+                if (!settings.bindtoexternalgridid) {
+                    $.aceOverWatch.field.autocomplete.showGrid(target,grid);
                 }
                 grid.find('[ridx]').first().focus();
 
@@ -7224,6 +10303,9 @@
 
             /**
              * value is null: the function returns the current value
+             *      if getStrict is true, always the real value will be returned
+             *      if getStrict is false, and usesearchstringasvalueifneeded is set to true,
+             *          then, if the value is not set, we'll return the current entered text
              *
              * value is not an object: the current value is set to this one
              * 						if extra is present, the extra will become the extravalue ( the searchname), that which is displayed in the field
@@ -7238,7 +10320,7 @@
              *
              * 					  returns the new value
              */
-            val : function(target, value, extra){
+            val : function(target, value, extra, getStrict = false){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
@@ -7258,12 +10340,10 @@
 
 
                         if( $.isFunction(settings.displayrenderer) ){
-                            hasRenderer = true;
                             inputField.val(settings.displayrenderer(settings.value, recordData));
                         }
                         else
                         if ($.isFunction(window[settings.displayrenderer])) {
-                            hasRenderer = true;
                             inputField.val(window[settings.displayrenderer](settings.value, recordData));
                         }
                         else {
@@ -7281,14 +10361,11 @@
                         if( extra ){
                             settings.extravalue = extra;
 
-
                             if( $.isFunction(settings.displayrenderer) ){
-                                hasRenderer = true;
                                 inputField.val(settings.displayrenderer(extra, null));
                             }
                             else
                             if ($.isFunction(window[settings.displayrenderer])) {
-                                hasRenderer = true;
                                 inputField.val(window[settings.displayrenderer](extra, null));
                             }
                             else {
@@ -7302,12 +10379,10 @@
                             settings.extravalue = '';
 
                             if( $.isFunction(settings.displayrenderer) ){
-                                hasRenderer = true;
                                 inputField.val(settings.displayrenderer(value, null));
                             }
                             else
                             if ($.isFunction(window[settings.displayrenderer])) {
-                                hasRenderer = true;
                                 inputField.val(window[settings.displayrenderer](value, null));
                             }
                             else {
@@ -7324,13 +10399,7 @@
 
                     settings.lastSelectedRecord = recordData;
 
-                    if( $.isFunction(settings.onselect) ){
-                        settings.onselect(target, settings.value, recordData);
-                    }
-                    else
-                    if ($.isFunction(window[settings.onselect])) {
-                        window[settings.onselect](target, settings.value, recordData);
-                    }
+                    $.aceOverWatch.utilities.runIt(settings.onselect, target, settings.value, recordData);
 
                     /**
                      * NOW.. IF we have set a value.... SO...
@@ -7360,11 +10429,17 @@
                     }
                 }
 
-                return settings.value;
+                return (!getStrict) && settings.usesearchstringasvalueifneeded && $.aceOverWatch.utilities.isVoid(settings.value,true)
+                    ? this.searchVal(target)
+                    : settings.value;
             },
 
-            searchVal : function(target){
-                return $(target).find('input').val();
+            searchVal : function(target,value){
+                if( value != null ){
+                    $(target).find('input').val(value);
+                }else {
+                    return $(target).find('input').val();
+                }
             },
 
             /*
@@ -7380,37 +10455,34 @@
             },
 
             hideSelectionGrid: function(target) {
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                if ($.aceOverWatch.utilities.isVoid(target)) return;
+                if (typeof target == "string") target = $(target);
+                if( !target.find('.'+$.aceOverWatch.classes.gridAutoComplete).is(":visible") ){
+                    return;
+                }
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                if( settings.bindtoexternalgridid ){
+                if( !settings || settings.bindtoexternalgridid ){
                     return;
                 }
 
-                if( !settings ){
-                    return;
-                }
-                if( $.isFunction(settings.onbeforegridhide) ){
-                    if (settings.onbeforegridhide(target)===false) return;
-                }
-                else
-                if ($.isFunction(window[settings.onbeforegridhide])) {
-                    if (window[settings.onbeforegridhide](target)===false) return;
-                }
+                $.aceOverWatch.utilities.runIt(settings.onbeforegridhide, target);
 
+                target.find('.'+$.aceOverWatch.classes.gridAutoComplete).addClass('ace-hide')
 
-                if( containerField.find('.'+$.aceOverWatch.classes.gridAutoComplete).is(":visible") ){
-                    containerField.find('.'+$.aceOverWatch.classes.gridAutoComplete).fadeOut(1);
-                }
+                $.aceOverWatch.utilities.runIt(settings.onaftergridhide, target);
 
-                if( $.isFunction(settings.onaftergridhide) ){
-                    if (settings.onaftergridhide(target)===false) return;
-                }
-                else
-                if ($.isFunction(window[settings.onaftergridhide])) {
-                    if (window[settings.onaftergridhide](target)===false) return;
-                }
+                $.aceOverWatch.eventManager.deregisterEvent('outsideclick',target);
+                $.aceOverWatch.utilities.runIt(settings.onclose, target);
 
+                $.aceOverWatch.field.autocomplete.renderTemplateIfNecessary(target);
+
+                let currentDisabledSearchAfterFocus = settings.disableSearchAfterFocus;
+                settings.disableSearchAfterFocus = true;
+                if( $.aceOverWatch.utilities.isInViewPortArr(target) ){
+                    target.find('.'+$.aceOverWatch.classes.fieldValue).focus();
+                }
+                settings.disableSearchAfterFocus = currentDisabledSearchAfterFocus;
             },
 
             clearValue : function(target) {
@@ -7422,9 +10494,9 @@
                 }
 
                 this.val(target,settings.clearvalue);
-                
+
                 if( settings.usequeries ){
-                	$.aceOverWatch.field.chips.setData(settings.chips,[]);
+                    $.aceOverWatch.field.chips.setData(settings.chips,[]);
                 }
 
 
@@ -7435,9 +10507,9 @@
                 if ($.isFunction(window[settings.onvaluecleared])) {
                     window[settings.onvaluecleared](target);
                 }
-                
+
                 if( settings.bindtoexternalgridid ){
-                	$.aceOverWatch.field.autocomplete.search(target);
+                    $.aceOverWatch.field.autocomplete.search(target);
                 }
 
             },
@@ -7491,10 +10563,9 @@
 
                 }else{
                     //we have a record, lets build our template..
+                    templateContent = $.aceOverWatch.utilities.getTemplate(settings.template).html();
 
-                    templateContent = $('#'+settings.template).html();
-
-                    for(fieldname in settings.lastSelectedRecord.data){
+                    for(let fieldname in settings.lastSelectedRecord.data){
                         //need to escape first this in order to work with the regular expression...
                         //templateContent = templateContent.replace(new RegExp('['+fieldname+']', 'g'), settings.lastSelectedRecord.val(fieldname));
                         templateContent = templateContent.split('['+fieldname+']').join(settings.lastSelectedRecord.val(fieldname));
@@ -7518,7 +10589,7 @@
             create: function(target,settings){
                 $.extend(true,settings, $.extend(true,{
                     value:'',		//the text to appear on the button
-                    action:'',		//an attribute string, reprezenting an action, like: save, edit, delete, etc; other controlles will try to take advantage of this and use this attribute as a hook
+                    action:'',		//an attribute string, representing an action, like: save, edit, delete, etc; other controlles will try to take advantage of this and use this attribute as a hook
                     iconcls:'',
                     iconposition:'before',//before or after
                     readonly : false,
@@ -7544,9 +10615,9 @@
                 }
                 var fieldHtml = '<div class="'+$.aceOverWatch.classes.buttonField+'">\
 									<button action="'+settings.action+'" type="button"  class="'+$.aceOverWatch.classes.fieldValue+settings.buttoncls+'" aceid="'+settings.id+'" '+tooltip+disabled+'>'+
-                                    buttonContent+
-                                    '</button>\
-									<span class='+$.aceOverWatch.classes.errorMsg+'></span>\
+                    buttonContent+
+                    '</button>\
+                    <span class='+$.aceOverWatch.classes.errorMsg+'></span>\
 								</div>';
 
                 return fieldHtml;
@@ -7557,22 +10628,9 @@
 
                 containerField.find('.'+$.aceOverWatch.classes.buttonField+ ' button').unbind('click').click(function(){
 
-                    var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
-
-                    var field = $(this).closest('.'+$.aceOverWatch.classes.buttonField).parent();
-
-                    if ( (!$.aceOverWatch.utilities.isVoid(settings.action)) && ($.isFunction(settings.action)) ){
-                        settings.action(field);
-                    }
-                    else
-                    if ((settings.action!=='') && ($.isFunction(window[settings.action]))){
-                        window[settings.action](field);
-                    }
-
-                    if( $.isFunction(settings.onClick) ){
-                        settings.onClick(field);
-                    }
+                    let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
+                    $.aceOverWatch.utilities.runIt(settings.action, $(this).closest('.'+$.aceOverWatch.classes.buttonField).parent());
 
                     return false;
                 });
@@ -7586,7 +10644,7 @@
             val : function(target,value,forceValueSet){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                
+
                 if( $.aceOverWatch.utilities.isVoid(value) ){
                     return containerField.find('button span').html();
                 }
@@ -7619,7 +10677,7 @@
                 if( !settings.textbellowicon ){
                     classes.push($.aceOverWatch.classes.iconButtonSingleLine);
                 }
-                
+
                 var disabled = settings.readonly == true ? ' disabled ' : 'false';
 
                 var fieldHtml = '<div class="'+$.aceOverWatch.classes.iconButton+'" >';
@@ -7662,7 +10720,7 @@
                     return false;
                 });
             },
-            
+
             /**
              *forceValueSet -  usually, the value of the button will not be set, IF the button doesn't have a fieldname..
              *				send this parameter to true to change it anyway
@@ -7671,7 +10729,7 @@
             val : function(target,value,forceValueSet){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                
+
                 if( $.aceOverWatch.utilities.isVoid(value) ){
                     return containerField.find('a').html();
                 }
@@ -7699,9 +10757,9 @@
                     iconcls: '',
                     destinationfield:'',	//the field in which the file is going to be uploaded
                     filetypeiconfield : '', //the field used to extract file type icon for a download
-                    
+
                     enableviewlink : false,
-                    
+
                     deletecode:'-',			//if the delete code if false, or void, the delete button will not be displayed!
                     autosaveonselectfile : true,
                     rounded:false,	//true to make the label round
@@ -7713,25 +10771,30 @@
                     maximagesize:0,			//in bytes, the size of the biggest image allowed to be uploaded
                     //0 - unlimited size
 
+                    acceptedfiles:'',//see the [accept] attribute for input files https://www.w3schools.com/tags/att_input_accept.asp
+
                     deletetriggeredfrombutton:false,
                     uploadtriggeredfrombutton:false,
                     currentdoc:'',
                     currentdocfilename:'',
                     currentdociconcls:'fa fa-file-o',
                     explicitfilenamefield:'',//optional - set this to the name of the field, which, will contain the name of the disk file after an upload operation
-                    						 //if exists, it will be used to display the name of the file
+                    //if exists, it will be used to display the name of the file
 
                     readonly:false,			//if true, the upload and delete buttons won't be created
 
                     uploadparameters : {},	//name value pairs to be sent to the server to upload the image
                     deleteparameters : {},  //name value pairs to be sent to the server to delete the image
 
-                    onuploadsuccessful:null,	//custom callback, to be called after a successfull upload!: unuploadsuccessfull(target, docURL, data)
-                    sendaditionalfieldsonsave : null, //function to return a object with aditional fields to be sent along with the upload; return an empty object {}, if nothing is to be added
-                    sendaditionalfieldsondelete : null, //function to return a object with aditional fields to be sent along with the delete op; return an empty object {}, if nothing is to be added
+                    onuploadsuccessful:null,	//custom callback, to be called after a successful upload!: onuploadsuccessful(target, docURL, data)
+                    sendaditionalfieldsonsave : null, //function to return a object with additional fields to be sent along with the upload; return an empty object {}, if nothing is to be added
+                    sendaditionalfieldsondelete : null, //function to return a object with additional fields to be sent along with the delete op; return an empty object {}, if nothing is to be added
 
                     onbeforesave:null, 	//called before the upload process actually begins, AFTER it has passed through the validations params:(target, otherFields); if it returns false, the upload will not take place
-                    onbeforeclick:null	//called before the click! if it returns false, the click will not be triggered
+                    onbeforeclick:null,	//called before the click! if it returns false, the click will not be triggered
+
+                    customviewmethod : null, //called when wanting to particularize the way the file / image is displayed on clicked
+                    //f(target, fileURL)
                 }, settings ) );
                 settings.deletetriggeredfrombutton = false;
                 settings.uploadtriggeredfrombutton = false;
@@ -7753,38 +10816,27 @@
                     classes.push($.aceOverWatch.classes.imageUpload);
                     style.push('background-image: url('+settings.currentdoc+')');
                 }
-                
-                if( settings.readonly ){
-                	classes.push('ace-readonly');
-                }
 
-                if( settings.rounded ){
-                    classes.push($.aceOverWatch.classes.aceRounded);
-                }
+                if( settings.readonly ){ classes.push('ace-readonly'); }
+                if( settings.rounded ){ classes.push($.aceOverWatch.classes.aceRounded); }
+                if(settings.width.length > 0 ){ style.push('width:'+settings.width+' !important'); }
+                if(settings.height.length > 0 ){ style.push('height:'+settings.height+' !important'); }
 
-                if(settings.width.length > 0 ){
-                    style.push('width:'+settings.width+' !important');
-                }
-                if(settings.height.length > 0 ){
-                    style.push('height:'+settings.height+' !important');
-                }
                 if (settings.atype=='image') {
-                    var buttons = settings.readonly == false ? '<div class="'+[$.aceOverWatch.classes.cardButton,$.aceOverWatch.classes.photoRemove].join(' ')+'"></div><input type="file" />' : '';
+                    var buttons = settings.readonly == false ? '<div class="'+[$.aceOverWatch.classes.cardButton,$.aceOverWatch.classes.photoRemove].join(' ')+'"></div><input type="file" '+( $.aceOverWatch.utilities.isVoid(settings.acceptedfiles,true) ? '' : ('accept="'+settings.acceptedfiles+'"') )+' />' : '';
 
                     //adding the template class here becauset the field controls present inside an upload image button must NOT be targeted as separte fields of a form
                     var fieldHtml = '<div class="'+$.aceOverWatch.classes.imageUploadButton+' '+$.aceOverWatch.classes.formIgnore+'" ><label style="'+style.join(';')+'" class="'+classes.join(' ')+'">'+buttons+'</label>'
-                    				+(
-                						settings.enableviewlink
-                						? '<div class="ace-col-12"><a class="view-link" href="#">'+_aceL.view+'</a></div>'
-        								: ''
-            						)+
-                    				'</div>';
+                        +(
+                            settings.enableviewlink
+                                ? '<div class="ace-col-12"><a class="view-link" href="#">'+_aceL.view+'</a></div>'
+                                : ''
+                        )+
+                        '</div>';
                 }
                 else {
-                    //console.log(settings.destinationfield+ ' ----> ' +settings.currentdociconcls);
-                    //if (settings.currentdociconcls=='') settings.currentdociconcls='fa-file-o';
 
-                    //adding the template class here becauset the field controls present inside an upload image button must NOT be targeted as separte fields of a form
+                    //adding the template class here because the field controls present inside an upload image button must NOT be targeted as separate fields of a form
                     var  fieldHtml = '<div class="'+$.aceOverWatch.classes.fileUpload+' '+$.aceOverWatch.classes.formIgnore +'">';
                     fieldHtml += $.aceOverWatch.field.label.create(settings);
                     fieldHtml += $.aceOverWatch.field.badge.create(settings);
@@ -7793,28 +10845,28 @@
                     fieldHtml += '		<span class="'+$.aceOverWatch.classes.fileUploadPlaceholder+'">'+(settings.currentdocfilename!==''?settings.currentdocfilename:settings.placeholder)+'</span>';
 
                     if( !settings.readonly ){
-                    fieldHtml += '			<div class="'+$.aceOverWatch.classes.fileUploadButtonsContainer+'">';
-                    fieldHtml += '				<div class="'+$.aceOverWatch.classes.fileUploadButton+' ace-label-align-top">';
-                    fieldHtml += '					<div class="'+$.aceOverWatch.classes.iconButton+'">';
-                    fieldHtml += '						<a class="'+$.aceOverWatch.classes.menubuttonTrigger+' '+$.aceOverWatch.classes.uploadIcon+' '+$.aceOverWatch.classes.imageUploadButton+'"><span>'+_aceL.upload+'</span></a>';
-                    fieldHtml += '					</div>';
-                    fieldHtml += '				</div>';
-
-                    if( !$.aceOverWatch.utilities.isVoid(settings.deletecode,true) ){
-                        fieldHtml += '				<div class="'+$.aceOverWatch.classes.fileRemoveButton+' ace-label-align-top">';
-                        fieldHtml += '					<div class="'+$.aceOverWatch.classes.iconButton+'">';
-                        fieldHtml += '						<a class="'+$.aceOverWatch.classes.menubuttonTrigger+' '+$.aceOverWatch.classes.trashIcon+' '+$.aceOverWatch.classes.docRemove+'"><span>'+_aceL.remove+'</span></a>';
+                        fieldHtml += '			<div class="'+$.aceOverWatch.classes.fileUploadButtonsContainer+'">';
+                        fieldHtml += '				<div class="'+$.aceOverWatch.classes.fileUploadButton+' ace-label-align-top">';
+                        fieldHtml += '					<div class="">';
+                        fieldHtml += '						<a class="'+$.aceOverWatch.classes.menubuttonTrigger+' '+$.aceOverWatch.classes.uploadIcon+' '+$.aceOverWatch.classes.imageUploadButton+'"><span>'+_aceL.upload+'</span></a>';
                         fieldHtml += '					</div>';
                         fieldHtml += '				</div>';
+
+                        if( !$.aceOverWatch.utilities.isVoid(settings.deletecode,true) ){
+                            fieldHtml += '				<div class="'+$.aceOverWatch.classes.fileRemoveButton+' ace-label-align-top">';
+                            fieldHtml += '					<div class="">';
+                            fieldHtml += '						<a class="'+$.aceOverWatch.classes.menubuttonTrigger+' '+$.aceOverWatch.classes.trashIcon+' '+$.aceOverWatch.classes.docRemove+'"><span>'+_aceL.remove+'</span></a>';
+                            fieldHtml += '					</div>';
+                            fieldHtml += '				</div>';
+                        }
+
+                        fieldHtml += '		</div>';
                     }
 
-                    fieldHtml += '		</div>';
-                    }
-
-                    fieldHtml += '		<input type="file">';
+                    fieldHtml += '		<input type="file" '+( $.aceOverWatch.utilities.isVoid(settings.acceptedfiles,true) ? '' : ('accept="'+settings.acceptedfiles+'"') )+' >';
                     fieldHtml += '</label>';
 
-                    fieldHtml += '</div>​';
+                    fieldHtml += '</div>';
                 }
                 return fieldHtml;
             },
@@ -7822,6 +10874,9 @@
             afterInit : function( target, what ){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
+
                 if (settings.atype=='image') {
                     containerField.find('div.'+ $.aceOverWatch.classes.photoRemove).ace('create',{
                         type : 'iconbutton',
@@ -7834,16 +10889,16 @@
                 else {
                     containerField.find('.'+$.aceOverWatch.classes.docRemove).unbind('click').click(function (e) {
 
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                        let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                         settings.deletetriggeredfrombutton=true;
                         $.aceOverWatch.field.uploadbutton.delFile(target);
                     });
                     containerField.find('.'+$.aceOverWatch.classes.fileUploadButton).unbind('click').click(function (e) {
 
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                        let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                         settings.uploadtriggeredfrombutton=true;
                     });
@@ -7851,43 +10906,51 @@
 
                 if( settings.enableviewlink ){
                     containerField.find('.view-link').unbind('click').click(function (e) {
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
-                        window.open(settings.currentdoc, '_tab');
+                        let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                        let callbackRes = $.aceOverWatch.utilities.runIt(settings.customviewmethod, target, settings.currentdoc);
+                        if( !$.aceOverWatch.utilities.wasItRan(callbackRes) ){
+                            window.open(settings.currentdoc, '_tab');
+                        }
                     });
 
                 }
 
                 containerField.find('input').unbind().change(function(e){
-
-                    var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
+                    let el = $(this);
+                    let target = el.closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                     if (settings.autosaveonselectfile) {
                         $.aceOverWatch.field.uploadbutton.uploadFile(target);
+                    }else{
+                        let fullPath = el.val();
+                        let fileName = '';
+                        if( fullPath ) {
+                            let startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+                            fileName = fullPath.substring(startIndex);
+                            if (fileName.indexOf('\\') === 0 || fileName.indexOf('/') === 0) {
+                                fileName = fileName.substring(1);
+                            }
+                        }
+                        target.find('.'+$.aceOverWatch.classes.fileUploadPlaceholder).html(fileName);
                     }
 
                 }).click(function (e){
 
-                    var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
+                    let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                    let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                    if ($.isFunction(settings.onbeforeclick)) {
-                        if( !settings.onbeforeclick(target) ){
-                            return false;
-                        }
-                    }else{
-                        if ($.isFunction(window[settings.onbeforeclick])) {
-                            if( !window[settings.onbeforeclick](target) ){
-                                return false;
-                            }
-                        }
+                    let beforeClickRes = $.aceOverWatch.utilities.runIt(settings.onbeforeclick, target);
+                    if( $.aceOverWatch.utilities.wasItRan(beforeClickRes) && !beforeClickRes){
+                        return false;
                     }
 
                     //here the veent will be triggered even if the user clicked upload or delete buttons
                     if ((settings.atype!='image')) {
                         if (settings.uploadtriggeredfrombutton) {
-                            settings.uploadtriggeredfrombutton=false;;//reset this after  dealing with upload click
+                            settings.uploadtriggeredfrombutton=false;//reset this after  dealing with upload click
                             //e.stopPropagation();
                             return true;
                         }
@@ -7899,77 +10962,66 @@
                         }
                         else {
                             if (settings.currentdoc!='') {
-                                window.open(settings.currentdoc, '_tab');
+                                let callbackRes = $.aceOverWatch.utilities.runIt(settings.customviewmethod, target, settings.currentdoc);
+                                if( !$.aceOverWatch.utilities.wasItRan(callbackRes) ){
+                                    window.open(settings.currentdoc, '_tab');
+                                }
+
                                 e.preventDefault();
                                 return false;
                             }
                         }
-
-                        //if (settings.currentdoc!='') e.preventDefault();
                     }
+
+                    if( settings.readonly ){ return false; }
                 });
             },
+            isFileSelected : function(target){
+                return !$.aceOverWatch.utilities.isVoid(target.find('input')[0].files[0]);
+            },
             uploadFile : function(target) {
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                var fileInput = containerField.find('input');
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let fileInput = target.find('input');
 
                 if (($.aceOverWatch.utilities.isVoid(fileInput)) ||
                     ($.aceOverWatch.utilities.isVoid(fileInput.length)) ||
                     (fileInput.length <= 0)
                 ) {
-                    return;
+                    return false;
                 }
 
-                var saveNow = true;
-                var file = fileInput[0].files[0];
+                let saveNow = true;
+                let file = fileInput[0].files[0];
                 if ($.aceOverWatch.utilities.isVoid(file)) {
                     saveNow = false;
                 }
                 else {
-                    name = file.name;
-                    size = file.size;
-                    type = file.type;
-
                     if(file.name.length < 1) {
                         saveNow = false;
                     }
                 }
 
                 $.extend(true,settings.net.extraparams,settings.uploadparameters);
-                var otherFields = {};
+                let otherFields = {};
 
-                if ($.isFunction(settings.sendaditionalfieldsonsave)) {
-                    $.extend(true,otherFields,settings.sendaditionalfieldsonsave(target));
-                }else{
-                    if ($.isFunction(window[settings.sendaditionalfieldsonsave])) {
-                        $.extend(true,otherFields,window[settings.sendaditionalfieldsonsave](target));
-                    }
+                let callbackRes = $.aceOverWatch.utilities.runIt(settings.sendaditionalfieldsonsave, target);
+
+                if( $.aceOverWatch.utilities.wasItRan(callbackRes) ){
+                    $.extend(true,otherFields,callbackRes);
                 }
 
-                if ($.isFunction(settings.onbeforesave)) {
-                    if( !settings.onbeforesave(target,otherFields) ){
-                        return false;
-                    }
-                }else{
-                    if ($.isFunction(window[settings.onbeforesave])) {
-                        if( !window[settings.onbeforesave](target,otherFields) ){
-                            return false;
-                        }
-                    }
-                }
-
-
+                callbackRes = $.aceOverWatch.utilities.runIt(settings.onbeforesave, target, otherFields);
+                if( $.aceOverWatch.utilities.wasItRan(callbackRes) && !callbackRes ){ return false; };
 
                 if (saveNow) {
                     if(settings.maximagesize != 0 && file.size > settings.maximagesize ) {
                         $.aceOverWatch.prompt.show( _aceL.fztb + String(parseFloat(settings.maximagesize) / 1024 / 1024)+' MB!',null,{type:'alert'});
-                        return;
+                        return false;
                     }
                     if (settings.atype=='image') {
                         if(file.type != 'image/png' && file.type != 'image/jpg' && file.type != 'image/gif' && file.type != 'image/jpeg' && file.type != 'image/bmp') {
                             $.aceOverWatch.prompt.show( _aceL.uif,null,{type:'alert'});
-                            return;
+                            return false;
                         }
                     }
 
@@ -7977,11 +11029,13 @@
                 }
                 else {
                     if (Object.keys(otherFields).length !== 0 || otherFields.constructor !== Object) {
-                        var saveRec = $.aceOverWatch.record.create(otherFields,'_document_id');
+                        saveNow = true;
+                        let saveRec = $.aceOverWatch.record.create(otherFields,'_document_id');
                         saveRec.makeItAllDirty();
                         $.aceOverWatch.net.save(target, saveRec, {});
                     }
                 }
+                return saveNow;
             },
 
             delFile : function(target) {
@@ -7995,16 +11049,11 @@
                     var delData = {};
                     delData[settings.deletefield] = settings.deletecode;
 
-                    if ($.isFunction(settings.sendaditionalfieldsondelete)) {
-                        $.extend(true,delData,settings.sendaditionalfieldsondelete(target));
-                    }else{
-                        if ($.isFunction(window[settings.sendaditionalfieldsondelete])) {
-                            $.extend(true,delData,window[settings.sendaditionalfieldsondelete](target));
-                        }
-                    }
-                    
+                    let callbackRes = $.aceOverWatch.utilities.runIt(settings.sendaditionalfieldsondelete, target);
+                    if( $.aceOverWatch.utilities.wasItRan(callbackRes) ){ $.extend(true,delData,callbackRes); };
+
                     if( settings.currentdocfilename && settings.currentdocfilename.length > 0 ){
-                    	delData['delete_file_name'] = settings.currentdocfilename;
+                        delData['delete_file_name'] = settings.currentdocfilename;
                     }
 
                     $.extend(true,settings.net.extraparams,settings.deleteparameters);
@@ -8041,24 +11090,27 @@
                     else { //i have a doc url
                         settings.currentdoc = new_val;
                         settings.currentdocfilename = '';
-                        if (new_val!=='') settings.currentdoc+='?'+Date.now(); //if is not void then i add a timestamp to be sure i get the last version all the time ...
-                        
+                        if (new_val!==''){//if is not void then i add a timestamp to be sure i get the last version all the time ...
+                            settings.currentdoc+= (settings.currentdoc.indexOf('?') == -1 ? '?' : '&')+Date.now();
+                        }
+
                         if(
-                     		   settings.explicitfilenamefield.length > 0
-             			){
-                     		if( value.data ){
-                     			settings.currentdocfilename = value.data[settings.explicitfilenamefield];
-                     		}else{
-                     			if( record ){
-                     				settings.currentdocfilename = record.val(settings.explicitfilenamefield);
-                     			}
-                     		}
-                     	}else{
-                     		let docParts = new_val.split('/');
-                             settings.currentdocfilename = docParts[docParts.length-1];
-                     	}
-                        
-                        
+                            settings.explicitfilenamefield.length > 0
+                        ){
+                            if( value.data ){
+                                settings.currentdocfilename = value.data[settings.explicitfilenamefield];
+                            }else{
+                                if( record ){
+                                    settings.currentdocfilename = record.val(settings.explicitfilenamefield);
+                                }
+                            }
+                        }else{
+                            let docParts = new_val.split('/');
+                            settings.currentdocfilename = docParts[docParts.length-1];
+                        }
+                        if( !settings.currentdocfilename ){ settings.currentdocfilename = ''; }
+
+
                         if (settings.atype=='image') {
                             containerField.find('label').css('background-image','url('+settings.currentdoc+')');
                         }
@@ -8079,9 +11131,9 @@
             },
 
             uploadSuccessful : function(target,data){
-            	if( !data ){
-            		data = {};
-            	}
+                if( !data ){
+                    data = {};
+                }
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
                 var docsrc = data[settings.fieldname];
                 if ($.aceOverWatch.utilities.isVoid(docsrc)) {
@@ -8103,15 +11155,10 @@
                         myRec.val(settings.fieldname, data[settings.fieldname]);
                     }
                 }
-                if ($.isFunction(settings.onuploadsuccessful)) {
-                    settings.onuploadsuccessful(target, data[settings.fieldname], data);
-                }else{
-                    if ($.isFunction(window[settings.onuploadsuccessful])) {
-                        window[settings.onuploadsuccessful](target, data[settings.fieldname], data);
-                    }
-                }
-                $(target).find('input').val('');
 
+                $.aceOverWatch.utilities.runIt(settings.onuploadsuccessful,target, data[settings.fieldname], data);
+
+                $(target).find('input').val('');
             }
 
         },
@@ -8153,7 +11200,7 @@
                                     value:'',
                                     iconcls:'',
                                     action:null,		//to define a custom action
-                                    
+
                                     checked:false,		//if true, and if the item is of types checkbox and radiogroups, the item will be checked
                                     image:''			//for image entries, it represents the url to the image it needs to be displayed
                                 },
@@ -8179,7 +11226,7 @@
                     settings.iconcls = $.aceOverWatch.classes.moreMenuIcon;
                 }
 
-                fieldHtml += '<a class="'+classes.join(' ')+'"><div class="'+settings.iconcls+'"></div> '+($.aceOverWatch.utilities.isVoid(settings.value)?'':settings.value)+'</a>';
+                fieldHtml += '<a class="'+classes.join(' ')+'"><div class="'+$.aceOverWatch.classes.icon +' '+settings.iconcls+'"></div> '+($.aceOverWatch.utilities.isVoid(settings.value)?'':settings.value)+'</a>';
                 fieldHtml += '<ul class="'+$.aceOverWatch.classes.menuDropDown+'">';
 
                 //now.. lets build the menu entries
@@ -8315,24 +11362,17 @@
                             break;
                     }
 
-                    if ( (!$.aceOverWatch.utilities.isVoid(settings.innerItems[idx].action)) && ($.isFunction(settings.innerItems[idx].action)) ){
-                        settings.innerItems[idx].action(idx,settings.innerItems[idx]['tag'],settings.innerItems[idx]['value']);
-                    }
-                    else
-                    if ((settings.innerItems[idx].action!=='') && ($.isFunction(window[settings.innerItems[idx].action]))){
-                        window[settings.innerItems[idx].action](idx,settings.innerItems[idx]['tag'],settings.innerItems[idx]['value']);
-                    }
-
                     $.aceOverWatch.field.menubutton.toogle(this);
 
-                    if( $.isFunction(settings.onselect) ){
-                        settings.onselect(idx,$(this).attr('tag'),$(this).attr('value'));
-                    }else{
-                        if ($.isFunction(window[settings.onselect])) {
-                            window[settings.onselect](idx,settings.innerItems[idx]['tag'],settings.innerItems[idx]['value']);
-                        }
-
+                    /*
+                     * if try to execute the items explicit action
+                     * IF this one does not exist, we attempt to execute the manue's general handler
+                     */
+                    let callback_res = $.aceOverWatch.utilities.runIt(settings.innerItems[idx].action,idx,settings.innerItems[idx]['tag'],settings.innerItems[idx]['value']);
+                    if( !$.aceOverWatch.utilities.wasItRan(callback_res) ){
+                        $.aceOverWatch.utilities.runIt(settings.onselect,idx,settings.innerItems[idx]['tag'],settings.innerItems[idx]['value']);
                     }
+
                     return false;
                 });
 
@@ -8390,7 +11430,7 @@
             toogle: function(insideEl){
                 var containerField = $(insideEl).closest('.'+$.aceOverWatch.classes.containerField);
                 containerField.find('.'+$.aceOverWatch.classes.menubuttonTrigger).toggleClass($.aceOverWatch.classes.menubuttonActive);
-                containerField.find('.'+$.aceOverWatch.classes.menuDropDown).fadeToggle( 100 );;
+                containerField.find('.'+$.aceOverWatch.classes.menuDropDown).fadeToggle( 100 );
             }
         },// end begin menubutton object
 
@@ -8404,10 +11444,35 @@
 
                 $.extend(true,settings, $.extend(true,{
                     ftype:'popup',			//or something else!
+                    disablehideonbkclick: false,//if true, a popup form will not hide on background click
+
+                    displayinfullscreenonmobile:false,//if true, whenever the form is displayed, and the current viewport is on mobile, or has mobile resolution,
+                    //the form will be displayed in a full screen window
+                    displayinfullscreencancel:false,//if true, when displayed in fullscreen, the form will auto display a floating element which,
+                    // when pressed, it will trigger a form hide,
+                    displayinfullscreenwithparents : 0,//if the number is greater than 0, when the form is displayed in full screen the indicated number of parents will also be included
+                    displayinfullscreencustomclass : '',//custom classed to add to the full screen container
+                    hideparentinfullscreen : true,//if true, when the form is displayed in full screen, the form will hide it's parent;
+                    //this is applied when displayinfullscreenwithparents is greater than 0
+                    //because otherwise, there might be weird results in some cases
+                    enablehashnavigation : false,//set to true, to enable the pressing of the BACK button of the browser to close the form
+                    onhashviewstepcallback:false,//set a callback to be called whenever the VIEW step of a the form is reached in hash navigation
+
+                    relatedbuttongroup : '',//if SPECIFIED, it has to be the id of a div with the class ace-buttons-groups
+                                            //the buttons in the group should be marked with classes as follows:
+                                            //ace-grid-operation-button - for the buttons that contain grid related operations, such as refresh
+                                            //ace-form-operation-button - for the buttons that contain form related operations, such as save
+                                            //right now, when the grid is created, the buttons must already be ace fields
+
                     savetype:'GET',			//set it to post to save the data as post.. helpful when sending BIG amounts of data
+
+                    loadtplfromdom : false,//in some situations, an app might have to generate templates on the fly, and reuse existing ids
+                                            //in situations such as these, it is not desired to load the template from cache if it exists
+                                            //and it is wanted to always check the dom for templates
+                                            // for cases such as these, set this setting to true
                     template:'',
                     renderto:'',
-                    parseastemplate:false,
+                    parseastemplate:false,//if true, after record load, the content of the form will be parsed like a template
                     displaysavebtn:true,
                     displaycancelbtn:true,
 
@@ -8416,14 +11481,14 @@
                     validate:false,			//true if form will try to validate the fields
                     makeelementvisible:null,	//a function, or the name of a function which will make a field visible
                     //params( target, element )
-                    //we do it like this, becase the scrolling needs to be on a case by case bases.. don't think a general appraoch might be
+                    //we do it like this, because the scrolling needs to be on a case by case bases.. don't think a general appraoch might be
 
                     validateOnlyVisibleSections:false, //only takes effect if the form has sections; if true, only the visible sections will be validated
                     onAfterSectionsValidation:null, //called after a form with sections is validated! function(target, validSectionsArray, invalidSectionsArray)
                     // 			validSectionsArray and invalidSectionsArray - array of the section's tags
 
-                    customsavetext:'',		//if lenght > 0 it will be the text displayed on the save button
-                    customcanceltext:'',		//if lenght > 0 it will be the text displayed on the cancel button
+                    customsavetext:'',		//if length > 0 it will be the text displayed on the save button
+                    customcanceltext:'',		//if length > 0 it will be the text displayed on the cancel button
 
                     customfooterbuttons : [],	//an array describing other buttons to be added to the form\
                     /**
@@ -8448,6 +11513,7 @@
                     oninit:null,			//called when the form is created and added to the dom	params:(form)
                     onshow:null,			//called when the form is displayed						params:(form)
                     customshow:null,		//the one implementing this function is expected to provide a way to display the form	params:(form,conainerId)
+                    onhide:null,		//called when the form is hidden						params:(form)
                     customhide:null,		//the one implementing this function is expected to provide a way to hide the form	params:(form,conainerId)
                     onlocalsavesuccessfull:null,//called when form saves something successfully LOCALY, not remotely!(target, record)
                     onsavesuccessful:null,	//called when form saves something successfull.. (target, record)
@@ -8458,6 +11524,7 @@
                     onbeforeloadrecord:null,//a function, or the name of a function to be called BEFORE a record is loaded in the form	params:(form, record)
                     onafterloadrecord:null,//a function, or the name of a function to be called AFTER a record is loaded in the form	params:(form, record)
 
+                    onfailedtoretrivenewrecordata:null,//a function, or the name of a function to be called when a new record is requested, but the form fails the field validations: function(form)
                     onbeforesave:null, 	//called before the saving process actually begins, AFTER it has passed through the validations params:(form, record)
                     //the function MUST return true if the form is to save itself
 
@@ -8472,8 +11539,24 @@
                     autosaveonlastenter : true,	//only when enablekeynavigation is true; if TRUE, when enter is pressed on the last ace field with an input field, then the form will attempt to save itself
 
                     customclasses : '', //a string of css classes to be added to the form-container div, for extra customization
-                    
+
                     alwayskeeprecordreference : false,//if set to true, the record will always keep its current reference over multiple load record operations
+
+                    withtags : false,//IF this is set to TRUE then:
+                    // - the form expects to have a field with the fieldname _tags, of type tags
+                    // - on save, these next two fields will be sent:
+                    //      _tags_add
+                    //      _tags_remove
+                    // the content of these tags is determined by comparing the initial value of the field,
+                    // with the current value
+                    // the names for the 3 fields may be changed as desired
+                    incomingtagsfield: '_tags',
+                    outgoingtagsaddfield: '_tags_add',
+                    outgoingtagsremovefield: '_tags_remove',
+
+                    recordlastinputfocus : false,//if true, the form will record the last INPUT element which has received
+                    //the focus from among its ACE fields
+                    lastFocusedElementWithInput : false,
 
                 }, settings ));
 
@@ -8498,7 +11581,8 @@
                     settings.net.idfieldname = settings.idfield;
                 }
 
-                if( $('#'+settings.template).length == 0 ){ //no template found, don't create edit form
+                let formTpl = $.aceOverWatch.utilities.getTemplate(settings.template,settings.loadtplfromdom?false:true);
+                if( formTpl.length == 0 ){ //no template found, don't create edit form
                     $.aceOverWatch.utilities.log('Failed to create form. No templated detected! :> '+'#'+settings.template);
                     return '';
                 }
@@ -8517,6 +11601,62 @@
                     style = ' style="height:100%;" ';
                 }
 
+                /*
+                 * dealing with the related button group, if it exists
+                 */
+                if( !$.aceOverWatch.utilities.isVoid(settings.relatedbuttongroup,true) ){
+                    let buttonGroup = $('#'+settings.relatedbuttongroup);
+                    if( buttonGroup.length == 1 ){
+                        settings.gridRelatedButtons = buttonGroup.find('.ace-grid-operation-button').addClass('ace-hide-on-mobile');
+                        settings.formRelatedButtons = buttonGroup.find('.ace-form-operation-button').addClass('ace-hide-on-mobile');
+
+                        if( settings.gridRelatedButtons.length > 0 ){
+                            let operations = [];
+                            let idx = 0;
+                            settings.gridRelatedButtons.each(function(){
+                                let bs = $(this).data($.aceOverWatch.settings.aceSettings);
+                                if( !bs || bs.type != 'button' ){
+                                    return;
+                                }
+                                operations.push({
+                                    label : bs.value,
+                                    action : bs.action,
+                                    icon : bs.iconcls,
+                                    tag: 'idx-'+String(idx),
+                                });
+                            });
+
+                            settings.gridRelatedButtons = settings.gridRelatedButtons.add($('<div class="ace-grid-operation-button ace-display-only-on-mobile"></div>').ace('create',{
+                                type : 'menubutton',
+                                items:operations,		//a list of items to be displayed
+                            }).appendTo(buttonGroup));
+                        }
+
+                        if( settings.formRelatedButtons.length > 0 ){
+                            let operations = [];
+                            let idx = 0;
+                            settings.formRelatedButtons.each(function(){
+                                let bs = $(this).data($.aceOverWatch.settings.aceSettings);
+                                if( !bs || bs.type != 'button' ){
+                                    return;
+                                }
+                                operations.push({
+                                    label : bs.value,
+                                    action : bs.action,
+                                    icon : bs.iconcls,
+                                    tag: 'idx-'+String(idx),
+                                });
+                            });
+                            settings.formRelatedButtons = settings.formRelatedButtons.add($('<div class="ace-form-operation-button ace-display-only-on-mobile"></div>').ace('create',{
+                                type : 'menubutton',
+                                items:operations,		//a list of items to be displayed
+                            }).appendTo(buttonGroup));
+                        }
+
+                        settings.gridRelatedButtons.removeClass('ace-hide');
+                        settings.formRelatedButtons.addClass('ace-hide');
+                    }
+                }
 
                 //TODO: do some verifications of these parameters to make sure all are as they should
                 var fieldHtml = '<div class="'+$.aceOverWatch.classes.formContainer+' ' + settings.customclasses+'"'+style+'><div class="'+$.aceOverWatch.classes.formInner+'" '+style+'></div><br class="'+$.aceOverWatch.classes.clear+'"/>';
@@ -8551,6 +11691,7 @@
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
                 errorObj.displayWarning = true;
                 errorObj.markWithErrorClass = false;
+                if ((!$.aceOverWatch.utilities.isVoid(settings)) || (!$.aceOverWatch.utilities.isVoid(settings.fields))) return true;
                 let isValid = settings.fields.ace('validate');
                 if( !isValid ){
                     $.aceOverWatch.toast.show('error',_aceL.vchk);
@@ -8561,12 +11702,14 @@
             /**
              * retrieves the form which contains the specified field
              * @param aceField jscript object
+             * @param forceSearch if true, it will perform a search no matter what
              */
-            getParentForm : function(field){
+            getParentForm : function(field,forceSearch  = false){
 
                 var settings = field.data($.aceOverWatch.settings.aceSettings);
                 if( 		!$.aceOverWatch.utilities.isVoid(settings)
                     && 	!$.aceOverWatch.utilities.isVoid(settings.parentForm)
+                    && !forceSearch
                 ){
                     /*
                      * if ace field, and has a parent form set.. return it
@@ -8582,46 +11725,29 @@
             },
 
             afterInit : function(target,what){
-                var containerField = $(target);
+                let containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
                 var innerEl = containerField.find('.'+$.aceOverWatch.classes.formInner);
 
-                //cloaning the elements from the template
-                innerEl.html( $('#'+settings['template']).children().clone(true,true) );
+                $.aceOverWatch.utilities.cloneFromTemplate(innerEl,settings.template,settings.loadtplfromdom ? false : true);
 
-                //some elements from the template might need some extra stuff to do to make them usable
-                //the datepicker is one of them; if it is only cloned, all the events from the clone will be transfered to the one from the template!
-                innerEl.find('.'+$.aceOverWatch.classes.containerField).each(function(){
-
-                    var settings = $(this).data($.aceOverWatch.settings.aceSettings);
-                    if( !settings ){
-                        return;
-                    }
-
-                    //here we need to get the settings to a new reference! otherwise all the fields will share the same one in all instances of the template
-                    //and this is not good
-                    var newSettings = {};
-                    $.extend(true,newSettings, settings);
-                    settings = newSettings;
-                    $(this).data($.aceOverWatch.settings.aceSettings,settings);
-
-                    if( settings.readonly ){
-                        $(this).ace('modify',{readonly:true});
-                    }else{
-                        //on modify, after init is already ran... so for datepicker fields, if they just got themselves readonly, there is no need to run this AGAIN! I hope
-                        //TODO: verify this
-                        if( settings.type == 'datepicker'){
-                            $.aceOverWatch.field.datepicker.afterInit(this,{all:true});
+                if( settings.ftype == 'popup' && !settings.disablehideonbkclick){
+                    containerField.unbind('click').on('click',function(e){
+                        if( $(e.target).hasClass('ace-form-popup') ){
+                            $(this).ace('hide');
                         }
-                    }
-
-                });
+                    });
+                }
 
                 //setting up the default buttons actions
                 containerField.find('[action="save"]').unbind('click').on('click',function(e){
+                    let el = $(this);
+                    if( $.aceOverWatch.utilities.isReadonlyACEField(el) ){
+                        return;
+                    }
 
-                    var target = $.aceOverWatch.field.form.getParentForm($(this));
+                    let target = $.aceOverWatch.field.form.getParentForm(el);
 
                     e.stopImmediatePropagation();
                     $.aceOverWatch.field.form.save(target);
@@ -8629,7 +11755,12 @@
                 });
 
                 containerField.find('[action="delete"]').unbind('click').on('click',function(e){
-                    var target = $.aceOverWatch.field.form.getParentForm($(this));
+                    let el = $(this);
+                    if( $.aceOverWatch.utilities.isReadonlyACEField(el) ){
+                        return;
+                    }
+
+                    let target = $.aceOverWatch.field.form.getParentForm(el);
 
                     e.stopImmediatePropagation();
                     $.aceOverWatch.field.form.deleteRecord(target);
@@ -8651,7 +11782,7 @@
                         if (!parentSettings) return;
 
                         if (!$.aceOverWatch.utilities.isVoid(parentSettings.rowedittpl))
-                            $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true); //redraw the editing row
+                            $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true, containerField.attr('rid')); //redraw the editing row
                     });
                 });
 
@@ -8685,7 +11816,7 @@
                         switch(e.keyCode){
                             case 27://escape
                                 e.preventDefault();
-                                $.aceOverWatch.field.form.hide(this);
+                                $.aceOverWatch.field.form.hide($(this));
                                 return false;
                                 break;
                         }
@@ -8694,6 +11825,19 @@
                 }
 
                 $.aceOverWatch.field.form.setFields(target);
+
+                if( settings.recordlastinputfocus ){
+
+                    settings.fields.find('input.ace-efld,textarea.ace-efld').focusin(function (e) {
+                        $(this).parents('.'+$.aceOverWatch.classes.formContainer).first().parent().data($.aceOverWatch.settings.aceSettings).lastFocusedElementWithInput = $(this).parents('.'+$.aceOverWatch.classes.containerField).first();
+                    });
+
+                }
+
+            },
+
+            getLastFocusedElementWithInput : function(target){
+                return target.data($.aceOverWatch.settings.aceSettings).lastFocusedElementWithInput;
             },
 
             /*
@@ -8752,23 +11896,21 @@
                         if( e.keyCode == 13 ){
                             var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                             var settings = target.data($.aceOverWatch.settings.aceSettings);
-                            
+
                             if(
-                            		settings.type == 'button'
+                                settings.type == 'button'
                                 || 	settings.type == 'iconbutton'
                                 || 	settings.type =='autocomplete'
                                 || 	settings.type=='chips'
                                 || 	settings.type=='textarea'
-                            	||	settings.type == 'breadcrumbs'
-                        		||	settings.type == 'progressbar'
-                    			||	settings.type == 'wizard'
-                        		)
-                            {	//TODO add more type to which custom navigation should not be imlemented
+                                ||	settings.type == 'breadcrumbs'
+                                ||	settings.type == 'progressbar'
+                                ||	settings.type == 'wizard'
+                            )
+                            {	//TODO add more type to which custom navigation should not be implemented
                                 //don't do custom navigation for these buttons...
                                 return;
                             }
-
-                            //console.log('enter was pressed here! ace tab index: '+settings.aceTabIndex);
 
                             var form = $.aceOverWatch.field.form.getParentForm($(this));
                             var formSettings = form.data($.aceOverWatch.settings.aceSettings);
@@ -8808,12 +11950,21 @@
 
                     });
                 }
+
+                if( settings.withtags ){
+                    settings.tagsField = mainFormContainer.find('[fieldname="'+settings.incomingtagsfield+'"]');
+                    if( settings.tagsField.length == 0 ){
+                        settings.tagsField = false;
+                    }
+                }else{
+                    settings.tagsField = false;
+                }
             },
 
             //returns true if all is well, the record was loaded correctly
             //if something went wrong with the creation of the form, like the fact there was not template specified,
             //then there won't be any settings, and the loading will fail
-            loadRecord : function(target,record, keepCurrentRecordReference){
+            loadRecord : function(target,record, keepCurrentRecordReference, keepWithoutNotifyingParent=false){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
@@ -8834,17 +11985,12 @@
                     settings.net.idfieldvalue = settings.record.val(settings.net.idfieldname);
                 }
 
-                if ($.isFunction(settings.onbeforeloadrecord)) {
-                    if (settings.onbeforeloadrecord(target, settings.record)===false) return false;
-                }else{
-                    if ($.isFunction(window[settings.onbeforeloadrecord])) {
-                        if (window[settings.onbeforeloadrecord](target, settings.record)===false) return false;
-                    }
-                }
+                let callback_res = $.aceOverWatch.utilities.runIt(settings.onbeforeloadrecord, target, settings.record);
+                if( $.aceOverWatch.utilities.wasItRan(callback_res) && callback_res===false ){ return false; };
 
                 /*
                  * in some cases, during before load operations, other fields might have appeared in the form
-                 * if that is the case, then the recompute_fields should be explicitdly set to true if the user
+                 * if that is the case, then the recompute_fields should be explicitly set to true if the user
                  * desires to set data in those fields automatically!
                  */
                 if(settings.record && settings.record.val('recompute_fields') == true ){
@@ -8890,7 +12036,20 @@
                         fieldSettings.net.idfieldvalue = settings.net.idfieldvalue;
                     }
 
-                    var extra = '';
+                    let extra = '';
+                    switch( fieldSettings.type ){
+                        case 'autocomplete':
+                            if( fieldSettings.displayname.length > 0 ){
+                                extra = settings.record.val(fieldSettings.displayname);
+                                if( $.aceOverWatch.utilities.isVoid(extra,true) ){
+                                    extra = '';
+                                }
+                            }
+                            break;
+                        case 'daterangepicker':
+                            extra = { triggerchange : false };
+                            break;
+                    }
                     if( fieldSettings.type == 'autocomplete' && fieldSettings.displayname.length > 0 ){
                         extra = settings.record.val(fieldSettings.displayname);
                     }
@@ -8907,18 +12066,134 @@
                 });
 
                 if (settings.parseastemplate) {
-                    //I have to parse the template
                     $.aceOverWatch.field.form.parseTemplate(target, settings.record);
                 }
 
-                if ($.isFunction(settings.onafterloadrecord)) {
-                    if (settings.onafterloadrecord(target, settings.record)===false) return false;
-                }else{
-                    if ($.isFunction(window[settings.onafterloadrecord])) {
-                        if (window[settings.onafterloadrecord](target, settings.record)===false) return false;
+                callback_res = $.aceOverWatch.utilities.runIt(settings.onafterloadrecord, target, settings.record);
+                if( $.aceOverWatch.utilities.wasItRan(callback_res) && callback_res===false ){ return false; };
+
+                this.tagsExtractInitial(settings,record);
+
+                if( keepCurrentRecordReference && !keepWithoutNotifyingParent){
+                    //notify the parent that data has changed
+                    //if the form doesn't have a parent, it is considered standalone
+                    let parentSettings = settings.parent ? $(settings.parent).data($.aceOverWatch.settings.aceSettings) : settings;
+
+                    switch(parentSettings.type){
+                        case 'grid':
+                            if( parentSettings.editCurrentRow < 0 ){//if it was as new row, we simulate a save
+                                $.aceOverWatch.field.grid.saveSuccessful($(settings.parent), record);
+                            }else{
+                                $.aceOverWatch.field.grid.redrawRow($(settings.parent), parentSettings, parentSettings.editCurrentRow);
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
+
                 return true;
+            },
+
+            /**
+             * after loading the data on form,
+             * IF the form uses tags, this method will build a map of the current existing tags
+             * this will be used, on the save operation, to set the two outgoing tag fields. See: tagsSetOutgoing
+             *
+             * @param settings
+             * @param record
+             */
+            tagsExtractInitial : function(settings,record){
+                if( !settings.withtags ){
+                    return;
+                }
+                settings.currentTags = {};
+
+                let tags = record.val(settings.incomingtagsfield);
+                if( $.aceOverWatch.utilities.isVoid(tags,true) ){
+                    return;
+                }
+
+                let tagPairs = tags.split(',');
+                tagPairs.forEach(function (tagPair) {
+                    if (!tagPair) {
+                        return;
+                    }
+                    let tagPairArr = tagPair.split(':');
+                    let name = '';
+                    let id = 0;
+
+                    if (tagPairArr.length == 1) {
+                        name = tagPairArr[0];
+                    } else {
+                        name = tagPairArr[1];
+                        id = parseInt(tagPairArr[0]);
+                    }
+
+                    settings.currentTags[name] = id;
+
+                }, this);
+            },
+
+            tagsSetOutgoing : function(settings,record){
+                if( !settings.withtags ){
+                    return;
+                }
+
+                let tagsToAdd = [];
+                let tagsToRemove = [];
+
+                /*
+                 * getting the current entered tags
+                 */
+                let tags = record.val(settings.incomingtagsfield);
+                if( $.aceOverWatch.utilities.isVoid(tags,true) ){
+                    tags='';
+                }
+
+                let tagPairs = tags.split(',');
+                let allDetectedTags = {};
+                tagPairs.forEach(function (tagPair) {
+                    if (!tagPair) {
+                        return;
+                    }
+                    let tagPairArr = tagPair.split(':');
+                    let name = '';
+                    let id = 0;
+
+                    if (tagPairArr.length == 1) {
+                        name = tagPairArr[0];
+                    } else {
+                        name = tagPairArr[1];
+                        id = parseInt(tagPairArr[0]);
+                    }
+
+                    allDetectedTags[name] = true;
+
+                    if( !settings.currentTags[name] ){
+                        tagsToAdd.push(name);
+                    }
+
+                }, this);
+
+                for(let tagName in settings.currentTags){
+                    if( !allDetectedTags[tagName] ){
+                        tagsToRemove.push(String(settings.currentTags[tagName])+':'+tagName);
+                    }
+                }
+
+                if( tagsToAdd.length > 0 ){
+                    record.val(settings.outgoingtagsaddfield,tagsToAdd.join(','),false);
+                }else{
+                    record.delete(settings.outgoingtagsaddfield);
+                }
+
+                if( tagsToRemove.length > 0 ){
+                    record.val(settings.outgoingtagsremovefield,tagsToRemove.join(','),false);
+                }else{
+                    record.delete(settings.outgoingtagsremovefield);
+                }
+
             },
 
             parseTemplate : function(target, rec, addSpaceAsSufix = true) {
@@ -8929,6 +12204,9 @@
                 });
                 containerField.find('[acetplclass]').addClass(function(){
                     return $(this).addClass($.aceOverWatch.utilities.renderer(rec.val($(this).attr('fieldname')),rec,$(this).attr('classtplrenderer')),addSpaceAsSufix);
+                });
+                containerField.find('[acetpltitle]').attr('title',function(){
+                    return $.aceOverWatch.utilities.runIt($(this).attr('titletplrenderer'),rec.val($(this).attr('fieldname')),rec);
                 });
                 containerField.find('[acetplstyle]').addClass(function(){
                     return $(this).addClass($.aceOverWatch.utilities.renderer(rec.val($(this).attr('fieldname')),rec,$(this).attr('styletplrenderer')),addSpaceAsSufix);
@@ -8951,6 +12229,33 @@
                 //notify the parent that data has changed
                 //if the form doesn't have a parent, it is considered standalone
                 var parentSettings = settings.parent ? $(settings.parent).data($.aceOverWatch.settings.aceSettings) : settings;
+
+                switch(parentSettings.type){
+                    case 'grid':
+                        $.aceOverWatch.field.grid.redrawRow($(settings.parent), parentSettings, parentSettings.editCurrentRow);
+                        break;
+                    default:
+                        break;
+                }
+            },
+
+            updateRecordBulk : function(target,data){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){
+                    return false;
+                }
+
+                if( settings.record && data ){
+                    for( let field in data ){
+                        settings.record.val(field,data[field], true);//true to set the field as being clean, saved
+                    }
+                }
+
+                //if the form is attached to a grid, or something else, notify it the record has been changed
+
+                //notify the parent that data has changed
+                //if the form doesn't have a parent, it is considered standalone
+                let parentSettings = settings.parent ? $(settings.parent).data($.aceOverWatch.settings.aceSettings) : settings;
 
                 switch(parentSettings.type){
                     case 'grid':
@@ -8993,8 +12298,8 @@
                         && 	(fieldSettings.fieldname.length > 0)
                         && 	!$.aceOverWatch.utilities.isVoid(settings.record)
                         && 	fieldSettings.type != 'display'//added this for 2 main reasons:
-                        								   //-displays may have renderers, which will distort the information, and appear dirty even when they shouldn't actually be
-                        								   //-display fields shoulnd't be used anyway to send / modify information, so they don't count
+                        //-displays may have renderers, which will distort the information, and appear dirty even when they shouldn't actually be
+                        //-display fields shoulnd't be used anyway to send / modify information, so they don't count
                         && recordValue != currentValue
                     ){
                         isDirty = true;
@@ -9028,31 +12333,25 @@
 
                 if ((forcecancel!==true) && settings.checkdirtyoncancel && $.aceOverWatch.field.form.isDirty(target)) {
                     $.aceOverWatch.prompt.show(_aceL.unsaved,function() {
-                        if (newRecord) $.aceOverWatch.field.form.deleteRecord(target, true); //force delte - no other checks
+                        if (newRecord) $.aceOverWatch.field.form.deleteRecord(target, true); //force delete - no other checks
+
                         $.aceOverWatch.field.form.hide(target);
-                        if( $.isFunction(onformcanceledcallback) ){
-                            onformcanceledcallback(target);
-                        }else{
-                            if( $.isFunction(window[onformcanceledcallback]) ){
-                                onformcanceledcallback(target);
+                        $.aceOverWatch.utilities.runIt(onformcanceledcallback,target);
+
+                    },{
+                        type:'question',
+                        callbackCancel : function(cfg){
+                            if( settings.enablehashnavigation ){
+                                $.aceOverWatch.specialHashNavigation.register(settings.id,target,'form','v');
                             }
                         }
-                        $(target).parents('.'+$.aceOverWatch.classes.appMobileWindow).removeClass('ace-show');
-                        $('.'+$.aceOverWatch.classes.appContent).css('z-index','3');
-                    },{type:'question'});
+                    });
 
                 }
                 else {
                     if (newRecord) $.aceOverWatch.field.form.deleteRecord(target, true);//force delte - no other checks
                     $.aceOverWatch.field.form.hide(target);
-                    if( $.isFunction(onformcanceledcallback) ){
-                        onformcanceledcallback(target);
-                    }else{
-                        if( $.isFunction(window[onformcanceledcallback]) ){
-                            onformcanceledcallback(target);
-
-                        }
-                    }
+                    $.aceOverWatch.utilities.runIt(onformcanceledcallback,target);
                 }
 
             },
@@ -9074,6 +12373,7 @@
             retrieveNewRecordData:function(target,extraRecord,extraFieldVerificationFunction, extraIncludeNormal, alltoExtraOnly, surpressMessages){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                if( !settings.fields ){ return false; }
 
                 if( settings.validate && alltoExtraOnly  != true ){
 
@@ -9218,11 +12518,12 @@
             },
 
             save : function(target){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
 
                 //gets the new information from the form's fields
                 if( !$.aceOverWatch.field.form.retrieveNewRecordData(target) ){
+                    $.aceOverWatch.utilities.log('form save: failed to retrieve new record data', 'warning', false);
+                    $.aceOverWatch.utilities.runIt(settings.onfailedtoretrivenewrecordata,target);
                     return;
                 }
 
@@ -9235,23 +12536,31 @@
                     onlocalsavesuccessfull: settings.onlocalsavesuccessfull,
                 };
 
-                if( jQuery.isFunction(settings.onbeforesave) ){
-                    if( !settings.onbeforesave(target, settings.record) ){
-                        $.aceOverWatch.utilities.log('OBS method failed', 'warning', false);
-                        return false;
-                    }
-                }else{
-                    if ($.isFunction(window[settings.onbeforesave])) {
-                        if( !window[settings.onbeforesave](target, settings.record) ){
-                            $.aceOverWatch.utilities.log('OBS method failed', 'warning', false);
-                            return false;
-                        }
-                    }
+                this.tagsSetOutgoing(settings,settings.record);
+
+                let res = $.aceOverWatch.utilities.runIt(settings.onbeforesave,target, settings.record);
+                if( $.aceOverWatch.utilities.wasItRan(res) && !res ){
+                    $.aceOverWatch.utilities.log('OBS method failed', 'warning', false);
+                    return;
                 }
 
                 if (settings.sendallfieldsonsave) {
                     settings.record.makeItAllDirty();
                 }
+
+                if( settings.net.remote == true ){
+                    if ($.aceOverWatch.utilities.isVoid(settings.saveoptions)) {
+                        settings.saveoptions = {};
+                    }
+
+                    if (!$.aceOverWatch.utilities.isVoid(settings.savetype))
+                    {
+                        settings.saveoptions['type'] = settings.savetype;
+                    }
+
+                    settings.saveoptions['quietoperation'] = settings.quietoperation == true;
+                }
+
                 switch(parentSettings.type){
                     case 'grid':
                         if( settings.assignedToGridRowIdx != -2 ){//-2 is the default value
@@ -9263,20 +12572,7 @@
                         //if the save is a success, the grid will make sure to do something with the form
                         break;
                     case 'form':
-
-
-                        if( settings.net.remote == true ){
-
-                            if ($.aceOverWatch.utilities.isVoid(settings.saveoptions)) {
-                                settings.saveoptions = {};
-                                if (!$.aceOverWatch.utilities.isVoid(settings.savetype))
-                                {
-                                    settings.saveoptions['type'] = settings.savetype;
-                                }
-
-                            }
-                        }
-
+                    case 'tags':
 
                         if( settings.net.idfieldname ){
                             settings.record.setDirty(settings.net.idfieldname,true);
@@ -9323,15 +12619,20 @@
                     }
                 }
 
-                switch(parentSettings.type){
-                    case 'grid':
-                        if( settings.assignedToGridRowIdx == -2 ) return;
-                        $.aceOverWatch.field.grid.deleteRecord(settings.parent,settings.assignedToGridRowIdx,0,settings.record,forceDelete);
-                        break;
-                    default:
-                        $.aceOverWatch.field.form.hide(target);
-                        break;
+                if (!$.aceOverWatch.utilities.isVoid(parentSettings)) {
+                    switch (parentSettings.type) {
+                        case 'grid':
+                            if (settings.assignedToGridRowIdx == -2) return;
+                            $.aceOverWatch.field.grid.deleteRecord(settings.parent, settings.assignedToGridRowIdx, 0, settings.record, forceDelete);
+                            break;
+                        default:
+                            $.aceOverWatch.field.form.hide(target);
+                            break;
+                    }
+                } else {
+                    $.aceOverWatch.field.form.hide(target);
                 }
+
             },
 
             saveSuccessful : function(target,rawData){
@@ -9352,9 +12653,8 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
-                if( jQuery.isFunction(settings.onshow) ){
-                    settings.onshow(target);
-                }
+                containerField.focus();
+                $.aceOverWatch.utilities.runIt(settings.onshow,target);
 
                 if( settings.validate ){
                     settings.fields.ace('validate',{resetTries:true});
@@ -9370,9 +12670,7 @@
                     /*
                      * now go through ALL fields, and load those with remote data
                      */
-                    var innerEl = containerField.find('.'+$.aceOverWatch.classes.formInner);
-
-                    innerEl.find('.'+$.aceOverWatch.classes.containerField).each(function(){
+                    settings.fields.each(function(){
 
                         var settings = $(this).data($.aceOverWatch.settings.aceSettings);
                         if( !settings ){
@@ -9389,20 +12687,83 @@
 
                 }
 
+                if( settings.displayinfullscreenonmobile && $.aceOverWatch.utilities.isViewportForMobile() ){
+                    let fullScreenConfig = {
+                        displayinfullscreencancel:settings.displayinfullscreencancel
+                    };
+                    if( settings.displayinfullscreenwithparents > 0 ){
+                        fullScreenConfig.actualtarget = containerField.parents(':eq('+String(settings.displayinfullscreenwithparents-1)+')');
+                        if( settings.hideparentinfullscreen && settings.parent ){
+                            settings.parent.addClass('ace-hide');
+                        }
+                    }
+                    if( !$.aceOverWatch.utilities.isVoid(settings.displayinfullscreencustomclass,true) ){
+                        fullScreenConfig.customclassforpopupwindowwhendisplayed = settings.displayinfullscreencustomclass;
+                    }
+                    $.aceOverWatch.utilities.viewInFullScreen(containerField,fullScreenConfig);
+                }
+
+                if( settings.gridRelatedButtons ){ settings.gridRelatedButtons.addClass('ace-hide'); };
+                if( settings.formRelatedButtons ){ settings.formRelatedButtons.removeClass('ace-hide'); };
+
+                if( settings.enablehashnavigation ){
+                    $.aceOverWatch.specialHashNavigation.register(settings.id,target,'form',false,settings.onhashviewstepcallback);
+                }
+
+                //containerField.focus();
+
+                setTimeout(function(t){
+                    t.focus();
+                },100,containerField);
+
             },
 
             hide : function(target){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
 
                 if( !settings ){
                     return;
                 }
 
+                if( settings.displayed ){
+                    /*
+                     * this happens when the form has been displaced, and it's contents has been displayed in a full screen window
+                     * in this case, dismissing it, we'll get the original target
+                     */
+                    let actualTarget = $.aceOverWatch.utilities.dissmissViewInFullScreen(target)
+                    if( actualTarget ){
+                        target = actualTarget;
+                    }
+
+                    if( settings.hideparentinfullscreen && settings.parent ){
+                        settings.parent.removeClass('ace-hide');
+                    }
+                }else{
+                    if( settings.popupOriginalWindow ){
+                        $.aceOverWatch.utilities.dissmissViewInFullScreen(settings.popupOriginalWindow);
+                        if( settings.hideparentinfullscreen && settings.parent ){
+                            settings.parent.removeClass('ace-hide');
+                        }
+                    }
+                }
+                // let fullScreenContainer = target.parents('.ace-full-screen-popup').addBack('.ace-full-screen-popup').first();
+                // if( fullScreenContainer.length == 1 ){
+                //     $.aceOverWatch.utilities.dissmissViewInFullScreen(fullScreenContainer);
+                // }
+
                 if( jQuery.isFunction(settings.customhide) ){
                     settings.customhide(target, settings.renderto);//custom hide logic
                 }else{
-                    containerField.removeClass($.aceOverWatch.classes.formShow);
+                    target.removeClass($.aceOverWatch.classes.formShow);
+                }
+
+                $.aceOverWatch.utilities.runIt(settings.onhide,target);
+
+                if( settings.gridRelatedButtons ){ settings.gridRelatedButtons.removeClass('ace-hide'); }
+                if( settings.formRelatedButtons ){ settings.formRelatedButtons.addClass('ace-hide'); }
+
+                if( settings.enablehashnavigation ) {
+                    $.aceOverWatch.specialHashNavigation.deregister(settings.id);
                 }
             },
 
@@ -9422,7 +12783,56 @@
                     return true;
                 }
 
+            },
+
+            /**
+             * given the id of a template, the form will hide it's normal content, and will display the content specified in the template
+             * the form will go through its on fields, and if they are visible, they will attempt to set their value in the
+             * equivalent field in the template, otherwise they will try to hide the field
+             *
+             * also, if the field value is void, the field will not be displayed
+             *
+             * @param form
+             * @param printTemplateId
+             */
+            showPrintView : function(target, printTemplateId){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let innerForms = target.children('.'+$.aceOverWatch.classes.formContainer).children('.'+$.aceOverWatch.classes.formInner);
+                if( innerForms.length == 2 ){//the second one is an older print form, so we destroy it
+                    $(innerForms[1]).remove();
+                }
+
+                let innerPrintEl =$('<div class="'+$.aceOverWatch.classes.formInner+'"></div>');
+                $.aceOverWatch.utilities.cloneFromTemplate(innerPrintEl,printTemplateId);
+
+                innerPrintEl.find('[fieldname]').addClass('ace-hide');
+                settings.fields.each(function(){
+
+                    let field = $(this);
+                    let fs = field.data($.aceOverWatch.settings.aceSettings);
+                    if( $.aceOverWatch.utilities.isVoid(fs) ){
+                        return;
+                    }
+                    let value = field.ace('value');
+                    if( field.is(':visible') && !$.aceOverWatch.utilities.isVoid(value,true) ){
+                        innerPrintEl.find('[fieldname="'+fs.fieldname+'"]').removeClass('ace-hide').ace('value',field.ace('valueprint'),null,settings.record);
+                    }
+
+                });
+
+                innerPrintEl.insertAfter($(innerForms[0]));
+                $(innerForms[0]).addClass('ace-hide');
+            },
+
+            hidePrintView : function(target){
+                let innerForms = target.children('.'+$.aceOverWatch.classes.formContainer).children('.'+$.aceOverWatch.classes.formInner);
+                if( innerForms.length == 2 ){//the second one is an older print form, so we destroy it
+                    $(innerForms[1]).remove();
+                }
+                $(innerForms[0]).removeClass('ace-hide');
             }
+            
+
         },//end form object
 
         /**
@@ -9761,7 +13171,6 @@
                     record.loadFromOtherRecord(filterFromAnotherObject.record,true);
                 }
 
-
                 return {
                     extraRecord: extraRecord,
                     filter: filter,
@@ -9806,13 +13215,13 @@
                     /*
                      * IF the target is a grid, lets use VALUE, instead of MODIFY ( uppercase here are just for visibility )
                      * when a grid is using value, it will not be re-written, its edit form will not be destroed and recreated, etc
-                     * 
+                     *
                      */
                     settings.targetfield.ace( (targetFieldSettings.type == 'grid') ? 'value' : 'modify',{
                         net : {
-                            filter : filterData.filter
+                            filter : filterData.filter,
+                            extraparams : filterData.directFields,
                         },
-                        extraparams : filterData.directFields,
 
                         cleardata: true,		//to wipe existing data
                         page:1,					//in case it has pages, to get back to page 1
@@ -9935,16 +13344,16 @@
 
             create : function(target,settings){
                 $.extend(true,settings, $.extend(true,{
-                	/*
-                	 * the type of grid we are dealing with: table, or panel
-                	 * table : 
-                	 * 	- it displays the list in horizontal rows and columns
-                	 *  - the information about how the grid should be displayed can be found in the columns field
-                	 * panel:
-                	 * - this type of grid requires a cell template to be specified: rowtpl
-                	 * - each row will display a copy of the template, and the ace fields in will will be filled with information from the fields with the same name of the data row
-                	 */
-                    gtype:'table',		
+                    /*
+                     * the type of grid we are dealing with: table, or panel
+                     * table :
+                     * 	- it displays the list in horizontal rows and columns
+                     *  - the information about how the grid should be displayed can be found in the columns field
+                     * panel:
+                     * - this type of grid requires a cell template to be specified: rowtpl
+                     * - each row will display a copy of the template, and the ace fields in will will be filled with information from the fields with the same name of the data row
+                     */
+                    gtype:'table',
 
                     /*
                      * ATTENTION
@@ -9954,10 +13363,27 @@
                     rowgrouptpl:'',//ATTENTION: code related to another PROJECT! should be removed!
                     onshouldinsertgridsubgrouprow : null,
                     onaftergridsubgrouprowinserted : null,
-                    
+
+                    /*
+                     * ATTENTION!
+                     *  if the presentation form is enabled
+                     *  on grid selection change the form will be populated
+                     */
+                    presentationformtpl : '',
+                    presentationreverse : false,//true to appear on the left side, false(default) on the right side
+                    presentationratio   : '8-4',//allowed presentation values: 10-2, 8-4, 5-5
+                                                //if the entire grid has a length of 12 units,
+                                                //the first number represents the size of the actual grid,
+                                                //and the second number represents the size of the presentation form
+                    presentationhideonmobile: true,//by default, the form will not be visible on mobile
+                    presentationform : {},  //subset of fields
+                    presentationcustomclass: '',//one ore more classes to be added to the presentation form
+                    presentationonafterloadrecord : null,//a function, or the name of a function to be called AFTER a record is loaded in the presentation form	params:(form, record)
 
                     rowtpl:'',
                     rowedittpl:'',	//set this for custom row template inline edit
+
+                    rowclassrenderer:'',	//for any type of grid - this is a renderer to return additional classes to a row function(idx,record)
 
                     rowparseastemplate:false, //if the rowtpl should also be parsed as template in the form
                     autoloadrowfields:true,//true if the row form should autoload by itself
@@ -9967,33 +13393,33 @@
 
                     page:1,				//this is the first page loaded ( first page == 1 )
                     pagination:true,
-                    
+
                     infinitescroll:false,
                     infinitescrollfactor:1, //in situations in which more than one row might be displayed on one line, set this
                                             //to the max number of rows expected to be drawn on one line + 1
 
                     freezeTotalExpectedRowsCount : false,//set to true, when the client specifies a CUSTOM of totalExpectedRowsCount
-                    							//while true, this value will not be overwritten by data returned from the SERVER
+                    //while true, this value will not be overwritten by data returned from the SERVER
 
                     loading : false, 	//this flag tells if there is a active net connection loading the gird data (no matter if the previous result was successfull or not)
                     height:false,
                     width:'auto',		//this is the width of the ENTIRE grid container, the on which ACE is being run; the inner grid inside stretches to 100%
-                    
+
                     /*
                      * the columns is an array, in which each element is an object, that defined the properties of a column.
                      * These properties are described a bit bellow..
                      * search for the text between the brackets in the code bellow: [begin column for grid]
                      */
-                    columns:[],	
+                    columns:[],
 
                     /*
-                     * The next settings are for determing IF the grid should display an aditional row in the footer, in which teh totals for some of the columns will be display
+                     * The next settings are for determining IF the grid should display an additional row in the footer, in which the totals for some of the columns will be display
                      * showtotalsrow - set to true, to display the row
                      * ontotalsrecalculated - optional custom method to be called after the total of a column is recalculated and redrawn
                      * 						  function(function(idx, columnFieldName, cellElement))
                      * totalscolumns - optional custom set of columns to be used to draw the totals row; same properties as the normal columns array
                      * The columns which should have their total displayed need to have an aditional field specified:
-                     * 	- totalsoprenderer 
+                     * 	- totalsoprenderer
                      * For the totalsoprenderer may have one of these three predefined values, or be a custom method, or the name of a custom method to be called to compute the total in a special way.
                      * The predefined methods are:
                      * 	- count: display the number of elements in the page
@@ -10003,13 +13429,16 @@
                      */
                     showtotalsrow:false,
                     ontotalsrecalculated:null,
-                    totalscolumns: [], //an array as colums to be used for displaying footer's totals instead of the columns metadata (to have different columns than the main grid)
+                    totalscolumns: [], //an array as columns to be used for displaying footer's totals instead of the columns metadata (to have different columns than the main grid)
 
                     data:[],			//explicit data passed from outside!
                     cleardata:false,	//if true, the data is wiped; useful when modifying the grid from the outside, and we want to wipe all the data
+                    cleartags:false,    //if true, the current search tags are removed
 
                     allowedit: true,
                     alloweditinline: false,
+                    onafterinlineeditdisplay : null, //callback, which, if exists, will be called after the
+                    // function(target,rowIdx,cellIdx, editElementCore)
                     inlineautosave : false,
                     stayongridafterfocusout: false,
                     allowadd: true,
@@ -10031,14 +13460,15 @@
                     displaycolumnlines:true,
                     displaycheckboxcolselectall : true, //for checkboxcol column type display a checkbox that will (de)select all checkboxes in the
 
-                    suppressdeletemessage: false,
+                    suppressdeletemessage: false,//if true, the message displayed AFTER a row has been deleted will not be displayed
+                    suppressdeleteconfirmationmessage : false,//if true, the user will not be asked if he desires the row to be deleted
 
                     hideheader:false,
 
                     previousSelectedRow : -1,
                     selectedRow:-1,
                     selectedCell:-1,
-                    
+
                     selectiontype:'row',//can be row, or cell
                     donotredrawselectedrow:false,	//in some cases, we don't want to redraw the row when it becomes selected... in this case, set this field to true;
 
@@ -10047,38 +13477,44 @@
                     showdeletecolumn: 'begin',//or end or whatever	TODO: not yet implemented; also affect the default button on panel grids
 
                     editcolumnname : '',
-                    editcolumnwidth : '80px',
+                    editcolumnwidth : '',
                     editcolumnwidthclass : $.aceOverWatch.classes.col1,
+                    editcolumniconcls : '',
+                    editcolumncustomrowdisplay : false,//function, or the name of a function which, if provided, will be called to verify, IF the delete button should be displayed for a given row
 
                     deletecolumnname : '',
-                    deletecolumnwidth : '80px',
+                    deletecolumnwidth : '',
                     deletecolumnwidthclass : $.aceOverWatch.classes.col1,
                     deletecolumniconcls : '',
                     deletecolumncustomrowdisplay : false,//function, or the name of a function which, if provided, will be called to verify, IF the delete button should be displayed for a given row
 
                     editonselect:false,	//true if you trigger an edit when a cell is clicked
-                    
+                    forceinlineeditonselect:false,	//if true, on select there will be an inline edit operation, otherwise, the form will be used
+
                     editform: {},
                     hideformaftersave : true,
                     norecordstpl : '',
                     createtplrenderedautogenfields : false, //this flag is used to know if the returned page was the template for norecords defined above in norecordstpl variable.
-                    										//If so, then I create the ace elements from it defined with the class $.aceOverWatch.classes.acetplautogen
-                    
+                    //If so, then I create the ace elements from it defined with the class $.aceOverWatch.classes.acetplautogen
+
                     sendallfieldsonsave : false, //mark all record as dirty before saving
                     disablesaveokmsg : false,	//set to true, to disable the save was ok msg after a successfull save
 
                     selectfirstresult : false, //if true... when data is loaded in the grid, the first element will be selected automatically..
-                    						//this is a ONE TIME use, after it, it will be reset to FALSE...
+                    //this is a ONE TIME use, after it, it will be reset to FALSE...
                     selectonlyifsingle : false, //selects only if ONLY ONE RESULT has been found!
 
                     classes:'',		//string, custom classes to be added to the grid
 
                     //custom callbacks
                     onsavesuccessful:null,		//callback on save successfull; parameter: the record
-                    onpreloadsuccessful:null,	//called right after the data has been loaded from the server; the client can do cutom filtering on it if so desiring, before it is processed
-                    							//function(target,dataArr, totalExpectedData);
+                    onlocalsavesuccessfull:null,//called when form saves something successfully LOCALLY, from an INLINE EDIT not remotely!(target, record)
+                    onpreloadsuccessful:null,	//called right after the data has been loaded from the server; the client can do custom filtering on it if so desiring, before it is processed
+                                                //function(target,dataArr, totalExpectedData);
+                    onbeforepagereload:null,	//called right before a page is reloaded, or redrawn in case of local data
+                                                //function(target)
                     onloadsuccessful:null,		// called when the data has been loaded from the server, and the information displayed
-                    							//function(target,settings.data, startIdx, endIdx, totalExpectedData);
+                                                //function(target,settings.data, startIdx, endIdx, totalExpectedData);
                     onrowredrawn:null,			//function(target,settings, rowIdx);
                     oninitrow : null,			//callback when a row grid is created
 
@@ -10086,18 +13522,18 @@
                     onrowclick:null,			//same as onselectionchange, but it is triggered ALL the time the row is clicked: function(target, row, col, record)
                     onmouseenterleave:null,		//if set, the function will be called each time the mouse enters OVER row, or leave the row: function(target, row, record, state)
                     onbeforemouseenterleave:null,		//if set, the function will be called each time the mouse enters OVER row, or leave the row: function(target, row, record, state)
-                    							//1 for mouse enter, 2 for mouse leave
-                    							//return false to cancel default behaviour
+                    //1 for mouse enter, 2 for mouse leave
+                    //return false to cancel default behaviour
                     onafterdelete:null,			//function called after a delete operation.. function(target, record);
                     onbeforedelete:null,		//function called before a delete operation.. function(target, record, rowIdx);
-                    							// if return false, the delete operation will not take place
-                    
-                    onmodifydeleteinfo:null,	//function called to modify the delete data, before it is sent to the server
-                    							// function(target,currentDeleteData,record)
+                    // if return false, the delete operation will not take place
+
+                    onmodifydeleteinfo:null,	//function called to modify delete-related data, before it is sent to the server
+                    // function(target,currentDeleteData,record)
 
                     //these callbacks affect the panel grid: params(form,record)
-                    onbeforerowrecordloaded:null,	//a function, or the name of the function to be ran BEFORE the data has been loaded into the row form
-                    onafterrowrecordloaded:null,	//a function, or the name of the function to be ran AFTER the data has been loaded into the row form
+                    onbeforerowrecordloaded:null,	//a function, or the name of the function to be run BEFORE the data has been loaded into the row form
+                    onafterrowrecordloaded:null,	//a function, or the name of the function to be run AFTER the data has been loaded into the row form
 
                     rowformsaveonlastenter : true,
                     rowenablekeynavigation : true,
@@ -10108,16 +13544,16 @@
                     //ATTENTION: for the two callbacks bellow: the first param, target, is going to be GRID itself, and NOT the row form that triggered the save!
                     onrowsaveerror : null,	//custom error function for the row form: params(target, data)
                     onrowsavesuccessful : null,	//custom successful function for the row form: params(target, data)
-                    
+
 
                     /*
                      * these two methods, if defined, should return a html code which will be inserted BEFORE, or AFTER a raw
                      */
                     oninsertgridsubgrouprow : null, //returns a html coded text, to be added bellow a row function(rowIdx, record)
                     oninsertgriduppergrouprow : null,//returns a html coded text, to be added above a row function(rowIdx, record)
-                    
+
                     onrefreshstaticpage : null,//custom call, when the grid wants to refresh the data currently displayed in the page function(target, page, pageSize)
-                    						   //if all ok, the function should return an array of data
+                    //if all ok, the function should return an array of data
 
                     getcustomdeletestring : null,//custom function which returns a delete string confirmation: params(target, rowIdx, colIdx, record)
 
@@ -10139,12 +13575,25 @@
                     currentNavigatedIndex:-1,//this is the index of the row currently navigated with the arrow keys; it gets reset to -1 whenever a page reloads
 
                     tooglecheckonrowclick : false,//set it to true, if you want that ALL col checkboxes, if any, to be tooggled at any row click
-                    						//attention: donotredrawselectedrow should be set to tue as well, otherwise it may not work correctly!
+                    //attention: donotredrawselectedrow should be set to tue as well, otherwise it may not work correctly!
 
                     /*
 					 * private setting, to ignore some label logic
 					 */
                     ignoreLabels : true,
+
+                    withtags : false,
+                    incomingtagsfield: '_tags',
+                    outgoingtagsaddfield: '_tags_add',
+                    outgoingtagsremovefield: '_tags_remove',
+                    tagsoverviewgridid:'',//the ID of the container which will hold the tagsoverview grid
+                    tagschipsid:'',//the ID of the container which will become the chips controller for grid tags
+                    hidetagsoverviewwhennotags : true,
+                    ontagsoverviewloadsuccessful : null,//function(overviewTagGrid,tagsData)
+                    currentSearchTags : {},
+                    tagssearchmode : 'AND',//should be either AND or OR
+
+                    insertnewrowsatendofpage : false,//if true, the new rows will be inserted at the end of the page, instead of the beginning
 
                 }, settings ));
 
@@ -10226,7 +13675,47 @@
                     settings.net.start = (settings.page-1) * settings.net.size;
                 }
 
-                //dealing with the edit form
+                /*
+                 * checking existence of presentation tpl
+                 */
+                if( !this.createStepEditForm(target,settings) ){ return ''; }
+                if( !this.createStepPresentationForm(target,settings) ){ return ''; }
+                if( !this.createStepInternalData(target,settings) ){ return ''; }
+                if( !this.createStepColumns(target,settings) ){ return ''; }
+                if( !this.createStepChips(target,settings) ){ return ''; }
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+                let gridTopToolbar = this.createStepBuildToolbar(settings);
+                let gridHeader = this.createStepBuildHeader(settings);
+                let gridBody = this.createStepBuildBody(settings);
+                let gridTotals = this.createStepBuildTotals(settings);
+                let gridFooter = this.createStepBuildFooter(settings, gridTotals);
+
+                /*
+                 * build the actual grid
+                 */
+
+                let styleGrid = ['width:100%'];
+                if( settings.height != false ){
+                    styleGrid.push('height:'+settings.height);
+                }
+
+                let fieldHtml = '<div class="'+$.aceOverWatch.classes.grid+' ' + (settings.infinitescroll ? $.aceOverWatch.classes.gridInfiniteScroll : '' )  +'" style="'+styleGrid.join(';')+'">';
+                fieldHtml += gridTopToolbar;
+                fieldHtml += gridHeader;
+                fieldHtml += gridBody;
+                fieldHtml += gridFooter;
+                fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
+                fieldHtml += '</div>';//end - grid
+
+                return fieldHtml;
+            },
+
+            /**
+             * internal method, do not call it from outside
+             */
+            createStepEditForm : function(target, settings){
                 $.extend(true,settings.editform, $.extend(true,{
                     type:'popup',
                     template:'',
@@ -10236,6 +13725,12 @@
                     parent:target,
                     net:{},
                     hideaftersave : settings.hideformaftersave,
+
+                    withtags : settings.withtags,
+                    incomingtagsfield: settings.incomingtagsfield,
+                    outgoingtagsaddfield: settings.outgoingtagsaddfield,
+                    outgoingtagsremovefield: settings.outgoingtagsremovefield,
+
                 }, settings.editform ));
 
                 //overwriting the form's net with the grid's net object
@@ -10261,13 +13756,13 @@
                         //expecting the renderto div to exist
                         if( $('#'+form.renderto).length == 0 ){
                             $.aceOverWatch.utilities.log('Failed to create Grid! Custom edit form specified, with no render to!');
-                            return "";
+                            return false;
                         }
 
                         break;
                     default:
                         $.aceOverWatch.utilities.log('Failed to create Grid! Invalid edit form type specified: ' + type);
-                        return "";
+                        return false;
                 };
 
                 /*
@@ -10275,7 +13770,7 @@
 				 * also, we don't create the form if no template has been given
 				 */
                 if(
-                    	settings.alloweditinline != true
+                    settings.alloweditinline != true
                     &&  String(settings.editform.template.length) > 0
                     &&	settings.allowedit
 
@@ -10285,6 +13780,21 @@
                     $('#'+form.renderto).ace('create',form);
                 }
 
+                return true;
+            },
+
+            createStepPresentationForm : function(target, settings){
+                settings.buildPresentationForm = false;
+                if( !$.aceOverWatch.utilities.isVoid(settings.presentationformtpl,true) ) {
+                    let pFormTpl = $.aceOverWatch.utilities.getTemplate(settings.presentationformtpl);
+                    if (pFormTpl.length == 1) { //no template found, don't create edit form
+                        settings.buildPresentationForm = true;
+                    }
+                }
+                return true;
+            },
+
+            createStepInternalData : function(target, settings){
                 if( settings.cleardata ){
                     settings.data = [];
                     settings.page = 1;
@@ -10293,7 +13803,7 @@
                     settings.data = $.aceOverWatch.utilities.getAsociatedDataArr(target);
                 }
 
-                //convert data to inner data format
+                //convert data to inner data format if needed
                 if( settings.data.length > 0 && !$.aceOverWatch.record.isRecord(settings.data[0]) ){
                     var innerData = [];
                     for(var idx = 0; idx < settings.data.length; idx++){
@@ -10308,10 +13818,12 @@
                 ){
                     settings.net.totalExpectedRowsCount = settings.data.length;
                 }
-                $.aceOverWatch.field.grid.calculateMaxPages(settings);
 
-                //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                this.calculateMaxPages(settings);
+                return true;
+            },
 
+            createStepColumns : function(target, settings){
                 if( settings.innerColumns.length == 0 && !settings.columns || !settings.columns instanceof Array || settings.columns.length == 0 ){
                     settings.columns = $.aceOverWatch.utilities.getAsociatedDataArr(target,'columns');
                 }
@@ -10319,24 +13831,24 @@
                 if( settings.columns.length > 0 ){
                     settings.innerColumns = [];
 
-                    for(var idx in settings.columns){
+                    for(let idx in settings.columns){
                         settings.innerColumns.push(settings.columns[idx]);
                     }
 
                     if( settings.allowdelete != false && settings.showdeletecolumn != "" ){
                         let delName = settings.deletecolumnname.length > 0 ? settings.deletecolumnname : _aceL['delete'];
-                    	let delColumn = {
-                            title: _aceL['delete'], 
+                        let delColumn = {
+                            title: delName,
                             type:'action',
                             aditionalclasses:[settings.deletecolumnwidthclass,$.aceOverWatch.classes.collDelete].join(' '),
                             actions:[{
                                 title: delName,
                                 callback:$.aceOverWatch.field.grid.deleteRecord,
-                                iconcls : settings.deletecolumniconcls,
+                                iconcls: settings.deletecolumniconcls,
                                 actionrenderer : settings.deletecolumncustomrowdisplay
                             }]
                         };
-                        if (settings.deletecolumnwidth > 0) delColumn['width'] = settings.deletecolumnwidth;
+                        if (!$.aceOverWatch.utilities.isVoid(settings.deletecolumnwidth)) delColumn['width'] = settings.deletecolumnwidth;
 
 
                         switch(settings.showdeletecolumn){
@@ -10347,24 +13859,27 @@
                                 settings.innerColumns.push(delColumn);
                                 break;
                             default:
-                                delete delColumn
+                                delete delColumn;
                                 break;
                         }
                     }
 
                     //for inline editing, displaying the edit button doesn't make sense
                     if( settings.allowedit != false && settings.showeditcolumn != "" && settings.alloweditinline != true){
-                    	let editName = settings.editcolumnname.length > 0 ? settings.editcolumnname : _aceL['edit'];
-                    	var editColumn = {
+                        let editName = settings.editcolumnname.length > 0 ? settings.editcolumnname : _aceL['edit'];
+                        let editColumn = {
                             title:editName,
                             type:'action',
                             aditionalclasses:[settings.editcolumnwidthclass,$.aceOverWatch.classes.collEdit].join(' '),
                             actions:[{
                                 title: editName,
                                 callback:$.aceOverWatch.field.grid.editRecord,
+                                iconcls : settings.editcolumniconcls,
+                                actionrenderer : settings.editcolumncustomrowdisplay
                             }]
                         };
-                        if (settings.editcolumnwidth > 0) editColumn['width'] = settings.editcolumnwidth;
+
+                        if (!$.aceOverWatch.utilities.isVoid(settings.editcolumnwidth)) editColumn['width'] = settings.editcolumnwidth;
 
                         switch(settings.showeditcolumn){
                             case 'begin':
@@ -10374,7 +13889,7 @@
                                 settings.innerColumns.push(editColumn);
                                 break;
                             default:
-                                delete editColumn
+                                delete editColumn;
                                 break;
                         }
                     }
@@ -10387,7 +13902,7 @@
                      * use these if we have
                      */
                     if (($.isArray(settings.totalscolumns)) && (settings.totalscolumns.length > 0)) {
-                        for(var idx in settings.totalscolumns){
+                        for(let idx in settings.totalscolumns){
                             settings.totalsColumns.push(settings.totalscolumns[idx]);
                         }
                     } else {
@@ -10396,9 +13911,9 @@
                 }
 
                 if( settings.gtype == 'panel' ){
-                	/*
-                	 * if we are on a panel grid we replace all the columns with ONE column of type form
-                	 */
+                    /*
+                     * if we are on a panel grid we replace all the columns with ONE column of type form
+                     */
 
                     settings.innerColumns = [
 
@@ -10412,21 +13927,6 @@
                         }
 
                     ];
-
-                    if (settings.showtotalsrow) {
-                        settings.totalsColumns = [
-
-                            {
-
-                                title : '',
-                                width : '100%',
-                                atype : 'form',
-                                //fieldname not required for this...
-
-                            }
-
-                        ];
-                    }
                 }
 
                 /*
@@ -10435,88 +13935,51 @@
                 settings.columns = [];
                 settings.totalscolumns = [];
 
-                /**
-                 * creating the grid toolbar
-                 *****/
-                var gridTopToolbar = '<div class="'+$.aceOverWatch.classes.gridTopToolbar+'" >';
-                var areThereElementsInToptoolbar = false;
-                if( settings.allowadd != false ){
-                    areThereElementsInToptoolbar = true;
-                    gridTopToolbar += '<button action="add">'+_aceL.add+'</button>';
-                }
-                if( settings.allowrefresh != false ){
-                    areThereElementsInToptoolbar = true;
-                    gridTopToolbar += '<button action="refresh">'+_aceL.refresh+'</button>';
-                }
-                if( settings.allowsearchfield != false ){
-                    areThereElementsInToptoolbar = true;
-                    gridTopToolbar += '<input class="'+$.aceOverWatch.classes.gridSearch+'" placeholder="'+settings.serachtext+'">';
-                }
-                if( areThereElementsInToptoolbar ){
-                    gridTopToolbar+='</div>';
-                }else{
-                    gridTopToolbar = '';
-                }
-
-                /**
-                 * creating the grid header
+                /*
+                 * no we populate the inner columns, with missing default data
                  */
 
-                    //ok.. let's build the grid header!
-                var headerClasses = [$.aceOverWatch.classes.gridHeader];
-                var footerClasses = [$.aceOverWatch.classes.gridFooter];
-                if( settings.hideheader ){
-                    headerClasses.push($.aceOverWatch.classes.hide);
-                }
-                var footerTotalsClasses = [$.aceOverWatch.classes.gridFooterTotals];
-                if( !settings.showtotalsrow ){
-                    footerTotalsClasses.push($.aceOverWatch.classes.hide);
-                }
-                else {
-                    footerClasses.push($.aceOverWatch.classes.gridFooterWithTotals);
-                }
+                settings.haveGroupHeaderCells = false;
+                settings.currGroupHeaderArr = [];
 
-                var gridHeader = '';
-                var gridTotals = '';
-
-
-                var currGroupHeaderCells = '';
-                var haveGroupHeaderCells = false;
-                var currGroupHeaderArr = [];
-                for(var idx in settings.innerColumns){
-                    var column = settings.innerColumns[idx];
+                let currGroupHeaderCells = '';
+                for(let idx in settings.innerColumns){
+                    let column = settings.innerColumns[idx];
                     /*begin column for grid*/
                     column = $.extend(true, {
                         title:'',
+                        tooltip : '',
+                        tooltiprenderer : null,
                         type:'normal', //normal, action, checkboxcol
                         atype:'text',		//atype - ace type; by default, it is text; used atm for creating edit fields. All atypes = [combobox, checkbox, switch, autocomplete, datepicker, text, form]
+                        readonly:false,     //if true, and editing inline, the field will not be editable
                         fieldname:'',
                         renderer:null,		//the renderer might be a function itself, or the name of a global function ( found in window )
-                        
-                        actionrenderer:null,  //function to return true or false to display/hide a action button on a action column
-                        actiontitlerenderer:null,  //function to return the title for a action column
-                        
+
+                        actionrenderer:null,  //function to return true or false to display/hide an action button on an action column
+                        actiontitlerenderer:null,  //function to return the title for an action column
+
                         aditionalclasses:'',
                         aditionalheaderclasses:'',
-                        
+
                         align:'left',
-                        
+
                         iconcls:'', //used to display a icon
-                        
+
                         classes:[],
                         styles:[],
-                        
+
                         rowtitle:'', //used by the checkboxcol to show a text next to the checkbox on each row
                         groupheader : '', //a text to group cells by
                         oncolumntitleclick:null,	//function(target, clickedHeaderCell, clickedHeaderColIdx, clickedHeaderColDefinition)
 
                         allowsort : false,
                         hidesorticonuntilfirstclick : true,
-                        
+
                         sortdir : '', //should be '', asc or desc - for '' the sort icon is hidden
-                        sortasciconcls : 'fa-caret-up',
-                        sortdesciconcls : 'fa-caret-down',
-                        
+                        sortasciconcls : 'fa fa-caret-up',
+                        sortdesciconcls : 'fa fa-caret-down',
+
                         /*
                          * used to display the totals of a column
                          */
@@ -10524,7 +13987,7 @@
 
 
                         acetplclass : '', //set true to render a class returned by the classtplrenderer property
-                        classtplrenderer : '', //function used to return a class based on the currenct record row - called only when acetplclass = true
+                        classtplrenderer : '', //function used to return a class based on the current record row - called only when acetplclass = true
 
                     },column);
 
@@ -10559,35 +14022,75 @@
 
                     if (column.groupheader != currGroupHeaderCells) {
                         currGroupHeaderCells = column.groupheader;
-                        haveGroupHeaderCells = true;
-                        if ($.aceOverWatch.utilities.isVoid(currGroupHeaderArr[currGroupHeaderCells])) currGroupHeaderArr[currGroupHeaderCells]=0;
+                        settings.haveGroupHeaderCells = true;
+                        if ($.aceOverWatch.utilities.isVoid(settings.currGroupHeaderArr[currGroupHeaderCells])) settings.currGroupHeaderArr[currGroupHeaderCells]=0;
                     }
 
                     if (currGroupHeaderCells != '') {
-                        currGroupHeaderArr[currGroupHeaderCells]++;
+                        settings.currGroupHeaderArr[currGroupHeaderCells]++;
                     }
                     settings.innerColumns[idx] = column;
                 }
 
+                return true;
+            },
 
-                if (haveGroupHeaderCells){
-                	headerClasses.push($.aceOverWatch.classes.gridNHeader);
+            createStepChips : function(target, settings){
+                if( settings.cleartags && settings.tagschips ){
+                    settings.net.extraparams.tags = '';
+                    $.aceOverWatch.field.chips.setData(settings.tagschips, []);
+                    settings.tagschips.addClass('ace-hide');
                 }
-                
-                gridHeader = '<div class="'+headerClasses.join(' ')+'" >';
 
-                currGroupHeaderCells = '';
-                var currGroupHeaderCellNo = 0;
-                var groupHeaderClass = [];
-                var groupHeaderColAttr = '';
+                return true;
+            },
 
+            createStepBuildToolbar : function(settings){
+                let gridTopToolbar = '<div class="'+$.aceOverWatch.classes.gridTopToolbar+'" >';
+                let areThereElementsInToptoolbar = false;
+                if( settings.allowadd != false ){
+                    areThereElementsInToptoolbar = true;
+                    gridTopToolbar += '<button action="add">'+_aceL.add+'</button>';
+                }
+                if( settings.allowrefresh != false ){
+                    areThereElementsInToptoolbar = true;
+                    gridTopToolbar += '<button action="refresh">'+_aceL.refresh+'</button>';
+                }
+                if( settings.allowsearchfield != false ){
+                    areThereElementsInToptoolbar = true;
+                    gridTopToolbar += '<input class="'+$.aceOverWatch.classes.gridSearch+'" placeholder="'+settings.serachtext+'">';
+                }
+                if( areThereElementsInToptoolbar ){
+                    gridTopToolbar+='</div>';
+                }else{
+                    gridTopToolbar = '';
+                }
+                return gridTopToolbar;
+            },
 
-                for(var idx in settings.innerColumns){
+            createStepBuildHeader : function(settings){
+                let headerClasses = [$.aceOverWatch.classes.gridHeader];
+                if( settings.hideheader ){
+                    headerClasses.push($.aceOverWatch.classes.hide);
+                }
 
-                    var column = settings.innerColumns[idx];
-                    var columnicon = column.iconcls!='' ? '<i class="'+column.iconcls+'"></i>' : '';
+                if (settings.haveGroupHeaderCells){
+                    headerClasses.push($.aceOverWatch.classes.gridNHeader);
+                }
 
-                    var columnaditionalheaderclasses = [column.aditionalheaderclasses];
+                let gridHeader = '<div class="'+headerClasses.join(' ')+'" >';
+
+                let currGroupHeaderCells = '';
+                let currGroupHeaderCellNo = 0;
+                let groupHeaderClass = [];
+                let groupHeaderColAttr = '';
+
+                for(let idx in settings.innerColumns){
+
+                    let column = settings.innerColumns[idx];
+                    let columnicon = column.iconcls!='' ? '<i class="'+column.iconcls+'"></i>' : '';
+
+                    let columnaditionalheaderclasses = [column.aditionalheaderclasses];
                     if (( $.isFunction(column.oncolumntitleclick) ) || ( $.isFunction(window[column.oncolumntitleclick]) )){
                         columnaditionalheaderclasses.push($.aceOverWatch.classes.clickable);
                     }
@@ -10599,19 +14102,19 @@
                         groupHeaderClass = [];
                     }
                     if (currGroupHeaderCells != '') {
-                        //if I am on a groupped header cell
+                        //if I am on a grouped header cell
                         groupHeaderClass.push($.aceOverWatch.classes.gridNHeaderCol);
                         currGroupHeaderCellNo++;
-                        if (currGroupHeaderCellNo == Math.ceil(currGroupHeaderArr[currGroupHeaderCells]/2)) {
+                        if (currGroupHeaderCellNo == Math.ceil(settings.currGroupHeaderArr[currGroupHeaderCells]/2)) {
                             //for the even cols no we have to shift the before element with 50% left to show it on the center
-                            if (currGroupHeaderArr[currGroupHeaderCells] % 2 === 0) groupHeaderClass.push($.aceOverWatch.classes.gridNHeaderTitle50);
+                            if (settings.currGroupHeaderArr[currGroupHeaderCells] % 2 === 0) groupHeaderClass.push($.aceOverWatch.classes.gridNHeaderTitle50);
                             else groupHeaderClass.push($.aceOverWatch.classes.gridNHeaderTitle);
                             groupHeaderColAttr = ' groupname="'+currGroupHeaderCells+'"';
                         }
                         else {
                             groupHeaderColAttr = '';
                         }
-                        if (currGroupHeaderCellNo == currGroupHeaderArr[currGroupHeaderCells])
+                        if (currGroupHeaderCellNo == settings.currGroupHeaderArr[currGroupHeaderCells])
                             groupHeaderClass.push($.aceOverWatch.classes.gridNHeaderColLast);
                     }
                     else {
@@ -10619,7 +14122,7 @@
                         groupHeaderColAttr = '';
                     }
 
-                    var columnsorticon = '';
+                    let columnsorticon = '';
                     if (column.allowsort) {
                         columnaditionalheaderclasses.push($.aceOverWatch.classes.clickable);
 
@@ -10639,103 +14142,24 @@
 
                 gridHeader += '</div>';
 
+                delete settings.haveGroupHeaderCells;
+                delete settings.currGroupHeaderArr;
 
+                return gridHeader;
+            },
 
-                if( settings.showtotalsrow ) {
-                    
-                    for (var idx in settings.totalsColumns) {
-                        var column = settings.totalsColumns[idx];
-                        /*begin column for grid*/
-                        column = $.extend(true, {
-                            title: '',
-                            type: 'normal', //normal, action, checkboxcol
-                            atype: 'text',		//atype - ace type; by default, it is text; used atm for creating edit fields. All atypes = [combobox, checkbox, switch, autocomplete, datepicker, text, form]
-                            fieldname: '',
-                            renderer: null,		//the renderer might be a function itself, or the name of a global function ( found in window )
-                            actionrenderer: null,  //function to return true or false to display/hide a action button on a action column
-                            actiontitlerenderer: null,  //function to return the title for a action column
-                            aditionalclasses: '',
-                            aditionalheaderclasses: '',
-                            align: 'left',
-                            iconcls: '', //used to display a icon
-                            classes: [],
-                            styles: [],
-                            rowtitle: '', //used by the checkboxcol to show a text next to the checkbox on each row
-                            groupheader: '', //a text to group cells by
-                            oncolumntitleclick: null,	//function(target, clickedTotalsCell, clickedTotalsColIdx, clickedTotalsColDefinition)
-
-                            allowsort: false,
-                            hidesorticonuntilfirstclick: true,
-                            sortdir: '', //should be '', asc or desc - for '' the sort icon is hidden
-                            sortasciconcls: 'fa fa-caret-up',
-                            sortdesciconcls: 'fa fa-caret-down',
-
-
-                            acetplclass: '', //set true to render a class returned by the classtplrenderer property
-                            classtplrenderer: '', //function used to return a class based on the currenct record row - called only when acetplclass = true
-
-                        }, column);
-
-
-                        column.classes = [$.aceOverWatch.classes.gridCell];
-
-                        if (column.type == 'action') {
-                            column.classes.push($.aceOverWatch.classes.gridCellAction);
-                        }
-                        if (column.type == 'checkboxcol') {
-                            column.classes.push($.aceOverWatch.classes.gridCellCheckBoxCol);
-                        }
-
-                        if (!$.aceOverWatch.utilities.isVoid(column.width)) column.styles.push('width:' + column.width);
-
-
-                        switch (column['align']) {
-                            case 'left':
-                                column.classes.push($.aceOverWatch.classes.textAlignLeft);
-                                break;
-                            case 'right':
-                                column.classes.push($.aceOverWatch.classes.textAlignRight);
-                                break;
-                            case 'center':
-                                column.classes.push($.aceOverWatch.classes.textAlignCenter);
-                                break;
-                        }
-                        if (!$.aceOverWatch.utilities.isVoid(column.aditionalclasses)) column.classes.push(column.aditionalclasses);
-
-                        settings.totalsColumns[idx] = column;
-                    }
-
-                	gridTotals = '<div class="'+footerTotalsClasses.join(' ')+'" >';
-
-                    for(var idx in settings.totalsColumns){
-
-                        var column = settings.totalsColumns[idx];
-
-                        var columnaditionalheaderclasses = [column.aditionalheaderclasses];
-                        if (( $.isFunction(column.oncolumntitleclick) ) || ( $.isFunction(window[column.oncolumntitleclick]) )){
-                            columnaditionalheaderclasses.push($.aceOverWatch.classes.clickable);
-                        }
-
-                        gridTotals += '<div class="' + [].concat(column.classes,columnaditionalheaderclasses).join(' ')  + '" style="' + column.styles.join(';') + '" ' + ' tridx="' + idx + '" totalscalculation="'+($.aceOverWatch.utilities.isVoid(column.totalscalculation)?'':column.totalscalculation)+'">' + ($.aceOverWatch.utilities.isVoid(column.totalstext)?'&nbsp;':column.totalstext) + '</div>';
-
-                        settings.totalsColumns[idx] = column;
-                    }
-
-                    gridTotals += '</div>';
-                }
-
-
-                settings.gridHeader = gridHeader;
-                settings.footerTotalsRow = gridTotals;
-
-                //let build the rest of the body now
-
-                styleBody=[];
+            createStepBuildBody : function(settings){
+                let styleBody=[];
                 if( settings.height != false ){
                     styleBody.push('height:100%');
                 }
 
-                var gridBody = '<div class="'+$.aceOverWatch.classes.gridBody + ' '+$.aceOverWatch.classes.gridScrollView+'" style="'+styleBody.join(';')+'">';
+                let gridClasses = [$.aceOverWatch.classes.gridBody,$.aceOverWatch.classes.gridScrollView];
+                if( settings.buildPresentationForm ){
+                    gridClasses.push('ace-presentation-main');
+                }
+
+                let gridBody = '<div class="'+$.aceOverWatch.classes.gridBody + ' '+$.aceOverWatch.classes.gridScrollView+' '+(settings.buildPresentationForm?'ace-presentation-main':'')+'" style="'+styleBody.join(';')+'">';
                 gridBody += $.aceOverWatch.field.grid.getPageHtml(settings);
                 gridBody += '</div>';
 
@@ -10744,19 +14168,133 @@
                     gridBody += '<div class="'+$.aceOverWatch.classes.gridEditInlineControls+'"><button action="save">'+_aceL.save+'</button><button action="cancel">'+_aceL.cancel+'</button></div>'
                 }
 
-                settings.gridBody = gridBody;
-
                 /*
-				 * currently only the pagination is displayed in the grid.. soo.. if no pagination... no footer
-				 * should not negatively influence anything
-				 */
-                var gridFooter = '';
+                 * now.. IF we have a presentation section, we'll wrap the body in a presentation panel
+                 */
+                if( settings.buildPresentationForm ){
+                    let classes = ['ace-col-12 ace-presentation-container ace-presentation-hidden-info'];
+                    switch( settings.presentationratio ){
+                        case '10-2': classes.push('ace-presentation-ration-10-2'); break;
+                        case '5-5': classes.push('ace-presentation-ration-5-5'); break;
+                        case '8-4':
+                        default:
+                            break;
+                    }
+                    if( settings.presentationreverse ){
+                        classes.push('ace-presentation-container-reverse');
+                    }
+                    if( settings.presentationhideonmobile ){
+                        classes.push('ace-presentation-hide-mobile-info');
+                    }
+                    gridBody = '<div class="'+classes.join(' ')+'">'
+                        + gridBody
+                        + '<div class="ace-presentation-info"></div>'
+                        + '</div>';
+                }
+
+                return gridBody;
+            },
+
+            createStepBuildTotals : function(settings){
+                if( !settings.showtotalsrow ) { return ''; }
+
+                let footerTotalsClasses = [$.aceOverWatch.classes.gridFooterTotals];
+
+                for (let idx in settings.totalsColumns) {
+                    let column = settings.totalsColumns[idx];
+                    /*begin column for grid*/
+                    column = $.extend(true, {
+                        title: '',
+                        type: 'normal', //normal, action, checkboxcol
+                        atype: 'text',		//atype - ace type; by default, it is text; used atm for creating edit fields. All atypes = [combobox, checkbox, switch, autocomplete, datepicker, text, form]
+                        fieldname: '',
+                        renderer: null,		//the renderer might be a function itself, or the name of a global function ( found in window )
+                        actionrenderer: null,  //function to return true or false to display/hide a action button on a action column
+                        actiontitlerenderer: null,  //function to return the title for a action column
+                        aditionalclasses: '',
+                        aditionalheaderclasses: '',
+                        align: 'left',
+                        iconcls: '', //used to display a icon
+                        classes: [],
+                        styles: [],
+                        rowtitle: '', //used by the checkboxcol to show a text next to the checkbox on each row
+                        groupheader: '', //a text to group cells by
+                        oncolumntitleclick: null,	//function(target, clickedTotalsCell, clickedTotalsColIdx, clickedTotalsColDefinition)
+
+                        allowsort: false,
+                        hidesorticonuntilfirstclick: true,
+                        sortdir: '', //should be '', asc or desc - for '' the sort icon is hidden
+                        sortasciconcls: 'fa fa-caret-up',
+                        sortdesciconcls: 'fa fa-caret-down',
+
+                        acetplclass: '', //set true to render a class returned by the classtplrenderer property
+                        classtplrenderer: '', //function used to return a class based on the current record row - called only when acetplclass = true
+
+                    }, column);
+
+
+                    column.classes = [$.aceOverWatch.classes.gridCell];
+
+                    if (column.type == 'action') {
+                        column.classes.push($.aceOverWatch.classes.gridCellAction);
+                    }
+                    if (column.type == 'checkboxcol') {
+                        column.classes.push($.aceOverWatch.classes.gridCellCheckBoxCol);
+                    }
+
+                    if (!$.aceOverWatch.utilities.isVoid(column.width)) column.styles.push('width:' + column.width);
+
+                    switch (column['align']) {
+                        case 'left':
+                            column.classes.push($.aceOverWatch.classes.textAlignLeft);
+                            break;
+                        case 'right':
+                            column.classes.push($.aceOverWatch.classes.textAlignRight);
+                            break;
+                        case 'center':
+                            column.classes.push($.aceOverWatch.classes.textAlignCenter);
+                            break;
+                    }
+                    if (!$.aceOverWatch.utilities.isVoid(column.aditionalclasses)) column.classes.push(column.aditionalclasses);
+
+                    settings.totalsColumns[idx] = column;
+                }
+
+                let gridTotals = '<div class="'+footerTotalsClasses.join(' ')+'" >';
+
+                for(let idx in settings.totalsColumns){
+
+                    let column = settings.totalsColumns[idx];
+
+                    let columnaditionalheaderclasses = [column.aditionalheaderclasses];
+                    if (( $.isFunction(column.oncolumntitleclick) ) || ( $.isFunction(window[column.oncolumntitleclick]) )){
+                        columnaditionalheaderclasses.push($.aceOverWatch.classes.clickable);
+                    }
+
+                    gridTotals += '<div class="' + [].concat(column.classes,columnaditionalheaderclasses).join(' ')  + '" style="' + column.styles.join(';') + '" ' + ' tridx="' + idx + '" totalscalculation="'+($.aceOverWatch.utilities.isVoid(column.totalscalculation)?'':column.totalscalculation)+'">' + ($.aceOverWatch.utilities.isVoid(column.totalstext)?'&nbsp;':column.totalstext) + '</div>';
+
+                    settings.totalsColumns[idx] = column;
+                }
+
+                gridTotals += '</div>';
+
+                return gridTotals;
+            },
+
+            createStepBuildFooter : function(settings, gridTotals){
+                let gridFooter = '';
+
+                let footerClasses = [$.aceOverWatch.classes.gridFooter];
+                if( settings.showtotalsrow ){
+                    footerClasses.push($.aceOverWatch.classes.gridFooterWithTotals);
+                }
+
                 if( settings.pagination ){
 
                     gridFooter = '<div class="'+footerClasses.join(' ')+'" >';
 
                     if (settings.showtotalsrow) {
-                        gridFooter += settings.footerTotalsRow;
+                        gridFooter += gridTotals;
                     }
                     gridFooter += '<div class="'+$.aceOverWatch.classes.gridPagination+'" >\
 						<button jt="0" >&lt;&lt;</button>\
@@ -10769,32 +14307,59 @@
                     gridFooter += '</div>';
                 } else{
                     if (settings.showtotalsrow) {
-                        gridFooter += '<div class="'+footerClasses.join(' ')+'" >' + settings.footerTotalsRow + '</div>';
+                        gridFooter += '<div class="'+footerClasses.join(' ')+'" >' + gridTotals + '</div>';
                     }
                 }
-                settings.gridFooter = gridFooter;
 
-                //building the big grid
+                return gridFooter;
+            },
 
-                styleGrid=['width:100%'];
-                if( settings.height != false ){
-                    styleGrid.push('height:'+settings.height);
+            createStepBuildPresentationForm : function(target, settings){
+                if( !settings.buildPresentationForm ){
+                    settings.actualPresentationForm = false;
+                    return;
                 }
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.grid+' ' + (settings.infinitescroll ? $.aceOverWatch.classes.gridInfiniteScroll : '' )  +'" style="'+styleGrid.join(';')+'">';
-                fieldHtml += gridTopToolbar;
-                fieldHtml += gridHeader;
-                fieldHtml += gridBody;
-                fieldHtml += settings.gridFooter;
-                fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
-                fieldHtml += '</div>';//end - grid
+                settings.presentationform.template = settings.presentationformtpl;
 
-                return fieldHtml;
+                $.extend(true,settings.presentationform, $.extend(true,{
+                    type:'form',
+                    ftype:'custom',
+                    displaysavebtn:false,
+                    displaycancelbtn:false,
+                    parent:target,
+                    net:settings.net,
+                    validate:true,
+                    checkdirtyoncancel : false,
+                    onsavesuccessful : function(form, data){
+                        $.aceOverWatch.field.form.loadRecord(form,form.ace('value'),true);
+                    },
+                    onafterloadrecord : settings.presentationonafterloadrecord
+                }, settings.presentationform ));
+
+                settings.actualPresentationForm = target.find('.ace-presentation-info').addClass(settings.presentationcustomclass).ace('create',settings.presentationform);
+            },
+
+            displayPresentationForm : function(settings, record){
+                settings.actualPresentationForm.ace('value',record);
+                let parent = settings.actualPresentationForm.parent();
+                parent.removeClass('ace-presentation-hidden-info');
+                parent.siblings('.ace-grid-header').css('width',String(parent.find('.ace-grid-body').first().outerWidth())+'px');
+            },
+            hidePresentationForm : function(settings){
+                if( !settings.actualPresentationForm ){ return; }
+                let parent = settings.actualPresentationForm.parent();
+                parent.addClass('ace-presentation-hidden-info');
+                parent.siblings('.ace-grid-header').css('width','100%');
             },
 
             afterInit : function(target,what){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if( what.all ) {
+                    this.createStepBuildPresentationForm(containerField, settings);
+                }
 
                 /**
                  *  first check if I have some fields loaded from a template that have to be autocreated
@@ -10821,16 +14386,16 @@
                                 $.aceOverWatch.field.grid.reloadPage(target);
                                 break;
                             default:
-                            	
-                            	if( $.isFunction(action)) {
-                            		action(el);
+
+                                if( $.isFunction(action)) {
+                                    action(el);
                                 }else{
                                     if( jQuery.isFunction(window[action]) ){
                                         window[action](el);
                                     }
                                 }
-                            	
-                            	break;
+
+                                break;
                         }
 
                         return false;
@@ -10846,6 +14411,7 @@
                 /*
 				 * enable pagination
 				 */
+                if( !settings.pagination ){ settings.paginationInput = false; }
                 if( (what.all == true || what.pagination == true ) && settings.pagination ){
 
                     $.aceOverWatch.field.grid.setPaginationButtons(target);
@@ -10877,16 +14443,19 @@
                         }
 
                         if( oldPage != settings.page ){
+
+                            $.aceOverWatch.field.grid.hidePresentationForm(settings);
+
                             if( settings.net.remote ){
                                 settings.net.start = (settings.page-1) * settings.net.size;
-                                $.aceOverWatch.net.load(target);
-                            }else{
-                                $.aceOverWatch.field.grid.displayPage(target);
                             }
+
+                            $.aceOverWatch.field.grid.reloadPage(target,false,true);
                         }
                     });
 
-                    containerField.find('.'+$.aceOverWatch.classes.gridPagination).find('input').unbind().on('change',function(){
+                    settings.paginationInput = containerField.find('.'+$.aceOverWatch.classes.gridPagination).find('input');
+                    settings.paginationInput.unbind().on('change',function(){
 
 
                         var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
@@ -10897,7 +14466,7 @@
                             return;
                         }
 
-                        if( page < 1 || page > settings.net.maxPages ){
+                        if( page < 1 || ( page > settings.maxPages && !settings.net.donotreturntotals ) ){
                             page = settings.page;
                             $(this).val(settings.page);
                         }
@@ -10930,7 +14499,7 @@
                 if( (what.all == true || what.rowActions == true ) ){
 
                     //this deals with clicks on action buttons
-                    containerField.find('.'+$.aceOverWatch.classes.gridActionButton).unbind().on('click',function(){
+                    containerField.find('.'+$.aceOverWatch.classes.gridActionButton).unbind().on('click',function(e){
 
                         var aIdx = $(this).attr('aidx');//action idx
                         var cIdx = $(this).closest('.'+$.aceOverWatch.classes.gridCell).attr('cidx');
@@ -10939,41 +14508,25 @@
                         var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        if( !settings ){
-                            return;
-                        }
+                        if( !settings ){ return; }
 
                         if( settings.innerColumns[cIdx].actions instanceof Array ){
-                            if( $.isFunction(settings.innerColumns[cIdx].actions[aIdx].callback) ){
-                                settings.innerColumns[cIdx].actions[aIdx].callback(target,rIdx,cIdx,settings.data[rIdx]);
-                            }else{
-                                if( $.isFunction(window[settings.innerColumns[cIdx].actions[aIdx].callback]) ){
-                                    window[settings.innerColumns[cIdx].actions[aIdx].callback](target,rIdx,cIdx,settings.data[rIdx]);
-                                }
-                            }
+                            $.aceOverWatch.utilities.runIt(settings.innerColumns[cIdx].actions[aIdx].callback,target,rIdx,cIdx,settings.data[rIdx],e);
                         }
 
+                        return false;
                     });
                     //this deals with clicks on checkboxes for checkboxcols
                     containerField.find('.'+$.aceOverWatch.classes.gridActionCheckBoxCol).unbind().on('click',function(){
+                        let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
+                        let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        var cIdx = $(this).closest('.'+$.aceOverWatch.classes.gridCell).attr('cidx');
-                        var rIdx = $(this).closest('.'+$.aceOverWatch.classes.gridRow).attr('ridx');
+                        if( !settings ){ return; }
 
-                        var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                        var settings = target.data($.aceOverWatch.settings.aceSettings);
+                        let cIdx = $(this).closest('.'+$.aceOverWatch.classes.gridCell).attr('cidx');
+                        let rIdx = $(this).closest('.'+$.aceOverWatch.classes.gridRow).attr('ridx');
 
-                        if( !settings ){
-                            return;
-                        }
-
-                        if( $.isFunction(settings.innerColumns[cIdx].callback) ){
-                            settings.innerColumns[cIdx].callback(target, $(this).prop('checked'), rIdx,cIdx,settings.data[rIdx], this);
-                        }else{
-                            if( $.isFunction(window[settings.innerColumns[cIdx].callback]) ){
-                                window[settings.innerColumns[cIdx].callback](target, $(this).prop('checked'), rIdx,cIdx,settings.data[rIdx], this);
-                            }
-                        }
+                        $.aceOverWatch.utilities.runIt(settings.innerColumns[cIdx].callback,target, $(this).prop('checked'), rIdx,cIdx,settings.data[rIdx], this);
 
                     });
                     //this deals with clicks on HEADER checkboxes for checkboxcols
@@ -10987,7 +14540,7 @@
                     });
 
                     //this handles the click on cells
-                    containerField.find('.'+$.aceOverWatch.classes.gridCell).unbind('click').on('click',function(){
+                    containerField.find('.'+$.aceOverWatch.classes.gridCell).unbind('click').on('click',function(e){
 
                         var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = target.data($.aceOverWatch.settings.aceSettings);
@@ -11030,14 +14583,9 @@
                             if( !settings.donotredrawselectedrow ){
                                 $.aceOverWatch.field.grid.redrawRow(target, settings, rIdx);
                             }
-                            //this was redrawned because the selection was changed... so.. now.. if we have a callback for this event, call it
-                            if( $.isFunction(settings.onselectionchange)) {
-                                settings.onselectionchange(target, rIdx, cIdx, settings.data[rIdx]);
-                            }else{
-                                if( jQuery.isFunction(window[settings.onselectionchange]) ){
-                                    window[settings.onselectionchange](target, rIdx, cIdx, settings.data[rIdx]);
-                                }
-                            }
+
+                            $.aceOverWatch.utilities.runIt(settings.onselectionchange,target,rIdx, cIdx, settings.data[rIdx]);
+
                         }
                         //end selection logic
 
@@ -11077,20 +14625,36 @@
                             }
 
                         }
-                        
-                        if( $.isFunction(settings.onrowclick)) {
-                            settings.onrowclick(target, rIdx, cIdx, settings.data[rIdx]);
-                        }else{
-                            if( jQuery.isFunction(window[settings.onrowclick]) ){
-                                window[settings.onrowclick](target, rIdx, cIdx, settings.data[rIdx]);
+
+                        $.aceOverWatch.utilities.runIt(settings.onrowclick,target, rIdx, cIdx, settings.data[rIdx],e);
+
+                        let edited = false;
+                        if( settings.allowedit ) {
+                            if (settings.gtype == 'table' && (settings.alloweditinline || settings.forceinlineeditonselect) ) {
+                                $.aceOverWatch.field.grid.inlineEdit(target,rIdx,cIdx);
+                                edited = true;
+                            }else{
+                                if (settings.editonselect && !settings.alloweditinline) {
+                                    $.aceOverWatch.field.grid.editRecord(target,rIdx,0,settings.data[rIdx]);
+                                    edited = true;
+                                }
                             }
                         }
 
-                        if(  settings.gtype == 'table' && settings.allowedit && settings.alloweditinline ){
-                            $.aceOverWatch.field.grid.inlineEdit(target,rIdx,cIdx);
-                        }else{
-                            if (settings.allowedit && settings.editonselect && !settings.alloweditinline){
-                                $.aceOverWatch.field.grid.editRecord(target,rIdx,0,settings.data[rIdx]);
+                        if( settings.actualPresentationForm ) {
+                            if (!$.aceOverWatch.utilities.isViewportForMobile() || !settings.presentationhideonmobile) {
+                                $.aceOverWatch.field.grid.displayPresentationForm(settings,settings.data[rIdx]);
+                                /*settings.actualPresentationForm.ace('value', settings.data[rIdx]);
+                                settings.actualPresentationForm.parent().removeClass('ace-presentation-hidden-info');*/
+                                if( !edited ){
+                                    settings.editCurrentRow = rIdx;
+                                }
+                            }else{
+                                if ( $.aceOverWatch.utilities.isViewportForMobile() && settings.presentationhideonmobile
+                                    && settings.allowedit && !edited
+                                ) {
+                                    $.aceOverWatch.field.grid.editRecord(target,rIdx,0,settings.data[rIdx]);
+                                }
                             }
                         }
 
@@ -11098,17 +14662,16 @@
                             return false;//inline autocomplete behaves WRONG if click events are not stopped from propagading here
                         }
 
-
                         /*
-                         * stopping this event from propagating in SOME situations: 
+                         * stopping this event from propagating in SOME situations:
                          * this might be needed, for example, when dealing with nested grids
                          */
                         if( settings.stoprowclickpropagation ){
-                        	return false;
+                            return false;
                         }
-                        
+
                         if( settings.tooglecheckonrowclick ){
-                        	$(this).closest('.'+$.aceOverWatch.classes.gridRow).find('.'+$.aceOverWatch.classes.gridActionCheckBoxCol).trigger('click');
+                            $(this).closest('.'+$.aceOverWatch.classes.gridRow).find('.'+$.aceOverWatch.classes.gridActionCheckBoxCol).trigger('click');
                         }
                     });
 
@@ -11131,29 +14694,29 @@
 
                             if (settings.innerColumns[hcIdx].sortdir == 'asc') {
                                 settings.innerColumns[hcIdx].sortdir = 'desc';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls);
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).addClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                                .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
                             }
                             else if (settings.innerColumns[hcIdx].sortdir == 'desc') {
                                 settings.innerColumns[hcIdx].sortdir = '';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls);
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                                .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
                             }
                             else {
                                 settings.innerColumns[hcIdx].sortdir = 'asc';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).addClass(settings.innerColumns[hcIdx].sortasciconcls);
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls)
+                                .addClass(settings.innerColumns[hcIdx].sortasciconcls);
                             }
 
                             if ($.aceOverWatch.utilities.isVoid(settings.orderbyarr)) {
                                 settings.orderbyarr = {};
                             }
                             if (settings.innerColumns[hcIdx].sortdir !== '') {
-                            	el.find('.' + $.aceOverWatch.classes.gridCellSort).removeClass($.aceOverWatch.classes.hide);
+                                el.find('.' + $.aceOverWatch.classes.gridCellSort).removeClass($.aceOverWatch.classes.hide);
                                 settings.orderbyarr[settings.innerColumns[hcIdx].fieldname] = settings.innerColumns[hcIdx].sortdir;
                             }
                             else {
-                            	el.find('.' + $.aceOverWatch.classes.gridCellSort).addClass($.aceOverWatch.classes.hide);
+                                el.find('.' + $.aceOverWatch.classes.gridCellSort).addClass($.aceOverWatch.classes.hide);
                                 settings.orderbyarr[settings.innerColumns[hcIdx].fieldname] = null;
                             }
 
@@ -11165,7 +14728,7 @@
                             settings.net.extraparams['orderby'] = JSON.stringify(settings.orderbyarr);
                             reloadGrid = true;
                         }
-                        
+
                         $.aceOverWatch.utilities.runIt(settings.innerColumns[hcIdx].oncolumntitleclick, target, $(this), hcIdx, settings.innerColumns[hcIdx]);
 
                         if (reloadGrid) {
@@ -11233,7 +14796,7 @@
                                             var containerField = $(target);
                                             var settings = containerField.data($.aceOverWatch.settings.aceSettings);
                                             if (!settings) return;
-                                            $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true); //redraw the editing row
+                                            $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true, rIdx); //redraw the editing row
                                         }); //cancel edit
                                     }
                                 }
@@ -11321,16 +14884,11 @@
                             onsavesuccessful : settings.onrowsavesuccessful
                                 ? settings.onrowsavesuccessful
                                 : null,
+                            onlocalsavesuccessfull : settings.onrowsavesuccessful
+                                ? settings.onrowsavesuccessful
+                                : null,
                             oninit:function(form){
-                                //now call the function passed in the constructor load record if case
-                                if( $.isFunction(settings.oninitrow) ){
-                                    return settings.oninitrow(form);
-                                }
-                                else{
-                                    if($.isFunction(window[settings.oninitrow])){
-                                        return window[settings.oninitrow](form);
-                                    }
-                                }
+                                $.aceOverWatch.utilities.runIt(settings.oninitrow,form);
                             },
                             onafterloadrecord:  function(target, record){
                                 var f = $(target);
@@ -11478,7 +15036,7 @@
                                 var gridSettings = $(settings.parent).data($.aceOverWatch.settings.aceSettings);
                                 //make sure that the grid knows the curelntly editedRecord
                                 gridSettings.editCurrentRow = settings.assignedToGridRowIdx; //set the row as being edited
-                                $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true); //redraw the editing row
+                                $.aceOverWatch.field.grid.inlineDissmissRowEdit(settings.parent, true, containerField.attr('rid')); //redraw the editing row
                             }); //cancel edit
                         });
 
@@ -11505,9 +15063,9 @@
                     if (settings.infinitescroll ){
                         containerField.find('.'+$.aceOverWatch.classes.gridScrollView).trigger('scroll');
                     }
-                    
+
                     if( what.all == true || what.totals == true ){
-                    	this.calculateGridTotals(containerField);
+                        this.calculateGridTotals(containerField);
                     }
                 }
 
@@ -11590,19 +15148,39 @@
                 }
 
                 //key based navigation
-                if( what.all == true ){
+                if( what.all == true
+                    && (
+                        settings.paginationInput
+                        || settings.hideonescape
+                        || settings.enablekeybasednavigation
+                        || settings.oncustomkeypresshandler
+                    )
+                ){
                     containerField.unbind('keyup').keyup(function(e){
 
                         e.stopImmediatePropagation();
 
                         var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                        
+
+                        if( settings.paginationInput ){
+                            if( settings.paginationInput.is(":focus") ) {
+                                return;
+                            }
+
+                        }
+
+
                         ///////////////////////////////////
                         switch(e.keyCode){
                             case 27://escape
                                 if( settings.hideonescape){
-                                    $(this).fadeOut(1);
+                                    if( settings.acParent ){
+                                        $.aceOverWatch.field.autocomplete.hideSelectionGrid(settings.acParent);
+                                    }else {
+                                        $(this).fadeOut(1);
+                                    }
+
                                 }
                                 break;
                             case 37: // left arrow - go to previous page
@@ -11638,11 +15216,11 @@
                                 return false;//because we don't want it to propagate, because it might do for some unwanted behaviour in several cases (enter on autocomplete grid for example)
                                 break;
                         }
-                        
+
                         if( settings.oncustomkeypresshandler ){
-                        	settings.oncustomkeypresshandler($(this), false, e.keyCode);
+                            settings.oncustomkeypresshandler($(this), false, e.keyCode);
                         }
-                        
+
                         return false;
 
                     });
@@ -11652,6 +15230,11 @@
 
                         containerField.unbind('keypress').keypress(function(e){
                             var settings = $(this).data($.aceOverWatch.settings.aceSettings);
+
+                            if( settings.paginationInput && settings.paginationInput.is(":focus") ) {
+                                return;
+                            }
+
                             settings.oncustomkeypresshandler($(this), e, false);
                         });
 
@@ -11708,13 +15291,13 @@
                 }
 
                 if(
-                		!settings.data
-            		||
-                		(
-                					settings.data
-                				&&	settings.data.length <= rowIdx //less of equal, because the rowIdx starts with zero 
-                		)
-        		){
+                    !settings.data
+                    ||
+                    (
+                        settings.data
+                        &&	settings.data.length <= rowIdx //less of equal, because the rowIdx starts with zero
+                    )
+                ){
                     return false;
                 }
 
@@ -11753,12 +15336,12 @@
              * initialData -  a simple object whose properties will be added to the editing record
              */
             addNewRecord: function(target, initialData){
-            	var containerField = $(target);
+                var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                
+
                 if( !settings || !settings.allowedit ){
-                	$.aceOverWatch.utilities.log(_aceL.eona);
-                	return;
+                    $.aceOverWatch.utilities.log(_aceL.eona);
+                    return;
                 }
 
                 settings.editingRecord = {};
@@ -11780,6 +15363,7 @@
                 if( settings.net.maxPages * settings.net.size < settings.net.totalExpectedRowsCount ){
                     settings.net.maxPages++;//in case of incomplete pages
                 }
+                return true;
             },
 
             search : function(target, queryObj, asAdvancedFilter){
@@ -11815,15 +15399,17 @@
             },
 
             reloadPage : function(target, keepeditform, forceKeepData){
-                var settings =  $(target).data($.aceOverWatch.settings.aceSettings);
+                var settings =  target.data($.aceOverWatch.settings.aceSettings);
 
                 if( !settings ){
                     return;
                 }
-                
+
                 $.aceOverWatch.field.grid.inlineDissmissRowEdit(target);
 
                 if (keepeditform !== true) $.aceOverWatch.field.grid.hideEditForm(target);
+
+                $.aceOverWatch.utilities.runIt(settings.onbeforepagereload,target);
 
                 /*
 				 * for the moment, disable the current selection when a page is re-loaded
@@ -11844,35 +15430,63 @@
                         $.aceOverWatch.field.grid.displayPage(target);
                     }
 
+                    if( settings.withtags ) {
+                        let queryTags = [];
+                        for(let tagName in settings.currentSearchTags ){
+                            let id = settings.currentSearchTags[tagName];
+                            queryTags.push((id > 0 ? id+':' : '')+tagName);
+                        }
+                        if( queryTags.length == 0 ) {
+                            delete settings.net.extraparams.tags;
+                        }else{
+                            settings.net.extraparams.tags = queryTags.join(',');
+                        }
+                        settings.net.extraparams.tags_sm = settings.tagssearchmode;
+                    }else{
+                        settings.net.extraparams.tags = '';
+                    }
+
                     $.aceOverWatch.net.load(target);			//the results are gouing to be processed by the setData function
 
                 }else{
-                	
-                	let newStaticPageData = $.aceOverWatch.utilities.runIt(settings.onrefreshstaticpage,target,settings.page,settings.net.size);
-                	if( $.isArray(newStaticPageData) ){
-                		/*
-                		 * if the page we have just reloaded is NOT the last page, we allow at max: settings.net.size elements to be rewritten
-                		 * if the page we have just reloaded IS the last page, we allow items to be added to the grid, as it is necessary
-                		 */
-                		let maxExpectedItems = settings.data.length;
-                		if( settings.page < settings.net.maxPages ){
-                			if( newStaticPageData.length > settings.net.size ){
-                				newStaticPageData.splice(settings.net.size,newStaticPageData.length-settings.net.size);
-                			}
-                		}else{
-                			let possibleNewLength = (settings.page-1) * settings.net.maxPages + newStaticPageData.length; 
 
-                			if( possibleNewLength > settings.data.length ){
-                				maxExpectedItems = possibleNewLength;
-                			}
-                		}
-                		
-                		this.setData(target, newStaticPageData, maxExpectedItems);
-                	}else{
-                		$.aceOverWatch.field.grid.displayPage(target);
-                	}
-                	
+                    let newStaticPageData = $.aceOverWatch.utilities.runIt(settings.onrefreshstaticpage,target,settings.page,settings.net.size);
+                    if( $.isArray(newStaticPageData) ){
+                        /*
+                         * if the page we have just reloaded is NOT the last page, we allow at max: settings.net.size elements to be rewritten
+                         * if the page we have just reloaded IS the last page, we allow items to be added to the grid, as it is necessary
+                         */
+                        let maxExpectedItems = settings.data.length;
+                        if( settings.page < settings.net.maxPages ){
+                            if( newStaticPageData.length > settings.net.size ){
+                                newStaticPageData.splice(settings.net.size,newStaticPageData.length-settings.net.size);
+                            }
+                        }else{
+                            let possibleNewLength = (settings.page-1) * settings.net.maxPages + newStaticPageData.length;
+
+                            if( possibleNewLength > settings.data.length ){
+                                maxExpectedItems = possibleNewLength;
+                            }
+                        }
+
+                        this.setData(target, newStaticPageData, maxExpectedItems);
+                    }else{
+                        $.aceOverWatch.field.grid.displayPage(target);
+                    }
+
                 }
+            },
+
+            refresh : function(target,params){
+                target.ace('value',{
+                    cleardata:true,
+                    page:1,
+                    net : {
+                        extraparams : params
+                    }
+                });
+                this.reloadPage( target );
+                return target;
             },
 
             calculateGridTotals : function(target) {
@@ -11892,39 +15506,45 @@
                     for(var idx in settings.totalsColumns) {
                         let column = settings.totalsColumns[idx];
                         if( $.aceOverWatch.utilities.isVoid(column.totalsoprenderer) && $.aceOverWatch.utilities.isVoid(column.fieldname) ){
-                        	continue;
+                            continue;
                         }
                         var totalCellValue = 0;
                         switch (column.totalsoprenderer) {
-                            
-                        	case 'count': //computes the number of elements displayed in the page
+
+                            case 'count': //computes the number of elements displayed in the page
                                 totalCellValue = totalsDataArr.length;
                                 break;
-                                        
+
                             case 'sum': //computes the sum of all elements converted into decimal numbers
-                            			//if something can't be converted into decimal, it will be treated as 0 (neutral)
+                                //if something can't be converted into decimal, it will be treated as 0 (neutral)
                                 $.each(totalsDataArr, function (idx, rec) {
                                     let tmpVal = parseFloat(rec.val(column.fieldname));
                                     if (!$.isNumeric(tmpVal)) tmpVal = 0;
                                     totalCellValue += tmpVal;
                                 });
+                                if( !Number.isInteger(totalCellValue) ){
+                                    totalCellValue = totalCellValue.toFixed(2);
+                                }
                                 break;
                             case 'mul': //multiplies all elements converted into decimal numbers
-                            			 //if something can't be converted into decimal, it will be treated as 1 ( neutral )
-                            	totalCellValue = 1;
-                            	$.each(totalsDataArr, function (idx, rec) {
-                            		let tmpVal = parseFloat(rec.val(column.fieldname));
-                            		if (!$.isNumeric(tmpVal)) tmpVal = 1;
-                            		totalCellValue *= tmpVal;
-                            	});
-                            	break;
-                            	
+                                //if something can't be converted into decimal, it will be treated as 1 ( neutral )
+                                totalCellValue = 1;
+                                $.each(totalsDataArr, function (idx, rec) {
+                                    let tmpVal = parseFloat(rec.val(column.fieldname));
+                                    if (!$.isNumeric(tmpVal)) tmpVal = 1;
+                                    totalCellValue *= tmpVal;
+                                });
+                                if( !Number.isInteger(totalCellValue) ){
+                                    totalCellValue = totalCellValue.toFixed(2);
+                                }
+                                break;
+
                             default:	//by default, it should be a function, or the name of a function with 2 parameters( dataArr, columnName), that returns a value
-                               	
-                    			totalCellValue = $.aceOverWatch.utilities.runIt(column.totalsoprenderer, totalsDataArr, column.fieldname);
-                    			if( !$.aceOverWatch.utilities.wasItRan() ){
-                    				continue;
-                    			}
+
+                                totalCellValue = $.aceOverWatch.utilities.runIt(column.totalsoprenderer, totalsDataArr, column.fieldname);
+                                if( !$.aceOverWatch.utilities.wasItRan(totalCellValue) ){
+                                    continue;
+                                }
 
                                 break;
                         }
@@ -11998,7 +15618,7 @@
                 var paginationDiv = containerField.find('.'+$.aceOverWatch.classes.gridPagination);
 
                 paginationDiv.find('input').val(settings.page);
-                paginationDiv.find('span.'+$.aceOverWatch.classes.gridPaginationTP).html(settings.net.maxPages);
+                paginationDiv.find('span.'+$.aceOverWatch.classes.gridPaginationTP).html(settings.net.donotreturntotals ? '...' : settings.net.maxPages);
 
                 if( settings.net.maxPages == 1 ){
                     paginationDiv.find('button').hide();
@@ -12020,6 +15640,12 @@
                         paginationDiv.find('button[jt="2"]').prop('disabled', false);
                     }
                 }
+
+                if( settings.net.donotreturntotals ){
+                    paginationDiv.find('button[jt="2"]').addClass('ace-hide');
+                }else{
+                    paginationDiv.find('button[jt="2"]').removeClass('ace-hide');
+                }
             },
 
             getPageHtml : function(settings){
@@ -12030,18 +15656,23 @@
                 if(	   settings.loading
                     && settings.displayloadingmask
                 ){
-                	return $.aceOverWatch.utilities.getLoaderCode(_aceL.ld);
+                    return $.aceOverWatch.utilities.getLoaderCode(_aceL.ld);
                 }
 
                 settings.startPageRowIndex = (settings.page-1)*settings.net.size;
                 if( settings.startPageRowIndex >= settings.data.length ){
 
-                    if (settings.norecordstpl != '') {
+                    this.hidePresentationForm(settings);
+                    /*if( settings.actualPresentationForm ){
+                        settings.actualPresentationForm.parent().addClass('ace-presentation-hidden-info');
+                    }*/
+
+                    if (settings.norecordstpl != '' && (!settings.infinitescroll || settings.data.length == 0) ) {
                         settings.createtplrenderedautogenfields = true;
 
-                        let content = $('#'+settings.norecordstpl).clone(true, true).html();
+                        let content = $.aceOverWatch.utilities.getTemplate(settings.norecordstpl).clone(true, true).html();
                         if( !content ){
-                        	return '';
+                            return '';
                         }
                         return content;
                     }
@@ -12098,20 +15729,27 @@
                     }
                 }
 
-
-                var subRow = "";
-                var subRowRes = "";
-                var subRowAdditionalClasses = " ";
-                if( $.isFunction(settings.oninsertgridsubgrouprow) ){
-                    subRowRes = settings.oninsertgridsubgrouprow(idx, settings.data[idx]);
+                var rowClass = false;
+                if( $.isFunction(settings.rowclassrenderer) ){
+                    rowClass = settings.rowclassrenderer(idx, settings.data[idx]);
                 }
                 else{
-                    if($.isFunction(window[settings.oninsertgridsubgrouprow])){
-                        subRowRes = window[settings.oninsertgridsubgrouprow](idx, settings.data[idx]);
+                    if($.isFunction(window[settings.rowclassrenderer])){
+                        rowClass = window[settings.rowclassrenderer](idx, settings.data[idx]);
                     }
                 }
 
-                
+                if (rowClass) {
+                    rowClasses.push(rowClass);
+                }
+
+                var subRow = "";
+                var subRowAdditionalClasses = " ";
+
+                let subRowRes = $.aceOverWatch.utilities.runIt(settings.oninsertgridsubgrouprow, idx, settings.data[idx]);
+                if( !$.aceOverWatch.utilities.wasItRan(subRowRes) ){ subRowRes = ""; }
+
+
                 if ($.isPlainObject(subRowRes)) {
                     if ($.aceOverWatch.utilities.isVoid(subRowRes.html, true)) subRowRes.html = "";
                     subRow = subRowRes.html;
@@ -12135,16 +15773,10 @@
                     subRow = "<div class='ace-thin-col-24 ace-small-padding " + $.aceOverWatch.classes.gridSubgroupRow + " " + selectedClass +  " " + subRowAdditionalClasses + "' " + 'style="display: block;width: max-content;"' + ">" + subRow + "</div>";
                     rowClasses.push('ace-flex-wrap-yes');
                 }
-                
-                let upperRow = "";
-                if( $.isFunction(settings.oninsertgriduppergrouprow) ){
-                    upperRow = settings.oninsertgriduppergrouprow(idx, settings.data[idx]);
-                }
-                else{
-                    if($.isFunction(window[settings.oninsertgriduppergrouprow])){
-                        upperRow = window[settings.oninsertgriduppergrouprow](idx, settings.data[idx]);
-                    }
-                }
+
+                let upperRow = $.aceOverWatch.utilities.runIt(settings.oninsertgriduppergrouprow, idx, settings.data[idx]);
+                if( !$.aceOverWatch.utilities.wasItRan(upperRow) ){ upperRow = ""; }
+
                 if (upperRow != "") {
                     var selectedClass = ( ridx == settings.selectedRow &&
                         (
@@ -12171,13 +15803,13 @@
                     ) ? $.aceOverWatch.classes.gridCellSelected :'';
 
                     var navigatedClass = ( ridx == settings.currentNavigatedIndex ) ? $.aceOverWatch.classes.gridCellNavigated : '';
-                    
+
                     if( settings.selectiontype === false ){
-                    	/*
-                    	 * IF selecting type is explicit set to false, EXACTLY, disable the selection classes!!
-                    	 */
-                    	selectedClass = '';
-                    	navigatedClass = '';
+                        /*
+                         * IF selecting type is explicit set to false, EXACTLY, disable the selection classes!!
+                         */
+                        selectedClass = '';
+                        navigatedClass = '';
                     }
 
                     var dirtyClass = '';
@@ -12187,15 +15819,25 @@
 
                     var columnClassRenderer = '';
                     if (
-                    		!$.aceOverWatch.utilities.isVoid(column.acetplclass)
+                        !$.aceOverWatch.utilities.isVoid(column.acetplclass)
                         &&	(column.acetplclass == 'true') || (column.acetplclass == true)
-                    	&&	!$.aceOverWatch.utilities.isVoid(column.classtplrenderer)
-                    	&&	idx >= 0	
+                        &&	!$.aceOverWatch.utilities.isVoid(column.classtplrenderer)
+                        &&	idx >= 0
                     ) {
                         columnClassRenderer = ' '+$.aceOverWatch.utilities.renderer(settings.data[idx].val(column.fieldname),settings.data[idx],column.classtplrenderer);
                     }
 
-                    rowHtml += '<div data-label="'+column.title+ '" class="'+column.classes.join(' ')+' ' + selectedClass+' '+dirtyClass+' ' + navigatedClass + columnClassRenderer + '" style="'+column.styles.join(';')+'" cidx="'+cIdx+'">';
+                    let cellTooltip = '';
+                    let toolTipRes = $.aceOverWatch.utilities.runIt(column.tooltiprenderer, settings.data[idx].val(column.fieldname),settings.data[idx]);
+                    if( $.aceOverWatch.utilities.wasItRan(toolTipRes) ){ cellTooltip = toolTipRes; }
+                    else{
+                        toolTipRes = $.aceOverWatch.utilities.runIt('getSimpleJSTranslation', column.tooltip);
+                        if( $.aceOverWatch.utilities.wasItRan(toolTipRes) ){ cellTooltip = toolTipRes; }
+                    }
+
+                    if (cellTooltip != "") cellTooltip = ' title="' + cellTooltip.replace(/"/g, '\\"') + '"';
+
+                    rowHtml += '<div data-label="'+column.title+ '" class="'+column.classes.join(' ')+' ' + selectedClass+' '+dirtyClass+' ' + navigatedClass + columnClassRenderer + '" style="'+column.styles.join(';')+'" cidx="'+cIdx+'"'+cellTooltip+'>';
 
                     if( 	idx >= 0
                         && 	!$.aceOverWatch.utilities.isVoid(settings.data[idx])
@@ -12283,19 +15925,22 @@
             },
 
             redrawRow : function(target, settings, ridx){
-            	var containerField = $(target);
-
                 if( !settings ){
-                    var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                    var settings = target.data($.aceOverWatch.settings.aceSettings);
                 }
-                containerField.find('.'+$.aceOverWatch.classes.gridRow+'[gid="'+settings.id+'"][ridx="'+ridx+'"]').replaceWith($.aceOverWatch.field.grid.getRowHtml(ridx,settings));
-                this.afterInit(containerField,{rowActions:true,rid:ridx,totals:true});
-                
-                $.aceOverWatch.utilities.runIt(settings.onrowredrawn, containerField, settings, ridx);
+                let rowContainer = target.find('.'+$.aceOverWatch.classes.gridRow+'[gid="'+settings.id+'"][ridx="'+ridx+'"]');
+                if( rowContainer.length == 0 ){
+                    return;
+                }
+                rowContainer.replaceWith($.aceOverWatch.field.grid.getRowHtml(ridx,settings));
+                this.afterInit(target,{rowActions:true,rid:ridx,totals:true});
+
+                $.aceOverWatch.utilities.runIt(settings.onrowredrawn, target, settings, ridx);
             },
 
             editRecord : function(target, rowIdx, colIdx, record){
-                var settings = $(target).data($.aceOverWatch.settings.aceSettings);
+                let containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
                 if( $.isFunction(settings.onbeforerowedit) ){
                     if (settings.onbeforerowedit(target, rowIdx, colIdx, record)===false) return;
@@ -12314,11 +15959,18 @@
                     //it failed, so... get back to the greed with the operation a success,
                     if( settings.alloweditinline && settings.allowedit /*&& settings.net.remote*/ ){
                         //ok... add the record to the top of the current page
+                        //unless we want it at the END of the page
                         var targetRowIdx = (settings.page-1)*settings.net.size;
+                        if( settings.insertnewrowsatendofpage ){
+                            targetRowIdx += settings.net.size-1;
+                            if( settings.data.length < targetRowIdx ){
+                                targetRowIdx = settings.data.length;
+                            }
+                        }
                         settings.data.splice(targetRowIdx,0,record);
                         settings.net.totalExpectedRowsCount++;
                         $.aceOverWatch.field.grid.calculateMaxPages(settings);
-                        $.aceOverWatch.field.grid.displayPage(target);
+                        $.aceOverWatch.field.grid.displayPage(containerField);
 
                         if( settings.gtype != 'panel' ){
                             //find first cell which isn't an action
@@ -12390,7 +16042,10 @@
             deleteRecord : function(target, rowIdx, colIdx, record, forceDelete){
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
 
-                if (($.aceOverWatch.utilities.isVoid(forceDelete)) || (!forceDelete)) {
+                if (
+                    !settings.suppressdeleteconfirmationmessage
+                    && forceDelete !== true
+                ) {
 
                     $.aceOverWatch.prompt.show(
                         settings.actualCustomDeleteString
@@ -12459,11 +16114,26 @@
                     }
 
                 }else{
-                	
-                	settings.data[settings.editCurrentRow].makeItAllClean(true);
+
+                    if( settings.data[settings.editCurrentRow] ){
+                        settings.data[settings.editCurrentRow].makeItAllClean(true);
+                    }
 
                     if( settings.editCurrentRow == -1 ){
-                        settings.data.unshift(settings.editingRecord);
+                        //settings.data.unshift(settings.editingRecord);
+
+                        //ok... add the record to the top of the current page
+                        //unless we want it at the END of the page
+                        var targetRowIdx = (settings.page-1)*settings.net.size;
+                        if( settings.insertnewrowsatendofpage ){
+                            targetRowIdx += settings.net.size-1;
+                            if( settings.data.length < targetRowIdx ){
+                                targetRowIdx = settings.data.length;
+                            }
+                        }
+                        settings.data.splice(targetRowIdx,0,settings.editingRecord);
+                        settings.editCurrentRow = targetRowIdx;
+
                         settings.net.totalExpectedRowsCount++;
                         $.aceOverWatch.field.grid.calculateMaxPages(settings);
                         $.aceOverWatch.field.grid.displayPage(target)
@@ -12472,23 +16142,25 @@
                          * static data... so redraw the affected row only
                          */
                         $.aceOverWatch.field.grid.redrawRow(target, settings, settings.editCurrentRow);
-                        settings.editCurrentRow = -1;
                     }
-                    
+
                     if( settings.alloweditinline ){
-                    	$(target).find('.'+$.aceOverWatch.classes.gridEditInlineControls).hide();
+                        $(target).find('.'+$.aceOverWatch.classes.gridEditInlineControls).hide();
                     }else{
-						if( settings.hideformaftersave ){
-	                        $.aceOverWatch.field.grid.hideEditForm(target);
-	                    }
+                        if( settings.hideformaftersave ){
+                            $.aceOverWatch.field.grid.hideEditForm(target);
+                        }
                     }
-						
-					if( 	callbacks
-						&& 	$.isFunction(callbacks.onlocalsavesuccessfull)
-					){
-						callbacks.onlocalsavesuccessfull(target, settings.editingRecord);
+
+                    if( 	callbacks
+                        && 	$.isFunction(callbacks.onlocalsavesuccessfull)
+                    ){
+                        //callbacks.onlocalsavesuccessfull(target, settings.editingRecord ? settings.editingRecord : (settings.data[settings.editCurrentRow]?settings.data[settings.editCurrentRow]:false) );
+                        callbacks.onlocalsavesuccessfull(target, settings.data[settings.editCurrentRow]?settings.data[settings.editCurrentRow]: (settings.editingRecord ? settings.editingRecord : false) );
                     }
-				}
+
+                    settings.editCurrentRow = -1;
+                }
             },
 
             getEditForm : function(target) {
@@ -12523,6 +16195,13 @@
 
                     $.aceOverWatch.field.grid.redrawRow(target, settings, settings.editCurrentRow);
 
+                    if( settings.actualPresentationForm ){
+                        /*settings.actualPresentationForm.ace('value',settings.data[settings.editCurrentRow]);
+                        settings.actualPresentationForm.parent().removeClass('ace-presentation-hidden-info');
+                         */
+                        this.displayPresentationForm(settings,settings.data[settings.editCurrentRow]);
+                    }
+
                 }else{
                     positionIdx = 0;
                     settings.editingRecord.convert(rawData);
@@ -12533,8 +16212,8 @@
                     settings.editingRecord.makeItAllClean(true);
 
                     if( settings.addnewrecordstodataset ){
-	                    settings.data.unshift(settings.editingRecord);
-	                    settings.net.totalExpectedRowsCount++;
+                        settings.data.unshift(settings.editingRecord);
+                        settings.net.totalExpectedRowsCount++;
                     }
                     $.aceOverWatch.field.grid.calculateMaxPages(settings);
                     $.aceOverWatch.field.grid.displayPage(target)
@@ -12561,13 +16240,8 @@
                     $.aceOverWatch.toast.show('success',_aceL.saved_ok);
                 }
 
-                if( $.isFunction(settings.onsavesuccessful) ){
-                    settings.onsavesuccessful(target,settings.data[positionIdx]);
-                }else{
-                    if($.isFunction(window[settings.onsavesuccessful])){
-                        window[settings.onsavesuccessful](target,settings.data[positionIdx]);
-                    }
-                }
+                $.aceOverWatch.utilities.runIt(settings.onsavesuccessful,target, settings.data[positionIdx]);
+
             },
 
             /**
@@ -12582,9 +16256,9 @@
                 $.aceOverWatch.field.grid.calculateMaxPages(settings);
                 $.aceOverWatch.field.grid.displayPage(target);
             },
-            
+
             forceStopLoading : function(target){
-            	var targetField = $(target);
+                var targetField = $(target);
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
                 settings.loading = false;
                 $.aceOverWatch.field.grid.displayPage(target);
@@ -12599,31 +16273,13 @@
             setData : function(target, dataArr, totalExpectedData, clearExistingData = false, additionalData = false){
                 var targetField = $(target);
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
-                var updatePaginationToolbar = false;
 
                 var initialDataLength = 0;
                 if (dataArr) {
                     initialDataLength = dataArr.length;
-
-                    /*
-					 * this is a precaution, in case more data have been sent than expected..
-					 * careful.. I am not sure if this breaks anything.. yet..
-					 */
-                    /*if(
-								   !$.aceOverWatch.utilities.isVoid(totalExpectedData)
-								&& initialDataLength >  totalExpectedData
-					){
-						totalExpectedData = initialDataLength;
-					}*/
                 }
 
-                if( $.isFunction(settings.onpreloadsuccessful) ){
-                    settings.onpreloadsuccessful(target,dataArr, totalExpectedData, additionalData);
-                }else{
-                    if($.isFunction(window[settings.onpreloadsuccessful])){
-                        window[settings.onpreloadsuccessful](target,dataArr, totalExpectedData, additionalData);
-                    }
-                }
+                $.aceOverWatch.utilities.runIt(settings.onpreloadsuccessful,target, dataArr, totalExpectedData, additionalData);
 
                 //modify the final data based on the amount of items added or removed in the custom preloading logic
                 if (dataArr) {
@@ -12636,6 +16292,13 @@
                 ){
                     totalExpectedData = dataArr.length;
                 }
+                if( settings.net.donotreturntotals){
+                    if( dataArr.length > 0 ){
+                        totalExpectedData = settings.page * settings.net.size + 1;
+                    }else{
+                        totalExpectedData = (settings.page-1) * settings.net.size;
+                    }
+                }
 
                 settings.loading = false;//mark for loading done
 
@@ -12643,9 +16306,7 @@
                     && 	settings.net.totalExpectedRowsCount != totalExpectedData
                     &&	!settings.freezeTotalExpectedRowsCount
                 ){
-                    updatePaginationToolbar = true;
                     settings.net.totalExpectedRowsCount = totalExpectedData;
-                    $.aceOverWatch.field.grid.calculateMaxPages(settings);
                 }
 
                 $.aceOverWatch.field.grid.calculateMaxPages(settings);
@@ -12659,21 +16320,21 @@
                 var startIdx = (settings.page-1)*settings.net.size;
                 var endIdx = settings.page*settings.net.size;
                 if (dataArr) {
-                	
-                	let actualEndIdx = endIdx;
+
+                    let actualEndIdx = endIdx;
                     if( 	!settings.net.remote
-                		&&	dataArr.length > settings.net.size
-            		){
-                    	/*
+                        &&	dataArr.length > settings.net.size
+                    ){
+                        /*
                          * in the case of local grids ( not remote ), we might get more information than the one to be displayed currently on the page
                          * in this case, we'll update the rest of the grid with whatever new data we actuall got
                          */
-                		actualEndIdx += Math.min(dataArr.length-settings.net.size,settings.net.totalExpectedRowsCount - endIdx);
+                        actualEndIdx += Math.min(dataArr.length-settings.net.size,settings.net.totalExpectedRowsCount - endIdx);
                     }
-                	
+
                     for( let idx = startIdx; idx < actualEndIdx; idx++ ){
                         if( $.aceOverWatch.utilities.isVoid(dataArr[idx-startIdx]) ){
-                        	continue;
+                            continue;
                         }
                         if( settings.data[idx] ){
                             settings.data[idx].reset();
@@ -12685,41 +16346,196 @@
                                 : $.aceOverWatch.record.create(dataArr[idx-startIdx]);
                         }
                     }
-                    
+
                 }
 
-                $.aceOverWatch.field.grid.displayPage(target);
+                this.displayPage(targetField);
 
-                if( $.isFunction(settings.onloadsuccessful) ){
-                    settings.onloadsuccessful(target,settings.data, startIdx, endIdx, totalExpectedData, additionalData);
-                }else{
-                    if($.isFunction(window[settings.onloadsuccessful])){
-                        window[settings.onloadsuccessful](target,settings.data, startIdx, endIdx, totalExpectedData, additionalData);
-                    }
-                }
+                this.setTagsOverview(targetField, additionalData);
 
-                //////////////////////////////////////////////////////
-                //selectRow: function(target, rowIdx){}
+                $.aceOverWatch.utilities.runIt(settings.onloadsuccessful,targetField,settings.data,startIdx,endIdx,totalExpectedData,additionalData);
+
                 if( settings.selectfirstresult ){
-                	
-                	if( 
-                				settings.selectonlyifsingle == false
-                			||	dataArr.length == 1
-        			){
-                	
-	                    if( startIdx < endIdx ){
-	                        $.aceOverWatch.field.grid.selectRow(target, startIdx);
-	                    }
-	                    
-                	}
-                	
-                	settings.selectfirstresult = false;
+
+                    if(
+                        settings.selectonlyifsingle == false
+                        ||	dataArr.length == 1
+                    ){
+
+                        if( startIdx < endIdx ){
+                            $.aceOverWatch.field.grid.selectRow(target, startIdx);
+                        }
+
+                    }
+
+                    settings.selectfirstresult = false;
                 }
 
                 /*
 				 * also, lets make sure, that, if the checkall button was pressed, it is now disabled!
 				 */
                 targetField.find('.'+$.aceOverWatch.classes.gridActionCheckAllBoxCol).prop('checked',false);
+            },
+
+            setTagsOverview : function(target, additionalData){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings.withtags ){
+                    return false;
+                }
+                if( !$.isArray(additionalData.tags_overview) ){
+                    additionalData.tags_overview = [];
+                }
+
+                settings.dataSetNameToIndexMap = {};
+
+                for(let idx = 0; idx <additionalData.tags_overview.length; idx++){
+                    settings.dataSetNameToIndexMap[additionalData.tags_overview[idx]['tag_name']] = idx;
+                }
+
+                $.aceOverWatch.field.grid.setData(this.getTagsOverviewGrid(target),additionalData.tags_overview,additionalData.tags_overview,true);
+
+                if( additionalData.tags_overview.length == 0 && settings.hidetagsoverviewwhennotags ){
+                    settings.tagsoverviewgrid.addClass('ace-hide');
+                }else{
+                    settings.tagsoverviewgrid.removeClass('ace-hide');
+                }
+                $.aceOverWatch.utilities.runIt(settings.ontagsoverviewloadsuccessful,settings.tagsoverviewgrid,additionalData.tags_overview);
+            },
+
+            getTagsOverviewGrid : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings.withtags ){
+                    return false;
+                }
+                if( !settings.tagsoverviewgrid ){
+                    settings.tagsoverviewgrid = $('#'+settings.tagsoverviewgridid ).ace('create',{
+                        type : 'grid',
+                        gtype : 'table',
+
+                        width:'100%',
+
+                        allowedit : false,
+                        alloweditinline : false,
+                        allowadd : false,
+                        allowdelete : false,
+                        allowrefresh : false,
+                        allowsearchfield:false,
+
+                        editonselect:false,
+                        showeditcolumn:'',
+                        showdeletecolumn:'',
+
+                        displayrowlines:true,
+                        displaycolumnlines:true,
+
+                        selectiontype : 'row',
+
+                        idfield : 'tag_id',
+
+                        suppressdeletemessage : true,
+                        pagination:false,
+
+                        parent : target,
+
+                        net : {
+                            remote : false,
+                            size: 100000,
+                        },
+
+                        columns: [
+                            {
+                                title : _aceL.tagLabel,
+                                fieldname : 'tag_name',
+                                aditionalclasses : 'ace-col-12',
+                                renderer : function(value, record ){
+                                    return value + ' ('+record.val('tag_count')+')';
+                                }
+                            },
+
+                        ],
+
+                        onrowclick : function(target, row, col, record){
+                            $.aceOverWatch.field.grid.deleteRecord(target, row, col, record, true);
+                            $.aceOverWatch.field.grid.addTagToSearchElement(target.data($.aceOverWatch.settings.aceSettings).parent, record);
+                        }
+                    });
+                }
+                return settings.tagsoverviewgrid;
+            },
+
+            getTagsChips : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings.withtags ){
+                    return false;
+                }
+                if( !settings.tagschips ){
+                    settings.tagschips = $('#'+settings.tagschipsid ).ace('create',{
+
+                        type: 'chips',
+                        placeholder:'enter tag, press enter',
+
+                        withclearbutton : true,
+                        clickonchips : true,
+
+                        parent : target,
+
+                        onadd : function(target, record){
+                            $.aceOverWatch.field.grid.addRemoveTagSearch(target.data($.aceOverWatch.settings.aceSettings).parent,record,true);
+                        },
+                        onremove : function(target, index, record){
+                            $.aceOverWatch.field.grid.addRemoveTagSearch(target.data($.aceOverWatch.settings.aceSettings).parent,record,false);
+                        },
+                        onclear : function(target, index, record){
+                            $.aceOverWatch.field.grid.clearTagSearch(target.data($.aceOverWatch.settings.aceSettings).parent);
+                        },
+                        parent : target,
+
+                    });
+                }
+                return settings.tagschips;
+            },
+
+            addRemoveTagSearch : function(target,record,add=true){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let id = parseInt(record.val('id'));
+                if( isNaN(id) ){
+                    id = 0;
+                }
+                if( add ) {
+                    settings.currentSearchTags[record.val('name')] = id;
+                    settings.tagschips.removeClass('ace-hide');
+                }else{
+                    delete settings.currentSearchTags[record.val('name')];
+                    if( $.aceOverWatch.field.chips.getChipsCount(settings.tagschips) == 0 ){
+                        settings.tagschips.addClass('ace-hide');
+                    }
+                }
+                this.reloadFirstPage(target);
+            },
+
+            clearTagSearch : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                settings.currentSearchTags = {};
+                settings.tagschips.addClass('ace-hide');
+                this.reloadFirstPage(target);
+            },
+
+            reloadFirstPage : function(target,extraParams = false){
+                let newValObj = {
+                    cleardata:true,
+                    page:1,
+                };
+                if( extraParams ){
+                    newValObj.net = {
+                        extraparams: extraParams
+                    };
+                }
+                this.val(target,newValObj);
+                this.reloadPage( target );
+            },
+
+            addTagToSearchElement : function(target, tagRecord){
+                $.aceOverWatch.field.chips.addChip($.aceOverWatch.field.grid.getTagsChips(target),tagRecord.val('tag_name'),tagRecord.val('tag_id'));
             },
 
             getData : function(target){
@@ -12730,7 +16546,7 @@
                 return settings.data;
             },
 
-            inlineEdit : function(target,rowIdx,cellIdx){
+            inlineEdit : function(target,rowIdx,cellIdx,ignoreReadonly=false){
                 var targetField = $(target);
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
                 if( !settings ){
@@ -12753,8 +16569,12 @@
                     cell.data('eCfg',data);
                 }
 
-                if( data.isEditing ){
+                if( data.isEditing || (settings.innerColumns[cellIdx].readonly && !ignoreReadonly) ){
                     return;
+                }
+
+                if( rowIdx != settings.editCurrentRow ){
+                    $.aceOverWatch.field.grid.inlineDissmissRowEdit(target);//making sure the inline controls are hidden in case they were visible
                 }
 
                 data.originalValue = settings.data[rowIdx].val(settings.innerColumns[cellIdx].fieldname);
@@ -12895,11 +16715,14 @@
                         editElementCore = editElement;
 
                         editElementCore.focusout(function(e){
+                            $.aceOverWatch.field.grid.inlineDissmissCellInput(this,true);
                             if (settings.stayongridafterfocusout) {
                                 e.preventDefault();
                                 e.stopPropagation();
                             }
-                            $.aceOverWatch.field.grid.inlineDissmissCellInput(this,true);
+                            setTimeout(function(){
+                                $.aceOverWatch.utilities.triggerMouseClick({ifHasClass:'ace-grid-cell'});
+                            },100);
                         }).keydown(function (e) {
                             switch(e.keyCode) {
                                 case 9://tab
@@ -12920,12 +16743,6 @@
 
                                     break;
                             }
-                        }).focusout(function(e){
-                            $.aceOverWatch.field.grid.inlineDissmissCellInput(this,true);
-                            if (settings.stayongridafterfocusout) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }
                         });
 
                         break;
@@ -12935,12 +16752,6 @@
                 var ctrlDiv = targetField.find('.'+$.aceOverWatch.classes.gridEditInlineControls);
 
                 rowDiv.addClass($.aceOverWatch.classes.gridInlineRow);
-                /*
-				ctrlDiv.css({
-					'left': rowDiv.offset().left+rowDiv.width()/2-ctrlDiv.width()/2,
-			        'top': (rowDiv.offset().top + rowDiv.height())
-				}).show();
-				*/
 
                 ctrlDiv.fadeIn(100).position({
                     my:        "left top",
@@ -12950,18 +16761,9 @@
                 });
 
                 cell.html(editElement);//displaying the input element
-
-
-
                 editElementCore.focus();
 
-                if( $.isFunction(settings.onafterinlineeditdisplay) ){
-                    settings.onafterinlineeditdisplay(target,rowIdx,cellIdx, editElementCore);
-                }else{
-                    if($.isFunction(window[settings.onafterinlineeditdisplay])){
-                        window[settings.onafterinlineeditdisplay](target,rowIdx,cellIdx, editElementCore);
-                    }
-                }
+                $.aceOverWatch.utilities.runIt(settings.onafterinlineeditdisplay,target,rowIdx,cellIdx, editElementCore);
             },
 
             inlineDissmissCellInput : function(target,save){
@@ -13045,43 +16847,50 @@
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
                 $.aceOverWatch.field.grid.save(target,{
                     onsuccess: settings.onsavesuccessful,
+                    onlocalsavesuccessfull: settings.onlocalsavesuccessfull
                 });
             },
 
-            inlineDissmissRowEdit : function(target,clean){
+            inlineDissmissRowEdit : function(target,clean, explicitRowIdx = false ){
                 var targetField = $(target);
                 var settings = targetField.data($.aceOverWatch.settings.aceSettings);
-                
-                if( !settings.alloweditinline || !settings.allowedit ){
-                	return;
-                }
-                
-                let inlineControls = $('.'+$.aceOverWatch.classes.gridEditInlineControls);
-                if( !inlineControls.is(':visible') ){
-                	/*
-                	 * nothing to do, we're not editing anything
-                	 */
-                	return;
-                }
-                	
-                targetField.find('.'+$.aceOverWatch.classes.gridRow+'[gid="'+settings.id+'"][ridx="'+settings.editCurrentRow+'"]').removeClass($.aceOverWatch.classes.gridInlineRow);
 
-                if( clean == true && settings.editCurrentRow >= 0 && settings.editCurrentRow < settings.data.length ){
-                	/*
+                if( !settings.alloweditinline || !settings.allowedit ){
+                    return;
+                }
+
+                let workingRowIdx = explicitRowIdx ? explicitRowIdx : settings.editCurrentRow;
+
+                let inlineControls = targetField.find('.'+$.aceOverWatch.classes.gridEditInlineControls);
+
+                if(settings.gtype != 'panel' && !inlineControls.is(':visible')) {
+                    /*
+                     * nothing to do, we're not editing anything
+                     */
+                    return;
+                }
+
+                targetField.find('.'+$.aceOverWatch.classes.gridRow+'[gid="'+settings.id+'"][ridx="'+workingRowIdx+'"]').removeClass($.aceOverWatch.classes.gridInlineRow);
+
+                if( clean == true && workingRowIdx >= 0 && workingRowIdx < settings.data.length ){
+                    /*
                      * go through all columns, and for the dirty values replace the original values, and remove the dirty cell mark
                      */
                     for(var cIdx in settings.innerColumns){
-                        if( settings.data[settings.editCurrentRow].isDirty(settings.innerColumns[cIdx].fieldname) ){
-                            settings.data[settings.editCurrentRow].clean(settings.innerColumns[cIdx].fieldname);
+                        if( settings.data[workingRowIdx].isDirty(settings.innerColumns[cIdx].fieldname) ){
+                            settings.data[workingRowIdx].clean(settings.innerColumns[cIdx].fieldname);
                         }
                     }
                 }
-                if( settings.editCurrentRow >= 0 && settings.editCurrentRow < settings.data.length ){
-                    $.aceOverWatch.field.grid.redrawRow(target,settings, settings.editCurrentRow);
+                if( workingRowIdx >= 0 && workingRowIdx < settings.data.length ){
+                    $.aceOverWatch.field.grid.redrawRow(target, settings, workingRowIdx);
                 }
 
-                inlineControls.hide();
-                settings.editCurrentRow = -1;
+                if( settings.gtype != 'popup' ) {
+                    inlineControls.hide();
+                    settings.editCurrentRow = -1;
+                }
+
             },
 
             //in this case, we just expect value to be an object, and we just paste it over internal settings
@@ -13089,14 +16898,21 @@
                 if( typeof value !== 'object' ){
                     return;
                 }
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                let containerField = $(target);
+                let settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
                 $.extend(true,settings, value);
 
                 if( settings.cleardata ){
                     settings.data = [];
                     settings.page = 1;
+                    this.displayPage(containerField);
+                }
+
+                if( settings.cleartags && settings.tagschips ){
+                    settings.net.extraparams.tags = '';
+                    $.aceOverWatch.field.chips.setData(settings.tagschips, []);
+                    settings.tagschips.addClass('ace-hide');
                 }
 
                 return settings;
@@ -13106,21 +16922,12 @@
              * the method determines IF the last row of the grid is visible, AND if it is, determines if we are to load the next page or not!
              */
             infiniteLoadIfNeeded : function(scrollingRegion){
-                var grid = scrollingRegion.closest('.'+$.aceOverWatch.classes.containerField);
-                var settings = grid.data($.aceOverWatch.settings.aceSettings);
+                let grid = scrollingRegion.closest('.'+$.aceOverWatch.classes.containerField);
+                let settings = grid.data($.aceOverWatch.settings.aceSettings);
 
-                var lastRow = scrollingRegion.find('.'+$.aceOverWatch.classes.gridRow).last();
-
-                if( lastRow.length == 0 ){
+                if( settings.actualPageHeight == 0 || settings.loading || scrollingRegion.find('.'+$.aceOverWatch.classes.gridRow).last().length == 0 ){
                     /*
 					 * no rows, nothing to do
-					 */
-                    return true;
-                }
-
-                if( settings.loading ){
-                    /*
-					 * we are already in the process of loading something.. no need to check again
 					 */
                     return true;
                 }
@@ -13131,17 +16938,10 @@
 
                 if(
                     settings.actualPageHeight <= (scrollingRegion.scrollTop() + scrollingRegion.height() +20) * settings.infinitescrollfactor /* testing if the ROW is ABOVE the bottom line...*/
-
                 ) {
-
-                    //console.log(' - last row IS MAYBE visible - ridx = '+lastRow.attr('ridx'));
-
-
 
                     if( settings.page < settings.net.maxPages ){
                         settings.page++;
-
-                        //console.log(' LOADING THE NEXT PAGE :> !'+settings.page);
 
                         if( settings.net.remote ){
                             settings.net.start = (settings.page-1) * settings.net.size;
@@ -13152,12 +16952,9 @@
                         }
 
                     }else{
-                        //console.log('LAST PAGE LOADED!!!!');
+                        //$.aceOverWatch.utilities.log('LAST PAGE LOADED!!!!','debug');
                     }
 
-
-                } else {
-                    //console.log(' - last row IS MAYBE NOT visible - ridx = '+lastRow.attr('ridx'));
                 }
 
             },
@@ -13165,7 +16962,7 @@
             /*begin checkboxcol functions*/
             setColCheckState : function(obj, checkedState, triggerClick){
                 if (obj.prop('checked') == checkedState) {
-                	return;
+                    return;
                 }
                 if (triggerClick){
                     obj.prop('checked', checkedState).triggerHandler('click');
@@ -13185,6 +16982,30 @@
                     .filter(function () { return $(this).prop('checked') === true; })
                     .each (function () {
                         $.aceOverWatch.field.grid.setColCheckState($(this), false, triggerClick);
+                    });
+            },
+            uncheckColsAtRowIdx : function(target, rowIdx, triggerClick){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if (!settings) return false;
+
+                return containerField.find('[ridx="'+rowIdx+'"] .'+$.aceOverWatch.classes.gridActionCheckBoxCol)
+                    .filter(function () { return $(this).prop('checked') === true; })
+                    .each (function () {
+                        $.aceOverWatch.field.grid.setColCheckState($(this), false, triggerClick);
+                    });
+            },
+            checkColsAtRowIdx : function(target, rowIdx, triggerClick){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                if (!settings) return false;
+
+                return containerField.find('[ridx="'+rowIdx+'"] .'+$.aceOverWatch.classes.gridActionCheckBoxCol)
+                    .filter(function () { return !$(this).prop('checked'); })
+                    .each (function () {
+                        $.aceOverWatch.field.grid.setColCheckState($(this), true, triggerClick);
                     });
             },
             checkAllCols : function(target, triggerClick){
@@ -13222,7 +17043,7 @@
                 containerField.find('.'+$.aceOverWatch.classes.gridActionCheckBoxCol)
                     .filter(function () { return $(this).prop('checked') === true; })
                     .each(function() {
-                    	let el = $(this);
+                        let el = $(this);
                         var rIdx = el.closest('.'+$.aceOverWatch.classes.gridRow).attr('ridx');
 
                         var settings = el.closest('.'+$.aceOverWatch.classes.containerField).data($.aceOverWatch.settings.aceSettings);
@@ -13234,8 +17055,32 @@
                         res.push(settings.data[rIdx]);
                     });
                 return res;
-            }
+            },
             /*end checkboxcol functions*/
+
+            moveRow : function(target, initialRowIdx, upwords){
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+                initialRowIdx = parseInt(initialRowIdx);
+
+                let initialLength = settings.data.length;
+                if( initialLength <= 1 ){
+                    return;//nothing to move
+                }
+                let finalRowIdx = upwords ? initialRowIdx - 1 : initialRowIdx + 1;
+
+                let data = settings.data.splice(initialRowIdx,1)[0];
+                if( finalRowIdx < 0 ){
+                    settings.data.push(data);
+                }else{
+                    if( finalRowIdx >= initialLength ){
+                        settings.data.splice(0,0,data);
+                    }else{
+                        settings.data.splice(finalRowIdx,0,data);
+                    }
+                }
+                $.aceOverWatch.field.grid.displayPage(target);
+            }
+
 
         },//end grid object
 
@@ -13250,12 +17095,14 @@
                 $.extend(true,settings, $.extend(true,{
                     beforeclick : null, //customhandler to be called before click - if it returns false then the click action is reversed
                     handler:null, 		//custom handler function to do stuff when an item in the tree view is clicked
-                    // handler(tag)
+                    // handler(tag,tagData,target)
                     // the tag identifies the information on one of the items in the list
                     //if the item doesn't have a tag set, the handler will not be called
 
                     activetag:'',		//the currently active tag
                     aditionaldata:[], //used to add new items to the accordion
+                    insertadditionaldatainfront : false,//if true, any additional data will be added in front of the existing data;
+                            // it gets reset to false after every use
                     cleardata : false,
 
                     data : [],			//array the data being displayed, in a format like this:
@@ -13265,27 +17112,29 @@
                      * 	{
                      * 		'name':'....',
                      * 		'tag':1,
+                     * 	     action:null,//function, or the name of a function to be called for this item instead of handler	action(tag,tagData,target)
                      * 		'iconcls':'some icon classes',
                      * 		'net' : '...',  //use net to perform remote loading on click -
                      * 		'editable: true/false* //in this case the arrow for children will not be displayed, instead a + sign will be to perform a add operation on this module.
                      * 								//Also the loaded children will have a edit icon next to them
                      *
                      *       'cls' : '...', //css class(es) to be added to each element
-                     *       
+                     *
                      *       tpl_al : '', //set it to '1' to signal that the accordion desires to create an autoload template
                      *       tpl_app : '' //the name of the application module from which the template belongs to
                      *       tpl_path : '' //the path within the application folder where the template is found on disk
                      *       tpl_module : '',//the name of the module to be loaded
-                     *       
+                     *
                      *       The request sent to the server will be of this form:
                      *       	fileloadcode / tpl_app / tpl_path / [tpl_module + fileloadsufix ]
                      *       To this, the server is expected to return a file identified by:
                      *       	tpl_app / tpl_path / [tpl_module + fileloadsufix + .html ]
-                     *       
+                     *
                      * 	},
                      * 	{
                      * 		'name':'....',
-                     * 		'tag':2
+                     * 		'tag':2,
+                     * 	    action:null,
                      * 		'children':[
                      * 			{
                      * 				'name':'....',
@@ -13297,23 +17146,25 @@
                      * .....
                      * ]
                      */
-                    dictionary : {},    //an object to be used as dictionary for quick access accordion taga based on tag
+                    dictionary : {},    //an object to be used as dictionary for quick access accordion data based on tag
 
                     withcheckboxes : false,
                     checkall : false,
 
+                    hidearrowicons : false,
+
                     enabledexpand : true,//if false, the accordeon will not expand, or collaps, when an item is clicked
                     tooglecheckonrowclick : false,//set it to true, if you want the accordion to trigger a check on the element we click
                     //works only if withcheckboxes is marked as true
-                    
+
                     remoteidfield : '_id',		//when loading remote data from the server, this will be the field which denotes the id of the new items loaded
                     remotenamefield : '_name',	//the name of a field from which the display text will be retrieved
-                    
+
                     /*
                      * used by the auto load functionality
                      */
                     fileloadsufix : '.tpl', //a sufix, which is added to the name of the templates
-                	fileloadcode : 'tpl',	//code, sent to the server as part of the url, to signiy that a page template is desired
+                    fileloadcode : 'tpl',	//code, sent to the server as part of the url, to signiy that a page template is desired
 
                 }, settings ));
 
@@ -13327,8 +17178,11 @@
 
                 }
 
-                if (settings.aditionaldata.length > 0) {
-                    settings.data = settings.data.concat(settings.aditionaldata); //if I have to add aditional items at runtime
+                if (settings.aditionaldata.length > 0) {  //if I have to add aditional items at runtime
+                    settings.data = settings.insertadditionaldatainfront
+                                ?  settings.aditionaldata.concat(settings.data)
+                                : settings.data.concat(settings.aditionaldata);
+                    settings.insertadditionaldatainfront = false;
                     settings.aditionaldata = [];
                 }
 
@@ -13341,7 +17195,7 @@
 				 */
                 settings.initialActiveTag = settings.activetag;
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.scrollView+'">';
+                var fieldHtml = '<div class="'+$.aceOverWatch.classes.scrollView+(settings.hidearrowicons ? ' ace-accordion-hide-arrows' : '')+'">';
 
                 //now.. we build the UL thingy! :D
                 var level = 0;	//deeper we go in a tree, we increase the level
@@ -13350,7 +17204,6 @@
 
                 return fieldHtml;
             },
-
 
             /**
              * recursive function to build the tree level
@@ -13420,7 +17273,7 @@
                     var row = '<a class="'+classes.join(' ')+'" href="'+tag+'" tag="'+tag+'"'+ (parentTag!==''?' parenttag="'+parentTag+'"':'')+'>'+checkboxIcon+rightIcon+labelText+'</a>';
 
                     if( level > 0 ){
-                        row = '<li'+ (data.cls ? data.cls : '' ) +'>' + row + '</li>';
+                        row = '<li '+ (data.cls ? ' class="'+data.cls+'" ' : '' ) +'>' + row + '</li>';
                     }
                     if (remoteLoading) {
                         row += '<ul class="'+$.aceOverWatch.classes.accordionList+'" remotetag="'+tag+'" level="'+level+'"></ul>';
@@ -13436,23 +17289,23 @@
                     fieldHtml += row;
 
                     settings.dictionary[tag] = data;
-                    
+
                     /*
                      * now check the autoload template flag and if so I create the autoload templates
                      */
 
                     if (data.tpl_al === '1') {
-                    	let url = [];
-                    	if( settings.fileloadcode ){
-                    		url.push(settings.fileloadcode);
-                    	}
-                    	if( data.tpl_app ){
-                    		url.push(data.tpl_app);
-                    	}
-                    	if( data.tpl_path ){
-                    		url.push(data.tpl_path);
-                    	}
-                    	
+                        let url = [];
+                        if( settings.fileloadcode ){
+                            url.push(settings.fileloadcode);
+                        }
+                        if( data.tpl_app ){
+                            url.push(data.tpl_app);
+                        }
+                        if( data.tpl_path ){
+                            url.push(data.tpl_path);
+                        }
+
                         let tplData = {
                             'class': 'ace-app-edit-windwow ace-hide ace-auto-loadtpl '+(data.cls ? data.cls : ''),
                             tag : tag,
@@ -13463,6 +17316,8 @@
                         };
 
                         $.aceOverWatch.template.loadTemplate($('<div></div>', tplData).appendTo($(document.body)), tplData);
+
+                        data.tpl_al = 0;
                     }
                 }
 
@@ -13520,13 +17375,7 @@
                         settings.dictionary[tags[idx]].checked = !isChecked;
                     }
 
-                    if( $.isFunction(settings.onchecked) ){
-                        settings.onchecked(tags,settings.dictionary[tags[0]]);
-                    }else{
-                        if($.isFunction(window[settings.onchecked])){
-                            window[settings.onchecked](tags,settings.dictionary[tags[0]]);
-                        }
-                    }
+                    $.aceOverWatch.utilities.runIt(settings.onchecked,settings.dictionary[tags[0]]);
 
                     return false;//not to send the click to other even handlers!
                 });
@@ -13541,7 +17390,7 @@
                      */
                     var clickedItem = $(this).closest('.'+$.aceOverWatch.classes.accordionItem);
                     if  (!$.aceOverWatch.field.accordion.createRemoteItemForm(target, clickedItem)){
-                    	return;
+                        return;
                     }
 
                     var clickedItemSettings = $.aceOverWatch.field.accordion.getRemoteItemData(target, clickedItem);
@@ -13574,8 +17423,8 @@
                  */
                 containerField.find('.'+$.aceOverWatch.classes.accordionItem).unbind("click").click( function(e) {
 
-            		let el = $(this);
-                	
+                    let el = $(this);
+
                     var target = el.closest('.'+$.aceOverWatch.classes.containerField);
                     var settings = target.data($.aceOverWatch.settings.aceSettings);
 
@@ -13587,13 +17436,8 @@
                         parenttag=el.attr('parenttag'); //if there is a parent tag then I will call the handler with the parent tag so I can enter the same point for all the records of this parent
                     }
 
-                    if( $.isFunction(settings.beforeclick) ){
-                        if (settings.beforeclick(parenttag,settings.dictionary[tag])===false) return false;
-                    }else{
-                        if($.isFunction(window[settings.beforeclick])){
-                            if (window[settings.beforeclick](parenttag,settings.dictionary[tag])===false) return false;
-                        }
-                    }
+                    let res = $.aceOverWatch.utilities.runIt(settings.beforeclick,settings.dictionary[tag]);
+                    if( $.aceOverWatch.utilities.wasItRan(res) && res === false ){ return false; }
 
                     //testing to see if it has children!
                     //first make sure we create the settings
@@ -13614,32 +17458,34 @@
                     }
 
                     /*
-                     * IF this trigger is a result of the accordion being created, or modified with an active item, 
+                     * IF this trigger is a result of the accordion being created, or modified with an active item,
                      * then, in this case, we do NOT trigger the custom handler
                      */
-                    if( 
-                    			settings.activetag == tag
-                    		&&	settings.customHandlerForActiveTagBecauseCreation === true
-            		){
-                    	settings.customHandlerForActiveTagBecauseCreation = false;
-                    	return;
+                    if(
+                        settings.activetag == tag
+                        &&	settings.customHandlerForActiveTagBecauseCreation === true
+                    ){
+                        settings.customHandlerForActiveTagBecauseCreation = false;
+                        return;
                     }
                     settings.activetag = tag;
 
                     if( ( !$.aceOverWatch.utilities.isVoid(tag) && tag.length > 0 ) && ($.aceOverWatch.utilities.isVoid(clickedItemSettings.net))){ //if it is remotely loading then i dont call the handler
-                        if( $.isFunction(settings.handler) ){
-                            settings.handler(parenttag,settings.dictionary[tag]);
-                        }else{
-                            if($.isFunction(window[settings.handler])){
-                                window[settings.handler](parenttag,settings.dictionary[tag]);
-                            }
+
+                        /*
+                         * if the tag has a custom action handler, we run that
+                         * otherwise, we run the main handler
+                         */
+                        let callback_res = $.aceOverWatch.utilities.runIt(settings.dictionary[tag].action,parenttag,settings.dictionary[tag],target);
+                        if( !$.aceOverWatch.utilities.wasItRan(callback_res) ) {
+                            $.aceOverWatch.utilities.runIt(settings.handler, parenttag, settings.dictionary[tag], target);
                         }
                     }
                 });
-                
+
                 if(  !$.aceOverWatch.utilities.isVoid(settings.activetag) ){
-                	settings.customHandlerForActiveTagBecauseCreation = true;
-                	this.openTag(target,settings.activetag);
+                    settings.customHandlerForActiveTagBecauseCreation = true;
+                    this.openTag(target,settings.activetag);
                 }
 
             },
@@ -13678,11 +17524,35 @@
                 return checkedTags;
             },
 
-
             clearData : function(target){
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                if( !settings ){
+                    return;
+                }
                 settings.data = [];
+                containerField.ace('modify',{});
+            },
+
+            deleteTags : function(target,tagsArr){
+                var containerField = $(target);
+                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+
+                let removeTagsDictionary = {};
+                for(let idx in tagsArr){
+                    if( settings.dictionary[tagsArr[idx]] ){
+                        removeTagsDictionary[tagsArr[idx]] = true;
+                    }
+                }
+
+                let newData = [];
+                for(let idx in settings.data ){
+                    if( !removeTagsDictionary[settings.data[idx].tag] ){
+                        newData.push(settings.data[idx]);
+                    }
+                }
+
+                settings.data = newData;
                 containerField.ace('modify',{});
             },
 
@@ -13699,10 +17569,10 @@
                         target:target,
                         tag:$(remoteItem).attr('tag'),
                         editable:true,
-                        
+
                         idfield : settings.remoteidfield,
                         namefield : settings.remotenamefield,
-                        
+
                         editform: {},
                     }, settings.dictionary[$(remoteItem).attr('tag')])));
                     var remoteItemSettings = $(remoteItem).data($.aceOverWatch.settings.aceSettings);
@@ -13791,7 +17661,7 @@
             },
 
             displaySubItems : function(target, clickedItem) {
-            	
+
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
@@ -13799,26 +17669,26 @@
                 var elExpanded = false;
                 if( nextEl.is('ul')){
 
-                	if( settings.enabledexpand ){
-                		nextEl.toggleClass( $.aceOverWatch.classes.show ); //clickedItem works if we are on the first level.. if not... look at else
-                		if (!clickedItem.hasClass($.aceOverWatch.classes.accordionItemRemoteLoad)){
-                			clickedItem.children('.'+$.aceOverWatch.classes.arrowIcon).toggleClass($.aceOverWatch.classes.defaultDownArrow+' '+$.aceOverWatch.classes.defaultUpArrow);
-                		}
-                	}
+                    if( settings.enabledexpand ){
+                        nextEl.toggleClass( $.aceOverWatch.classes.show ); //clickedItem works if we are on the first level.. if not... look at else
+                        if (!clickedItem.hasClass($.aceOverWatch.classes.accordionItemRemoteLoad)){
+                            clickedItem.children('.'+$.aceOverWatch.classes.arrowIcon).toggleClass($.aceOverWatch.classes.defaultDownArrow+' '+$.aceOverWatch.classes.defaultUpArrow);
+                        }
+                    }
                     if (nextEl.hasClass($.aceOverWatch.classes.show)) elExpanded = true;
-                    
+
                 }else{
                     //might not be on the first level.. so check if we are in an li, if so, check the next of the parent!
                     var parent = clickedItem.parent();
                     if( parent.is('li') ){
                         var nextEl = parent.next();
                         if( nextEl.is('ul')){
-                        	if( settings.enabledexpand ){
-                        		nextEl.toggleClass( $.aceOverWatch.classes.show );
-                        		if (!clickedItem.hasClass($.aceOverWatch.classes.accordionItemRemoteLoad)){
-                        			clickedItem.children('.'+$.aceOverWatch.classes.arrowIcon).toggleClass($.aceOverWatch.classes.defaultDownArrow+' '+$.aceOverWatch.classes.defaultUpArrow);
-                        		}
-                        	}
+                            if( settings.enabledexpand ){
+                                nextEl.toggleClass( $.aceOverWatch.classes.show );
+                                if (!clickedItem.hasClass($.aceOverWatch.classes.accordionItemRemoteLoad)){
+                                    clickedItem.children('.'+$.aceOverWatch.classes.arrowIcon).toggleClass($.aceOverWatch.classes.defaultDownArrow+' '+$.aceOverWatch.classes.defaultUpArrow);
+                                }
+                            }
                             if (nextEl.hasClass($.aceOverWatch.classes.show)) elExpanded = true;
                         }
                     }
@@ -13848,10 +17718,11 @@
             },
 
             setTagAsActive:function(target, tag){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-                containerField.find('.'+$.aceOverWatch.classes.accordionItem).removeClass($.aceOverWatch.classes.accordionActive);
-                containerField.find('.'+$.aceOverWatch.classes.accordionItem+'[tag="'+tag+'"]').addClass($.aceOverWatch.classes.accordionActive);
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                let tagElement = target.find('.'+$.aceOverWatch.classes.accordionItem+'[tag="'+tag+'"]');
+                if( tagElement.length == 0 ){ return; }
+                target.find('.'+$.aceOverWatch.classes.accordionItem).removeClass($.aceOverWatch.classes.accordionActive);
+                tagElement.addClass($.aceOverWatch.classes.accordionActive);
             },
 
             changeDisplayForTag:function(target, tag, display){
@@ -13863,38 +17734,34 @@
 				 */
             },
 
-            //hide tag..
+            renameTag : function(target, tag, newName){
+                target.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"] p').html(newName);
+            },
+
             hideTag : function(target, tag){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-
-                //find the accordion item
-                containerField.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]').addClass($.aceOverWatch.classes.hide);
+                target.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]').addClass($.aceOverWatch.classes.hide);
             },
-            //show tag - the reverse of hide tag
             showTag : function(target, tag){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
-
-                //find the accordion item
-                containerField.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]').removeClass($.aceOverWatch.classes.hide);
+                target.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]').removeClass($.aceOverWatch.classes.hide);
             },
 
-            //forcelly selects and opend the tag :)
+            //forcelly selects and opens the tag :)
             openTag : function(target, tag){
-                var containerField = $(target);
-                var settings = containerField.data($.aceOverWatch.settings.aceSettings);
+                var settings = target.data($.aceOverWatch.settings.aceSettings);
+
+                //find the accordion item
+                let el = target.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]');
+                if( el.length == 0 ){ return; }
 
                 //close all opened things
-                containerField.find('ul').removeClass($.aceOverWatch.classes.show);
+                target.find('ul').removeClass($.aceOverWatch.classes.show);
+                el.triggerHandler('click');
+            },
 
-                //find the accordion item
-                let el = containerField.find('.'+$.aceOverWatch.classes.accordionItem+'[href="'+tag+'"]');
-                if( el.length > 0 ){
-                    el.triggerHandler('click');
-                }else{
-                    containerField.find('.'+$.aceOverWatch.classes.accordionItem).removeClass($.aceOverWatch.classes.accordionActive);
-                }
+            openFirstTag : function(target){
+                let settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !settings || settings.data.length == 0 ){ return; }
+                this.openTag(target,settings.data[0].tag);
             },
 
             checkTag : function(target, tag){
@@ -14053,20 +17920,12 @@
                 var settings = $(target).data($.aceOverWatch.settings.aceSettings);
 
                 if (settings.editform.hideaftersave) {
-                    var form = $('#'+settings.editform.renderto);
-                    $.aceOverWatch.field.form.hide(form);
+                    $.aceOverWatch.field.form.hide($('#'+settings.editform.renderto));
                 }
                 $.aceOverWatch.toast.show('success',_aceL.saved_ok);
 
                 $.aceOverWatch.field.accordion.reloadItem(settings.target, target, true);
-
-                if( $.isFunction(settings.onsavesuccessful) ){
-                    settings.onsavesuccessful(target,settings.data[positionIdx]);
-                }else{
-                    if($.isFunction(window[settings.onsavesuccessful])){
-                        window[settings.onsavesuccessful](tag,settings.data[positionIdx]);
-                    }
-                }
+                $.aceOverWatch.utilities.runIt(settings.onsavesuccessful,target,settings.data);
             },
 
             setData : function(target, clickedItem, rows,totalCount) {
@@ -14101,21 +17960,21 @@
             },
 
             toogle : function(target) {
-            	/*
-            	 * obsolete, to be removed
-            	 */
+                /*
+                 * obsolete, to be removed
+                 */
             },
 
             expand : function(target) {
-            	/*
-            	 * obsolete, to be removed
-            	 */
+                /*
+                 * obsolete, to be removed
+                 */
             },
 
             contract : function(target) {
-            	/*
-            	 * obsolete, to be removed
-            	 */
+                /*
+                 * obsolete, to be removed
+                 */
             },
 
             val : function(target, value, extra, record){
@@ -14182,6 +18041,8 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
+                $.aceOverWatch.field.badge.afterInit(containerField, what);
+
                 $.aceOverWatch.field.pagination.update(target);
 
                 /*
@@ -14214,7 +18075,7 @@
                     }
 
                     if( newPage != settings.page ){
-                    	$.aceOverWatch.field.grid.inlineDissmissRowEdit(target);
+                        $.aceOverWatch.field.grid.inlineDissmissRowEdit(target,false);
                         $.aceOverWatch.field.pagination.onPageChange(target,settings,newPage);
                     }
                 });
@@ -14232,13 +18093,13 @@
                         return;
                     }
 
-                    if( page < 1 || page > settings.maxPages ){
+                    if( page < 1 || ( page > settings.maxPages && !settings.net.donotreturntotals ) ){
                         page = settings.page;
                         $(this).val(settings.page);//this updates the input field with the adjusted page value
                     }
 
                     if( page != settings.page ){
-                    	$.aceOverWatch.field.grid.inlineDissmissRowEdit(target);
+                        $.aceOverWatch.field.grid.inlineDissmissRowEdit(target,false);
                         $.aceOverWatch.field.pagination.onPageChange(target,settings,page);
                     }
                 });
@@ -14251,9 +18112,7 @@
 
                 if( settings.page != page ){
                     settings.page = page;
-                    if( $.isFunction(settings.onPageChanged) ){
-                        settings.onPageChanged(settings.page);
-                    }
+                    $.aceOverWatch.utilities.runIt(settings.onPageChanged,page);
                 }
 
                 $.aceOverWatch.field.pagination.update(target);
@@ -14332,36 +18191,12 @@
                 if( !settings ){
                     //build the options from the properties of the field
                     settings = {};
-
-                    $.each(containerField.attributes, function() {
-                        // this.attributes is not a plain object, but an array
-                        // of attribute nodes, which contain both the name and value
-                        if(this.specified) {
-
-                            switch( this.name ){
-                                case 'extraparams':
-                                    settings[this.name] = $.aceOverWatch.utilities.getObjectFromText(this.value);
-                                    break;
-                                case 'displayexpanded':
-                                    settings[this.name] = (this.value=='true');
-                                    break;
-                                default:
-                                    settings[this.name] = this.value;
-                                    break;
-                            }
-                        }
-
-                        delete settings.id;
-                        delete settings.class;
-                        delete settings.style;
-                        delete settings.listeners;
-
-                    });
+                    $.aceOverWatch.field.parseAttributes(containerField, settings);
                 }
                 //we are using 2 extend because we do not want the default settings to overwrite the given settings if any
                 $.extend(true,settings,$.extend(true,{
                     contentselector : '.'+$.aceOverWatch.classes.cardViewItem,
-                    restricttoparent : false,//true, if the selector should be applid only to the initial body of the card view
+                    restricttoparent : false,//true, if the selector should be applied only to the initial body of the card view
                     listeners:{},
                 }, settings ));
 
@@ -14432,7 +18267,7 @@
 
                 var myCard = $(cardEl).addClass($.aceOverWatch.classes.hide).addClass($.aceOverWatch.classes.cardViewItem);
                 if( !alreadyIn ){
-                	myCard.detach().appendTo(containerField);
+                    myCard.detach().appendTo(containerField);
                 }
                 containerField.data('cardsNo',containerField.data('cardsNo')+1);
 
@@ -14448,33 +18283,35 @@
              * @param callback - a function, or the name of a function in window; if it exists, it will be execute after the switch has been performed
              */
             switchTo : function(target, card, callback) {
-                var containerField = $(target);
-                if (!containerField) return false;
-
-                containerField.children('.'+$.aceOverWatch.classes.cardViewItem).addClass($.aceOverWatch.classes.hide);
-                containerField.data('activeCard','');
+                if ($.type(target) == "string") target = $(target);
+                let cardEl;
                 switch ($.type(card)) {
-                    
-                	case 'number' : //switch to index
-                        var myCards = containerField.data('cards');
+
+                    case 'number' : //switch to index
+                        var myCards = target.data('cards');
                         if (!myCards || card >= myCards.length || $.aceOverWatch.utilities.isVoid(myCards[card]) ){
-                        	return false;
+                            return false;
                         }
 
-                        myCards[card].removeClass($.aceOverWatch.classes.hide);
-                        containerField.data('activeCard',card);
+                        cardEl = myCards[card];
                         break;
-                    
+
                     case 'string' : //switch by selector
-                        containerField.children(card).removeClass($.aceOverWatch.classes.hide);
-                        containerField.data('activeCard',card);
+                        cardEl = target.children(card);
+                        if( cardEl.length == 0 ){
+                            return false;
+                        }
                         break;
 
                     default :
                         return false;
                         break;
                 }
-                
+
+                target.children('.'+$.aceOverWatch.classes.cardViewItem).addClass($.aceOverWatch.classes.hide);
+                cardEl.removeClass($.aceOverWatch.classes.hide);
+                target.data('activeCard',card);
+
                 $.aceOverWatch.utilities.runIt(callback,target);
 
                 return true;
@@ -14505,6 +18342,7 @@
 
                     onSearch			: null, //callback for search operation - 2 params - first the target (the searchform) and second the search object (if not object then is quick search otherwise is advanced search)
                     onChangeSortOrder	: null,//callback for sort
+                    withquickmenuitems  : true,
                 }, settings ));
 
 
@@ -14551,13 +18389,14 @@
 
 
                 /* BEGIN QuickSEARCH*/
-                var quickSearchTarget = $('<div></div>').addClass($.aceOverWatch.classes.dataSearchPanel);
+                var quickSearchTarget = $('<div></div>').addClass($.aceOverWatch.classes.dataSearchPanel+' ace-col-12');
                 var quickSearchTriggerBtnContainer = $('<div></div>').addClass($.aceOverWatch.classes.triggerBtnContainer).appendTo(quickSearchTarget);
 
-                var quickSearch = $('<div></div>').ace('create',{
+                var quickSearch = $('<div class="ace-col-12 ace-no-padding"></div>').ace('create',{
 
                     fieldname: settings.modulename+'_quick_search',
                     placeholder: _aceL.search,
+                    ignorecontrolenvelope: settings.ignorecontrolenvelope,
 
                     onchange:function(t,value){
                         $.aceOverWatch.field.searchform.search(target, value);
@@ -14565,7 +18404,7 @@
 
                 }).addClass($.aceOverWatch.classes.fieldcell).addClass($.aceOverWatch.classes.quickSearchField).appendTo(quickSearchTriggerBtnContainer);
 
-                var quickSearchBtn = $('<div class="ace-search-panel-submit"></div>').ace('create',{
+                let quickSearchBtn = $('<div class="ace-search-panel-submit"></div>').ace('create',{
                     type: 'iconbutton',
                     iconcls: 'fa fa-search',
                     action: function() {
@@ -14574,30 +18413,31 @@
                 }).addClass($.aceOverWatch.classes.fieldcell).appendTo(quickSearchTriggerBtnContainer);
 
 
-                var quickSearchMenuItems = [];
-                if (settings.orderbyfields.length>0) {
-                    quickSearchMenuItems.push({
-                        label: _aceL.sortby,
-                        type: 'grouplabel',
-                    });
-                    $.each(settings.orderbyfields, function(index, value) {
-                        var searchFld = $('<div></div>').ace('create', value).addClass($.aceOverWatch.classes.col12).addClass($.aceOverWatch.classes.fieldcell).appendTo(advSearchPanel);
-                        quickSearchMenuItems.push(value);
-                    });
-                }
-                quickSearchMenuItems.push({
-                    label:_aceL.advsearch,
-                    action : function() {
-                        containerField.find('.'+$.aceOverWatch.classes.dataSearchPanel).addClass($.aceOverWatch.classes.hide);
-                        containerField.find('.'+$.aceOverWatch.classes.dataAdvSearchPanel).removeClass($.aceOverWatch.classes.hide);
+                if( settings.withquickmenuitems ) {
+                    let quickSearchMenuItems = [];
+                    if (settings.orderbyfields.length > 0) {
+                        quickSearchMenuItems.push({
+                            label: _aceL.sortby,
+                            type: 'grouplabel',
+                        });
+                        $.each(settings.orderbyfields, function (index, value) {
+                            var searchFld = $('<div></div>').ace('create', value).addClass($.aceOverWatch.classes.col12).addClass($.aceOverWatch.classes.fieldcell).appendTo(advSearchPanel);
+                            quickSearchMenuItems.push(value);
+                        });
                     }
-                });
+                    quickSearchMenuItems.push({
+                        label: _aceL.advsearch,
+                        action: function () {
+                            containerField.find('.' + $.aceOverWatch.classes.dataSearchPanel).addClass($.aceOverWatch.classes.hide);
+                            containerField.find('.' + $.aceOverWatch.classes.dataAdvSearchPanel).removeClass($.aceOverWatch.classes.hide);
+                        }
+                    });
 
-                var quickSearchMenu = $('<div class="ace-search-panel-menu-button"></div>').ace('create',{
-                    type: 'menubutton',
-                    items: quickSearchMenuItems,
-                }).addClass($.aceOverWatch.classes.fieldcell).appendTo(quickSearchTriggerBtnContainer);
-                /* END QuickSEARCH*/
+                    let quickSearchMenu = $('<div class="ace-search-panel-menu-button"></div>').ace('create', {
+                        type: 'menubutton',
+                        items: quickSearchMenuItems,
+                    }).addClass($.aceOverWatch.classes.fieldcell).appendTo(quickSearchTriggerBtnContainer);
+                }
 
                 if (settings.showaddbutton) {
                     var quickAddBtn = $('<div class=" ace-search-panel-add-button"></div>').ace('create',{
@@ -14752,19 +18592,21 @@
         switch(action){
             case 'value':
                 return $.aceOverWatch.field.value(this, options, extra, suplementary);
-            
+            case 'valueprint':
+                return $.aceOverWatch.field.valueprint(this);
+
             case 'settings':
-            	return $.aceOverWatch.field.settings(this, options);
-            	
+                return $.aceOverWatch.field.settings(this, options);
+
             case 'netparams':
-            	return $.aceOverWatch.field.netparams(this, options,extra);
-                
+                return $.aceOverWatch.field.netparams(this, options,extra);
+
             case 'validate':
                 var isValid = true;
 
                 this.each(function() {
-                    var debugValidation = {};
-                    var tmpVal = $.aceOverWatch.field.validate(this, options, debugValidation);
+                    let debugValidation = {};
+                    let tmpVal = $.aceOverWatch.field.validate($(this), options, debugValidation);
                     if (!tmpVal) {
                         $.aceOverWatch.utilities.log({
                             msg : ' Validation :> INVALID FIELD FOUND ',
@@ -14784,24 +18626,27 @@
 
             switch( action ){
                 case 'create'://to create a new field
-                    if ($(this).attr('id') == 'documents-add-button') console.log('creating add button on DOCS');
-                    return  $.aceOverWatch.field.create(this, options);
+                    return  $.aceOverWatch.field.create($(this), options);
                 case 'modify'://to modify an existing field; this operation will redraw the item
-                    return  $.aceOverWatch.field.modify(this, options);
+                    return  $.aceOverWatch.field.modify($(this), options);
                 case 'show':
-                    return $.aceOverWatch.field.show(this, options);
+                    return $.aceOverWatch.field.show($(this), options);
                 case 'save':
-                    return $.aceOverWatch.field.save(this, options, extra);
+                    return $.aceOverWatch.field.save($(this), options, extra);
+                case 'refresh':
+                    return  $.aceOverWatch.field.refresh($(this), options);
                 case 'cancel':
-                    return $.aceOverWatch.field.cancel(this, options, extra);
+                    return $.aceOverWatch.field.cancel($(this), options, extra);
                 case 'hide':
-                    return $.aceOverWatch.field.hide(this, options);
+                    return $.aceOverWatch.field.hide($(this), options);
                 case 'load':
-                    return  $.aceOverWatch.net.load(this, options, extra);
+                    return  $.aceOverWatch.net.load($(this), options, extra);
                 case 'loadrecord':
-                    return  $.aceOverWatch.field.record(this, options);
+                    return  $.aceOverWatch.field.record($(this), options);
+                case 'focus':
+                    return  $.aceOverWatch.field.focus($(this), options);
                 case 'loadtpl':
-                    return  $.aceOverWatch.template.loadTemplate(this, options);
+                    return  $.aceOverWatch.template.loadTemplate($(this), options);
                 default:
                     return this;
             }
@@ -14811,3 +18656,5 @@
     };
 
 }( jQuery ));
+
+$.aceOverWatch.utilities.startTrackMouse();
