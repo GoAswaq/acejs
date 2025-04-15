@@ -3,6 +3,77 @@
 
 **IntegratedTemplates** is a powerful yet simple templating engine developed by **thinkIT**, based on the original PEAR project `HTML_Template_IT`. It helps separate the application logic from the HTML design, allowing developers and designers to work independently and efficiently.
 
+
+## ✨ Why Use IntegratedTemplates?
+
+IntegratedTemplates lets you:
+
+- Keep **logic** and **presentation** separate.
+- Reuse **templates** across different logic flows.
+- Allow designers and developers to work in parallel.
+- Easily **iterate** and **reuse blocks** of content.
+- Define **variables and blocks** in HTML and replace them using PHP.
+
+---
+
+## 📁 How Templates Work
+
+Templates are regular `.html` files with placeholders (`{VAR_NAME}`) and blocks defined using HTML comments. 
+If in a block you do not have any matched variable, the block will not be parsed/rendered (please note that if the variable exists and it is an empty string - the block will still be rendered).
+
+### 🔹 Define a Block and Variables
+
+```html
+<!-- BEGIN article_block -->
+  <h1>{ARTICLE_TITLE}</h1>
+  <h2>{ARTICLE_SUBTITLE}</h2>
+  <p>By {ARTICLE_AUTHOR}</p>
+  <div>{ARTICLE_TEXT}</div>
+<!-- END article_block -->
+```
+
+## 🧠 PHP Usage Example of the IntegratedTemplate class
+
+```php
+$tpl = new IntegratedTemplate();
+$tpl->loadTemplatefile("news_template.html", true, true);
+
+$tpl->setCurrentBlock("article_block");
+$tpl->setVariable("ARTICLE_TITLE", "The Future of Tech");
+$tpl->setVariable("ARTICLE_SUBTITLE", "Innovation & AI");
+$tpl->setVariable("ARTICLE_AUTHOR", "Jane Doe");
+$tpl->setVariable("ARTICLE_TEXT", "Lorem ipsum...");
+$tpl->parseCurrentBlock("article_block");
+
+$tpl->show();
+
+```
+
+### ✅ Expected Parsed Result
+
+```html
+  <h1>The Future of Tech</h1>
+  <h2>Innovation & AI</h2>
+  <p>By Jane Doe</p>
+  <div>Lorem ipsum...</div>
+```
+
+---
+
+## 🔄 Nesting Blocks
+
+Yes, blocks can be nested!
+
+```html
+<!-- BEGIN list -->
+  <ul>
+  <!-- BEGIN item -->
+    <li>{ITEM_TEXT}</li>
+  <!-- END item -->
+  </ul>
+<!-- END list -->
+```
+
 ---
 
 ## 🛠️ Helper Function: `return_parsed_template_file`
@@ -33,15 +104,22 @@ echo return_parsed_template_text($template_text, $TEMPLATE_DATA);
 
 ## 🗂️ `$TEMPLATE_DATA` Structure
 
-This array controls everything rendered by the template engine.
+This array controls everything rendered by the template engine.<br>
+**Remember** that if in a block you do not have any matched variable, the block will not be parsed/rendered (please note that if the variable exists and it is an empty string - the block will still be rendered). For this, $TEMPLATE_DATA contains a predefined varaible, named **_TPL_display_anyway_**. If in a block the variable {TPL_display_anyway} is present, that block will be rendered and nothing will be shown in this variable's place.
+
 
 ### 🔹 Basic Format
 
 ```php
 $TEMPLATE_DATA = [
-  'VAR_NAME' => ['type' => 'field', 'value' => 'Some value'],
-  'BLOCK_NAME' => ['type' => 'options', 'show' => 1],
-  'BLOCK_NAME_option_data' => ['type' => 'options', 'value' => [...]]
+  'VAR_NAME' => ['type' => 'field', 'value' => 'Ssome value', 'show' => 1|0],
+  'BLOCK_NAME_option_data' => ['type' => 'options', value => ['key_name' => ['value'=> '$some_value']] 'show' => 1|0],
+  
+  /*
+   * OR - used for options like elements where only 3 key names are needed (name, value, selected)
+   */
+  
+  'BLOCK_NAME_option_data' => ['type' => 'options', 'value' => [['value'=>'$some_value', 'name' => 'Ssome name', 'selected' => 'selected']]],
 ];
 ```
 
@@ -50,63 +128,9 @@ $TEMPLATE_DATA = [
 | `type`     | Purpose                              |
 |------------|--------------------------------------|
 | `field`    | Default type for variables           |
-| `value`    | Explicit static value                |
-| `checkbox` | Outputs `checked` if value = 1       |
 | `options`  | Used for iterated blocks (like `<select>`) |
 
 ---
-
-## ✨ Why Use IntegratedTemplates?
-
-IntegratedTemplates lets you:
-
-- Keep **logic** and **presentation** separate.
-- Reuse **templates** across different logic flows.
-- Allow designers and developers to work in parallel.
-- Easily **iterate** and **reuse blocks** of content.
-- Define **variables and blocks** in HTML and replace them using PHP.
-
----
-
-## 📁 How Templates Work
-
-Templates are regular `.html` files with placeholders (`{VAR_NAME}`) and blocks defined using HTML comments:
-
-### 🔹 Define a Block and Variables
-
-```html
-<!-- BEGIN article_block -->
-  <h1>{ARTICLE_TITLE}</h1>
-  <h2>{ARTICLE_SUBTITLE}</h2>
-  <p>By {ARTICLE_AUTHOR}</p>
-  <div>{ARTICLE_TEXT}</div>
-<!-- END article_block -->
-```
-
-### ✅ Expected Parsed Result
-
-```html
-  <h1>The Future of Tech</h1>
-  <h2>Innovation & AI</h2>
-  <p>By Jane Doe</p>
-  <div>Lorem ipsum...</div>
-```
-
----
-
-## 🔄 Nesting Blocks
-
-Yes, blocks can be nested!
-
-```html
-<!-- BEGIN list -->
-  <ul>
-  <!-- BEGIN item -->
-    <li>{ITEM_TEXT}</li>
-  <!-- END item -->
-  </ul>
-<!-- END list -->
-```
 
 ---
 
@@ -175,20 +199,47 @@ To ensure proper parsing by IntegratedTemplates, `options` blocks must be writte
 ```php
 $TEMPLATE_DATA['select_roles_option_data']['type'] = 'options';
 
-$TEMPLATE_DATA['select_roles_option_data']['value'][0]['value']['value'] = 'admin';
-$TEMPLATE_DATA['select_roles_option_data']['value'][0]['name']['value'] = 'Admin';
-$TEMPLATE_DATA['select_roles_option_data']['value'][0]['selected']['value'] = 'selected';
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['value_key']['value'] = 'admin';
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['name_key']['value'] = 'Admin';
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['selected_key']['value'] = 'selected';
 
-$TEMPLATE_DATA['select_roles_option_data']['value'][1]['value']['value'] = 'user';
-$TEMPLATE_DATA['select_roles_option_data']['value'][1]['name']['value'] = 'User';
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['value_key']['value'] = 'user';
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['name_key']['value'] = 'User';
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['selected_key']['value'] = 'selected';
+
+/*
+ *  OR simple way used only for 3 values array
+ */
+ 
+ 
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['value'] = 'admin';
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['name'] = 'Admin';
+$TEMPLATE_DATA['select_roles_option_data']['value'][0]['selected'] = 'selected';
+
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['value'] = 'user';
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['name'] = 'User';
+$TEMPLATE_DATA['select_roles_option_data']['value'][1]['selected'] = 'selected';
+
+
 ```
 
 ### 🔹 Template Block
+For the block to be parsed correctly, it must be defined in the template file as follows:
 
+For key=>value options array:
+```html
+<select name="USER_ROLE">
+    <!-- BEGIN select_roles_option -->
+    <option value="{value_key}" {selected_key}>{name_key}</option>
+    <!-- END select_roles_option -->
+</select>
+```
+
+For simple 3 values options array (note the useage of block name in with the 3 variables _value, _name and _selected):
 ```html
 <select name="USER_ROLE">
 <!-- BEGIN select_roles_option -->
-  <option value="{value}" {selected}>{name}</option>
+    <option value="{select_roles_option_value}" {select_roles_option_selected}>{select_roles_option_name}</option>
 <!-- END select_roles_option -->
 </select>
 ```
@@ -202,7 +253,7 @@ $TEMPLATE_DATA['select_roles_option_data']['value'][1]['name']['value'] = 'User'
 </select>
 ```
 
-> ✅ Important: The block name in the template must match the structure:
+> ✅ Important: The block name in the template must match the structure - wiwthout the `_data` suffix.:
 > `select_roles_option_data` → `<!-- BEGIN select_roles_option -->`
 
 ---
@@ -272,7 +323,7 @@ $TEMPLATE_DATA['user_type']['value'] = 'admin';
 
 ```html
 <!-- BEGIN IF_FIELD_user_type_IS_admin -->
-  <p>Welcome, admin! You have full access.</p>
+  <p>Welcome, {user_type}! You have full access.</p>
 <!-- END IF_FIELD_user_type_IS_admin -->
 ```
 
