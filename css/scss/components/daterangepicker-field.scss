@@ -1,0 +1,40 @@
+/* begin daterangepicker field */
+@use '../variables/all' as *;
+
+.ace-date-picker-wrapper-modal {
+  position: fixed;
+  z-index: 1;
+  left: $meas-0;
+  top: $meas-0;
+  width: $meas-full;
+  height: $meas-full;
+  overflow: auto;
+  background-color: $drp-modal-background;
+}
+.date-picker-wrapper {
+  background-color: $drp-modal-content-background;
+  border-radius: $meas-radius-10;
+  font-family: Roboto, Sans-Serif;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  //color: #222;
+  @include addBorder('all',$ace-border-default-size,$ace-border-default-pattern,$drp-main-border-color);//#ccc
+}
+.date-picker-wrapper .month-wrapper table th, .date-picker-wrapper .month-wrapper table td {
+  font-size: $font-size-10;
+}
+.date-picker-wrapper .month-wrapper table .day {
+  font-size: $font-size-10;
+  padding: $meas-pad-3 $meas-pad-0;
+}
+.date-picker-wrapper .drp_top-bar {
+  padding: $meas-pad-10 $meas-pad-0;
+}
+.date-picker-wrapper .first-date-selected, .date-picker-wrapper .last-date-selected {
+  background-color: $drp-accent-color !important;
+  color: $drp-highlight-font-color !important;
+}
+.date-picker-wrapper .month-wrapper table .day.checked {
+  background-color: $drp-checked-highlight;
+}
+/* end daterangepicker field */

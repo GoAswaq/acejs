@@ -1,454 +1,4 @@
 @charset "UTF-8";
-/* BEGIN HARDCODED COLORS - DO NOT MODIFY - they should NOT be overwritten by themes*/
-/* END DO NOT MODIFY */
-/*
- * begin specific TOAST colors
- */
-/*
- * begin specific PROMPT colors
- */
-/*
- * begin common controls
- */
-/*
- * begin loader & masks &checks
- */
-/*
- * begin select
- */
-/*
- * begin specific BUTTON colors
- */
-/*
- * begin UPLOAD BUTTON colors
- */
-/*
- * begin CHECKBOX coloring
- */
-/*
- * begin radiogroup
- */
-/*
- * begin chips
- */
-/*
- * begins tags
- */
-/*
- * begin breadcrumbs
- */
-/*
- * begin specific GRID colors
- */
-/*
- * begin form specific color
- */
-/*
- * begin autocomplete
- */
-/*
- * begin accordion
- */
-/*
- * begin datepicker
- */
-/*
- * begin menubutton
- */
-/*
- * begin side menu
- */
-/*
- * presentation panel
- */
-/*
- * mobile elements
- */
-/*
- * shadows
- */
-/* Used for:
-TOP: .ace-filter-container:hover .ace-filter-remove,.ace-deblur-zone > div > .ace-autocomplete-field > .ace-empty ~ .ace-label, .ace-deblur-zone > div > .ace-autocomplete-field > button,
-		.ace-popover:before,
-WIDTH: .ace-entry .ace-flex-wrap-yes .ace-auto-gen .ace-efld,
-HEIGHT: .ace-dropdown-list li, .ace-thin-progress-bar .ace-progress-bar, .ace-thin-progress-bar .ace-progress-inner-bar,
-LEFT/RIGHT: .ace-combo-field:after , .ace-radio-field .ace-error-msg, .ace-lateral-form .ace-soft-close,
- */
-/* Used for:
-TOP: .ace-efld ~ label, .ace-efld:focus ~ label, .ace-empty:focus ~ label, .ace-autocomplete-details-field .ace-efld.ace-hide ~ .ace-label, .ace-label-align-top .ace-file-upload .ace-label,
-		.ace-radio-field .ace-error-msg, .ace-text-editor .ace-efld:focus ~ label, .ace-text-editor .ace-efld ~ label ,
-BOTTOM: .ace-text-field:after
-WIDTH: .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, span.ace-card-highlight:after,
-HEIGHT: .ace-efld ~ label,  .ace-thin-row, .ace-autocomplete-field input ~ .ace-autocomplete-clear-button, a.ace-advanced-search-trigger img, .ace-radio + span, span.ace-card-highlight:after,
-PADDING: .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field, .ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"],
-		.ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger, .ace-accordion-list,  a.ace-breadcrumbs-link, .ace-mask-el > div,
-LINE-HEIGHT: span.ace-selectoption,
-BORDER: .ace-breadcrumbs-separator:after, .ace-arrow-down,
- */
-/* Used for:
-TOP: [class*="ace-huge-text-"] .ace-empty:focus ~ .ace-label, [class*="ace-huge-text-"] .ace-efld ~ .ace-label,
-HEIGHT: .ace-nested-grid-header .ace-grid-groupped-header-col, .ui-datepicker td span, .ui-datepicker td a, .ace-accordion, .ace-deblur-zone i,
-LINE-HEIGHT: div.ace-selectbox, .ui-datepicker td span, .ui-datepicker td a,
-WIDTH: .ui-datepicker td span, .ui-datepicker td a
-LEFT/RIGHT: .ace-adv-search-panel .ace-advanced-expand, .ace-floating-button, .ace-arrow-down,
- */
-/* Used for:
-TOP: .ace-text-center .ace-deblur-zone.ace-show .ace-autocomplete-field .ace-grid-auto-complete,
-MARIGIN: .ace-nested-grid-header .ace-grid-groupped-header-title-50[groupname]::before
-HEIGHT: .ace-flex-grid .ace-grid-footer, .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
-WIDTH: .ace-icon-card.ace-icon-card-small i.fa, .ace-icon-card.ace-icon-card-small i.far, .ace-icon-card.ace-icon-card-small i.fad, .ace-icon-card.ace-icon-card-small i.fal, .ace-icon-card.ace-icon-card-small i.icofont
-LEFT/RIGHT: .ace-timeline .ace-grid-body:before
- */
-/* Used for:
-HEIGHT: .ace-main-nav, .ace-main-nav .ace-logo, .ace-grid-height-minus-50 .ace-grid, .recaptcha_div table td img, [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-menu-trigger, .ace-main-nav .ace-dropdown-trigger-click,
-		.ace-height-minus-50, .ace-i-height-minus-50, .ace-height-minus-50-vh, .ace-i-height-minus-50-vh ,
-WIDTH: .ace-autocomplete-field .ace-grid-pagination input,
-TOP: .ace-main-nav .ace-dropdown-list, .ace-side-container,
-MARGIN: .ace-content, .ace-margin-top-50
- */
-/* Used for:
-HEIGHT: .ace-grid-height-minus-60 .ace-grid, ace-height-minus-60, ace-i-height-minus-60, .ace-height-minus-60-vh, .ace-i-height-minus-60-vh
-PADDING LEFT/RIGHT: .ace-search-bar input
-MARGIN: .ace-margin-top-60,
- */
-/* Used for:
-WIDTH: .ace-main-nav .ace-logo
-HEIGHT: .ace-nested-grid-header > .ace-grid-cell, .ace-grid-groupped-header-col.ace-grid-grouped-header-col-last:after
-PADDING LEFT/RIGHT: [class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder
- */
-/* Used for:
-WIDTH: .ace-icon-card i.icofont
-HEIGHT: .ace-icon-card i.icofont, .ace-height-minus-80, .ace-i-height-minus-80, .ace-height-minus-80-vh, .ace-i-height-minus-80-vh , .ace-grid-body, .ace-grid-height-minus-80 .ace-grid,
-BOX-SHADDOW: .ace-advanced-panel.from-top.ace-show,
-MARGIN: .ace-margin-top-80
- */
-/* Used for:
-WIDTH: .ace-side-container .ace-expand, .ace-side-menu, .ace-hidden-menu-screen
-TRANSFORM: .ace-hidden-menu-screen,
- */
-/* Used for:
-HEIGHT: .ace-height-minus-140, .recaptcha_div td.recaptcha_image_cell
- */
-/* Used for:
-LEFT/RIGHT: .ace-main-nav .ace-right ul li .ace-dropdown-list
-MARIGN: .ace-margin-top-150
-HEIGHT: .ace-grid-height-minus-150 .ace-grid, .ace-i-height-minus-150-vh, .ace-height-minus-150-vh, .ace-i-height-minus-150, .ace-height-minus-150
-WIDTH: .ace-file-upload span, .ace-label-align-top .ace-display-field .ace-label
- */
-/* Used for:
-WIDTH: .ace-advanced-panel
-*/
-/* Used for:
-HEIGHT: .ace-blur-zone .ace-scrollview
- */
-/* Used for:
-HEIGHT: .ace-grid-height-minus-200 .ace-grid, .ace-height-minus-200, .ace-i-height-minus-200, .ace-height-minus-200-vh, .ace-i-height-minus-200-vh, .ace-height-minus-200
- */
-/* Used for:
-.ace-timeline .ace-grid-body, .recaptcha_div span#recaptcha_privacy
- */
-/* Used for:
-ace-adv-search-panel, ace-grid-height-minus-250, ace-info-side, ace-quick-access-bar, ace-height-minus-250, ace-margin-top-250
- */
-/*
-Used for timeline
- */
-/* Used for:
-HEIGHT: .ace-height-minus-300, .ace-i-height-minus-300, .ace-height-minus-300-vh, .ace-i-height-minus-300-vh, .ace-height-minus-300
-LEFT/RIGHT: .ace-advanced-panel.ace-quick-access-bar
-WIDTH:.ace-advanced-panel.ace-quick-access-bar.ace-show
-HEIGHT: .ace-flex-grid-height-300 .ace-grid-auto-complete, .ace-flex-grid-height-300 .ace-grid
- */
-/* Used for:
-HEIGHT: .ace-height-minus-350, .ace-i-height-minus-350, .ace-height-minus-350-vh, .ace-i-height-minus-350-vh, .ace-height-minus-350
- */
-/* Used for:
-HEIGHT: .ace-height-minus-400, .ace-i-height-minus-400, .ace-height-minus-400-vh, .ace-i-height-minus-400-vh, .ace-height-minus-400
- */
-/* Used for:
-HEIGHT: .ace-height-minus-450, .ace-i-height-minus-450, .ace-height-minus-450-vh, .ace-i-height-minus-450-vh, .ace-height-minus-450
- */
-/* Used for:
-.ace-entry-card
- */
-/* Used for:
-.span.ace-selection
- */
-/* Used for
-  .ace-panel-white, .ace-panel-blue, .ace-panel-yellow, .ace-panel-orange, .ace-panel-red, .ace-panel-green,
- .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-template.ace-field-container, .ace-autocomplete-field .ace-grid-auto-complete,
- .ace-chips-field input, .ace-datepicker-field, .ace-no-bottom-padding .ace-datepicker-field, .ace-fld-no-padding .ace-display-field, .ace-fld-no-padding-top .ace-display-field, .ace-fld-no-padding-bottom .ace-display-field,
- [class^="ace-state-badge-"] .ace-text-field .ace-label, .ace-accordion-checkbox, .ace-horizontal-menu .ace-side-menu,
- .ace-no-border-button button, button.ace-no-border-button, a.ace-no-border-button, .ace-dropdown, .ace-input + label,
- .ace-efld.ace-progress-bar,
- .ace-form-padding, .ace-no-padding, .ace-no-padding-top, .ace-no-padding-left, .ace-no-padding-right, .ace-no-padding-bottom
- .ace-text-field, .ace-entry-card .ace-field-container, .ace-entry-card-title, .ace-entry-card-title h2,
-.ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span.efld, .ace-entry-card-title .ace-auto-gen.ace-h2 .ace-display-field span
-
-*/
-/* Used for
- .ace-thin-rows-grid, .ace-input + label
-*/
-/* Used for
- .ace-grid-cell button, .ace-compact-grid .ace-grid-row .ace-grid-cell, .ace-chips-field, .ace-chip, .ui-datepicker th, .ace-advanced-panel-trigger.active-filters .ace-numbered-badge,
- .ace-entry-card.ace-no-shadow button,
-*/
-/* Used for
- .ace-grid-cell button, .ace-accordion, .ace-input + label
-*/
-/* Used for
- .ace-grid-pagination button, .ace-nested-grid-header .ace-grid-groupped-header-col, .ace-chips-field, .ui-datepicker-trigger,
- a.ace-tiny-button, button.ace-tiny-button, .ace-tiny-button a, .ace-tiny-button button, span.ace-card-highlight:after,
-*/
-/* Used for
- .ace-grid-cell button, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-cell-no-padding .ace-grid-cell, .ace-grid-pagination, .ace-grid-action-cell button, .ace-grid-action-button:before,
- .ace-grid-inline-ctrls, .ace-chips-field, .ace-chip, .ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker th, .ui-datepicker-title,
- .ace-radio-field,
- [class^="ace-state-badge-"] .ace-text-field, [class^="ace-state-badge-"] .ace-text-field input, .ace-accordion-checkbox,
- .ace-deblur-zone i, a.ace-breadcrumbs-link, .ace-inside, .ace-dropdown, .ace-dropdown-trigger-click, .ace-prompt-el div button,
- .ace-toast-icon span, .ace-advanced-panel-trigger.active-filters .ace-numbered-badge, .ace-entry-card.ace-no-shadow button,
- .ace-icon-card i.fa, .ace-icon-card i.far, .ace-icon-card i.fad, .ace-icon-card i.fal, .ace-icon-card i.icofont,
- .ace-panel-white, .ace-error .ace-error-msg, .ace-mask-el > div,
-.ace-tiny-padding-top, .ace-tiny-padding-left, ace-tiny-padding-right, ace-tiny-padding-bottom, ace-tiny-padding,
-.ace-i-tiny-padding-top, .ace-i-tiny-padding-left, .ace-i-tiny-padding-right, .ace-i-tiny-padding-bottom, .ace-i-tiny-padding
-*/
-/* Used for
- .ace-file-upload span, .ace-file-type-icon, .ace-grid-row .ace-flat-button button,
- .ace-prompt-el div button#mask_el_prompt_cancel, .ace-prompt-el div button#mask_el_prompt_ok
-*/
-/* Used for
- .ace-iconbutton a
-*/
-/* Used for
- .ace-inside, .ace-inside button
-*/
-/* Used for
-.ace-file-upload span, .ace-file-upload-button a, .ace-file-remove a, .ace-file-upload-button a:hover, .ace-file-upload-button a:hover span, .ace-file-remove a, .ace-file-remove a:hover, .ace-file-remove a:hover span,
-.ace-grid-cell, .ace-grid-pagination, .ace-grid-header .ace-grid-action-cell, .ace-grid-footer-totals .ace-grid-action-cell
-.ace-autocomplete-details-inner-field, .ace-checkbox-field .ace-label,
-.ui-datepicker-prev, .ui-datepicker-next, .ui-datepicker-trigger,
-[class*="ace-"] > input[type="text"], [class*="ace-"] > input[type="password"], [class*="ace-"] > input[type="number"], [class*="ace-"] > input[type="email"], [class*="ace-"] > .ace-grid-search, [class*="ace-"] > textarea, [class*="ace-"] select,
-.ace-filter-container:hover .ace-filter-remove,
-.ace-efld, .ace-label, .ace-footer, .ace-main-nav, .ace-accordion, .ace-horizontal-menu .ace-accordion,
-[class^="ace-state-badge-"] .ace-text-field, [class^="ace-state-badge-"] .ace-text-field input,
-.ace-side-menu a, .ace-side-menu ul li a i, ul.ace-side-menu-dropdown-list li a,
-a.ace-normal-button, button.ace-normal-button, .ace-normal-button a, .ace-normal-button button, .ace-button,
-.ace-dropdown-list li a, .ace-dropdown-trigger, .ace-dropdown-trigger-click,
-.ace-prompt-el div button,
-.ace-chat-buble, .ace-mask-el div p,
-.ace-small-padding-top, .ace-small-padding-left, ace-small-padding-right, .ace-small-padding-bottom, .ace-small-padding
-.ace-i-small-padding-top, .ace-i-small-padding-left, .ace-i-small-padding-right, .ace-i-small-padding-bottom, .ace-i-small-padding,
-.ace-entry-card .ace-field-container.ace-small-padding-right
- */
-/* Used for
-.ace-grid-cell .ace-checkbox-field
- */
-/* Used for
-  .ace-grid-cell, .ace-grid-cell input, .ace-nested-grid-header > .ace-grid-cell, a.ace-tiny-button, button.ace-tiny-button, .ace-tiny-button a, .ace-tiny-button button,
-  .ace-checkable-card, ,
- */
-/* Used for
-  .ace-file-type-icon, .ace-mask-el > div
- */
-/* Used for
-  .ace-grid-header .ace-grid-cell, .ace-grid-footer-totals .ace-grid-cell, .ace-timeline-content-timestamp
- */
-/* Used for
-  .ace-grid-cell input, .ace-grid-header .ace-grid-action-cell, .ace-grid-footer-totals .ace-grid-action-cell, .ace-nested-grid-header .ace-grid-cell-header, .ace-nested-grid-header .ace-grid-cell-header,
-  .ui-datepicker, .ace-radio-field input[type="radio"] + span, a.ace-breadcrumbs-link, .ace-iconbutton a,
-  a.ace-normal-button, button.ace-normal-button, .ace-normal-button a, .ace-normal-button button, .ace-button, .ace-dropdown-list, .ace-radio + span, .ace-input + label,
-  .ace-toast, .ace-panel-blue, .ace-panel-yellow, .ace-panel-orange, .ace-panel-red, .ace-panel-green, .ace-popover, .ace-quick-access-bar, .ace-simple-card-footer,
-.ace-form-padding, .ace-medium-padding-top, ace-medium-padding-left, ace-medium-padding-right, ace-medium-padding-bottom, .ace-medium-padding
-.ace-i-medium-padding-top, .ace-i-medium-padding-left, .ace-i-medium-padding-right, .ace-i-medium-padding-bottom, .ace-i-medium-padding,
-.ace-entry-card-title
-*/
-/* Used for
-  .ace-grid-cell input
-*/
-/* Used for
-  .ace-checkable-card
-*/
-/* Used for
-.ace-accordion-list, .ace-autocomplete-field, .ace-autocomplete-field .ace-grid-cell, .ace-label-align-top .ace-combo-field, .ace-datepicker-field,
-.ace-label-align-top .ace-file-upload, .ace-auto-gen[type="radiogroup"], .ace-text-editor, .ace-label-align-top .ace-text-field, .ace-menu-trigger,
-a.ace-breadcrumbs-link, .ace-mask-el > div
-
-*/
-/* Used for
-  .ui-datepicker-calendar, .ace-radio-field input[type="radio"] + span, .ace-toast, .ace-mask-el div p,
-.ace-big-padding-top, .ace-big-padding-left, .ace-big-padding-right, .ace-big-padding-bottom, .ace-big-padding,
-.ace-i-big-padding-top, .ace-i-big-padding-left, .ace-i-big-padding-right, .ace-i-big-padding-bottom, .ace-i-big-padding
-*/
-/* Used for
-.ace-large-padding-top, ace-large-padding-left, ace-large-padding-right, ace-large-padding, .ace-large-padding-bottom
-.ace-i-large-padding-top, .ace-i-large-padding-left, .ace-i-large-padding-right, .ace-i-large-padding-bottom, .ace-i-large-padding
-*/
-/* Used for
-  .ace-content,
-*/
-/* Used for
-  ul.ace-side-menu-dropdown-list li a
-*/
-/* Used for
-.ace-form-popup > .ace-form-container
-*/
-/* Used for
-  .ace-search-bar input
-*/
-/* Used for
-[class*="ace-col-"] .ace-file-upload .ace-file-upload-placeholder,
-*/
-/* Used for
-  .ace-timeline-block
-*/
-/* Used for:
-.ace-mask-el > div
- */
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-.ace-tiny-margin, .ace-i-tiny-margin
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for:
-MARGIN: .ace-grid-cell button, .ace-grid-cell input, .ace-autocomplete-field .ace-autocomplete-extra-link, .ace-entry img, .ace-label-align-left .ace-error-msg,
-		.ace-search-bar, .ace-dialog-action-border,
-		html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fa,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.far,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fad,html[dir="ltr"] .ace-icon-card.ace-icon-card-small i.fal,html[dir="rtl"] .ace-icon-card.ace-icon-card-small i.icofont,
-		.ace-independent-form .ace-grid .ace-entry-card,
-		.ace-separator, .ace-error-msg
- */
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-.ace-medium-margin, .ace-i-medium-margin
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-.ace-big-margin, .ace-i-big-margin
-*/
-/* Used for
-*/
-/* Used for
-.ace-large-margin, .ace-i-large-margin
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-.ace-content,
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/**
-Used for positioning an element: left, right, top, bottom
- */
-/**
-Used borders: top,left,bottom,right
- */
-/* Used for
-BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
-			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
-			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
-			.ace-timeline-content:before, .ace-timeline-content:after,
- */
-/* Used for
-BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
-			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
-			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
-			.ace-timeline-content:before, .ace-timeline-content:after,
- */
-/* Used for
-box-shaddow
- */
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
-/* Used for
-*/
 /*
  * the composite values MUST NOT be overwritten by themes!
  */
@@ -803,6 +353,12 @@ div {
 
 a {
   color: red;
+  text-decoration: underline;
+}
+
+a:hover {
+  color: red;
+  text-decoration: underline;
 }
 
 a[disabled] {
@@ -1251,6 +807,30 @@ h4.ace-standard-title-text,
   font-weight: 600;
 }
 
+.ace-standard-subtitle-text,
+span.ace-standard-subtitle-text,
+h1.ace-standard-subtitle-text {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.ace-transparent-subtitle-bar h2.ace-standard-subtitle-text,
+.ace-form-inner h2.ace-standard-subtitle-text,
+h2.ace-standard-subtitle-text {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+h3.ace-standard-subtitle-text {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+h4.ace-standard-subtitle-text {
+  font-size: 16px;
+  font-weight: 400;
+}
+
 .ace-title {
   margin-bottom: 15px;
   position: relative;
@@ -1609,13 +1189,10 @@ html[dir=rtl] .ace-field-container {
   padding-left: 0px;
 }
 
-#myLogingForm .ace-field-container {
-  padding: 0px;
-}
-
 [class*=ace-] > .fa,
 [class*=ace-] > .far,
-[class*=ace-] > .fal {
+[class*=ace-] > .fal,
+[class*=ace-] > .fab {
   line-height: 1.8;
 }
 
@@ -1629,7 +1206,7 @@ html[dir=rtl] .ace-field-container {
 [class*=ace-] keygen,
 [class*=ace-] select,
 [class*=ace-] button {
-  font-family: "Lato";
+  font-family: "Lato", "Font Awesome 5 Pro", "FontAwesome";
   font-size: 13px;
 }
 
@@ -1638,7 +1215,7 @@ html[dir=rtl] .ace-field-container {
 [class*=ace-] > keygen,
 [class*=ace-] > select,
 [class*=ace-] > button {
-  font-family: "Lato";
+  font-family: "Lato", "Font Awesome 5 Pro", "FontAwesome";
   font-size: 13px;
   width: 100%;
   white-space: nowrap;
@@ -1725,7 +1302,7 @@ html[dir=rtl] .ace-field-container {
   cursor: pointer;
   color: rgba(0, 0, 0, 0.8);
   position: relative;
-  font-family: "Lato", "FontAwesome", "Font Awesome 5 Pro";
+  font-family: "Lato", "Font Awesome 5 Pro", "FontAwesome";
   padding: 8px 10px;
   min-height: 34px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1796,15 +1373,31 @@ html[dir=rtl] [class*=ace-] a:before {
   opacity: 1;
 }
 
+.ace-button-inverse button {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+.ace-button-inverse button:hover {
+  color: white;
+  background-color: transparent;
+  border: 1px solid white;
+}
+
+.ace-button-smaller button {
+  padding: 4px 5px;
+}
+
 @media screen and (min-width: 320px) and (max-width: 1024px) {
   [class*=ace-] > input[type=text],
-[class*=ace-] input[type=number],
-[class*=ace-] input[type=email],
-[class*=ace-] input[type=password],
-[class*=ace-] textarea,
-[class*=ace-] .hasDatepicker,
-[class*=ace-] .ace-grid-search,
-[class*=ace-] select {
+  [class*=ace-] input[type=number],
+  [class*=ace-] input[type=email],
+  [class*=ace-] input[type=password],
+  [class*=ace-] textarea,
+  [class*=ace-] .hasDatepicker,
+  [class*=ace-] .ace-grid-search,
+  [class*=ace-] select {
     background-color: rgba(93, 158, 183, 0.08);
   }
 }
@@ -1813,6 +1406,7 @@ html[dir=rtl] [class*=ace-] a:before {
 .ace-main-nav {
   background: #f2f4f8;
   height: 50px;
+  padding: unset;
   width: 100%;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.26);
   position: fixed;
@@ -1930,7 +1524,6 @@ html[dir=rtl] .ace-search-bar input {
   .ace-main-nav .ace-search-bar {
     width: 58% !important;
   }
-
   .ace-main-nav .ace-user-intro {
     display: none;
   }
@@ -2025,8 +1618,8 @@ html[dir=rtl] .ace-datepicker-field .ace-error-msg {
 }
 
 .ace-error-msg:before {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f071";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-error .ace-error-msg {
@@ -2055,8 +1648,8 @@ html[dir=rtl] .ace-datepicker-field .ace-error-msg {
 
 .ace-error-req > div:after {
   color: #d64343 !important;
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f069";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   display: block;
   position: absolute;
   font-size: 8px;
@@ -2097,8 +1690,7 @@ html[dir=rtl] .ace-error-req > div:after {
   text-align: center;
   padding: 13px 20px 13px;
   height: 50px;
-  width: 50px;
-  /*yes, same as height by default */
+  width: 50px; /*yes, same as height by default */
   font-size: 14pt !important;
   color: white;
   background-color: #82d57a;
@@ -2197,8 +1789,7 @@ html[dir=rtl] .ace-side-menu ul li a {
 
 .ace-side-menu ul li a i {
   font-size: 16pt;
-  line-height: 1.8 !important;
-  /* Fix for cases we use icons from different fonts */
+  line-height: 1.8 !important; /* Fix for cases we use icons from different fonts */
 }
 
 html[dir=ltr] .ace-side-menu ul li a i {
@@ -2218,6 +1809,7 @@ html[dir=rtl] .ace-side-menu ul li a i {
   text-align: center;
   white-space: normal;
   line-height: 1;
+  padding-top: 0px;
 }
 
 html[dir=ltr] .ace-side-menu a p {
@@ -2317,10 +1909,11 @@ html[dir=rtl] .ace-side-menu .ace-edit-icon {
   padding-left: 0px !important;
 }
 
-.ace-side-menu .ace-scrollview .ace-accordion.ace-active {
+.ace-side-menu .ace-scrollview .ace-accordion.ace-active, .ace-side-menu .ace-scrollview .ace-accordion.ace-active:hover {
   color: red !important;
   background-color: transparent;
   border-radius: 0px;
+  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
 }
 
 html[dir=ltr] .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
@@ -2331,6 +1924,20 @@ html[dir=rtl] .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
   border-right: 1px solid red;
 }
 
+html[dir=ltr] .ace-side-menu .ace-scrollview .ace-accordion.ace-active:hover {
+  border-left: 1px solid red;
+}
+
+html[dir=rtl] .ace-side-menu .ace-scrollview .ace-accordion.ace-active:hover {
+  border-right: 1px solid red;
+}
+
+.ace-side-menu .ace-scrollview .ace-accordion:hover {
+  background-color: transparent;
+  border-radius: 0px;
+  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
+}
+
 @media screen and (min-width: 320px) and (max-width: 1024px) {
   .ace-side-menu .ace-scrollview {
     display: flex;
@@ -2339,22 +1946,18 @@ html[dir=rtl] .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
     overflow-x: auto;
     justify-content: center;
   }
-
   .ace-side-menu .ace-scrollview .ace-accordion {
     clear: none;
     width: auto;
     padding: 4px 10px;
     flex: none;
   }
-
   .ace-side-menu .ace-scrollview .ace-accordion i {
     font-size: 22px !important;
   }
-
   .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
     box-shadow: none;
   }
-
   .ace-side-container {
     position: fixed;
     height: 44px;
@@ -2363,11 +1966,9 @@ html[dir=rtl] .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
     bottom: 0px;
     width: 100%;
   }
-
   .ace-no-top-bar .ace-side-container {
     top: initial;
   }
-
   .ace-side-menu {
     visibility: hidden;
     height: 0;
@@ -2376,7 +1977,6 @@ html[dir=rtl] .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
     opacity: 0;
     transition: width ease 0.16s;
   }
-
   .ace-side-menu.ace-expand {
     visibility: visible;
     height: 100%;
@@ -2545,7 +2145,6 @@ html[dir=rtl] .ace-info-side-details {
     top: 0px;
     z-index: 3;
   }
-
   .ace-footer {
     display: none;
   }
@@ -2558,16 +2157,13 @@ html[dir=rtl] .ace-info-side-details {
 @media screen and (min-width: 320px) and (max-width: 680px), screen and (min-device-width: 320px) and (max-device-height: 680px) and (orientation: landscape) {
   /*.ace-info-side {
     height: calc(calc(var(--vh, 1vh) * 100) - 50px);
-  }*/
-  /*SM-not sure*/
+  }*/ /*SM-not sure*/
   .ace-info-side.ace-info-side-mobile-scroll {
     overflow-y: auto;
   }
-
   /*.ace-no-top-bar .ace-info-side {
     height: smartvh(100);
-  }*/
-  /*SM-not sure*/
+  }*/ /*SM-not sure*/
 }
 /* end app content */
 /* begin accordion field */
@@ -2876,118 +2472,6 @@ html[dir=rtl] .ace-submenu.ace-horizontal-tabs .ace-active {
 
 /* end tags */
 /* begin chips */
-/*
-
-ACE CODE simple chip with already loaded store:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-8 ks-target"
-  type="chips"
-  placeholder="type something here and press enter"
-
-  allowduplicates="true"
-  maxchipcount="5"
-  customallowadd="allowChipTextToBeAdded"
-  onadd="onChipAdded"
-  onremove="onChipRemoved"
->
-  <store>
-    <record>
-      <field name="name">C1</field>
-      <field name="value">1</field>
-    </record>
-    <record>
-      <field name="name">C2</field>
-      <field name="value">2</field>
-    </record>
-    <record>
-      <field name="name">C3</field>
-      <field name="value">3</field>
-    </record>
-  </store>
-</div>
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-8 ks-target ace-field-container" type="chips" placeholder="type something here and press enter" allowduplicates="true" maxchipcount="5" customallowadd="allowChipTextToBeAdded" onadd="onChipAdded" onremove="onChipRemoved">
-  <div class="ace-chips-field">
-    <span class="ace-chip" idx="0">C1
-      <a href="#" class="ace-chip-remove">X</a>
-    </span>
-    <span class="ace-chip" idx="1">C2
-      <a href="#" class="ace-chip-remove">X</a>
-    </span>
-    <span class="ace-chip" idx="2">C3
-      <a href="#" class="ace-chip-remove">X</a>
-    </span>
-    <input type="text" class="ace-efld" aceid="ace-26" placeholder="type something here and press enter">
-  </div>
-</div>
-<<<<<<<<<<<<<<<<
-
-
-ACE-CODE - chips with combobox selector:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-8 ks-target"
-  type="chips"
-  placeholder="type something here and press enter"
-
-  maxchipcount="5"
-
-  onadd="onChipAdded"
-  onremove="onChipRemoved"
-
-  inputtype="combobox"
->
-  <storecombo>
-    <record>
-        <field name="name">Option 1</field>
-        <field name="id">1</field>
-    </record>
-    <record>
-        <field name="name">Option 2</field>
-        <field name="id">2</field>
-    </record>
-    <record>
-        <field name="name">Option 3</field>
-        <field name="id">3</field>
-    </record>
-    <record>
-        <field name="name">Option 4</field>
-        <field name="id">4</field>
-    </record>
-    <record>
-        <field name="name">Option 5</field>
-        <field name="id">5</field>
-    </record>
-  </storecombo>
-</div>
-
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-8 ks-target ace-field-container" type="chips" placeholder="type something here and press enter" maxchipcount="5" onadd="onChipAdded" onremove="onChipRemoved" inputtype="combobox">
-  <div class="ace-chips-field">
-    <span class="ace-chip" idx="0">Option 1
-      <a href="#" class="ace-chip-remove">X</a>
-    </span>
-    <span class="ace-chip" idx="1">Option 3
-      <a href="#" class="ace-chip-remove">X</a>
-    </span>
-    <select placeholder="" class="ace-efld" aceid="ace-30">
-      <option value=""></option>
-      <option value="2">Option 2</option>
-      <option value="4">Option 4</option>
-      <option value="5">Option 5</option>
-    </select>
-  </div>
-</div>
-<<<<<<<<<<<<<<<<
-
- */
 .ace-error .ace-chips-field {
   border-bottom: 1px solid #d64343;
 }
@@ -3060,8 +2544,8 @@ html[dir=rtl] .ace-image-upload {
 }
 
 .ace-image-upload:after {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f030";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   display: inline-block;
   width: 48px;
   height: 48px;
@@ -3087,22 +2571,22 @@ html[dir=rtl] .ace-image-upload {
 @keyframes image-icon-change {
   0% {
     transform: scale(1);
-    content: "";
+    content: "\f030";
   }
   60% {
     transform: scale(0);
-    content: "";
+    content: "\f040";
   }
   100% {
     transform: scale(1);
-    content: "";
+    content: "\f040";
   }
 }
 .ace-image-upload:not(.ace-readonly):hover:after {
   background: red;
   transform: scale(1);
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f040";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   animation: image-icon-change ease 0.3s;
 }
 
@@ -3179,26 +2663,22 @@ a.ace-photo-remove:hover,
 
 @media screen and (min-width: 320px) and (max-width: 1024px) {
   .ace-file-upload-button a:hover,
-.ace-file-remove a:hover {
+  .ace-file-remove a:hover {
     max-width: 400px;
   }
-
   .ace-file-upload label .ace-file-upload-button,
-.ace-file-upload label .ace-file-remove {
+  .ace-file-upload label .ace-file-remove {
     transform: scale(1) !important;
   }
-
   .ace-image-upload a.ace-photo-remove,
-.ace-image-upload button.ace-photo-remove,
-.ace-image-upload .ace-photo-remove a,
-.ace-image-upload .ace-photo-remove button {
+  .ace-image-upload button.ace-photo-remove,
+  .ace-image-upload .ace-photo-remove a,
+  .ace-image-upload .ace-photo-remove button {
     transform: scale(1);
   }
-
   .ace-image-upload:after {
     transform: scale(1);
   }
-
   .ace-image-upload:before {
     opacity: 1;
     transform: scale(1);
@@ -3325,8 +2805,8 @@ html[dir=rtl] .ace-auto-gen.ace-h4 .ace-display-field span.ace-efld {
 }
 
 .ace-state-checked .ace-display-field span.ace-efld:before {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f00c";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   display: inline;
   color: #46c392;
   cursor: default;
@@ -3334,8 +2814,8 @@ html[dir=rtl] .ace-auto-gen.ace-h4 .ace-display-field span.ace-efld {
 }
 
 .ace-state-unchecked .ace-display-field span.ace-efld:before {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f00d";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   display: inline;
   color: #ff6579;
   cursor: default;
@@ -3494,8 +2974,7 @@ html[dir=rtl] .ace-text-field {
 }
 
 .ace-grid-cell .ace-label-align-top .ace-text-field {
-  padding-bottom: 0px;
-  /*SM-not sure*/
+  padding-bottom: 0px; /*SM-not sure*/
 }
 
 .ace-label-align-left .ace-text-field .ace-label {
@@ -3531,6 +3010,10 @@ html[dir=rtl] .ace-text-field:after {
 
 .ace-error .ace-text-field .ace-label {
   color: #d64343 !important;
+}
+
+.ace-text-field .ace-efld:focus ~ label {
+  color: red !important;
 }
 
 /* end textfield field */
@@ -3623,8 +3106,8 @@ html[dir=rtl] [class^=ace-state-badge-] .ace-text-field .ace-label {
 }
 
 .ace-combo-field:after {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f107";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   top: 8px;
   position: absolute;
 }
@@ -3642,16 +3125,14 @@ html[dir=rtl] .ace-combo-field:after {
 }
 
 .ace-grid-cell .ace-label-align-top .ace-combo-field {
-  padding-bottom: 0px;
-  /*SM-not sure*/
+  padding-bottom: 0px; /*SM-not sure*/
 }
 
 /*.ace-combo-field .ace-efld ~ label {
   display: inline-block;
   top: - $position-18;
   position: absolute;
-}*/
-/*SM-not sure*/
+}*/ /*SM-not sure*/
 html[dir=ltr] .ace-combo-field .ace-efld ~ label {
   left: 0px;
 }
@@ -3802,89 +3283,256 @@ html[dir=rtl] .ace-popup-autocomplete-target.ace-field-container {
   justify-content: center;
 }
 
+/* begin multicheck field */
+.ace-delete-icon {
+  background-color: #383838;
+  color: white;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  line-height: 1.1;
+  font-size: 10px;
+  display: inline-block;
+  border: 0px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.ace-delete-icon::after {
+  content: "X";
+  font-size: 11px;
+}
+
+html[dir=ltr] .ace-delete-icon::after {
+  padding-right: 1px;
+}
+
+html[dir=rtl] .ace-delete-icon::after {
+  padding-left: 1px;
+}
+
+.ace-delete-icon:hover {
+  background-color: #C0392B;
+}
+
+html[dir=ltr] .ace-multicheck-field .ace-delete-icon {
+  float: right;
+}
+
+html[dir=rtl] .ace-multicheck-field .ace-delete-icon {
+  float: left;
+}
+
+html[dir=ltr] .ace-multicheck-field .ace-delete-icon {
+  margin-right: 10px;
+}
+
+html[dir=rtl] .ace-multicheck-field .ace-delete-icon {
+  margin-left: 10px;
+}
+
+.ace-mc-options input[type=checkbox] {
+  width: initial;
+}
+
+.ace-multicheck-data-selection-container {
+  width: 100%;
+}
+
+.ace-multicheck-field .ace-box-2 {
+  height: 100%;
+}
+
+.ace-modal-background {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+html[dir=ltr] .ace-modal-background {
+  left: 0px;
+}
+
+html[dir=rtl] .ace-modal-background {
+  right: 0px;
+}
+
+.ace-modal-content {
+  background-color: #f2f4f8;
+  padding: 10px;
+  display: inline-block;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ace-split-top-line {
+  border-top: 1px "dotted" #676767;
+}
+
+.ace-action-icon {
+  width: 20px;
+  height: 20px;
+  font-size: 16px;
+  border-radius: 50%;
+  font-weight: bolder;
+  color: #383838;
+  cursor: pointer;
+  line-height: 1.1;
+  display: inline-block;
+  border: 0px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+html[dir=ltr] .ace-action-icon {
+  float: right;
+}
+
+html[dir=rtl] .ace-action-icon {
+  float: left;
+}
+
+.ae-action-icon::after {
+  position: relative;
+  top: 10px;
+}
+
+html[dir=ltr] .ace-modal-background {
+  left: 5px;
+}
+
+html[dir=rtl] .ace-modal-background {
+  right: 5px;
+}
+
+.ace-down-arrow::after {
+  content: "∨";
+}
+
+.ace-icon-close::after {
+  content: "×";
+}
+
+.ace-action-icon:hover {
+  background-color: red;
+  color: white;
+}
+
+[class*=ace-box-] {
+  font-family: Roboto, Sans-Serif;
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-weight: 400;
+  font-stretch: normal;
+  line-height: normal;
+  -webkit-font-smoothing: antialiased;
+  padding: 0px;
+}
+
+html[dir=ltr] .ace-box-1 {
+  padding-left: 10px;
+}
+
+html[dir=rtl] .ace-box-1 {
+  padding-right: 10px;
+}
+
+.ace-box-2 {
+  padding: 10px;
+  background: white;
+  white-space: nowrap;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ace-box-2-title {
+  color: rgba(0, 0, 0, 0.8);
+  font-stretch: normal;
+  font-size: 14px;
+  line-height: 16px;
+  overflow: hidden;
+}
+
+.ace-box-2-detail {
+  color: red;
+  font-size: 12px;
+  line-height: 13px;
+}
+
+.ace-submit-btn {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  height: 27px;
+  line-height: 27px;
+  min-width: 54px;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.ace-submit-btn:hover, .ace-submit-btn:active {
+  background-color: red;
+  color: white;
+  opacity: 1;
+  border: 1px solid transparent;
+}
+
+/* end multicheck field */
+/* begin daterangepicker field */
+.ace-date-picker-wrapper-modal {
+  position: fixed;
+  z-index: 1;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.date-picker-wrapper {
+  background-color: #f2f4f8;
+  border-radius: 10px;
+  font-family: Roboto, Sans-Serif;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.date-picker-wrapper .month-wrapper table th, .date-picker-wrapper .month-wrapper table td {
+  font-size: 10px;
+}
+
+.date-picker-wrapper .month-wrapper table .day {
+  font-size: 10px;
+  padding: 3px 0px;
+}
+
+.date-picker-wrapper .drp_top-bar {
+  padding: 10px 0px;
+}
+
+.date-picker-wrapper .first-date-selected, .date-picker-wrapper .last-date-selected {
+  background-color: red !important;
+  color: white !important;
+}
+
+.date-picker-wrapper .month-wrapper table .day.checked {
+  background-color: #c8edc5;
+}
+
+/* end daterangepicker field */
 /* begin autocomplete field */
-/*
-ACE CODE:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-10"
-  type="autocomplete"
-  placeholder="type something here"
-  label="Find a student"
-  labelwidth="200px"
-  searchname="student_name"
-  valuename="student_id"
-  net="remote=true;autoload=false;fid='loadstudentsfilter';size=5"
-  minlength="0"
-  autosearchonfocus="true"
-  displayrenderer="rendererStudent"
-  gridrowrenderer="rendererStudentV2"
-></div>
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-10 ace-field-container ace-label-align-top" type="autocomplete" placeholder="type something here" label="Find a student" labelwidth="200px" searchname="student_name" valuename="student_id" net="remote=true;autoload=false;fid='loadstudentsfilter';size=5" minlength="0" autosearchonfocus="true" displayrenderer="rendererStudent" gridrowrenderer="rendererStudentV2">
-  <div class="ace-autocomplete-field ace-form-fields-ignore">
-    <input type="text" class="ace-efld ace-empty" aceid="ace-37" value="" placeholder="type something here">
-    <div class="ace-grid-auto-complete ace-hide-errors ace-field-container" tabindex="0" agrid="true" style="width: $meas-full; max-width: 1084px; top: 33px; left: 0.28125px; display: none;">
-      <div class="ace-grid " style="width:100%">
-        <div class="ace-grid-header ace-hide">
-          <div class="ace-grid-cell ace-ta-lft  " style="width:100%" hcidx="0" tabindex="0"></div>
-        </div>
-        <div class="ace-grid-body ace-grid-scrollview" style="">
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="0">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>1:</b> Bob Marley, M, Jamaica, 1945-02-06
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="1">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>2:</b> Freddy Mercury, M, Zanzibar, 1946-09-05
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="2">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>3:</b> Shania Twain, F, Canada, 1965-09-28
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="3">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>4:</b> Jennifer Lopez, F, USA, 1969-07-24
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="4">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>5:</b> Gordon Matthew Thomas Sumner aka Sting, M, England, 1951-10-02
-            </div>
-          </div>
-        </div>
-        <div class="ace-grid-footer">
-          <div class="ace-grid-pagination">
-            <button jt="0" disabled="" style="">&lt;&lt;</button>
-            <button jt="-1" disabled="" style="">&lt;</button>						&nbsp;
-            <div>
-              <span>Page</span>
-              <input type="number" value="1">
-              <span>of&nbsp;</span>
-              <span class="ace-grid-pagination-tp">3</span>&nbsp;
-            </div>
-            <button jt="1" style="">&gt;</button>
-            <button jt="2" style="">&gt;&gt;</button>
-          </div>
-          <span class="ace-error-msg"></span>
-        </div>
-      </div>
-    </div>
-    <label class="ace-label" style="width:200px">Find a student:</label>
-    <button class="ace-autocomplete-clear-button">X</button>
-    <span class="ace-error-msg"></span>
-  </div>
-</div>
-<<<<<<<<<<<<<<<<
-
-
-*/
 .ace-autocomplete-field {
   position: relative;
   width: 100%;
@@ -3956,8 +3604,15 @@ html[dir=rtl] .ace-autocomplete-field .ace-autocomplete-extra-link {
   border-radius: 50%;
   margin-top: 7px;
   position: relative;
+  display: inline-block;
   z-index: 1;
   backface-visibility: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+.ace-autocomplete-field input ~ .ace-autocomplete-clear-button {
+  background-color: #8f8f8f;
 }
 
 .ace-autocomplete-field .ace-autocomplete-clear-button:hover {
@@ -4043,44 +3698,6 @@ html[dir=rtl] .ace-autocomplete-field .ace-grid-auto-complete.ace-field-containe
 
 /* end autocomplete field */
 /* begin checkbox */
-/*
-
-ACE CODE:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-8"
-  type="checkbox"
-
-  label="Ex. 2 - custom on and off values"
-  labelalign="left"
-  labelwidth="400px"
-
-  on="123"
-  off="321"
-
-  checked="true"
-  onchange="onCheckboxChange"
->
-</div>
-
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-8 ace-field-container ace-label-align-left" type="checkbox" label="Ex. 2 - custom on and off values" labelalign="left" labelwidth="400px" on="123" off="321" checked="true" onchange="onCheckboxChange">
-  <div class="ace-checkbox-field" tabindex="0">
-    <label class="ace-label">
-      <input class="ace-efld" aceid="ace-60" value="" checked="" type="checkbox" name="">
-      <span>Ex. 2 - custom on and off values</span>
-    </label>
-    <span class="ace-error-msg"></span>
-  </div>
-</div>
-
-main_page.js:573
-
-
- */
 .ace-checkbox-field .ace-label {
   cursor: pointer;
 }
@@ -4098,8 +3715,8 @@ main_page.js:573
   line-height: 0;
   font-size: 19.5px;
   text-align: center;
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f055";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 html[dir=ltr] .ace-checkbox-field input[type=checkbox] + span:before {
@@ -4119,7 +3736,7 @@ html[dir=rtl] .ace-checkbox-field input[type=checkbox] + span:before {
   line-height: 0;
   font-size: 19.5px;
   text-align: center;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 html[dir=rtl] .ace-checkbox-field input[type=checkbox] + span:after {
@@ -4127,9 +3744,9 @@ html[dir=rtl] .ace-checkbox-field input[type=checkbox] + span:after {
 }
 
 .ace-checkbox-field input[type=checkbox]:checked + span:before {
-  content: "";
+  content: "\f058";
   color: red;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-checkbox-field input[type=checkbox]:checked + span {
@@ -4153,16 +3770,16 @@ html[dir=rtl] .ace-checkbox-field input[type=checkbox] + span {
 }
 
 .ace-checkbox-field-checked:before {
-  content: "";
+  content: "\f058";
   color: red;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   padding: 4px;
 }
 
 .ace-checkbox-field-unchecked:before {
-  content: "";
+  content: "\f055";
   color: #8f8f8f;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   padding: 4px;
 }
 
@@ -4197,8 +3814,8 @@ html[dir=rtl] .ace-checkbox-field input[type=checkbox] + span {
 
 .ace-state-check .ace-checkbox-field input[type=checkbox] + span:before,
 .ace-state-check .ace-checkbox-field input[type=checkbox] + span:after {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f00d";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   display: inline;
   color: #ff6579;
   cursor: default;
@@ -4219,8 +3836,8 @@ html[dir=ltr] .ace-state-check .ace-checkbox-field input[type=checkbox] + span:a
 
 .ace-state-check .ace-checkbox-field input[type=checkbox]:checked + span:before,
 .ace-state-check .ace-checkbox-field input[type=checkbox]:checked + span:after {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f00c";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   color: #46c392;
   background: transparent;
 }
@@ -4285,7 +3902,7 @@ html[dir=rtl] .ace-switch-field span.ace-label {
   border-radius: 24px;
   transition: ease-in-out 0.1s;
   margin: 0px !important;
-  font-family: "FontAwesome", "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
@@ -4309,8 +3926,8 @@ html[dir=rtl] .ace-switch-field input[type=checkbox] + span {
   font-size: 22px;
   text-align: center;
   line-height: 1.3;
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f111";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   position: absolute;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.26);
 }
@@ -4496,7 +4113,35 @@ html[dir=rtl] .ace-radio-field input[type=radio] + span {
   top: -18px;
 }
 
-/* end radio group */
+.ace-radio-field .ace-rg-custom-check {
+  display: inline-block;
+  width: 100%;
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+html[dir=ltr] .ace-radio-field .ace-rg-custom-check {
+  padding-left: 4px;
+}
+
+html[dir=rtl] .ace-radio-field .ace-rg-custom-check {
+  padding-right: 4px;
+}
+
+.ace-radio-field .ace-rg-custom-check input {
+  display: inline-block;
+  width: 10px;
+}
+
+html[dir=ltr] .ace-radio-field .ace-rg-custom-check span {
+  padding-left: 10px;
+}
+
+html[dir=rtl] .ace-radio-field .ace-rg-custom-check span {
+  padding-right: 10px;
+}
+
+/* end radio group! */
 /* begin radio group modifiers */
 .ace-inline-radio-group > .ace-radio-field > .ace-label {
   width: auto;
@@ -4618,8 +4263,7 @@ html[dir=rtl] .ace-grid-action-cell button {
 /*.ace-grid-cell .ace-grid-cell-template .ace-datepicker-field input {
   position: absolute;
   margin: inherit;
-}*/
-/*SM-removed*/
+}*/ /*SM-removed*/
 /*
 .ace-grid-cell .ace-field-container .ace-autocomplete-field:not(.ace-ignore-cell) {
   height: $meas-full;
@@ -4633,8 +4277,7 @@ html[dir=rtl] .ace-grid-action-cell button {
   height: $meas-full;
   width: $meas-full;
 }
-*/
-/*SM-removed*/
+*/ /*SM-removed*/
 .ace-grid-cell-no-padding .ace-grid-cell {
   padding-top: 0px !important;
   padding-bottom: 5px;
@@ -4654,8 +4297,7 @@ html[dir=rtl] .ace-grid-action-cell button {
   width: $meas-full;
 }
 @include positionLTR('.ace-grid-cell input',left,$position-5);
-*/
-/*SM-not sure*/
+*/ /*SM-not sure*/
 .ace-grid-cell .ace-label-align-left input {
   position: initial;
 }
@@ -4667,8 +4309,7 @@ html[dir=rtl] .ace-grid-action-cell button {
   top:  $position-6;
 }
 @include positionLTR('.ace-grid-cell .ui-datepicker-trigger',left,$position-0);
- */
-/*SM-remove*/
+ */ /*SM-remove*/
 .ace-grid-cell input:focus {
   background: white;
   box-sizing: border-box;
@@ -4702,8 +4343,7 @@ html[dir=rtl] .ace-grid-cell .ace-checkbox-field input[type=checkbox] + span {
   top: -$position-7;
 }
 @include positionLTR('.ace-grid-cell select',left,$position-0);
-*/
-/*SM-removed -> causes alignament trouble in grid panels*/
+*/ /*SM-removed -> causes alignament trouble in grid panels*/
 .ace-grid-cell-normal-position .ace-grid-cell select {
   position: initial !important;
 }
@@ -4865,7 +4505,7 @@ html[dir=rtl] .ace-grid-cell-dirty:before {
 }
 
 .ace-grid-action-button:before {
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 html[dir=ltr] .ace-grid-action-button:before {
@@ -4948,11 +4588,9 @@ html[dir=rtl] .ace-grid-body {
     height: calc(100% - 80px);
     -webkit-overflow-scrolling: touch;
   }
-
   html[dir=ltr] [agrid=true].ace-field-container {
     padding-right: 0px;
   }
-
   html[dir=rtl] [agrid=true].ace-field-container {
     padding-left: 0px;
   }
@@ -5434,32 +5072,32 @@ html[dir=rtl] .ace-thin-rows-grid .ace-grid-action-cell button {
 
 .ace-flex-grid-height-600 .ace-grid-auto-complete,
 .ace-flex-grid-height-600 .ace-grid {
-  max-height: 600px;
+  max-height: 600px !important;
 }
 
 .ace-flex-grid-height-400 .ace-grid-auto-complete,
 .ace-flex-grid-height-400 .ace-grid {
-  max-height: 400px;
+  max-height: 400px !important;
 }
 
 .ace-flex-grid-height-350 .ace-grid-auto-complete,
 .ace-flex-grid-height-350 .ace-grid {
-  max-height: 350px;
+  max-height: 350px !important;
 }
 
 .ace-flex-grid-height-300 .ace-grid-auto-complete,
 .ace-flex-grid-height-300 .ace-grid {
-  max-height: 300px;
+  max-height: 300px !important;
 }
 
 .ace-flex-grid-height-250 .ace-grid-auto-complete,
 .ace-flex-grid-height-250 .ace-grid {
-  max-height: 250px;
+  max-height: 250px !important;
 }
 
 .ace-flex-grid-height-200 .ace-grid-auto-complete,
 .ace-flex-grid-height-200 .ace-grid {
-  max-height: 200px;
+  max-height: 200px !important;
 }
 
 .ace-grid-absolute-footer .ace-grid-footer {
@@ -5526,7 +5164,6 @@ html[dir=rtl] [class*=ace-grid-cols-] .ace-grid-row {
   .ace-grid-cols-4 .ace-grid-row {
     width: 33% !important;
   }
-
   .ace-grid-cols-6 .ace-grid-row {
     width: 25% !important;
   }
@@ -5595,76 +5232,59 @@ html[dir=rtl] [class*=ace-grid-cols-] .ace-grid-row {
     position: relative;
     top: initial;
   }
-
   html[dir=ltr] .ace-responsive-grid .ace-grid-cell-dirty:before {
     border-left: 3px solid #d64343;
   }
-
   html[dir=rtl] .ace-responsive-grid .ace-grid-cell-dirty:before {
     border-right: 3px solid #d64343;
   }
-
   .ace-responsive-grid .ace-grid-header {
     display: none;
   }
-
   .ace-responsive-grid .ace-grid-footer-totals {
     display: none;
   }
-
   .ace-responsive-grid .ace-grid .ace-grid-row {
     flex-wrap: wrap;
   }
-
   .ace-responsive-grid .ace-grid-cell {
     display: flex;
     padding: 6px 0px;
     justify-content: start;
   }
-
   .ace-responsive-grid .ace-grid-row-lines .ace-grid-cell {
     border-bottom: unset;
   }
-
   .ace-responsive-grid .ace-grid-row-lines {
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-
   .ace-responsive-grid .ace-grid-cell:before {
     content: attr(data-label);
     min-width: fit-content;
     display: inline-block;
     font-weight: bold;
   }
-
   html[dir=ltr] .ace-responsive-grid .ace-grid-cell:before {
     padding-right: 8px;
   }
-
   html[dir=rtl] .ace-responsive-grid .ace-grid-cell:before {
     padding-left: 8px;
   }
-
   html[dir=ltr] .ace-responsive-grid .ace-grid-cell:before {
     text-align: right;
   }
-
   html[dir=rtl] .ace-responsive-grid .ace-grid-cell:before {
     text-align: left;
   }
-
   .ace-responsive-grid .ace-grid-cell.ace-grid-action-cell:before {
     content: "";
   }
-
   .ace-responsive-grid .ace-grid .ace-grid-body {
     height: calc(100% - 89px);
   }
-
   .ace-responsive-grid .ace-grid .ace-presentation-container {
     height: calc(100% - 89px);
   }
-
   .ace-responsive-grid .ace-grid .ace-presentation-container .ace-grid-body {
     height: 100%;
   }
@@ -6024,8 +5644,7 @@ html[dir=rtl] .ace-form-show {
   width: 100%;
   /*left:  $position-0;
   right:  $position-0;
-  top:  $position-30p;*/
-  /*SM-not sure*/
+  top:  $position-30p;*/ /*SM-not sure*/
 }
 
 .ace-form-inner h2 {
@@ -6297,7 +5916,6 @@ html[dir=rtl] .ace-prompt-el > div > button {
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
   }
-
   .ace-prompt-el > .ace-prompt-inner-el.ace-show {
     -webkit-transform: translateY(0);
     transform: translateY(0);
@@ -6453,7 +6071,7 @@ html[dir=rtl] ace-mask-el {
   text-rendering: auto;
   line-height: 1;
   animation: fa-spin 1s infinite steps(8);
-  content: "";
+  content: "\f110";
   color: red;
   background: white;
   border-radius: 50%;
@@ -6466,7 +6084,6 @@ html[dir=rtl] ace-mask-el {
   .ace-mask-el > div {
     width: 90%;
   }
-
   .ace-content {
     height: 100%;
     clear: none;
@@ -6703,8 +6320,7 @@ html[dir=rtl] .ace-datepicker-field {
 }
 
 .ace-grid-cell .ace-label-align-top .ace-datepicker-field {
-  padding-bottom: 0px;
-  /*SM-not sure*/
+  padding-bottom: 0px; /*SM-not sure*/
 }
 
 /* end datepicker */
@@ -6763,7 +6379,7 @@ html[dir=rtl] .ace-toast-icon {
   height: 34px;
   padding: 5px;
   border-radius: 50%;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 html[dir=ltr] .ace-toast-icon span {
@@ -7159,7 +6775,8 @@ html[dir=rtl] .ace-toast-text p {
 
 /* end flex */
 /* begin file upload */
-.ace-file-upload input {
+.ace-file-upload input,
+.ace-file-upload .ace-file-upload input { /*not a mistake to be two ace-file-uploads here*/
   display: none;
 }
 
@@ -7181,8 +6798,7 @@ html[dir=rtl] .ace-file-upload {
 }
 
 .ace-grid-cell .ace-label-align-top .ace-file-upload {
-  padding-bottom: 0px;
-  /*SM-not sure*/
+  padding-bottom: 0px; /*SM-not sure*/
 }
 
 .ace-file-upload .ace-file-upload {
@@ -7598,7 +7214,6 @@ html[dir=rtl] a.ace-breadcrumbs-link[disabled] + :after {
     overflow-x: auto !important;
     max-width: 100%;
   }
-
   .ace-breadcrumbs-field .ace-breadcrumbs-link {
     flex: none;
   }
@@ -7883,7 +7498,7 @@ html[dir=rtl] a#recaptcha_switch_img_btn {
 }
 
 .ace-collapsible .ace-collapsible-trigger:before {
-  content: "";
+  content: "\f107";
   transition: all ease 0.2s;
   display: inline-block;
   padding: 0px 5px;
@@ -8067,8 +7682,7 @@ html[dir=rtl] .ace-dropdown {
 .ace-dropdown-list li {
   width: 100%;
   float: none;
-  /*  min-height: $meas-10; */
-  /*SM-not sure*/
+  /*  min-height: $meas-10; */ /*SM-not sure*/
 }
 
 .ace-dropdown-list li a {
@@ -8207,8 +7821,8 @@ html[dir=rtl] a.ace-advanced-search-trigger img {
   color: #8f8f8f;
   font-size: 18px;
   text-align: center;
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f10c";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 html[dir=ltr] .ace-radio + span:before {
@@ -8220,8 +7834,8 @@ html[dir=rtl] .ace-radio + span:before {
 }
 
 .ace-radio:checked + span:before {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f192";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   color: red;
 }
 
@@ -8256,7 +7870,7 @@ html[dir=rtl] .ace-radio + span {
 }
 
 .ace-input + label span:before {
-  font-family: "FontAwesome", "Font Awesome 5 Pro";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   -webkit-transition: all ease-in-out 0.1s;
   -moz-transition: all ease-in-out 0.1s;
   -o-transition: all ease-in-out 0.1s;
@@ -8293,8 +7907,8 @@ html[dir=rtl] .ace-input + label {
 }
 
 .ace-radio:checked + label span:before {
-  content: "";
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f192";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
   color: red;
 }
 
@@ -8724,7 +8338,7 @@ button.ace-big-button {
   color: rgba(0, 0, 0, 0.8);
   position: relative;
   margin: 3px;
-  font-family: "Lato", "FontAwesome", "Font Awesome 5 Pro";
+  font-family: "Lato", "Font Awesome 5 Pro", "FontAwesome";
   font-size: 13px;
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
@@ -8739,6 +8353,7 @@ button.ace-big-button {
 .ace-title-bar {
   width: 100%;
   height: 50px;
+  padding: unset;
   background: #f2f4f8;
   position: relative;
   display: flex;
@@ -9002,10 +8617,25 @@ html[dir=rtl] .ace-label-align-left .ace-error-req .ace-empty ~ label {
 .ace-label-align-left .ace-text-field,
 .ace-label-align-left .ace-combo-field,
 .ace-label-align-left .ace-datepicker-field,
-.ace-label-align-left .ace-autocomplete-field,
 .ace-label-align-left .ace-text-editor {
   display: flex;
   flex-direction: row-reverse;
+}
+
+.ace-label-align-left .ace-autocomplete-field {
+  display: flex;
+}
+
+.ace-label-align-left .ace-autocomplete-field > label {
+  order: 1;
+}
+
+.ace-label-align-left .ace-autocomplete-field > input {
+  order: 10;
+}
+
+.ace-label-align-left .ace-autocomplete-field > button {
+  order: 20;
 }
 
 .ace-label-align-left input,
@@ -9056,6 +8686,18 @@ html[dir=rtl] .ace-label-text-left .ace-label {
 }
 
 /* end label modifiers */
+[ace-tooltip]:hover::after {
+  display: block;
+  position: absolute;
+  margin-top: 10px;
+  z-index: 1000;
+  content: attr(ace-tooltip);
+  background-color: transparent;
+  color: red;
+  padding: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 /* begin badge related classes */
 .ace-badge {
   margin-top: 0px;
@@ -9287,7 +8929,7 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
 .ace-timeline-icon i:before {
   line-height: 2;
   font-size: 22px;
-  font-family: "FontAwesome", "Font Awesome 5 Pro", "icofont";
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon {
@@ -9320,53 +8962,53 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
 }
 
 .ace-timeline-icon[cpat="1"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ed0b" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="2"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f0f5" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="3"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ed02" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4BP"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ecef" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4PR/HR"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\f21e" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4RR"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ecef" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4TEMP"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ed16" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4O2sar"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ee84" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="4F/RBS"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ed15" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 .ace-timeline-icon[cpat="5"] i:before {
-  content: "" !important;
-  font-family: FontAwesome, "Font Awesome 5 Pro";
+  content: "\ee84" !important;
+  font-family: FontAwesome, "Font Awesome 5 Pro", "icofont";
 }
 
 @media screen and (min-width: 1181px) {
@@ -9376,7 +9018,6 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     display: block;
     float: none !important;
   }
-
   .ace-timeline-content {
     border-radius: 10px;
     width: 45%;
@@ -9384,7 +9025,6 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     background: #f2f4f8;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.26);
   }
-
   .ace-timeline .ace-grid-body:before {
     content: " ";
     position: absolute;
@@ -9392,23 +9032,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     right: 0px;
     margin: auto;
   }
-
   html[dir=ltr] .ace-timeline-content {
     float: left;
   }
-
   html[dir=rtl] .ace-timeline-content {
     float: right;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content {
     float: right;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content {
     float: left;
   }
-
   .ace-timeline-block .ace-timeline-content:before {
     content: " ";
     position: absolute;
@@ -9419,23 +9054,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before {
     border-left: 10px solid white;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before {
     border-right: 10px solid white;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before {
     right: -8px;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before {
     left: -8px;
   }
-
   .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
     content: " ";
     position: absolute;
@@ -9447,61 +9077,47 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
     border-left: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
     border-right: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
     right: -8px;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after {
     left: -8px;
   }
-
   .ace-timeline-content-timestamp {
     position: absolute;
     top: 16px;
     white-space: nowrap;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp {
     left: 122%;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp {
     right: 122%;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp {
     right: 122%;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp {
     left: 122%;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp div {
     float: left;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content-timestamp div {
     float: right;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp div {
     float: right;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content-timestamp div {
     float: left;
   }
-
   .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before {
     content: " ";
     position: absolute;
@@ -9512,23 +9128,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before {
     border-right: 10px solid white;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before {
     border-left: 10px solid white;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before {
     left: -8px;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before {
     right: -8px;
   }
-
   .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after {
     content: " ";
     position: absolute;
@@ -9540,23 +9151,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after {
     border-right: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after {
     border-left: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=ltr] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after {
     left: -8px;
   }
-
   html[dir=rtl] .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after {
     right: -8px;
   }
-
   .ace-timeline-icon {
     position: absolute;
     left: 0px;
@@ -9576,28 +9182,22 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
   html[dir=ltr] .ace-timeline-block {
     padding-left: 83px;
   }
-
   html[dir=rtl] .ace-timeline-block {
     padding-right: 83px;
   }
-
   .ace-timeline .ace-grid-body:before {
     content: " ";
   }
-
   html[dir=ltr] .ace-timeline .ace-grid-body:before {
     left: 40px;
   }
-
   html[dir=rtl] .ace-timeline .ace-grid-body:before {
     right: 40px;
   }
-
   .ace-timeline-content-timestamp {
     position: static;
     padding-top: 15px;
   }
-
   .ace-timeline-content:before {
     content: " ";
     position: absolute;
@@ -9608,23 +9208,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 12px solid transparent;
     border-bottom: 12px solid transparent;
   }
-
   html[dir=ltr] .ace-timeline-content:before {
     border-right: 10px solid white;
   }
-
   html[dir=rtl] .ace-timeline-content:before {
     border-left: 10px solid white;
   }
-
   html[dir=ltr] .ace-timeline-content:before {
     left: -8px;
   }
-
   html[dir=rtl] .ace-timeline-content:before {
     right: -8px;
   }
-
   .ace-timeline-icon {
     position: absolute;
     margin: 0px;
@@ -9636,15 +9231,12 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.26), inset 0px 1px 2px rgba(0, 0, 0, 0.26);
     border: 6px solid white;
   }
-
   html[dir=ltr] .ace-timeline-icon {
     left: 15px;
   }
-
   html[dir=rtl] .ace-timeline-icon {
     right: 15px;
   }
-
   .ace-timeline-content:after {
     content: " ";
     position: absolute;
@@ -9656,23 +9248,18 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
   }
-
   html[dir=ltr] .ace-timeline-content:after {
     border-right: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=rtl] .ace-timeline-content:after {
     border-left: 8px solid rgba(0, 0, 0, 0.26);
   }
-
   html[dir=ltr] .ace-timeline-content:after {
     left: -8px;
   }
-
   html[dir=rtl] .ace-timeline-content:after {
     right: -8px;
   }
-
   .ace-timeline-content {
     border-radius: 10px;
     width: 100%;
@@ -9680,11 +9267,9 @@ html[dir=rtl] .ace-timeline-content .ace-field-container {
     background: transparent;
     box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.26);
   }
-
   html[dir=ltr] .ace-timeline-content {
     float: left;
   }
-
   html[dir=rtl] .ace-timeline-content {
     float: right;
   }
@@ -10266,7 +9851,6 @@ html[dir=rtl] .ace-icon-card.ace-icon-card-small i {
   html[dir=ltr] .ace-icon-card {
     margin-left: 8px;
   }
-
   html[dir=rtl] .ace-icon-card {
     margin-right: 8px;
   }
@@ -10313,7 +9897,7 @@ html[dir=rtl] .ace-checkable-card span.ace-card-highlight {
 span.ace-card-highlight:after {
   position: absolute;
   top: -8px;
-  content: "";
+  content: "\f00c";
   transition: ease 0.3s;
   background: red;
   font-size: 16px;
@@ -10388,7 +9972,7 @@ html[dir=rtl] .ace-advanced-panel-trigger.active-filters .ace-numbered-badge {
   z-index: 2;
   overflow: hidden;
   box-shadow: 10px 0px 362px rgba(0, 0, 0, 0.26);
-  background: #f3f5f8;
+  background: rgb(243, 245, 248);
   transition: ease 0.3s;
   -webkit-transform: translateX(-100%) translate3d(0px, 0px, 0px);
   transform: translateX(-100%) translate3d(0px, 0px, 0px);
@@ -10832,7 +10416,6 @@ html[dir=rtl] .ace-grid .ace-presentation-container {
   html[dir=ltr] .ace-presentation-container {
     padding-left: 1px;
   }
-
   html[dir=rtl] .ace-presentation-container {
     padding-right: 1px;
   }
@@ -10944,41 +10527,34 @@ html[dir=rtl] .ace-presentation-container.ace-presentation-container-reverse > .
   .ace-presentation-container {
     flex-wrap: wrap;
   }
-
   .ace-presentation-container > .ace-presentation-main,
-.ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main,
-.ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main,
-.ace-grid .ace-presentation-container > .ace-presentation-main.ace-grid-body,
-.ace-grid .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main.ace-grid-body,
-.ace-grid .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main.ace-grid-body {
+  .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main,
+  .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main,
+  .ace-grid .ace-presentation-container > .ace-presentation-main.ace-grid-body,
+  .ace-grid .ace-presentation-container.ace-presentation-ration-10-2 > .ace-presentation-main.ace-grid-body,
+  .ace-grid .ace-presentation-container.ace-presentation-ration-6-6 > .ace-presentation-main.ace-grid-body {
     width: 100%;
     max-width: 100%;
     flex-basis: 100%;
   }
-
   .ace-presentation-container > .ace-presentation-info {
     width: 100%;
     max-width: 100%;
     flex-basis: 100%;
     padding-top: 8px;
   }
-
   html[dir=ltr] .ace-presentation-container > .ace-presentation-info {
     padding-left: 0px;
   }
-
   html[dir=rtl] .ace-presentation-container > .ace-presentation-info {
     padding-right: 0px;
   }
-
   html[dir=ltr] .ace-presentation-container.ace-presentation-container-reverse > .ace-presentation-info {
     padding-right: 0px;
   }
-
   html[dir=rtl] .ace-presentation-container.ace-presentation-container-reverse > .ace-presentation-info {
     padding-left: 0px;
   }
-
   .ace-presentation-container.ace-presentation-hide-mobile-info > .ace-presentation-info {
     display: none;
   }
@@ -11518,67 +11094,56 @@ html[dir=rtl] [class*=ace-extra-thin-col-] {
     flex-basis: 8.33%;
     max-width: 8.33%;
   }
-
   .ace-col-l-2 {
     width: 16.66%;
     flex-basis: 16.66%;
     max-width: 16.66%;
   }
-
   .ace-col-l-3 {
     width: 25%;
     flex-basis: 25%;
     max-width: 25%;
   }
-
   .ace-col-l-4 {
     width: 33.33%;
     flex-basis: 33.33%;
     max-width: 33.33%;
   }
-
   .ace-col-l-5 {
     width: 41.66%;
     flex-basis: 41.66%;
     max-width: 41.66%;
   }
-
   .ace-col-l-6 {
     width: 50%;
     flex-basis: 50%;
     max-width: 50%;
   }
-
   .ace-col-l-7 {
     width: 58.33%;
     flex-basis: 58.33%;
     max-width: 58.33%;
   }
-
   .ace-col-l-8 {
     width: 66.66%;
     flex-basis: 66.66%;
     max-width: 66.66%;
   }
-
   .ace-col-l-9 {
     width: 75%;
     flex-basis: 75%;
     max-width: 75%;
   }
-
   .ace-col-l-10 {
     width: 83.33%;
     flex-basis: 83.33%;
     max-width: 83.33%;
   }
-
   .ace-col-l-11 {
     width: 91.66%;
     flex-basis: 91.66%;
     max-width: 91.66%;
   }
-
   .ace-col-l-12 {
     width: 100%;
     flex-basis: 100%;
@@ -11591,67 +11156,56 @@ html[dir=rtl] [class*=ace-extra-thin-col-] {
     flex-basis: 8.33%;
     max-width: 8.33%;
   }
-
   .ace-col-m-2 {
     width: 16.66%;
     flex-basis: 16.66%;
     max-width: 16.66%;
   }
-
   .ace-col-m-3 {
     width: 25%;
     flex-basis: 25%;
     max-width: 25%;
   }
-
   .ace-col-m-4 {
     width: 33.33%;
     flex-basis: 33.33%;
     max-width: 33.33%;
   }
-
   .ace-col-m-5 {
     width: 41.66%;
     flex-basis: 41.66%;
     max-width: 41.66%;
   }
-
   .ace-col-m-6 {
     width: 50%;
     flex-basis: 50%;
     max-width: 50%;
   }
-
   .ace-col-m-7 {
     width: 58.33%;
     flex-basis: 58.33%;
     max-width: 58.33%;
   }
-
   .ace-col-m-8 {
     width: 66.66%;
     flex-basis: 66.66%;
     max-width: 66.66%;
   }
-
   .ace-col-m-9 {
     width: 75%;
     flex-basis: 75%;
     max-width: 75%;
   }
-
   .ace-col-m-10 {
     width: 83.33%;
     flex-basis: 83.33%;
     max-width: 83.33%;
   }
-
   .ace-col-m-11 {
     width: 91.66%;
     flex-basis: 91.66%;
     max-width: 91.66%;
   }
-
   .ace-col-m-12 {
     width: 100%;
     flex-basis: 100%;
@@ -11660,79 +11214,67 @@ html[dir=rtl] [class*=ace-extra-thin-col-] {
 }
 @media screen and (min-width: 320px) and (max-width: 680px), screen and (min-device-width: 320px) and (max-device-height: 680px) and (orientation: landscape) {
   [class*=ace-col-],
-[class*=ace-thin-col-],
-[class*=ace-extra-thin-col-] {
+  [class*=ace-thin-col-],
+  [class*=ace-extra-thin-col-] {
     width: 100%;
     max-width: 100%;
     flex-basis: 100%;
   }
-
   .ace-col-fm-1 {
     width: 8.33%;
     flex-basis: 8.33%;
     max-width: 8.33%;
   }
-
   .ace-col-fm-2 {
     width: 16.66%;
     flex-basis: 16.66%;
     max-width: 16.66%;
   }
-
   .ace-col-fm-3 {
     width: 25%;
     flex-basis: 25%;
     max-width: 25%;
   }
-
   .ace-col-fm-4 {
     width: 33.33%;
     flex-basis: 33.33%;
     max-width: 33.33%;
   }
-
   .ace-col-fm-5 {
     width: 41.66%;
     flex-basis: 41.66%;
     max-width: 41.66%;
   }
-
   .ace-col-fm-6 {
     width: 50%;
     flex-basis: 50%;
     max-width: 50%;
   }
-
   .ace-col-fm-7 {
     width: 58.33%;
     flex-basis: 58.33%;
     max-width: 58.33%;
   }
-
   .ace-col-fm-8 {
     width: 66.66%;
     flex-basis: 66.66%;
     max-width: 66.66%;
   }
-
   .ace-col-fm-9 {
     width: 75%;
     flex-basis: 75%;
     max-width: 75%;
   }
-
   .ace-col-fm-10 {
     width: 83.33%;
     flex-basis: 83.33%;
     max-width: 83.33%;
   }
-
   .ace-col-fm-11 {
     width: 91.66%;
     flex-basis: 91.66%;
     max-width: 91.66%;
   }
-
   .ace-col-fm-12 {
     width: 100%;
     flex-basis: 100%;
@@ -11767,6 +11309,34 @@ html[dir=ltr] .ace-form-padding {
 html[dir=rtl] .ace-form-padding {
   padding-right: 15px;
   padding-left: 0px;
+}
+
+.ace-extra-small-padding-top {
+  padding-top: 5px;
+}
+
+html[dir=ltr] .ace-extra-small-padding-left {
+  padding-left: 5px;
+}
+
+html[dir=rtl] .ace-extra-small-padding-left {
+  padding-right: 5px;
+}
+
+html[dir=ltr] .ace-extra-small-padding-right {
+  padding-right: 5px;
+}
+
+html[dir=rtl] .ace-extra-small-padding-right {
+  padding-left: 5px;
+}
+
+.ace-extra-small-padding-bottom {
+  padding-bottom: 5px;
+}
+
+.ace-extra-small-padding {
+  padding: 5px;
 }
 
 .ace-tiny-padding-top {
@@ -12674,6 +12244,67 @@ html[dir=rtl] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.a
   display: none;
 }
 
+.ace-expl-anchor {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: transparent;
+  color: red;
+  text-align: center;
+}
+
+.ace-expl-anchor:hover {
+  background-color: red;
+  color: white;
+}
+
+html[dir=ltr] .ace-expl-left.ace-expl-anchor-l1 {
+  left: -20px;
+}
+
+html[dir=rtl] .ace-expl-left.ace-expl-anchor-l1 {
+  right: -20px;
+}
+
+html[dir=ltr] .ace-expl-left.ace-expl-anchor-l2 {
+  left: -40px;
+}
+
+html[dir=rtl] .ace-expl-left.ace-expl-anchor-l2 {
+  right: -40px;
+}
+
+html[dir=ltr] .ace-expl-right.ace-expl-anchor-l1 {
+  right: -20px;
+}
+
+html[dir=rtl] .ace-expl-right.ace-expl-anchor-l1 {
+  left: -20px;
+}
+
+html[dir=ltr] .ace-expl-right.ace-expl-anchor-l2 {
+  right: -40px;
+}
+
+html[dir=rtl] .ace-expl-right.ace-expl-anchor-l2 {
+  left: -40px;
+}
+
+.ace-expl-anchor.ace-expl-onhover {
+  display: none;
+}
+
+.ace-field-container:hover .ace-expl-anchor.ace-expl-onhover {
+  display: flex;
+}
+
+.ace-expl-anchor i {
+  font-size: 10px;
+}
+
 /* end utility classes */
 /* begin app presentation */
 .ace-presentation-container .ace-side-container {
@@ -12718,6 +12349,8 @@ html[dir=rtl] .ace-main-presentation {
 .ace-main-presentation .ace-side-menu i.ace-accordion-icon {
   width: initial;
   min-width: 20px;
+  max-width: auto;
+  min-height: auto;
   font-size: 16px;
   font-weight: 400;
 }
@@ -12744,45 +12377,36 @@ html[dir=rtl] .ace-main-presentation {
     height: 100%;
     display: block;
   }
-
   ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview {
     display: block;
   }
-
   .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion {
     clear: initial;
     width: 100%;
     flex: initial;
     align-self: flex-start;
   }
-
   .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion i {
     font-size: 300% !important;
   }
-
   .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion p {
     display: none;
   }
-
   .ace-main-presentation .ace-side-menu .ace-accordion {
     width: 80px !important;
   }
-
   .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-accordion {
     width: 100% !important;
   }
-
   .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion i,
-.ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion p {
+  .ace-full-screen-popup.ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion p {
     font-size: 22px !important;
     display: initial;
     min-width: 30px;
   }
-
   .ace-main-presentation .ace-side-menu .ace-scrollview .ace-accordion.ace-active {
     box-shadow: initial;
   }
-
   .ace-main-presentation .ace-side-container {
     position: initial;
     height: initial;
@@ -12791,7 +12415,6 @@ html[dir=rtl] .ace-main-presentation {
     bottom: initial;
     width: initial;
   }
-
   .ace-main-presentation .ace-side-menu {
     visibility: initial;
     height: 100%;
@@ -12800,7 +12423,6 @@ html[dir=rtl] .ace-main-presentation {
     opacity: initial;
     transition: initial;
   }
-
   .ace-main-presentation .ace-side-menu.ace-expand {
     visibility: initial;
     height: 100%;
@@ -12850,7 +12472,6 @@ html[dir=rtl] .ace-form-operation-button ul {
   .ace-hide-on-mobile {
     display: none;
   }
-
   .ace-display-only-on-mobile {
     display: initial;
   }
@@ -12950,8 +12571,7 @@ html[dir=rtl] .ace-presentation-main > .ace-standard-form.ace-field-container {
 .ace-full-screen-popup.ace-standard-form > .ace-form-container {
   max-height: calc(calc(var(--vh, 1vh) * 100) - 50px);
   height: calc(calc(var(--vh, 1vh) * 100) - 50px);
-  /*overflow-y: hidden;*/
-  /*SM-not sure*/
+  /*overflow-y: hidden;*/ /*SM-not sure*/
 }
 
 .ace-no-top-bar .ace-standard-form > .ace-form-container > .ace-form-inner,
@@ -12964,8 +12584,7 @@ html[dir=rtl] .ace-presentation-main > .ace-standard-form.ace-field-container {
 .ace-standard-form.ace-standard-form-no-external-title > .ace-form-container {
   max-height: calc(calc(var(--vh, 1vh) * 100) - 50px);
   height: calc(calc(var(--vh, 1vh) * 100) - 50px);
-  /*overflow-y: hidden;*/
-  /*SM-not sure*/
+  /*overflow-y: hidden;*/ /*SM-not sure*/
 }
 
 .ace-standard-form.ace-standard-form-no-external-title > .ace-form-container > .ace-form-inner {
@@ -12978,8 +12597,7 @@ html[dir=rtl] .ace-presentation-main > .ace-standard-form.ace-field-container {
 .ace-full-screen-popup.ace-standard-form.ace-standard-form-no-external-title > .ace-form-container {
   max-height: calc(var(--vh, 1vh) * 100);
   height: calc(var(--vh, 1vh) * 100);
-  /*overflow-y: hidden;*/
-  /*SM-not sure*/
+  /*overflow-y: hidden;*/ /*SM-not sure*/
 }
 
 .ace-no-top-bar .ace-standard-form.ace-standard-form-no-external-title > .ace-form-container > .ace-form-inner,
@@ -13088,10 +12706,17 @@ html[dir=rtl] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.a
 
 @media screen and (min-width: 320px) and (max-width: 1024px) {
   .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope input,
-.ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope select {
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope select {
     background-color: transparent;
   }
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope input:-webkit-autofill,
+  .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope select:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 50px transparent inset !important;
+  }
 }
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within input,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within select,
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover,
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover input,
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover select {
@@ -13099,12 +12724,27 @@ html[dir=rtl] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form.a
 }
 
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope input:hover,
-.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:hover,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:focus-within,
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope input:focus,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:hover,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:focus-within,
 .ace-standard-form .ace-standard-form-inside .ace-control-envelope select:focus {
   background-color: transparent !important;
 }
 
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:focus-within select:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope:hover select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px transparent inset !important;
+}
+
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope input:-webkit-autofill,
+.ace-standard-form .ace-standard-form-inside .ace-control-envelope select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 50px transparent inset !important;
+}
+
+.ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope:focus-within label,
 .ace-standard-form .ace-form-container:hover .ace-standard-form-inside .ace-control-envelope:hover label {
   background-color: transparent !important;
 }

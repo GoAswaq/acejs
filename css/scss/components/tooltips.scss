@@ -1,0 +1,13 @@
+@use '../variables/all' as *;
+
+[ace-tooltip]:hover::after {
+  display: block;
+  position: absolute;
+  margin-top:$meas-marg-10;
+  z-index:1000;
+  content: attr(ace-tooltip);
+  background-color: transparent;
+  color: $primary-color;
+  padding: $meas-pad-5;
+  @include addBorder(bottom,$ace-border-default-size,$ace-border-default-pattern,$primary-border-color);
+}

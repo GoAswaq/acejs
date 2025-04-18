@@ -132,4 +132,36 @@ html[dir="rtl"] .ace-highlight-shadow-form.ace-independent-form.ace-lateral-form
 .ace-hint {
   display:none;
 }
+
+.ace-expl-anchor {
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  width: $meas-20;
+  height: $meas-20;
+  border-radius: 50%;
+  background-color: transparent;
+  color: $primary-color;
+  text-align: center;
+}
+.ace-expl-anchor:hover {
+  background-color: $primary-color;
+  color: $contrast-font-color;
+}
+@include leftLTR('.ace-expl-left.ace-expl-anchor-l1',-$meas-20);
+@include leftLTR('.ace-expl-left.ace-expl-anchor-l2',-$meas-40);
+
+@include rightLTR('.ace-expl-right.ace-expl-anchor-l1',-$meas-20);
+@include rightLTR('.ace-expl-right.ace-expl-anchor-l2',-$meas-40);
+
+.ace-expl-anchor.ace-expl-onhover {
+  display: none;
+}
+.ace-field-container:hover .ace-expl-anchor.ace-expl-onhover {
+  display: flex;
+}
+
+.ace-expl-anchor i {
+  font-size: $font-size-10;
+}
 /* end utility classes */

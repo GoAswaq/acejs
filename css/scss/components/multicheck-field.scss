@@ -1,0 +1,153 @@
+/* begin multicheck field */
+@use '../variables/all' as *;
+
+.ace-delete-icon {
+  background-color: $mc-color-action-icon;
+  color: $mc-highlight-font-color;
+  border-radius: 50%;
+  width: $meas-12;
+  height: $meas-12;
+  line-height: $meas-line-height-1d1;
+  font-size: $font-size-10;
+  display: inline-block;
+  border: 0px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.ace-delete-icon::after {
+  content: 'X';
+  font-size: $font-size-11;
+}
+@include sidePaddingLTR('.ace-delete-icon::after','right',$meas-pad-1);
+
+.ace-delete-icon:hover {
+  background-color: $mc-icon-highlight-warning;
+}
+
+@include floatToLTR('.ace-multicheck-field .ace-delete-icon',right);
+@include sideMarginLTR('.ace-multicheck-field .ace-delete-icon','right',$meas-pad-10);
+
+.ace-mc-options input[type="checkbox"]{
+  width: initial;
+}
+.ace-multicheck-data-selection-container {
+  width: $meas-full;
+}
+.ace-multicheck-field .ace-box-2 {
+  height: $meas-full;
+}
+
+.ace-modal-background {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  width: $meas-full;
+  height: $meas-full;
+  overflow: auto;
+  background-color: $mc-modal-background;
+}
+@include leftLTR('.ace-modal-background',$meas-0);
+
+.ace-modal-content {
+  background-color: $mc-modal-content-background;//f7f7f7
+  padding: $meas-pad-10;
+  display: inline-block;
+  border-radius: $ace-common-radius;
+  @include addBorder('all',$ace-border-default-size,$ace-border-default-pattern,$mc-main-border-color);//#ccc
+}
+
+.ace-split-top-line {
+  @include addBorder('top',$ace-border-default-size,'dotted',$mc-split-line-color);
+}
+
+.ace-action-icon {
+  width: $meas-pad-20;
+  height: $meas-pad-20;
+  font-size: $font-size-16;
+  border-radius:50%;
+  font-weight: bolder;
+  color: $mc-color-action-icon;//#d9d9d9
+  cursor: pointer;
+
+  line-height: $meas-line-height-1d1;
+  display: inline-block;
+  border: 0px;
+  text-align: center;
+  vertical-align: middle;
+}
+@include floatToLTR('.ace-action-icon',right);
+
+.ae-action-icon::after {
+  position: relative;
+  top: $meas-10;
+}
+@include leftLTR('.ace-modal-background',$meas-5);
+
+.ace-down-arrow::after {
+  content: "\2228";
+}
+.ace-icon-close::after {
+  content: "\00D7";
+}
+.ace-action-icon:hover {
+    background-color: $primary-color;
+    color: $mc-highlight-font-color;
+}
+
+[class*="ace-box-"] {
+  font-family: Roboto, Sans-Serif;
+  font-style: normal;
+  font-variant-ligatures: normal;
+  font-variant-caps: normal;
+  font-variant-numeric: normal;
+  font-variant-east-asian: normal;
+  font-weight: $font-weight-400;
+  font-stretch: normal;
+  line-height: normal;
+  -webkit-font-smoothing: antialiased;
+  padding: $meas-pad-0;
+}
+@include sidePaddingLTR('.ace-box-1','left',$meas-pad-10);
+
+.ace-box-2 {
+  padding: $meas-pad-10;
+  background:$mc-selection-box-color;
+  white-space:nowrap;
+  border-radius: $ace-common-radius;
+  @include addBorder('all',$ace-border-default-size,$ace-border-default-pattern,$mc-border-selection-box-color);//#e5e5e5
+}
+
+.ace-box-2-title {
+  color: $mc-title-color;
+  font-stretch: normal;
+  font-size: $font-size-14;
+  line-height: $meas-line-height-16;
+  overflow: hidden;
+}
+.ace-box-2-detail {
+  color: $mc-accent-color;
+  font-size: $font-size-12;
+  line-height: $meas-line-height-13;
+}
+
+.ace-submit-btn {
+  background-color:$mc-accent-color;
+  color: $mc-highlight-font-color;
+  font-size: $font-size-12;
+  font-weight: $font-weight-600;
+  height: 27px;
+  line-height: 27px;
+  min-width: 54px;
+  cursor: pointer;
+  @include addBorder('all',$ace-border-default-size,$ace-border-default-pattern,$mc-border-selection-box-color);//rgba(0,0,0,0.1)
+}
+.ace-submit-btn:hover,.ace-submit-btn:active {
+  background-color:$mc-accent-color;
+  color:$mc-highlight-font-color;
+  opacity:1;
+  @include addBorder('all',$ace-border-default-size,$ace-border-default-pattern,$mc-button-highlight-border);
+}
+/* end multicheck field */

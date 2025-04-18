@@ -1,0 +1,16 @@
+/*
+ * the composite values MUST NOT be overwritten by themes!
+ */
+[ace-tooltip]:hover::after {
+  display: block;
+  position: absolute;
+  margin-top: 10px;
+  z-index: 1000;
+  content: attr(ace-tooltip);
+  background-color: transparent;
+  color: #46c3ff;
+  padding: 5px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/*# sourceMappingURL=tooltips.css.map */

@@ -692,27 +692,27 @@ html[dir="rtl"] .ace-thin-rows-grid .ace-grid-cell {
 
 .ace-flex-grid-height-600 .ace-grid-auto-complete,
 .ace-flex-grid-height-600 .ace-grid {
-  max-height: 600px;
+  max-height: $meas-600 !important;
 }
 .ace-flex-grid-height-400 .ace-grid-auto-complete,
 .ace-flex-grid-height-400 .ace-grid {
-  max-height: 400px;
+  max-height: $meas-400 !important;
 }
 .ace-flex-grid-height-350 .ace-grid-auto-complete,
 .ace-flex-grid-height-350 .ace-grid {
-  max-height: $meas-350;
+  max-height: $meas-350 !important;
 }
 .ace-flex-grid-height-300 .ace-grid-auto-complete,
 .ace-flex-grid-height-300 .ace-grid {
-  max-height: $meas-300;
+  max-height: $meas-300 !important;
 }
 .ace-flex-grid-height-250 .ace-grid-auto-complete,
 .ace-flex-grid-height-250 .ace-grid {
-  max-height: $meas-250;
+  max-height: $meas-250 !important;
 }
 .ace-flex-grid-height-200 .ace-grid-auto-complete,
 .ace-flex-grid-height-200 .ace-grid {
-  max-height: $meas-200;
+  max-height: $meas-200 !important;
 }
 
 .ace-grid-absolute-footer .ace-grid-footer {

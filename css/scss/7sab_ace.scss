@@ -1,193 +1,46 @@
 //@use '../variables/all';
-@use './base' as base with (
+@use './base' with (
 
-    $primary-color: #A41039, //rgb(140, 23, 59)
+    $primary-color: rgb(140, 23, 59),
     $titlebar-shadow-color: transparent,
     $background-bg-color: #f2f4f8,
     $form-bg-color: #f2f4f8,
     $fullscreen-main-bg-color: #f2f4f8,
     $badge-color: white,
-    $badge-bg-color: #A41039, //rgb(140, 23, 59)
+    $badge-bg-color: rgb(140, 23, 59),
     $focus-bg-color: white,
     $presentation-info-bg-color: #f2f4f8,
     $accordion-active-bg-color: white,
     $accordion-active-border: white,
-    $accordion-hover-bg-color: rgb(223, 227, 231),
-    $active-border-radius: 12px,
-    $hover-border-radius: 12px,
-
-    $side-menu-a-color: rgb(117, 128, 138),
-    $side-menu-a-hover-color: rgb(117, 128, 138), //rgb(140, 23, 59)
-    $side-menu-a-pad: 16px,
-    $side-menu-p-left-pad: 16px,
-    $side-menu-icon-min-width: 24px,
-    $side-menu-icon-max-width: 24px,
-    $side-menu-icon-font-size: 24px,
-    $side-menu-p-top-pad: 4px,
-
-    $ace-standard-font-size: 17px,
+    $active-border-radius: 10px,
+    $side-menu-a-hover-color: rgb(140, 23, 59),
+    $ace-standard-font-size: 14px,
     $form-shadow-color: transparent,
     $form-highlight-shadow-color: rgba(0, 0, 0, 0.26),
     $titlebar-border-color: transparent,
 
-    $ace-envelope-highlight-padding: 8px 16px 8px 16px,
+    $ace-envelope-highlight-padding: 20px 10px 10px 10px,
     $ace-envelope-highlight-bg-color: #f2f4f8,
-    $label-envelope-color: #828B94,
+    $label-envelope-highlight-color: black,
     $ace-envelope-highlight-focus-bg-color:#ECEFEF,
-    $ace-envelop-highlight-label-top-offset: 11px,
+    $ace-envelop-highlight-label-top-offset: 6px,
     $ace-envelop-highlight-label-empty-offset: 27px,
     $ace-envelop-highlight-border-color: transparent,
     $ace-envelop-highlight-efld-side-padding: 0px,
     $ace-envelop-highlight-autocomple-grid-top: 50px,
     $ace-envelop-highlight-autocomple-popup-grid-top: 60px,
 
-    $prompt-button-ok-bg-color: #A41039, //rgb(140, 23, 59)
-    $prompt-button-ok-bg-hover-color: #A41039, //rgb(140, 23, 59)
-    $prompt-button-cancel-color: #A41039, //rgb(140, 23, 59)
+    $prompt-button-ok-bg-color: rgb(140, 23, 59),
+    $prompt-button-ok-bg-hover-color: rgb(140, 23, 59),
+    $prompt-button-cancel-color: rgb(140, 23, 59),
     $prompt-button-cancel-bg-color: transparent,
     $prompt-button-cancel-bg-hover-color: transparent,
 
     //heights
     //$ace-standard-bar-height: 100px,
     //
-
-    $ace-huge-title-size: 35px,
-    $meas-pad-15: 16px,
-    $meas-pad-25: 24px,
-    $text-font-family: ("Basier Circle","sans-serif","Font Awesome 5 Pro","FontAwesome"),
-    $controls-font-family: ("Basier Circle","Font Awesome 5 Pro","FontAwesome"),
-    $ace-border-default-size: 0px,
-    $primary-font-color: rgb(0,0,0),
-    $secondary-font-color: rgb(82, 92, 102),
-    $checkbox-background-color: #f2f4f8,
-    $link-color: rgba(0, 128, 255 ,0.8),
-    $link-hover-color: rgba(0, 128, 255 , 1),
-    $link-text-decoration: none,
-    $link-hover-text-decoration: none,
-
-
-    $ace-main-title-bar-padding: 32px 0px 0px 0px,
-    $ace-main-title-bar-height: 92px,
+    //$ace-main-title-bar-height: 75px,
     //$ace-tittle-bar-height: 100px,
     //$ace-footer-height: 200px,
     //$ace-horizontal-tabs-height: 100px,
-
-    $autocomplete-clear-button-width: 24px,
-    $autocomplete-clear-button-height: 24px,
-    $autocomplete-clear-button-min-height: 24px,
-    $autocomplete-clear-button-padding: 10px,
-    $autocomplete-clear-button-font-size: 20px,
-    $autocomplete-clear-button-display: flex
-
 );
-
-.fa-7sab:before {
-  content: url(../imgs/7sab.svg);
-}
-
-[class*="ace-"] > input[type="text"],
-[class*="ace-"] > input[type="password"],
-[class*="ace-"] > input[type="number"],
-[class*="ace-"] > input[type="email"],
-[class*="ace-"] > .ace-grid-search,
-[class*="ace-"] > textarea,
-[class*="ace-"] > select{
-  padding: 26px 0px 0px;
-}
-
-[class*="ace-"] > input,
-[class*="ace-"] > textarea,
-[class*="ace-"] > keygen,
-[class*="ace-"] > select,
-[class*="ace-"] > button {
-  font-weight: 400;
-}
-
-[class*="ace-"] > select {
-  height: auto;
-}
-
-.ace-standard-form .ace-standard-form-inside div.ace-control-envelope {
-  margin-top: 24px;
-}
-.ace-standard-subtitle-text {
-  color: base.$secondary-font-color;
-}
-[class*="ace-"] > button {
-  padding: 17px 22px;
-  border-radius: base.$meas-pad-15;
-  background-color: base.$primary-color;
-  color: base.$contrast-font-color;
-
-
-  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
-  box-shadow: adjust-color(base.$primary-color, $alpha:-0.88) 0px 0.7rem 1.3rem 0px, adjust-color(base.$primary-color, $alpha:-.76) 0px 1rem 2.2rem 0px;
-  font-weight: 500;
-  text-align: center;
-}
-
-[class*=ace-] > button {
-  padding: 17px 22px;
-  border-radius: 16px;
-  background-color: #A41039;
-  color: white;
-  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
-  box-shadow: rgb(164 16 57 / 12%) 0px 0.7rem 1.3rem 0px, rgb(164 16 57 / 24%) 0px 1rem 2.2rem 0px;
-  font-weight: 500;
-  width:100%;
-  text-align: center;
-}
-.ace-efld ~ label {
-  height: 23px !important;
-}
-.ace-button-inverse button:hover {
-  transition: background-color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, color 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, opacity 300ms cubic-bezier(0.15, 0.5, 0.5, 1) 0s, box-shadow 200ms cubic-bezier(0.4, 0.3, 0.8, 0.6) 0s;
-  box-shadow: rgb(255 255 255 / 12%) 0px 0.5rem 1.1rem 0px, rgb(255 255 255 / 24%) 0px 0.3rem 1.1rem 0px;
-
-}
-.ace-button-smaller button {
-  padding: 9px 11px;
-}
-a:not(.ace-side-menu a) {
-  margin-top: 9px;
-  display: block;
-}
-.ace-side-menu {
-  padding-top: 10px;
-}
-
-.ace-autocomplete-field input ~ .ace-autocomplete-clear-button {
-  box-shaddow: none !important;
-}
-.ace-autocomplete-extra-link {
-  float: right !important;
-  border-radius: 50%;
-  background-color: base.$badge-color;
-  width: 24px;
-  height: 24px;
-  display: flex !important;
-  justify-content: center;
-  align-items: center;
-  color: base.$primary-color;
-  line-height: 1;
-  margin-left: -30px;
-  margin-top: 7px !important;
-  z-index: 1;
-  position: relative;
-  font-size: 30px;
-  font-weight: 500;
-  overflow: visible;
-  line-height: 1;
-}
-
-
-html[dir=ltr] .ace-autocomplete-extra-link ~ .ace-autocomplete-clear-button {
-  float: left !important;
-  margin-left: -52px !important;;
-  margin-right: unset !important;;
-}
-html[dir=rtl] .ace-autocomplete-extra-link ~ .ace-autocomplete-clear-button {
-  float: right !important;;
-  margin-right: -52px !important;;
-  margin-left: unset !important;;
-}

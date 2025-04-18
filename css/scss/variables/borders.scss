@@ -1,16 +1,6 @@
-/**
-Used borders: top,left,bottom,right
- */
 $meas-border-null: 0 !default;
 $meas-bord-null: 0 !default;
 $border-null: 0 !default;
-
-/* Used for
-BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
-			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
-			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
-			.ace-timeline-content:before, .ace-timeline-content:after,
- */
 
 $meas-bord-0: 0px !default;
 $meas-bord-1: 1px !default;
@@ -28,15 +18,6 @@ $meas-bord-17: 17px !default;
 $meas-bord-20: 20px !default;
 $meas-bord-25: 25px !default;
 $meas-bord-35: 35px !default;
-
-
-/* Used for
-BORDER: .ace-breadcrumbs-separator:before, .ace-popover:before,
-			.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:before,.ace-grid-row:nth-child(odd) .ace-timeline-block .ace-timeline-content:after,
-			.ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:before , .ace-grid-row:nth-child(even) .ace-timeline-block .ace-timeline-content:after,
-			.ace-timeline-content:before, .ace-timeline-content:after,
- */
-$meas-bord-10: 10px !default;
 
 $link-text-decoration: underline !default;
 $link-hover-text-decoration: underline !default;

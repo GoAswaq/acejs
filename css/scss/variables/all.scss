@@ -158,6 +158,25 @@
   }
 }
 
+//value can be any size
+@mixin leftLTR($selector,$value,$important:false){
+  html[dir="ltr"] #{$selector} {
+    left: $value parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    right: $value parseImportant($important);
+  }
+}
+//value can be any size
+@mixin rightLTR($selector,$value,$important:false){
+  html[dir="ltr"] #{$selector} {
+    right: $value parseImportant($important);
+  }
+  html[dir="rtl"] #{$selector} {
+    left: $value parseImportant($important);
+  }
+}
+
 //position can be either left or right
 @mixin sidePaddingLTR($selector,$position,$value,$important:false){
   html[dir="ltr"] #{$selector} {

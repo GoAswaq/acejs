@@ -1,7 +1,8 @@
 /* begin file upload */
 @use '../variables/all' as *;
 
-.ace-file-upload input {
+.ace-file-upload input,
+.ace-file-upload .ace-file-upload input { /*not a mistake to be two ace-file-uploads here*/
   display: none;
 }
 

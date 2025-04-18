@@ -33,7 +33,8 @@
 
 [class*="ace-"] > .fa,
 [class*="ace-"] > .far,
-[class*="ace-"] > .fal {
+[class*="ace-"] > .fal,
+[class*=ace-] > .fab {
   line-height: $meas-line-height-1d8;
 }
 

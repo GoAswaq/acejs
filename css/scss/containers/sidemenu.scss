@@ -103,9 +103,9 @@
   text-align: center;
   white-space: normal;
   line-height: $meas-line-height-1d0;
+  padding-top: $side-menu-p-top-pad;
 }
 @include sidePaddingLTR('.ace-side-menu a p',left,$side-menu-p-left-pad);
-@include sidePaddingLTR('.ace-side-menu a p',top,$side-menu-p-top-pad);
 
 .ace-side-menu i.ace-accordion-icon {
   font-size: $font-size-34;

@@ -1,42 +1,4 @@
 /* begin checkbox */
-/*
-
-ACE CODE:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-8"
-  type="checkbox"
-
-  label="Ex. 2 - custom on and off values"
-  labelalign="left"
-  labelwidth="400px"
-
-  on="123"
-  off="321"
-
-  checked="true"
-  onchange="onCheckboxChange"
->
-</div>
-
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-8 ace-field-container ace-label-align-left" type="checkbox" label="Ex. 2 - custom on and off values" labelalign="left" labelwidth="400px" on="123" off="321" checked="true" onchange="onCheckboxChange">
-  <div class="ace-checkbox-field" tabindex="0">
-    <label class="ace-label">
-      <input class="ace-efld" aceid="ace-60" value="" checked="" type="checkbox" name="">
-      <span>Ex. 2 - custom on and off values</span>
-    </label>
-    <span class="ace-error-msg"></span>
-  </div>
-</div>
-
-main_page.js:573
-
-
- */
 
 @use '../variables/all' as *;
 

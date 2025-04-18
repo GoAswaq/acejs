@@ -22,6 +22,8 @@
 @use 'components/textfield';
 @use 'components/text-modifier';
 @use 'components/combo-field';
+@use 'components/multicheck-field';
+@use 'components/daterangepicker-field';
 @use 'components/autocpmlete-field';
 @use 'components/checkbox';
 @use 'components/switch-field';
@@ -48,6 +50,7 @@
 @use 'panels/title-bar';
 @use 'tools/thumbsup';
 @use 'components/label';
+@use 'components/tooltips';
 @use 'components/badge';
 @use 'tools/chat-bubbles';
 @use 'tools/timeline';

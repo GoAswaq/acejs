@@ -56,10 +56,21 @@
 .ace-label-align-left .ace-text-field,
 .ace-label-align-left .ace-combo-field,
 .ace-label-align-left .ace-datepicker-field,
-.ace-label-align-left .ace-autocomplete-field,
 .ace-label-align-left .ace-text-editor {
   display: flex;
   flex-direction: row-reverse;
+}
+.ace-label-align-left .ace-autocomplete-field{
+  display: flex;
+}
+.ace-label-align-left .ace-autocomplete-field > label{
+  order: 1;
+}
+.ace-label-align-left .ace-autocomplete-field > input{
+  order: 10;
+}
+.ace-label-align-left .ace-autocomplete-field > button{
+  order: 20;
 }
 
 .ace-label-align-left input,

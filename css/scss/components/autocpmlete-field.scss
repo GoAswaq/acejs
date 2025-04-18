@@ -1,88 +1,5 @@
 /* begin autocomplete field */
 
-/*
-ACE CODE:
->>>>>>>>>>>>>>>>
-<div
-  class="ace-auto-gen ace-col-10"
-  type="autocomplete"
-  placeholder="type something here"
-  label="Find a student"
-  labelwidth="200px"
-  searchname="student_name"
-  valuename="student_id"
-  net="remote=true;autoload=false;fid='loadstudentsfilter';size=5"
-  minlength="0"
-  autosearchonfocus="true"
-  displayrenderer="rendererStudent"
-  gridrowrenderer="rendererStudentV2"
-></div>
-<<<<<<<<<<<<<<<<
-
-RESULT:
->>>>>>>>>>>>>>>>
-<div class="ace-auto-gen ace-col-10 ace-field-container ace-label-align-top" type="autocomplete" placeholder="type something here" label="Find a student" labelwidth="200px" searchname="student_name" valuename="student_id" net="remote=true;autoload=false;fid='loadstudentsfilter';size=5" minlength="0" autosearchonfocus="true" displayrenderer="rendererStudent" gridrowrenderer="rendererStudentV2">
-  <div class="ace-autocomplete-field ace-form-fields-ignore">
-    <input type="text" class="ace-efld ace-empty" aceid="ace-37" value="" placeholder="type something here">
-    <div class="ace-grid-auto-complete ace-hide-errors ace-field-container" tabindex="0" agrid="true" style="width: $meas-full; max-width: 1084px; top: 33px; left: 0.28125px; display: none;">
-      <div class="ace-grid " style="width:100%">
-        <div class="ace-grid-header ace-hide">
-          <div class="ace-grid-cell ace-ta-lft  " style="width:100%" hcidx="0" tabindex="0"></div>
-        </div>
-        <div class="ace-grid-body ace-grid-scrollview" style="">
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="0">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>1:</b> Bob Marley, M, Jamaica, 1945-02-06
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="1">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>2:</b> Freddy Mercury, M, Zanzibar, 1946-09-05
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="2">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>3:</b> Shania Twain, F, Canada, 1965-09-28
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="3">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>4:</b> Jennifer Lopez, F, USA, 1969-07-24
-            </div>
-          </div>
-          <div class="ace-grid-row ace-grid-row-lines ace-grid-column-lines ace-clear" gid="ace-38" ridx="4">
-            <div data-label="" class="ace-grid-cell ace-ta-lft    " style="width:100%" cidx="0">
-              <b>5:</b> Gordon Matthew Thomas Sumner aka Sting, M, England, 1951-10-02
-            </div>
-          </div>
-        </div>
-        <div class="ace-grid-footer">
-          <div class="ace-grid-pagination">
-            <button jt="0" disabled="" style="">&lt;&lt;</button>
-            <button jt="-1" disabled="" style="">&lt;</button>						&nbsp;
-            <div>
-              <span>Page</span>
-              <input type="number" value="1">
-              <span>of&nbsp;</span>
-              <span class="ace-grid-pagination-tp">3</span>&nbsp;
-            </div>
-            <button jt="1" style="">&gt;</button>
-            <button jt="2" style="">&gt;&gt;</button>
-          </div>
-          <span class="ace-error-msg"></span>
-        </div>
-      </div>
-    </div>
-    <label class="ace-label" style="width:200px">Find a student:</label>
-    <button class="ace-autocomplete-clear-button">X</button>
-    <span class="ace-error-msg"></span>
-  </div>
-</div>
-<<<<<<<<<<<<<<<<
-
-
-*/
-
 @use '../variables/all' as *;
 
 .ace-autocomplete-field {
@@ -107,23 +24,23 @@ RESULT:
 .ace-autocomplete-details-inner-field {
   padding: $meas-pad-10;
 }
-.ace-autocomplete-field .ace-autocomplete-extra-link- {
-
-  position: absolute;
-  background-color: gray;
-  border-radius: 10px;
-  min-width: $autocomplete-extra-link-min-width;
-  min-height: $autocomplete-extra-link-min-height;
-  padding: $autocomplete-extra-link-padding;
-  right: 53px;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  z-index: 1;
-  font-size: 27px;
-  font-weight: 600;
+.ace-autocomplete-field .ace-autocomplete-extra-link {
+  //
+  //position: absolute;
+  //background-color: gray;
+  //border-radius: 10px;
+  //min-width: $autocomplete-extra-link-min-width;
+  //min-height: $autocomplete-extra-link-min-height;
+  //padding: $autocomplete-extra-link-padding;
+  //right: 53px;
+  //text-align: center;
+  //display: flex;
+  //align-items: center;
+  //justify-content: center;
+  //color: white;
+  //z-index: 1;
+  //font-size: 27px;
+  //font-weight: 600;
 
   margin-top: -$meas-marg-10;
 }
