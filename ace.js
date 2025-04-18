@@ -8522,7 +8522,9 @@
                     let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                     let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                    $.aceOverWatch.utilities.help.hints.display(settings.hintselector, settings.hintstype);
+                    if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ) {
+                        $.aceOverWatch.field.displayHint(settings.hintselector, settings.hintstype);
+                    }
 
                     switch( settings.displaytype ){
                         case 'popupmobile':
@@ -8531,7 +8533,7 @@
                                 //automatically displayed differently
                                 break;
                             }
-                        //if we are on mobile, we fall in the next case
+                            //if we are on mobile, we fall in the next case
                         case 'popup':
 
                             target.find('select').attr('disabled','disabled');
@@ -8588,7 +8590,7 @@
                                 f.ace('hide');
                             }
                         });
-                        f.find('.ace-combo-filter').unbind('keyup').keyup(function (e) {
+                          f.find('.ace-combo-filter').unbind('keyup').keyup(function (e) {
 
                             switch(e.keyCode){
                                 default:
@@ -8681,12 +8683,7 @@
                     settings.id = $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid();
                 }
 
-                let tooltip = '';
-                if( settings['tooltip'] ){
-                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
-                }
-
-                let fieldHtml = '<div class="'+$.aceOverWatch.classes.radio+'" '+tooltip+'>';
+                var fieldHtml = '<div class="'+$.aceOverWatch.classes.radio+'" >';
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
 
                 settings.labelalign = 'top';//always use top alignament with this one
@@ -8778,20 +8775,20 @@
                     var icons = [];
 
                     if(
-                        (											//the case when the static memebers are in front
-                            idx >= settings.data.length
-                            && settings.addstaticdatatofront
-                        )
+                            (											//the case when the static memebers are in front
+                                idx >= settings.data.length
+                                && settings.addstaticdatatofront
+                            )
                         ||
-                        (											//the case when the static memebers are at the back
-                            idx < (settings.innerData.length - settings.data.length )
-                            && !settings.addstaticdatatofront
-                        )
+                            (											//the case when the static memebers are at the back
+                                idx < (settings.innerData.length - settings.data.length )
+                                && !settings.addstaticdatatofront
+                            )
                         ||
-                        (
-                            idx < settings.innerData.length
-                            && settings.allowdeletestaticdata
-                        )
+                            (
+                                   idx < settings.innerData.length
+                                && settings.allowdeletestaticdata
+                            )
 
                     ){//we are doing this because the deleting and editing are disabled for STATIC radio members
 
@@ -8813,11 +8810,11 @@
                     }
 
                     radios.push('<label idx="'+idx+'" class="'+$.aceOverWatch.classes.label+'">'+
-                        '<input type="radio" name="'+name+'" value="'+settings.innerData[idx].val(settings.valuename)+'" ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' >'+
-                        '<span>'+settings.innerData[idx].val('radioActualText')+'</span>'+
-                        icons.join('')+
-                        customCheckbox+
-                        '</label>');
+                                '<input type="radio" name="'+name+'" value="'+settings.innerData[idx].val(settings.valuename)+'" ' + (settings['readonly'] ? 'disabled="disabled"' : '') +' >'+
+                                '<span>'+settings.innerData[idx].val('radioActualText')+'</span>'+
+                                icons.join('')+
+                                customCheckbox+
+                    '</label>');
                 }
 
                 if( settings.allowadd ){
@@ -9258,14 +9255,14 @@
                     onselect:null,
                 }, settings ) );
 
-                let tooltip = '';
+                var fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.datepickerField+'" >';
+
+                var tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
+                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
                 }
 
-                let fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.datepickerField+'" '+tooltip+'>';
-
-                fieldHtml += '<input class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" >';
+                fieldHtml += '<input class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" '+tooltip+'>';
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
                 fieldHtml += $.aceOverWatch.field.badge.create(settings);
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
@@ -9400,10 +9397,10 @@
             currentEditablePicker : false,
             ensureModalWindowExists : function(target,settings){
                 if( settings.modalWindow ){ return; }
-                settings.modalWindow = $('<div class="ace-col-12 ace-date-picker-wrapper-modal ace-hide"></div>');
+                settings.modalWindow = $('<div class="ace-col-12 date-picker-wrapper-modal ace-hide"></div>');
                 $('body').append(settings.modalWindow);
 
-                settings.drpTrigger = target.find('.ace-action-icon.ace-down-arrow');
+                settings.drpTrigger = target.find('.action-icon.down-arrow');
                 settings.drpTrigger.dateRangePicker({
                     monthSelect: true,
                     yearSelect: true,
@@ -9427,37 +9424,37 @@
                 let dateRangePickerWidget = $('.date-picker-wrapper:not(.ace-drp-attached)');
                 dateRangePickerWidget.addClass('.ace-drp-attached');
                 dateRangePickerWidget.find('.drp_top-bar').
-                html('').//empty existing content
+                    html('').//empty existing content
                     append($('<div class="ace-flex ace-jus-cont-space-beween" id="report-period-toolbar">' +
-                        '<div class="ace-flex">' +
-                        '<div class="label ace-small-padding-right">'+_aceL.sel_i+'</div>' +
-                        '<div>'+
-                        '<select id="report-period-interval">' +
-                        '<option value="0">'+_aceL.sel_ai+'</option>' +
-                        '<option value="1">'+_aceL.sel_azi+'</option>' +
-                        '<option value="2">'+_aceL.sel_ieri+'</option>' +
-                        '<option value="3">'+_aceL.sel_u7z+'</option>' +
-                        '<option value="9">'+_aceL.sel_sc+'</option>' +
-                        '<option value="8">'+_aceL.sel_st+'</option>' +
-                        '<option value="10">'+_aceL.sel_lc+'</option>' +
-                        '<option value="4">'+_aceL.sel_lt+'</option>' +
-                        '<option value="11">'+_aceL.sel_ac+'</option>' +
-                        '<option value="5">'+_aceL.sel_at+'</option>' +
-                        '<option value="6">'+_aceL.sel_u2a+'</option>' +
-                        '<option value="7">'+_aceL.sel_td+'</option>' +
-                        '</select>' +
-                        '           </div>' +
-                        '</div>' +
-                        '<div class="ace-action-icon ace-icon-close"></div>' +
-                        '</div>'));//creating our own
+                                '<div class="ace-flex">' +
+                                    '<div class="label ace-small-padding-right">'+_aceL.sel_i+'</div>' +
+                                        '<div>'+
+                                            '<select id="report-period-interval">' +
+                                                '<option value="0">'+_aceL.sel_ai+'</option>' +
+                                                '<option value="1">'+_aceL.sel_azi+'</option>' +
+                                                '<option value="2">'+_aceL.sel_ieri+'</option>' +
+                                                '<option value="3">'+_aceL.sel_u7z+'</option>' +
+                                                '<option value="9">'+_aceL.sel_sc+'</option>' +
+                                                '<option value="8">'+_aceL.sel_st+'</option>' +
+                                                '<option value="10">'+_aceL.sel_lc+'</option>' +
+                                                '<option value="4">'+_aceL.sel_lt+'</option>' +
+                                                '<option value="11">'+_aceL.sel_ac+'</option>' +
+                                                '<option value="5">'+_aceL.sel_at+'</option>' +
+                                                '<option value="6">'+_aceL.sel_u2a+'</option>' +
+                                                '<option value="7">'+_aceL.sel_td+'</option>' +
+                                            '</select>' +
+                            '           </div>' +
+                                    '</div>' +
+                                '<div class="action-icon close"></div>' +
+                            '</div>'));//creating our own
                 dateRangePickerWidget.find('.footer').append($('<div class="ace-col-12 ace-small-padding-top"  id="report-period-footer-toolbar">' +
-                    '<input type="button" class="ace-submit-btn" value="'+_aceL.apply+'">' +
+                    '<input type="button" class="submit-btn" value="'+_aceL.apply+'">' +
                     '</div>'));
 
                 dateRangePickerWidget.detach().appendTo(settings.modalWindow);
 
                 //lets add functionality to this
-                settings.modalWindow.find('#report-period-footer-toolbar .ace-submit-btn').click(function(){
+                settings.modalWindow.find('#report-period-footer-toolbar .submit-btn').click(function(){
                     $.aceOverWatch.field.daterangepicker.updateData(target);
                 });
 
@@ -9468,7 +9465,7 @@
                     $.aceOverWatch.field.daterangepicker.setDatesForPeriod(target,$(this).val());
                 });
 
-                settings.modalWindow.find('.ace-action-icon.close').click(function(){
+                settings.modalWindow.find('.action-icon.close').click(function(){
                     $.aceOverWatch.field.daterangepicker.close(target);
                 });
 
@@ -9604,24 +9601,19 @@
 
                 this.setStartEndDatesInternal(settings);
 
-                let tooltip = '';
-                if( settings['tooltip'] ){
-                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
-                }
-
-                let fieldHtml = '<div class="ace-daterangepicker-field ace-col-12" '+tooltip+'>'+
-                    '<div class="ace-box-2 ace-col-12">'+
-                    '<span class="ace-action-icon ace-down-arrow"></span>'+
-                    '<div class="ace-box-2-title">'+settings.label+'</div>'+
-                    '<div class="ace-box-2-detail">'+settings.startDate +' - ' + settings.endDate + '</div>'
-                '</div>'+
-                '</div>';
+                let fieldHtml = '<div class="ace-daterangepicker-field ace-col-12" >'+
+                                    '<div class="box-2 ace-col-12">'+
+                                        '<span class="action-icon down-arrow"></span>'+
+                                        '<div class="box-2-title">'+settings.label+'</div>'+
+                                        '<div class="box-2-detail">'+settings.startDate +' - ' + settings.endDate + '</div>'
+                                    '</div>'+
+                                '</div>';
                 return fieldHtml;
             },
 
             afterInit : function(target, what){
                 if( what.all || what.down ){
-                    target.find('.ace-down-arrow').unbind('click').click(function(e){
+                    target.find('.down-arrow').unbind('click').click(function(e){
                         e.preventDefault();
                         $.aceOverWatch.field.daterangepicker.open($(this).closest('.' + $.aceOverWatch.classes.containerField));
                         return false;
@@ -9638,7 +9630,7 @@
                 }else{
                     settings.value =value;
                     this.setStartEndDatesInternal(settings);
-                    target.find('.ace-box-2-detail').html(settings.startDate +' - ' + settings.endDate);
+                    target.find('.box-2-detail').html(settings.startDate +' - ' + settings.endDate);
 
                     if( !extra || extra.triggerchange != false ){
                         $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value);
@@ -9755,20 +9747,19 @@
                 if( settings.ignorecellcontainer == 1 ){
                     classes.push($.aceOverWatch.classes.autocompleteCellIgnore);
                 }
+                var fieldHtml = '<div class="'+classes.join(' ')+'" >';
 
-                let tooltip = '';
+                var tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
+                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
                 }
-
-                let fieldHtml = '<div class="'+classes.join(' ')+'" '+tooltip+'>';
 
                 var placeholder= '';
                 if( settings['placeholder'] ){
                     placeholder = ' placeholder="'+settings['placeholder']+'" ';
                 }
 
-                var inputF = '<input type="text" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['extravalue']+'" ' + (settings['readonly'] ? 'readonly="readonly"' : '') +' ' + placeholder + ' >';
+                var inputF = '<input type="text" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['extravalue']+'" '+tooltip+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') +' ' + placeholder + ' >';
 
                 if( settings.displayextralink ){
                     fieldHtml += '<a class="'+$.aceOverWatch.classes.autocompleteLink+'" href="'+settings.extralinkurl+'" target="_blank">'+settings.extralinktext+'</a>';
@@ -9962,7 +9953,9 @@
                         let autoEl = $(this).closest('.' + $.aceOverWatch.classes.containerField);
                         let s = autoEl.data($.aceOverWatch.settings.aceSettings);
 
-                        $.aceOverWatch.utilities.help.hints.display(s.hintselector, s.hintstype);
+                        if( !$.aceOverWatch.utilities.isVoid(s.hintselector,true) ) {
+                            $.aceOverWatch.field.displayHint(s.hintselector, s.hintstype);
+                        }
 
                         if( settings.autosearchonfocus && s.disableSearchAfterFocus !== true ) {
                             $.aceOverWatch.field.autocomplete.search(autoEl);
@@ -10277,7 +10270,7 @@
              */
             search : function(target,selectFirstResult, selectOnlyIfSingle = false, explicitFilter = false){
                 if(
-                    !target.is(':visible')
+                        !target.is(':visible')
                     || !$.aceOverWatch.utilities.isInViewPort(target[0])
                 ){
                     //no reason to trigger this if the field is not visible; it will also cause issues with the page layout due to the grid being shown
@@ -10680,9 +10673,9 @@
                     buttoncls : '', //class to be added to the button object
                 }, settings ) );	//example: grids of type 'panel' use this to link buttons found in their row template with default actions: edit, delete, save, etc
 
-                let tooltip = '';
+                var tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
+                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
                 }
                 var disabled = settings.readonly == true ? ' disabled ' : 'false';
 
@@ -11550,9 +11543,9 @@
                     savetype:'GET',			//set it to post to save the data as post.. helpful when sending BIG amounts of data
 
                     loadtplfromdom : false,//in some situations, an app might have to generate templates on the fly, and reuse existing ids
-                    //in situations such as these, it is not desired to load the template from cache if it exists
-                    //and it is wanted to always check the dom for templates
-                    // for cases such as these, set this setting to true
+                                            //in situations such as these, it is not desired to load the template from cache if it exists
+                                            //and it is wanted to always check the dom for templates
+                                            // for cases such as these, set this setting to true
                     template:'',
                     renderto:'',
                     parseastemplate:false,//if true, after record load, the content of the form will be parsed like a template
@@ -12703,10 +12696,10 @@
                 }
 
                 if (!$.aceOverWatch.utilities.isVoid(parentSettings)) {
-                    switch(parentSettings.type){
+                    switch (parentSettings.type) {
                         case 'grid':
-                            if( settings.assignedToGridRowIdx == -2 ) return;
-                            $.aceOverWatch.field.grid.deleteRecord(settings.parent,settings.assignedToGridRowIdx,0,settings.record,forceDelete);
+                            if (settings.assignedToGridRowIdx == -2) return;
+                            $.aceOverWatch.field.grid.deleteRecord(settings.parent, settings.assignedToGridRowIdx, 0, settings.record, forceDelete);
                             break;
                         default:
                             $.aceOverWatch.field.form.hide(target);
@@ -12736,6 +12729,7 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
+                containerField.focus();
                 $.aceOverWatch.utilities.runIt(settings.onshow,target);
 
                 if( settings.validate ){
@@ -12913,7 +12907,7 @@
                 }
                 $(innerForms[0]).removeClass('ace-hide');
             }
-
+            
 
         },//end form object
 
@@ -13592,11 +13586,11 @@
                     onsavesuccessful:null,		//callback on save successfull; parameter: the record
                     onlocalsavesuccessfull:null,//called when form saves something successfully LOCALLY, from an INLINE EDIT not remotely!(target, record)
                     onpreloadsuccessful:null,	//called right after the data has been loaded from the server; the client can do custom filtering on it if so desiring, before it is processed
-                    //function(target,dataArr, totalExpectedData);
+                                                //function(target,dataArr, totalExpectedData);
                     onbeforepagereload:null,	//called right before a page is reloaded, or redrawn in case of local data
-                    //function(target)
+                                                //function(target)
                     onloadsuccessful:null,		// called when the data has been loaded from the server, and the information displayed
-                    //function(target,settings.data, startIdx, endIdx, totalExpectedData);
+                                                //function(target,settings.data, startIdx, endIdx, totalExpectedData);
                     onrowredrawn:null,			//function(target,settings, rowIdx);
                     oninitrow : null,			//callback when a row grid is created
 
@@ -14777,17 +14771,17 @@
                             if (settings.innerColumns[hcIdx].sortdir == 'asc') {
                                 settings.innerColumns[hcIdx].sortdir = 'desc';
                                 el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
-                                    .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                                .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
                             }
                             else if (settings.innerColumns[hcIdx].sortdir == 'desc') {
                                 settings.innerColumns[hcIdx].sortdir = '';
                                 el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
-                                    .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                                .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
                             }
                             else {
                                 settings.innerColumns[hcIdx].sortdir = 'asc';
                                 el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls)
-                                    .addClass(settings.innerColumns[hcIdx].sortasciconcls);
+                                .addClass(settings.innerColumns[hcIdx].sortasciconcls);
                             }
 
                             if ($.aceOverWatch.utilities.isVoid(settings.orderbyarr)) {
@@ -15811,8 +15805,19 @@
                     }
                 }
 
-                let rowClass = $.aceOverWatch.utilities.runIt(settings.rowclassrenderer, idx, settings.data[idx]);
-                if( $.aceOverWatch.utilities.wasItRan(rowClass) ){ rowClasses.push(rowClass); }
+                var rowClass = false;
+                if( $.isFunction(settings.rowclassrenderer) ){
+                    rowClass = settings.rowclassrenderer(idx, settings.data[idx]);
+                }
+                else{
+                    if($.isFunction(window[settings.rowclassrenderer])){
+                        rowClass = window[settings.rowclassrenderer](idx, settings.data[idx]);
+                    }
+                }
+
+                if (rowClass) {
+                    rowClasses.push(rowClass);
+                }
 
                 var subRow = "";
                 var subRowAdditionalClasses = " ";
@@ -15965,7 +15970,7 @@
                                             }
                                         }
 
-                                        let tooltip = '';
+                                        var tooltip = '';
                                         if( colAction.tooltip ){
                                             tooltip = ' title="'+colAction.tooltip+'" ';
                                         }
@@ -17173,7 +17178,7 @@
                     activetag:'',		//the currently active tag
                     aditionaldata:[], //used to add new items to the accordion
                     insertadditionaldatainfront : false,//if true, any additional data will be added in front of the existing data;
-                    // it gets reset to false after every use
+                            // it gets reset to false after every use
                     cleardata : false,
 
                     data : [],			//array the data being displayed, in a format like this:
@@ -17251,8 +17256,8 @@
 
                 if (settings.aditionaldata.length > 0) {  //if I have to add aditional items at runtime
                     settings.data = settings.insertadditionaldatainfront
-                        ?  settings.aditionaldata.concat(settings.data)
-                        : settings.data.concat(settings.aditionaldata);
+                                ?  settings.aditionaldata.concat(settings.data)
+                                : settings.data.concat(settings.aditionaldata);
                     settings.insertadditionaldatainfront = false;
                     settings.aditionaldata = [];
                 }
@@ -18088,6 +18093,11 @@
 
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
                 fieldHtml += $.aceOverWatch.field.badge.create(settings);
+
+                var tooltip = '';
+                if( settings['tooltip'] ){
+                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
+                }
 
                 fieldHtml += '<div class="'+$.aceOverWatch.classes.gridPagination+'" >\
 					<button jt="0" >&lt;&lt;</button>\
