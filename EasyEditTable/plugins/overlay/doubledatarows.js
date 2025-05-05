@@ -1,6 +1,7 @@
 /*
  * this plugin does the following:
- * - it displays an Export element in the table toolbar, and, when clicked, it will save the contents of the table in an Excel file
+ * - it increases the size of of the rows
+ * - if the table has a filter form, the rows will be increased only if the filter contains an ace field with the fieldname _ddr, and if its value is 1
  */
 var aetuOverlayPluginDoubleDataRows = {
     type : 'OVERLAY',
@@ -21,10 +22,11 @@ var aetuOverlayPluginDoubleDataRows = {
     },
     drawYourself : function( tableObj ){
 
-        if( tableObj.filterform.find('[fieldname="_ddr"]').ace('value') == 1 ) {
-            tableObj.container.find('.ace-et-rows-envelope').addClass('ace-et-double-data-rows');
+        //using .children() and not the direct row container, because there might be plugins, like colcheck, who will add extra columns outside the main rows container
+        if( !tableObj.filterform || tableObj.filterform.find('[fieldname="_ddr"]').ace('value') == 1 ) {
+            tableObj.container.children().addClass('ace-et-double-data-rows');
         }else{
-            tableObj.container.find('.ace-et-rows-envelope').removeClass('ace-et-double-data-rows');
+            tableObj.container.children().removeClass('ace-et-double-data-rows');
         }
 
     },

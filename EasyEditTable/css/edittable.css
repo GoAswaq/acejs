@@ -464,63 +464,14 @@ html[dir="rtl"] .fa-button .tooltip {
 .fa-button:hover .tooltip {
     display: block;
 }
-  .date-picker-wrapper-modal {
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgb(0,0,0);
-      background-color: rgba(0,0,0,0.4);
-  }
-.date-picker-wrapper {
-    background-color: #f7f7f7;
-    border:1px solid #ccc;
-    border-radius: 5px;
-    font-family: Roboto, Sans-Serif;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-    color: #222;
-}
-.date-picker-wrapper .month-wrapper table th, .date-picker-wrapper .month-wrapper table td {
-    font-size:9px;
-}
-.date-picker-wrapper .month-wrapper table .day {
-    font-size:9px;
-    padding: 3px 0;
-}
-.date-picker-wrapper .drp_top-bar {
-    padding: 10px 0px 10px 0;
-}
-.date-picker-wrapper .first-date-selected, .date-picker-wrapper .last-date-selected {
-    background-color: #4bc340 !important;
-    color: white !important;
-}
-.date-picker-wrapper .month-wrapper table .day.checked {
-    background-color: #c8edc5;
-}
-
 
 .ace-et-toolbar-el {
     padding: 0px 5px;
 }
 
 
-
 .ace-scrollview-x {
     overflow-x: auto;
-}
-.ace-mc-options input[type="checkbox"]{
-    width: initial;
-}
-.ace-multicheck-data-selection-container {
-    width: 100%;
-}
-.ace-multicheck-field .box-2,
-.ace-daterangepicker-field .box-2 {/*custom for the report only, not for ace*/
-    height: 100%;
 }
 
 .aet-fc {/*focus cell*/

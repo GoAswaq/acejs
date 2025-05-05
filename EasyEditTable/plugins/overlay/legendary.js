@@ -13,6 +13,9 @@
  *          }
  *          ....
  *  }
+ *
+ *  an alternative to the global getEasyEditTableDictionary is the use of the configuration getDictionary, which has a similar use
+ *
  * }
  *
  * The columns for which a legend should be displayed need to have the following property:
@@ -23,7 +26,7 @@ var aetuOverlayPluginLegendary = {
     type : 'OVERLAY',
     name : 'legendary',
     defaultConfigObj : {
-
+        getDictionary : null,//function which returns the dictionaries; if missing, getEasyEditTableDictionary should be used
     },
     configObj : {},
     configObjMap : {
@@ -38,7 +41,14 @@ var aetuOverlayPluginLegendary = {
     },
     drawYourself : function( tableObj ){
 
-        let dictionaryObj = $.aceOverWatch.utilities.runIt('getEasyEditTableDictionary');
+        let dictionaryObj;
+        if( this.configObjMap[tableObj.id].getDictionary ){
+            let formattedContent = $.aceOverWatch.utilities.runIt(this.configObjMap[tableObj.id].getDictionary);
+            dictionaryObj =  $.aceOverWatch.utilities.wasItRan(formattedContent) ? formattedContent : {};
+        }else{
+            dictionaryObj = $.aceOverWatch.utilities.runIt('getEasyEditTableDictionary');
+        }
+
         if( typeof dictionaryObj !== 'object' ){ return; }
 
         let legend = $('<div class="aet-legend ace-col-12"><h2 class="ace-col-12">Legenda</h2></div>');

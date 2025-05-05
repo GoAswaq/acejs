@@ -1,5 +1,5 @@
 /**
- * .ace is the plugin, the public interface
+  * .ace is the plugin, the public interface
  * .aceOverWatch - is the object which contains all/most of the functionality
  **/
 
@@ -3914,7 +3914,7 @@
 
                 hintselector : '',
                 hintstype : 'standalone',//standalone - multiple
-                //with standalone: all siblings with the class ace-hint are hidden
+                                        //with standalone: all siblings with the class ace-hint are hidden
 
                 //some fields receive an additional class to their inner container: ace-control-envelope
                 //based on this class, the ace theme will customize their appearance in specific ways, depending on their
@@ -4465,6 +4465,7 @@
          * used to mask a field during an operation, to prevent user interaction
          */
         mask : function(target, mask){
+            if( !target ){ return; }
             let containerField = $(target);
             let settings = containerField.data($.aceOverWatch.settings.aceSettings);
             if( !settings ){
@@ -6244,8 +6245,8 @@
                     clickonchips : false,//if true, the user may click anywhere on the chips, not only on the x to remove chip
 
                     valueformat : 'default',//
-                    //if default: value returns an array of the inner data
-                    //valuestring: value returns a comma separated array of the values of each data entity
+                                    //if default: value returns an array of the inner data
+                                    //valuestring: value returns a comma separated array of the values of each data entity
 
                 }, settings ) );
 
@@ -6643,7 +6644,7 @@
                     }
                 }
                 if( desiredIdx === -1 ){
-                    return;
+                     return;
                 }
                 target.find('[idx="'+desiredIdx+'"]').trigger('click');
             },
@@ -7879,7 +7880,7 @@
                     customtoptionsselectionclasses : '',//class to be added to the options displayed in the selection window
 
                     onchange:null,		//a function, or the name of a function in window which is going to be called when the value changes
-                    // onchange(target, value, record)
+                            // onchange(target, value, record)
                     selectedValues : {},//if field to display name
 
                     onbeforeload : null, //called before loading of new query (target)
@@ -7907,18 +7908,18 @@
                 }
 
                 let fieldHtml = '<div class="ace-multicheck-field ace-col-12" '+tooltip+'>'+
-                    '<div class="ace-box-2 ace-col-12" style="max-height: 110px;">'+
-                    '<div class="ace-row ace-col-12">'+
-                    '<div class="ace-box-2-title ace-col-11">'+settings.label+'</div>'+
-                    '<div class="ace-col-1">' +
-                    '<span class="ace-action-icon ace-down-arrow"></span>' +
-                    '</div>'+
-                    '</div>'+
-                    '<div class="ace-multicheck-data-selection-container" style="max-height: 64px;display: block; overflow: auto">'+
-                    this.getParsedDataSelectionInternal(settings)+
-                    '</div>'+
-                    '</div>'+
-                    '</div>';
+                                    '<div class="ace-box-2 ace-col-12" style="max-height: 110px;">'+
+                                        '<div class="ace-row ace-col-12">'+
+                                            '<div class="ace-box-2-title ace-col-11">'+settings.label+'</div>'+
+                                            '<div class="ace-col-1">' +
+                                                '<span class="ace-action-icon ace-down-arrow"></span>' +
+                                            '</div>'+
+                                        '</div>'+
+                                        '<div class="ace-multicheck-data-selection-container" style="max-height: 64px;display: block; overflow: auto">'+
+                                            this.getParsedDataSelectionInternal(settings)+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
                 return fieldHtml;
             },
 
@@ -7927,10 +7928,10 @@
                 for(let field in settings.selectedValues){
                     elements.push(
                         '<div class="ace-box-2-detail ace-small-padding-top ace-float-left">'+
-                        '<span class="">'+
-                        '<b>'+settings.selectedValues[field]+'</b>'+
-                        '<span class="um-filter ace-delete-icon" val="'+field+'"></span>'+
-                        '</span>'+
+                            '<span class="">'+
+                                '<b>'+settings.selectedValues[field]+'</b>'+
+                                '<span class="um-filter ace-delete-icon" val="'+field+'"></span>'+
+                            '</span>'+
                         '</div>'
                     );
                 }
@@ -7982,7 +7983,7 @@
             displaySelectionBoxOrLoadData : function(target,forceReload = false){
                 let settings = target.data($.aceOverWatch.settings.aceSettings);
                 if(
-                    (settings.data.length == 0 || forceReload == true)
+                        (settings.data.length == 0 || forceReload == true)
                     && settings.net.remote
                 ){
                     $.aceOverWatch.utilities.runIt(settings.onbeforeload, target);
@@ -8030,11 +8031,11 @@
                     let value = rowData.val(settings.valuename);
 
                     rows.push($( '<div class="'+settings.customtoptionsselectionclasses+'" pval="'+value+'">' +
-                        '<div class="ace-flex">' +
-                        '<input type="checkbox" rowidx="'+rowIdx+'" val="'+value+'" id="'+settings.id+'-multi-check-'+rowIdx+'" '+(settings.selectedValues[value] ? 'checked="checked"' : '')+' >' +
-                        '<label for="'+settings.id+'-multi-check-'+rowIdx+'">'+rowData.val(settings.displayname)+'</label>' +
-                        '   </div>' +
-                        '</div>' ));
+                                    '<div class="ace-flex">' +
+                                        '<input type="checkbox" rowidx="'+rowIdx+'" val="'+value+'" id="'+settings.id+'-multi-check-'+rowIdx+'" '+(settings.selectedValues[value] ? 'checked="checked"' : '')+' >' +
+                                        '<label for="'+settings.id+'-multi-check-'+rowIdx+'">'+rowData.val(settings.displayname)+'</label>' +
+                                '   </div>' +
+                                '</div>' ));
                 });
                 settings.selectionWindowOptions.append(rows);
 
@@ -8077,15 +8078,15 @@
                 }
                 settings.selectionWindow = $('<div id="'+settings.id+'-multi-check" class="ace-hide ace-multicheck-wnd ace-modal-background">' +
                     '<div class="ace-modal-content" style="min-width: 300px;max-width: 450px;">' +
-                    '<span class="ace-action-icon ace-icon-close"></span>' +
-                    '<div class="ace-mc-options" style="height:240px; overflow: auto;"></div>' +
-                    (settings.withfilter ? '<div class="ace-mc-filter ace-small-padding-top ace-col-12"><div class="ace-col-1"><i class="fa fa-search"></i></div><input class="ace-col-11 ace-mc-filter-input" type="text" placeholder="'+_aceL.search+'"></div>' : '' )+
-                    '<div class="ace-col-12 ace-small-padding-top"></div>' +
-                    '<div class="ace-col-12 ace-small-padding-top ace-split-top-line">' +
-                    '<input type="button" class="ace-submit-btn" value="'+_aceL.apply+'">' +
+                        '<span class="ace-action-icon ace-icon-close"></span>' +
+                        '<div class="ace-mc-options" style="height:240px; overflow: auto;"></div>' +
+                        (settings.withfilter ? '<div class="ace-mc-filter ace-small-padding-top ace-col-12"><div class="ace-col-1"><i class="fa fa-search"></i></div><input class="ace-col-11 ace-mc-filter-input" type="text" placeholder="'+_aceL.search+'"></div>' : '' )+
+                        '<div class="ace-col-12 ace-small-padding-top"></div>' +
+                        '<div class="ace-col-12 ace-small-padding-top ace-split-top-line">' +
+                            '<input type="button" class="ace-submit-btn" value="'+_aceL.apply+'">' +
+                        '</div>' +
                     '</div>' +
-                    '</div>' +
-                    '</div>');
+                '</div>');
                 settings.selectionWindow.find('.ace-icon-close').click(function(){
                     let modalWnd = $(this).closest('.ace-modal-background');
                     modalWnd.addClass('ace-hide');
@@ -8100,7 +8101,7 @@
                 settings.selectionWindowModalContent = settings.selectionWindow.find('.ace-modal-content');
 
                 settings.selectionWindow.find('.ace-modal-content').data($.aceOverWatch.settings.aceSettings,{
-                    id : $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid()
+                   id : $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid()
                 });
                 settings.selectionWindow.data($.aceOverWatch.settings.aceSettings,{
                     id : $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid(),
@@ -8522,9 +8523,7 @@
                     let target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
                     let settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                    if( !$.aceOverWatch.utilities.isVoid(settings.hintselector,true) ) {
-                        $.aceOverWatch.field.displayHint(settings.hintselector, settings.hintstype);
-                    }
+                    $.aceOverWatch.utilities.help.hints.display(settings.hintselector, settings.hintstype);
 
                     switch( settings.displaytype ){
                         case 'popupmobile':
@@ -8683,7 +8682,12 @@
                     settings.id = $.aceOverWatch.settings.fieldPrefix+'-'+$.aceOverWatch.utilities.getNextoverviewid();
                 }
 
-                var fieldHtml = '<div class="'+$.aceOverWatch.classes.radio+'" >';
+                let tooltip = '';
+                if( settings['tooltip'] ){
+                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
+                }
+
+                let fieldHtml = '<div class="'+$.aceOverWatch.classes.radio+'" '+tooltip+'>';
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
 
                 settings.labelalign = 'top';//always use top alignament with this one
@@ -9255,14 +9259,14 @@
                     onselect:null,
                 }, settings ) );
 
-                var fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.datepickerField+'" >';
-
-                var tooltip = '';
+                let tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
+                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
                 }
 
-                fieldHtml += '<input class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" '+tooltip+'>';
+                let fieldHtml = '<div class="'+(settings.ignorecontrolenvelope ? '' : "ace-control-envelope ")+$.aceOverWatch.classes.datepickerField+'" '+tooltip+'>';
+
+                fieldHtml += '<input class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['value']+'" >';
                 fieldHtml += $.aceOverWatch.field.label.create(settings);
                 fieldHtml += $.aceOverWatch.field.badge.create(settings);
                 fieldHtml += '<span class='+$.aceOverWatch.classes.errorMsg+'></span>';
@@ -9397,10 +9401,10 @@
             currentEditablePicker : false,
             ensureModalWindowExists : function(target,settings){
                 if( settings.modalWindow ){ return; }
-                settings.modalWindow = $('<div class="ace-col-12 date-picker-wrapper-modal ace-hide"></div>');
+                settings.modalWindow = $('<div class="ace-col-12 ace-date-picker-wrapper-modal ace-hide"></div>');
                 $('body').append(settings.modalWindow);
 
-                settings.drpTrigger = target.find('.action-icon.down-arrow');
+                settings.drpTrigger = target.find('.ace-action-icon.ace-down-arrow');
                 settings.drpTrigger.dateRangePicker({
                     monthSelect: true,
                     yearSelect: true,
@@ -9445,16 +9449,16 @@
                                             '</select>' +
                             '           </div>' +
                                     '</div>' +
-                                '<div class="action-icon close"></div>' +
+                                '<div class="ace-action-icon ace-icon-close"></div>' +
                             '</div>'));//creating our own
                 dateRangePickerWidget.find('.footer').append($('<div class="ace-col-12 ace-small-padding-top"  id="report-period-footer-toolbar">' +
-                    '<input type="button" class="submit-btn" value="'+_aceL.apply+'">' +
+                    '<input type="button" class="ace-submit-btn" value="'+_aceL.apply+'">' +
                     '</div>'));
 
                 dateRangePickerWidget.detach().appendTo(settings.modalWindow);
 
                 //lets add functionality to this
-                settings.modalWindow.find('#report-period-footer-toolbar .submit-btn').click(function(){
+                settings.modalWindow.find('#report-period-footer-toolbar .ace-submit-btn').click(function(){
                     $.aceOverWatch.field.daterangepicker.updateData(target);
                 });
 
@@ -9465,7 +9469,7 @@
                     $.aceOverWatch.field.daterangepicker.setDatesForPeriod(target,$(this).val());
                 });
 
-                settings.modalWindow.find('.action-icon.close').click(function(){
+                settings.modalWindow.find('.ace-action-icon.close').click(function(){
                     $.aceOverWatch.field.daterangepicker.close(target);
                 });
 
@@ -9601,11 +9605,16 @@
 
                 this.setStartEndDatesInternal(settings);
 
-                let fieldHtml = '<div class="ace-daterangepicker-field ace-col-12" >'+
-                                    '<div class="box-2 ace-col-12">'+
-                                        '<span class="action-icon down-arrow"></span>'+
-                                        '<div class="box-2-title">'+settings.label+'</div>'+
-                                        '<div class="box-2-detail">'+settings.startDate +' - ' + settings.endDate + '</div>'
+                let tooltip = '';
+                if( settings['tooltip'] ){
+                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
+                }
+
+                let fieldHtml = '<div class="ace-daterangepicker-field ace-col-12" '+tooltip+'>'+
+                                    '<div class="ace-box-2 ace-col-12">'+
+                                        '<span class="ace-action-icon ace-down-arrow"></span>'+
+                                        '<div class="ace-box-2-title">'+settings.label+'</div>'+
+                                        '<div class="ace-box-2-detail">'+settings.startDate +' - ' + settings.endDate + '</div>'
                                     '</div>'+
                                 '</div>';
                 return fieldHtml;
@@ -9613,7 +9622,7 @@
 
             afterInit : function(target, what){
                 if( what.all || what.down ){
-                    target.find('.down-arrow').unbind('click').click(function(e){
+                    target.find('.ace-down-arrow').unbind('click').click(function(e){
                         e.preventDefault();
                         $.aceOverWatch.field.daterangepicker.open($(this).closest('.' + $.aceOverWatch.classes.containerField));
                         return false;
@@ -9630,7 +9639,7 @@
                 }else{
                     settings.value =value;
                     this.setStartEndDatesInternal(settings);
-                    target.find('.box-2-detail').html(settings.startDate +' - ' + settings.endDate);
+                    target.find('.ace-box-2-detail').html(settings.startDate +' - ' + settings.endDate);
 
                     if( !extra || extra.triggerchange != false ){
                         $.aceOverWatch.utilities.runIt(settings.onchange, target, settings.value);
@@ -9747,19 +9756,20 @@
                 if( settings.ignorecellcontainer == 1 ){
                     classes.push($.aceOverWatch.classes.autocompleteCellIgnore);
                 }
-                var fieldHtml = '<div class="'+classes.join(' ')+'" >';
 
-                var tooltip = '';
+                let tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
+                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
                 }
+
+                let fieldHtml = '<div class="'+classes.join(' ')+'" '+tooltip+'>';
 
                 var placeholder= '';
                 if( settings['placeholder'] ){
                     placeholder = ' placeholder="'+settings['placeholder']+'" ';
                 }
 
-                var inputF = '<input type="text" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['extravalue']+'" '+tooltip+' ' + (settings['readonly'] ? 'readonly="readonly"' : '') +' ' + placeholder + ' >';
+                var inputF = '<input type="text" class="'+$.aceOverWatch.classes.fieldValue+(String(settings['value']).length==0?' '+$.aceOverWatch.classes.empty:'')+'" aceid="'+settings.id+'" value="'+settings['extravalue']+'" ' + (settings['readonly'] ? 'readonly="readonly"' : '') +' ' + placeholder + ' >';
 
                 if( settings.displayextralink ){
                     fieldHtml += '<a class="'+$.aceOverWatch.classes.autocompleteLink+'" href="'+settings.extralinkurl+'" target="_blank">'+settings.extralinktext+'</a>';
@@ -9953,9 +9963,7 @@
                         let autoEl = $(this).closest('.' + $.aceOverWatch.classes.containerField);
                         let s = autoEl.data($.aceOverWatch.settings.aceSettings);
 
-                        if( !$.aceOverWatch.utilities.isVoid(s.hintselector,true) ) {
-                            $.aceOverWatch.field.displayHint(s.hintselector, s.hintstype);
-                        }
+                        $.aceOverWatch.utilities.help.hints.display(s.hintselector, s.hintstype);
 
                         if( settings.autosearchonfocus && s.disableSearchAfterFocus !== true ) {
                             $.aceOverWatch.field.autocomplete.search(autoEl);
@@ -10673,9 +10681,9 @@
                     buttoncls : '', //class to be added to the button object
                 }, settings ) );	//example: grids of type 'panel' use this to link buttons found in their row template with default actions: edit, delete, save, etc
 
-                var tooltip = '';
+                let tooltip = '';
                 if( settings['tooltip'] ){
-                    tooltip = ' data-toggle="tooltip" data-placement="bottom" data-trigger="hover" data-original-title="'+settings['tooltip']+'" ';
+                    tooltip = ' title="'+$('<div></div>').attr('x',settings['tooltip']).attr('x')+'" ';
                 }
                 var disabled = settings.readonly == true ? ' disabled ' : 'false';
 
@@ -12696,10 +12704,10 @@
                 }
 
                 if (!$.aceOverWatch.utilities.isVoid(parentSettings)) {
-                    switch (parentSettings.type) {
+                    switch(parentSettings.type){
                         case 'grid':
-                            if (settings.assignedToGridRowIdx == -2) return;
-                            $.aceOverWatch.field.grid.deleteRecord(settings.parent, settings.assignedToGridRowIdx, 0, settings.record, forceDelete);
+                            if( settings.assignedToGridRowIdx == -2 ) return;
+                            $.aceOverWatch.field.grid.deleteRecord(settings.parent,settings.assignedToGridRowIdx,0,settings.record,forceDelete);
                             break;
                         default:
                             $.aceOverWatch.field.form.hide(target);
@@ -12729,7 +12737,6 @@
                 var containerField = $(target);
                 var settings = containerField.data($.aceOverWatch.settings.aceSettings);
 
-                containerField.focus();
                 $.aceOverWatch.utilities.runIt(settings.onshow,target);
 
                 if( settings.validate ){
@@ -14017,6 +14024,7 @@
 
                 settings.haveGroupHeaderCells = false;
                 settings.currGroupHeaderArr = [];
+                settings.atLeastOneColumnWithSort = false;
 
                 let currGroupHeaderCells = '';
                 for(let idx in settings.innerColumns){
@@ -14051,10 +14059,11 @@
 
                         allowsort : false,
                         hidesorticonuntilfirstclick : true,
-
+                        sortexclusive:false,//if true, when the column is enabled for sorting, all other columns become unselected
                         sortdir : '', //should be '', asc or desc - for '' the sort icon is hidden
                         sortasciconcls : 'fa fa-caret-up',
                         sortdesciconcls : 'fa fa-caret-down',
+                        sortfield:'',//if not void, this will be used as the field to sort by, instead of the fieldname property
 
                         /*
                          * used to display the totals of a column
@@ -14066,6 +14075,13 @@
                         classtplrenderer : '', //function used to return a class based on the current record row - called only when acetplclass = true
 
                     },column);
+
+                    if( $.aceOverWatch.utilities.isVoid(column.sortfield,true) ){
+                        column.sortfield = column.fieldname;
+                    }
+                    if( column.allowsort ){
+                        settings.atLeastOneColumnWithSort = true;
+                    }
 
 
                     column.classes = [];
@@ -14299,14 +14315,20 @@
 
                         allowsort: false,
                         hidesorticonuntilfirstclick: true,
+                        sortexclusive:false,//if true, when the column is enabled for sorting, all other columns become unselected
                         sortdir: '', //should be '', asc or desc - for '' the sort icon is hidden
                         sortasciconcls: 'fa fa-caret-up',
                         sortdesciconcls: 'fa fa-caret-down',
+                        sortfield:'',//if not void, this will be used as the field to sort by, instead of the fieldname property
 
                         acetplclass: '', //set true to render a class returned by the classtplrenderer property
                         classtplrenderer: '', //function used to return a class based on the current record row - called only when acetplclass = true
 
                     }, column);
+
+                    if( $.aceOverWatch.utilities.isVoid(column.sortfield,true) ){
+                        column.sortfield = column.fieldname;
+                    }
 
 
                     column.classes = [$.aceOverWatch.classes.gridCell];
@@ -14751,61 +14773,36 @@
                         }
                     });
 
-                    /*
-                     * this handles the click on header cells - leave here to overwrite the ones above
-                     */
+                    if( what.all == true && settings.atLeastOneColumnWithSort ){
+                        containerField.find('.'+$.aceOverWatch.classes.gridHeader+' .'+$.aceOverWatch.classes.gridCell +'.'+$.aceOverWatch.classes.clickable).each(function (index, element) {
+                            let el = $(this);
+                            let hcIdx = el.attr('hcidx');//action idx
+                            if( typeof hcIdx == 'undefined' || settings.innerColumns[hcIdx].type == 'action'|| settings.innerColumns[hcIdx].type == 'checkboxcol'){
+                                return;//don't implement click thingies for action windows... the interaction with those is done through the action buttons
+                            }
+                            $.aceOverWatch.field.grid.handleClickOnColumn(el,hcIdx,settings,true);
+                        });
+                    }
+
+                    //this handles the click on header cells - leave here to overwrite the ones above
                     containerField.find('.'+$.aceOverWatch.classes.gridHeader+' .'+$.aceOverWatch.classes.gridCell +'.'+$.aceOverWatch.classes.clickable).unbind('click').on('click',function(){
                         let el = $(this);
                         var target = el.closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        var hcIdx = el.attr('hcidx');//action idx
+                        let hcIdx = el.attr('hcidx');//action idx
                         if( typeof hcIdx == 'undefined' || settings.innerColumns[hcIdx].type == 'action'|| settings.innerColumns[hcIdx].type == 'checkboxcol'){
                             return;//don't implement click thingies for action windows... the interaction with those is done through the action buttons
                         }
 
-                        var reloadGrid = false;
+                        let reloadGrid = false;
                         //Here I deal with the title column click for sorting purposes
-                        if (((settings.innerColumns[hcIdx].allowsort == true) || (settings.innerColumns[hcIdx].allowsort == "true")) && (settings.innerColumns[hcIdx].fieldname !== '')) {
-
-                            if (settings.innerColumns[hcIdx].sortdir == 'asc') {
-                                settings.innerColumns[hcIdx].sortdir = 'desc';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
-                                .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
-                            }
-                            else if (settings.innerColumns[hcIdx].sortdir == 'desc') {
-                                settings.innerColumns[hcIdx].sortdir = '';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
-                                .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
-                            }
-                            else {
-                                settings.innerColumns[hcIdx].sortdir = 'asc';
-                                el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls)
-                                .addClass(settings.innerColumns[hcIdx].sortasciconcls);
-                            }
-
-                            if ($.aceOverWatch.utilities.isVoid(settings.orderbyarr)) {
-                                settings.orderbyarr = {};
-                            }
-                            if (settings.innerColumns[hcIdx].sortdir !== '') {
-                                el.find('.' + $.aceOverWatch.classes.gridCellSort).removeClass($.aceOverWatch.classes.hide);
-                                settings.orderbyarr[settings.innerColumns[hcIdx].fieldname] = settings.innerColumns[hcIdx].sortdir;
-                            }
-                            else {
-                                el.find('.' + $.aceOverWatch.classes.gridCellSort).addClass($.aceOverWatch.classes.hide);
-                                settings.orderbyarr[settings.innerColumns[hcIdx].fieldname] = null;
-                            }
-
-
-                            if ($.aceOverWatch.utilities.isVoid(settings.net.extraparams)) {
-                                settings.net.extraparams = {};
-                            }
-
-                            settings.net.extraparams['orderby'] = JSON.stringify(settings.orderbyarr);
+                        if (((settings.innerColumns[hcIdx].allowsort == true) || (settings.innerColumns[hcIdx].allowsort == "true")) && (settings.innerColumns[hcIdx].sortfield !== '')) {
+                            $.aceOverWatch.field.grid.handleClickOnColumn(el,hcIdx,settings);
                             reloadGrid = true;
                         }
 
-                        $.aceOverWatch.utilities.runIt(settings.innerColumns[hcIdx].oncolumntitleclick, target, $(this), hcIdx, settings.innerColumns[hcIdx]);
+                        $.aceOverWatch.utilities.runIt(settings.innerColumns[hcIdx].oncolumntitleclick, target, el, hcIdx, settings.innerColumns[hcIdx]);
 
                         if (reloadGrid) {
                             $.aceOverWatch.field.grid.reloadPage(target);
@@ -15318,6 +15315,77 @@
                 }
             },
 
+            handleClickOnColumn : function(el,hcIdx, settings, setupOnly = false){
+                if ($.aceOverWatch.utilities.isVoid(settings.orderbyarr)) {
+                    settings.orderbyarr = {};
+                }
+
+                if( settings.innerColumns[hcIdx].sortexclusive
+                    && (
+                        !setupOnly
+                        || !$.aceOverWatch.utilities.isVoid(settings.innerColumns[hcIdx].sortdir,true)
+                    )
+                ){
+                    for (var i = 0; i < settings.innerColumns.length; i++) {
+                        if (i != hcIdx) {
+                            settings.innerColumns[i].sortdir = '';
+                            el.siblings('[hcidx="'+i+'"]').find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[i].sortdesciconcls+' '+settings.innerColumns[i].sortasciconcls);
+                            delete settings.orderbyarr[settings.innerColumns[i].sortfield];
+                        }
+                    }
+
+                }
+
+                if( setupOnly ){//not changing the click direction
+
+                    if (settings.innerColumns[hcIdx].sortdir == 'desc') {
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                            .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                    }else if (settings.innerColumns[hcIdx].sortdir == 'asc') {
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls)
+                            .addClass(settings.innerColumns[hcIdx].sortasciconcls);
+                    }else{
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                            .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                    }
+
+                }else{//changing the click direction
+                    if (settings.innerColumns[hcIdx].sortdir == 'asc') {
+                        settings.innerColumns[hcIdx].sortdir = 'desc';
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                            .addClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                    }
+                    else if (settings.innerColumns[hcIdx].sortdir == 'desc') {
+                        settings.innerColumns[hcIdx].sortdir = '';
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortasciconcls)
+                            .removeClass(settings.innerColumns[hcIdx].sortdesciconcls);
+                    }
+                    else {
+                        settings.innerColumns[hcIdx].sortdir = 'asc';
+                        el.find('.'+$.aceOverWatch.classes.gridCellSort).removeClass(settings.innerColumns[hcIdx].sortdesciconcls)
+                            .addClass(settings.innerColumns[hcIdx].sortasciconcls);
+                    }
+                }
+
+
+
+                if (settings.innerColumns[hcIdx].sortdir !== '') {
+                    el.find('.' + $.aceOverWatch.classes.gridCellSort).removeClass($.aceOverWatch.classes.hide);
+                    settings.orderbyarr[settings.innerColumns[hcIdx].sortfield] = settings.innerColumns[hcIdx].sortdir;
+                }
+                else {
+                    el.find('.' + $.aceOverWatch.classes.gridCellSort).addClass($.aceOverWatch.classes.hide);
+                    delete settings.orderbyarr[settings.innerColumns[hcIdx].sortfield];
+                }
+
+
+                if ($.aceOverWatch.utilities.isVoid(settings.net.extraparams)) {
+                    settings.net.extraparams = {};
+                }
+
+                settings.net.extraparams['orderby'] = JSON.stringify(settings.orderbyarr);
+            },
+
             /*
 			 * the function moves the current navigated row by a deltaRow, up and down; usually it's called when the key based navigation is in place, and the user pressed the arrow up or arrow down buttons
 			 */
@@ -15805,19 +15873,8 @@
                     }
                 }
 
-                var rowClass = false;
-                if( $.isFunction(settings.rowclassrenderer) ){
-                    rowClass = settings.rowclassrenderer(idx, settings.data[idx]);
-                }
-                else{
-                    if($.isFunction(window[settings.rowclassrenderer])){
-                        rowClass = window[settings.rowclassrenderer](idx, settings.data[idx]);
-                    }
-                }
-
-                if (rowClass) {
-                    rowClasses.push(rowClass);
-                }
+                let rowClass = $.aceOverWatch.utilities.runIt(settings.rowclassrenderer, idx, settings.data[idx]);
+                if( $.aceOverWatch.utilities.wasItRan(rowClass) ){ rowClasses.push(rowClass); }
 
                 var subRow = "";
                 var subRowAdditionalClasses = " ";

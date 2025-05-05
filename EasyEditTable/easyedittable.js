@@ -177,19 +177,67 @@ var aetu = {//aceEasyTableUtils
 	},
 
 	convertBasicThinkITReportStructureToTableConfig : function(source){
-		return {
+		//the internal setting overrides the thinkIT settings
+		return conversionObject = {
 			columns : source['columns'],
-			idfield : source['id_field'],
-			showtotalsrow : source['with_totals'],
-			subgroups : source['sub_groups'],
-			virtualfields : source['virtual_fields'],
-			title : source['title'],
+			idfield : source['idfield'] || source['id_field'],
+			showtotalsrow : source['showtotalsrow'] || source['with_totals'],
+			subgroups : source['subgroups'] || source['sub_groups'],
+			sortBySubgroupsOnce : source['sortBySubgroupsOnce']==1  || source['sortBySubgroupsOnce'] === true,
+			virtualfields : source['virtualfields'] || source['virtual_fields'],
+			title : source['title'] || source['title'],
 			generatedtime : source['generatedtime'],
 			overlayplugins : source['overlayplugins'],
 			cellcustomplugins : source['cellcustomplugins'],
 			dataplugins : source['dataplugins'],
 			otherdata : source['otherdata'],
 		};
+	},
+
+	/**
+	 *
+	 * @param data - data to sort
+	 * @param sortFields - array of objects, where each object has the following structure:
+	 *        fieldname - the fieldname to sort by
+	 *        ascending - true if we want to sort ascending, false if we want to sort descending
+	 * @param virtualfields - the virtual fields information
+	 */
+	sortByMultipleFields : function(data,sortFields,virtualfields){
+		if( data.length == 0 || sortFields.length == 0 ){ return; }
+		let paramsArray1 = [];
+		let paramsArray2 = [];
+
+		let virtualFieldsMap = {};
+		if( virtualfields && virtualfields.length > 0 ){
+			for(let idx in virtualfields ){
+				virtualFieldsMap[virtualfields[idx].fieldname] = idx;
+			}
+		}
+
+		for(let idx in sortFields ){
+			let prefix = sortFields[idx].ascending !== false ? '' : '-';
+			/*
+			 * if we have virtual fields for a sort field, we ignore the actual field, and use the virtual fields instead
+			 */
+			if( virtualFieldsMap[sortFields[idx].fieldname] != undefined && virtualfields[virtualFieldsMap[sortFields[idx].fieldname]].maxVirtualFields > 0){
+				for (let idxVF = 0; idxVF < virtualfields[virtualFieldsMap[sortFields[idx].fieldname]].maxVirtualFields; idxVF++ ){
+					paramsArray1.push(prefix+'aetu.simpleCompare(a.'+sortFields[idx].fieldname+idxVF+',b.'+sortFields[idx].fieldname+idxVF+')');
+					paramsArray2.push(prefix+'aetu.simpleCompare(b.'+sortFields[idx].fieldname+idxVF+',a.'+sortFields[idx].fieldname+idxVF+')');
+				}
+			}else{
+				paramsArray1.push(prefix+'aetu.simpleCompare(a.'+sortFields[idx].fieldname+',b.'+sortFields[idx].fieldname+')');
+				paramsArray2.push(prefix+'aetu.simpleCompare(b.'+sortFields[idx].fieldname+',a.'+sortFields[idx].fieldname+')');
+			}
+
+		}
+
+		let evalExpression = 'aetu.simpleCompare(['+paramsArray1.join(',')+'],['+paramsArray2.join(',')+']);';
+		data.sort(function(a, b){
+			return eval(evalExpression);
+		});
+	},
+	simpleCompare : function(x,y){
+		return x > y ? 1 : x < y ? -1 : 0;
 	}
 
 };
@@ -250,7 +298,9 @@ function ACEEasyTable(config){
 		this.handleDataPluginsConfig(config);
 
 		for(let field in config ) {
-			this[field] = config[field];
+			if( config[field] != undefined ) {
+				this[field] = config[field];
+			}
 		}
 
 		this.columnsNameMap = {};
@@ -646,6 +696,11 @@ function ACEEasyTable(config){
 
 		if( withSubgroups ){
 
+			if( this.sortBySubgroupsOnce ){//this happens only once
+				this.sortData(this['subgroups']);
+				this.sortBySubgroupsOnce = false;
+			}
+
 			/*
 			 * lets find out if we have subgroup totals
 			 */
@@ -788,15 +843,19 @@ function ACEEasyTable(config){
 
 	};
 
-	this.display = function(container,data){
+	this.display = function(container=false,data=false){
+		if( container === false ){
+			container = this.container;
+		}
 		if( !container ){ return; }
-
-		this.computeVirtualFieldsIfAny(data);
 
 		container.addClass('ace-et-container').html('');
 
 		let toolbar = $('<div class="ace-col-12 ace-et-toolbar"><div class="ace-col-12">'+this.genDate+'<h3 class="ace-et-tbl-title"><b>'+this.title+'</b></h3></div></div>');
-		this.data = data;
+		if( data !== false ) {
+			this.data = data;
+		}
+		this.computeVirtualFieldsIfAny(this.data);
 		let content = $('<div class="ace-col-12 ace-et-rows-envelope ace-et-main-rows-container">'+this.getHeaderContent()+'</div>').append(this.getAllRowsContent());
 		if( this.showtotalsrow ){
 			content.append(this.getFooterContent());
@@ -1027,6 +1086,20 @@ function ACEEasyTable(config){
 	this.onLoadError = function(data){
 		$.aceOverWatch.toast.show('error','Failed to load data: '+data.error);
 	};
+	this.updateConfiguration = function(configDetails){
+		this.parseConfig(configDetails);
+		this.handleDataPluginsRowModifications(this.data);
+		this.display();
+	}
+	/**
+	 * this function is used to sort the data
+	 * sortFields - array of objects, where each object has the following structure:
+	 * 		fieldname - the fieldname to sort by
+	 * 		ascending - true if we want to sort ascending, false if we want to sort descending
+	 */
+	this.sortData = function(sortFields){
+		aetu.sortByMultipleFields(this.data,sortFields,this.virtualfields);
+	},
 
 	/**
 	 * the save works like this:
