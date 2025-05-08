@@ -69,6 +69,10 @@ var aetu = {//aceEasyTableUtils
 		cell.html(cellDescriptor.tableObj.formatCellData(cellDescriptor.colIdx,val,cellDescriptor.tableObj.data[cellDescriptor.rowIdx]));
 		cellDescriptor.tableObj.performFinalSaveStep(cellDescriptor.rowIdx,cellDescriptor.colIdx,true);
 	},
+	triggerSorting : function(cell){
+		let cellDescriptor = this.getCellDescriptor(cell,true);
+		cellDescriptor.tableObj.updateSortingColumn(cellDescriptor.colIdx);
+	},
 
 	triggerEditNextCell : function(cell,forceDismissPreviousEditCell = true,direction=''){
 		/*
@@ -155,7 +159,7 @@ var aetu = {//aceEasyTableUtils
 		cellDescriptor.tableObj.save(cellDescriptor.rowIdx,cellDescriptor.colIdx,cellDescriptor.tableObj.value(cellDescriptor.rowIdx,cellDescriptor.colIdx));
 	},
 
-	getCellDescriptor : function(cell){
+	getCellDescriptor : function(cell,ignoreRowComponent = false){
 		/*
 		 * lets make sure that we really are on a cell
 		 */
@@ -167,11 +171,13 @@ var aetu = {//aceEasyTableUtils
 			rowIdx 		: cell.parent().attr('ridx'),
 			colIdx 	: cell.attr('cidx'),
 		};
-		if( descriptor.tableObj === undefined || descriptor.rowIdx === undefined || descriptor.colIdx === undefined){
+		if( descriptor.tableObj === undefined || (descriptor.rowIdx === undefined && !ignoreRowComponent)|| descriptor.colIdx === undefined){
 			return;//not a valid table cell
 		}
-		descriptor.editCellId = String(descriptor.tableObj.id)+'-'+String(descriptor.rowIdx)+'-'+String(descriptor.colIdx);
-		descriptor.rowData = descriptor.tableObj.data[descriptor.rowIdx];
+		if( descriptor.rowIdx !== undefined ) {
+			descriptor.editCellId = String(descriptor.tableObj.id) + '-' + String(descriptor.rowIdx) + '-' + String(descriptor.colIdx);
+			descriptor.rowData = descriptor.tableObj.data[descriptor.rowIdx];
+		}
 		descriptor.fieldname = descriptor.tableObj.columns[descriptor.colIdx].fieldname;
 		return descriptor;
 	},
@@ -183,7 +189,7 @@ var aetu = {//aceEasyTableUtils
 			idfield : source['idfield'] || source['id_field'],
 			showtotalsrow : source['showtotalsrow'] || source['with_totals'],
 			subgroups : source['subgroups'] || source['sub_groups'],
-			sortBySubgroupsOnce : source['sortBySubgroupsOnce']==1  || source['sortBySubgroupsOnce'] === true,
+			resortOnce : source['resortOnce']==1  || source['resortOnce'] === true,
 			virtualfields : source['virtualfields'] || source['virtual_fields'],
 			title : source['title'] || source['title'],
 			generatedtime : source['generatedtime'],
@@ -252,6 +258,7 @@ var aetu = {//aceEasyTableUtils
  * 		showtotalsrow
  * 		filterform
  * 		rebuildafterload
+ *		sortafterload
  * 		overlayplugins
  * 	    cellcustomplugins
  * 	    dataplugins
@@ -290,6 +297,8 @@ function ACEEasyTable(config){
 		}
 	};
 
+	this.sortingWeight = 0;
+	this.columSortingArr = [];
 	this.parseConfig = function(config){
 
 		/*
@@ -303,9 +312,47 @@ function ACEEasyTable(config){
 			}
 		}
 
+		this.groupingColumnsMap = {};
+		for(let idx in config.subgroups ){
+			this.groupingColumnsMap[config.subgroups[idx]['fieldname']] = true;
+		}
+
 		this.columnsNameMap = {};
+		this.columSortingArr = [];
+
 		for(let idx in this.columns ){
 			this.columnsNameMap[this.columns[idx].fieldname] = idx;
+
+			this.columns[idx].hasGrouping = this.groupingColumnsMap[this.columns[idx].fieldname] ? true : false;
+
+			if( this.columns[idx].allowsorting && !this.columns[idx].hasGrouping ){
+				if( this.columSortingArr.length > 0 && this.sortingexclusive ){
+					this.columns[idx].sortingorder = '';
+				}
+				if( this.columns[idx].sortingorder == 'ascending' || this.columns[idx].sortingorder == 'descending' )
+				{
+					if( this.columns[idx].sortingWeight == undefined ){
+						this.columns[idx].sortingWeight = 0;
+					}
+					if (this.columns[idx].sortingWeight == 0) {
+						this.columns[idx].sortingWeight = ++this.sortingWeight;
+					}
+				}else{
+					this.columns[idx].sortingWeight = 0;
+				}
+				if( this.columns[idx].sortingWeight > 0 ){
+					this.columSortingArr.push({
+						fieldname : this.columns[idx].fieldname,
+						ascending : this.columns[idx].sortingorder == 'ascending' ? true : false,
+						weight : this.columns[idx].sortingWeight,
+					});
+				}
+			}
+		}
+		if( this.columSortingArr.length > 0 ){
+			this.columSortingArr.sort(function(a, b){
+				return a.weight == b.weight ? 0 : (a.weight < b.weight ? -1 : 1);
+			});
 		}
 
 		this.columnsWithVirtualFields = {};//fieldname->idx in virtual fields
@@ -319,7 +366,7 @@ function ACEEasyTable(config){
 		this.genDate = '';
 		this.generatedtime = config.generatedtime;
 		if( !$.aceOverWatch.utilities.isVoid(config.generatedtime,true) ){
-			this.genDate = ' <span class="ace-aet-gdate">('+config.generatedtime+')</span>';
+			this.genDate = ' <span class="ace-aet-gdate">Generated at: '+config.generatedtime+'</span>';
 		}
 	};
 
@@ -353,7 +400,19 @@ function ACEEasyTable(config){
 					currentHeaderGroupText = '';
 				}
 			}
-			row.push('<div cidx = "'+colIdx+'" class="cell title '+this.columns[colIdx]['aditionalclasses']+' ' +this.columns[colIdx]['aditionalgroupclasses']+' '+(headerGroupRelatedClasses.join(' '))+' " '+headerAttribute+' >'+this.columns[colIdx]['title']+'</div>');
+			let sortingClasses = '';
+			let sortingContent = '';
+			if( this.columns[colIdx].allowsorting && !this.columns[colIdx].hasGrouping ){
+				sortingClasses = ' aet-sorting ';
+				let sortIcon;
+				switch( this.columns[colIdx].sortingorder ) {
+					case 'ascending': sortIcon = 'fal fa-long-arrow-up'; break;
+					case 'descending': sortIcon = 'fal fa-long-arrow-down'; break;
+					default: sortIcon = 'fal fa-dot-circle'; break;
+				}
+				sortingContent = '<i class="aet-st '+sortIcon+'"></i>';
+			}
+			row.push('<div cidx = "'+colIdx+'" class="cell title '+sortingClasses+this.columns[colIdx]['aditionalclasses']+' ' +this.columns[colIdx]['aditionalgroupclasses']+' '+(headerGroupRelatedClasses.join(' '))+' " '+headerAttribute+' >'+sortingContent+this.columns[colIdx]['title']+'</div>');
 		}
 		return '<div class="ace-col-12 ace-et-table-header-row '+(hasHeaderGroups ? 'ace-et-nested-header' : '')+'">'+
 					row.join('')+
@@ -645,6 +704,18 @@ function ACEEasyTable(config){
 
 			let classes = ['cell',this.columns[colIdx]['aditionalclasses']];
 
+			switch( this.columns[colIdx]['textalign'] ){
+				case 'left': classes.push('aet-atl'); break;
+				case 'right': classes.push('aet-atr'); break;
+				case 'center': classes.push('aet-atc'); break;
+				case 'justify': classes.push('aet-atj'); break;
+			}
+			switch( this.columns[colIdx]['verticalalign'] ){
+				case 'top': classes.push('aet-vat'); break;
+				case 'bottom': classes.push('aet-vab'); break;
+				case 'center': classes.push('aet-vac'); break;
+			}
+
 			let readonlyClass = '';
 			if( !$.aceOverWatch.utilities.isVoid(this.columns[colIdx]['readonlycustom'],true)){
 				let res = $.aceOverWatch.utilities.runIt(this.columns[colIdx]['readonlycustom'],this.columns[colIdx]['fieldname'],this.data[rowIdx],colIdx);
@@ -694,12 +765,21 @@ function ACEEasyTable(config){
 		this.subgroupsMapNameTemp = {};//temporary storage for subgroup full names
 		this.subtotalsWithCustomRenders = {};//subgroupOrderIdx -> [array of columns with custom renders]
 
-		if( withSubgroups ){
-
-			if( this.sortBySubgroupsOnce ){//this happens only once
-				this.sortData(this['subgroups']);
-				this.sortBySubgroupsOnce = false;
+		if( this.resortOnce ){//this happens only once, when requested
+			//for the sorting, the subgroups always have priority
+			//all other column sorting, if any, is going to be added AFTER
+			let sortingFields = [];
+			if( $.isArray(this['subgroups']) && this['subgroups'].length > 0 ){
+				sortingFields = sortingFields.concat(this['subgroups']);
 			}
+			if( $.isArray(this['columSortingArr']) ){
+				sortingFields = sortingFields.concat(this['columSortingArr']);
+			}
+			this.sortData(sortingFields);
+			this.resortOnce = false;
+		}
+
+		if( withSubgroups ){
 
 			/*
 			 * lets find out if we have subgroup totals
@@ -880,12 +960,18 @@ function ACEEasyTable(config){
 					if( target.hasClass('cell-save') ){
 							aetu.forceReSave(target.parents('.cell').first());
 					}else{
-						aetu.triggerCustomCellOperation(target);
+						if( target.hasClass('aet-sorting') ){
+							aetu.triggerSorting(target);
+						}else {
+							aetu.triggerCustomCellOperation(target);
+						}
 					}
 				}
 			}
 
 		});
+
+		
 		this.container = container;
 
 		/*
@@ -908,9 +994,9 @@ function ACEEasyTable(config){
 		if( value === undefined || value === null ){ value = '&nbsp;'; }
 		let res = $.aceOverWatch.utilities.runIt(this.columns[colIdx].renderer,value,data,colIdx);
 		if( $.aceOverWatch.utilities.wasItRan(res) ){
-			return res;
+			value = res;
 		}
-		return value;
+		return '<span>'+value+'</span>';
 	};
 
 	/**
@@ -1075,8 +1161,13 @@ function ACEEasyTable(config){
 		});
 	}
 	this.onLoadSuccess = function(data){
-		if( this.rebuildafterload && data.details ){
+
+		if( this.rebuildafterload && data.details){
 			this.parseConfig(aetu.convertBasicThinkITReportStructureToTableConfig(data.details));
+		}
+
+		if( this.sortafterload === true ){
+			this.resortOnce = true;
 		}
 
 		this.handleDataPluginsRowModifications(data.rows);
@@ -1099,6 +1190,36 @@ function ACEEasyTable(config){
 	 */
 	this.sortData = function(sortFields){
 		aetu.sortByMultipleFields(this.data,sortFields,this.virtualfields);
+	},
+
+	this.updateSortingColumn = function(colIdx){
+		if( !this.columns[colIdx] || !this.columns[colIdx].allowsorting || this.columns[colIdx].hasGrouping ){
+			return;
+		}
+
+		if( this.sortingexclusive ){
+
+			switch( this.columns[colIdx].sortingorder ){
+				case 'ascending': this.columns[colIdx].sortingorder = 'descending'; break;
+				default: this.columns[colIdx].sortingorder = 'ascending'; break;
+			}
+
+			for(let idx in this.columns ){
+				if( idx != colIdx && this.columns[idx].allowsorting ){
+					this.columns[idx].sortingorder = '';
+				}
+			}
+		}else{
+			//in nonexclusive cases we added a neutral state to allow the removal of a sorting group
+
+			switch( this.columns[colIdx].sortingorder ){
+				case 'ascending': this.columns[colIdx].sortingorder = 'descending'; break;
+				case 'descending': this.columns[colIdx].sortingorder = ''; break;
+				default: this.columns[colIdx].sortingorder = 'ascending'; break;
+			}
+
+		}
+		this.updateConfiguration({resortOnce:true});
 	},
 
 	/**

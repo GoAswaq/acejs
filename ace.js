@@ -2103,7 +2103,7 @@
             },
 
             parseAsAceTemplate : function(target, rec, veryAsStringToo) {
-                if (!target.selector) target=$(target);
+                if( !(target instanceof jQuery) ){ target = $(target); }
 
                 var operations_attributes = {
                     hide_if_field_is_void : 'ace_pt_hide_void',
@@ -2177,32 +2177,30 @@
                     hide ? el.addClass($.aceOverWatch.classes.hide) : el.removeClass($.aceOverWatch.classes.hide);
                 });
 
-
-                target.find(operations_attributes.ace_template_var_tag).replaceWith(function() {
-                    let el=$(this);
-                    let fldName = el.html();
-                    let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
-                    if ($.aceOverWatch.utilities.isVoid(rec)) return null;
-                    let res = rec.val(fldName);
-                    let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer,rec.val(fldName), rec);
-                    if( $.aceOverWatch.utilities.wasItRan(renderRes) ){
-                        res = renderRes;
-                    }
-                    return res;
-                });
-
-                target.find(operations_attributes.ace_template_reuse_var_tag).each(function() {
-                    let el=$(this);
-                    let fldName = el.attr(operations_attributes.ace_template_var_fld);
-                    let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
-                    if ($.aceOverWatch.utilities.isVoid(rec)) return null;
-                    let res = rec.val(fldName);
-                    let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer,rec.val(fldName), rec);
-                    if( $.aceOverWatch.utilities.wasItRan(renderRes) ){
-                        res = renderRes;
-                    }
-                    el.html(res);
-                });
+                if( !$.aceOverWatch.utilities.isVoid(rec) ) {
+                    target.find(operations_attributes.ace_template_var_tag).replaceWith(function() {
+                        let el=$(this);
+                        let fldName = el.html();
+                        let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
+                        let res = rec.val(fldName);
+                        let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer,rec.val(fldName), rec);
+                        if( $.aceOverWatch.utilities.wasItRan(renderRes) ){
+                            res = renderRes;
+                        }
+                        return res;
+                    });
+                    target.find(operations_attributes.ace_template_reuse_var_tag).each(function () {
+                        let el = $(this);
+                        let fldName = el.attr(operations_attributes.ace_template_var_fld);
+                        let fldRenderer = el.attr(operations_attributes.ace_template_var_renderer);
+                        let res = rec.val(fldName);
+                        let renderRes = $.aceOverWatch.utilities.runIt(fldRenderer, rec.val(fldName), rec);
+                        if ($.aceOverWatch.utilities.wasItRan(renderRes)) {
+                            res = renderRes;
+                        }
+                        el.html(res);
+                    });
+                }
             },
 
             /**
@@ -6777,9 +6775,13 @@
                     value:'',
                     rows:'5',
 
+                    onchange:null,	//function, or the name of a function to be called when the value changes or loses focus; onchange(target, value)
+                    onfocusin : false,//function (target)
+
                     //private settings
-                    timerId:null,	 //in case of autosave, this will contain the id of the timer used by the keyup event to detect changes
-                    onfocusin : false,
+                    timerIdAS:null,	 //in case of autosave, this will contain the id of the timer used by the keyup event to detect changes
+                    timerIdOC:null,	 //in case of onchange, this will contain the id of the timer used by the keyup event to detect changes
+
                 }, settings ) );
 
                 let tooltip = '';
@@ -6834,24 +6836,47 @@
                     textareaField.val(settings.displayValue);
                 }
 
-                textareaField.focusin(function (e) {
-                    var target = $(this).closest('.'+$.aceOverWatch.classes.containerField);
-                    var settings = target.data($.aceOverWatch.settings.aceSettings);
+                if( !$.aceOverWatch.utilities.isVoid(settings.onfocusin,true) ) {
+                    textareaField.focusin(function (e) {
+                        let t = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        let s = t.data($.aceOverWatch.settings.aceSettings);
+                        //it is done like this, because at the moment of creation the function might not yet be in dom
+                        if( !s.onFocusIn && s.onFocusIn !== false ){
+                            s.onFocusIn = $.isFunction(s.onfocusin)
+                                ? s.onfocusin
+                                : (
+                                    $.isFunction(window[s.onfocusin])
+                                        ? window[s.onfocusin]
+                                        : false
+                                );
+                        }
+                        if( s.onFocusIn !== false ) {
+                            s.onFocusIn(t);
+                        }
+                    });
+                }
 
-                    settings.onFocusIn = $.isFunction(settings.onfocusin)
-                        ? settings.onfocusin
-                        : (
-                            $.isFunction(window[settings.onfocusin])
-                                ? window[settings.onfocusin]
-                                : false
-                        );
+                if( !$.aceOverWatch.utilities.isVoid(settings.onchange,true) ) {
+                    textareaField.focusout(function (e) {
+                        let t = $(this).closest('.' + $.aceOverWatch.classes.containerField);
+                        let s = t.data($.aceOverWatch.settings.aceSettings);
+                        //it is done like this, because at the moment of creation the function might not yet be in dom
+                        if( !s.onFocusOut && s.onFocusOut !== false ){
+                            s.onFocusOut = $.isFunction(s.onchange)
+                                ? s.onchange
+                                : (
+                                    $.isFunction(window[s.onchange])
+                                        ? window[s.onchange]
+                                        : false
+                                );
+                        }
+                        if( s.onFocusOut !== false ) {
+                            s.onFocusOut(t,t.ace('value'));
+                        }
+                    });
+                }
 
-                    if( settings.onFocusIn !== false ){
-                        settings.onFocusIn(target);
-                    }
-                });
-
-                if( settings.net.autosave == true ){
+                if( settings.net.autosave == true || !$.aceOverWatch.utilities.isVoid(settings.onchange,true) ){
 
                     //ok.. we have autosave.. so....
                     //each time something is being typed, it will trigger a timer of 2 seconds(?).. if at the end of the timer, the value is different than the last value saved... the field will try to save itself
@@ -6861,7 +6886,8 @@
                         var target = el.closest('.'+$.aceOverWatch.classes.containerField);
                         var settings = target.data($.aceOverWatch.settings.aceSettings);
 
-                        clearTimeout(settings.timerId);
+                        clearTimeout(settings.timerIdAS);
+                        clearTimeout(settings.timerIdOC);
 
                         switch(e.keyCode){
                             case 13://enter
@@ -6889,16 +6915,29 @@
                                     $.aceOverWatch.field.save(target,true, true);
                                 }
 
+                                if( !$.aceOverWatch.utilities.isVoid(settings.onchange,true) ){
+                                    settings.timerIdOC = setTimeout(function(){
+                                        $.aceOverWatch.utilities.runIt(settings.onchange,target,target.ace('value'));
+                                    },$.aceOverWatch.settings.autosaveTimeout);
+                                }
+
                                 break;
                             case 27://escape
                                 //do nothing in this case, for now... change if needed?
                                 break;
                             default:
                                 if( settings.net.autosave ){
-                                    settings.timerId = setTimeout(function(){
+                                    settings.timerIdAS = setTimeout(function(){
                                         $.aceOverWatch.field.save(target,true, true);
                                     },$.aceOverWatch.settings.autosaveTimeout);
                                 }
+
+                                if( !$.aceOverWatch.utilities.isVoid(settings.onchange,true) ){
+                                    settings.timerIdOC = setTimeout(function(){
+                                        $.aceOverWatch.utilities.runIt(settings.onchange,target,target.ace('value'));
+                                    },$.aceOverWatch.settings.autosaveTimeout);
+                                }
+
                                 break;
                         }
                     });

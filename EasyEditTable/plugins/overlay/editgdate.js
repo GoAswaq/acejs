@@ -24,7 +24,7 @@ var aetuOverlayPluginEditGeneratedDate = {
             if ( event.ctrlKey ) {
 
                 let tableObj = aetu.getTableById(($(this).parents('.ace-et-container').first().attr('aetid')));
-                $.aceOverWatch.prompt.show('Care este noua data?',
+                $.aceOverWatch.prompt.show('What is the new date?',
                     function(value, cfg){
                         if( !$.aceOverWatch.utilities.isVoid(value,true) ){
                             value = value.trim();
